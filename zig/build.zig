@@ -29,6 +29,12 @@ pub fn build(b: *std.Build) void {
     winmd_mod.addAnonymousImport("Windows.winmd", .{
         .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
     });
+    winmd_mod.addAnonymousImport("Windows.Win32.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Win32.winmd"),
+    });
+    winmd_mod.addAnonymousImport("Windows.Wdk.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Wdk.winmd"),
+    });
 
     const win_core_mod = b.addModule("win-core", .{
         .root_source_file = b.path("packages/win-core/src/root.zig"),

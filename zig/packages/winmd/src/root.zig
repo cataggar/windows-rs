@@ -1851,3 +1851,88 @@ test "generics: IMap`2.GetView returns GENERICINST IMapView`2<K,V>" {
     try std.testing.expect(ret.generics[1] == .var_generic);
     try std.testing.expectEqual(@as(u32, 1), ret.generics[1].var_generic);
 }
+
+test "parse Windows.Win32.winmd: header, TypeIndex, and method-sig sweep" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    const f = try parse(bytes);
+
+    // Win32 metadata is dense; require a substantial type/method count so a
+    // future regression that drops rows is loud.
+    try std.testing.expect(f.rowCount(.type_def) > 5_000);
+    try std.testing.expect(f.rowCount(.method_def) > 10_000);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+    try std.testing.expect(index.containsNamespace("Windows.Win32.Foundation"));
+    try std.testing.expect(index.contains("Windows.Win32.Foundation", "HWND"));
+    try std.testing.expect(index.contains("Windows.Win32.System.Com", "IUnknown"));
+
+    // CreateFileW: classic Win32 call exercised by docs everywhere.
+    const k32 = index.get("Windows.Win32.Storage.FileSystem", "Apis");
+    try std.testing.expect(k32.len >= 1);
+    const methods = f.list(.type_def, k32[0], 5, .method_def);
+    var found_create_file_w = false;
+    var i = methods.start;
+    while (i < methods.end) : (i += 1) {
+        if (std.mem.eql(u8, f.str(.method_def, i, 3), "CreateFileW")) {
+            found_create_file_w = true;
+            break;
+        }
+    }
+    try std.testing.expect(found_create_file_w);
+
+    // Sweep: every method signature blob must either decode cleanly or fail
+    // with one of the known "not yet implemented" errors. A surprise error
+    // (BadCompressed, ShortBlob, TrailingBytes, ...) means real corruption
+    // or a reader bug.
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const total_methods = f.rowCount(.method_def);
+    var ok: u32 = 0;
+    var unsupported: u32 = 0;
+    var row: u32 = 0;
+    while (row < total_methods) : (row += 1) {
+        defer _ = arena.reset(.retain_capacity);
+        const sig = f.blob(.method_def, row, 4);
+        if (sig.len == 0) continue;
+        _ = readMethodSignature(arena.allocator(), &f, sig) catch |err| switch (err) {
+            error.UnsupportedElement => {
+                unsupported += 1;
+                continue;
+            },
+            else => return err,
+        };
+        ok += 1;
+    }
+    // Most Win32 method sigs use plain primitives + structs + pointers.
+    try std.testing.expect(ok > total_methods / 2);
+}
+
+test "parse Windows.Wdk.winmd: header, TypeIndex, and basic sigs" {
+    const bytes = @embedFile("Windows.Wdk.winmd");
+    const f = try parse(bytes);
+
+    try std.testing.expect(f.rowCount(.type_def) > 100);
+    try std.testing.expect(f.rowCount(.method_def) > 100);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+    // Wdk metadata sits under Windows.Wdk.* — exact namespaces vary by
+    // generation, so just assert a couple of well-known kernel headers
+    // are reachable.
+    try std.testing.expect(index.containsNamespace("Windows.Wdk.Foundation"));
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const total_methods = f.rowCount(.method_def);
+    var row: u32 = 0;
+    while (row < total_methods) : (row += 1) {
+        defer _ = arena.reset(.retain_capacity);
+        const sig = f.blob(.method_def, row, 4);
+        if (sig.len == 0) continue;
+        _ = readMethodSignature(arena.allocator(), &f, sig) catch |err| switch (err) {
+            error.UnsupportedElement => continue,
+            else => return err,
+        };
+    }
+}
