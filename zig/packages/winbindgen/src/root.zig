@@ -78,6 +78,7 @@ pub fn emitNamespace(
     try emitEnums(body_writer, arena, file, namespace);
     try emitStructsImpl(body_writer, arena, file, namespace, &cross);
     try emitInterfaceHandles(body_writer, file, namespace);
+    try emitDelegates(body_writer, file, namespace);
     try emitRuntimeClasses(body_writer, file, namespace);
     try emitInterfaceVtblsImpl(body_writer, arena, file, namespace, &cross);
 
@@ -87,6 +88,7 @@ pub fn emitNamespace(
         \\const HRESULT = win_core.HRESULT;
         \\const HSTRING = win_core.HSTRING;
         \\const GUID = win_core.GUID;
+        \\const BOOL = win_core.BOOL;
         \\const IInspectable_Vtbl = win_core.IInspectable_Vtbl;
         \\
     );
@@ -611,6 +613,10 @@ fn writeZigTy(
         .value_name => |tn| {
             if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
                 return false;
+            } else if (std.mem.eql(u8, tn.namespace, "System") and std.mem.eql(u8, tn.name, "Guid")) {
+                // `System.Guid` is the ECMA-335 name for the same
+                // struct `win-core` projects as `GUID`.
+                try writer.writeAll("GUID");
             } else if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
                 try cross.put(gpa, tn.namespace, {});
                 try writer.print("@\"{s}\".{s}", .{ tn.namespace, tn.name });
@@ -954,6 +960,38 @@ pub fn emitRuntimeClasses(
     }
 }
 
+/// Emit an opaque handle struct for every WinRT delegate in
+/// `namespace`. Delegates (function-pointer contracts like
+/// `AsyncActionCompletedHandler`) are TypeDefs whose base is
+/// `System.MulticastDelegate`. Full call-syntax support is deferred —
+/// for now we just make cross-references to the name resolve so vtbl
+/// slots that pass a `*DelegateName` compile.
+pub fn emitDelegates(
+    writer: *std.Io.Writer,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+
+        const flags = file.cell(.type_def, row, 0);
+        if ((flags & TYPE_ATTR_INTERFACE) != 0) continue;
+
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok == 0) continue;
+        const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+        if (!std.mem.eql(u8, base.namespace, "System")) continue;
+        if (!std.mem.eql(u8, base.name, "MulticastDelegate")) continue;
+
+        const name = file.str(.type_def, row, 1);
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+
+        try writer.print("pub const {s} = opaque {{}};\n", .{name});
+    }
+}
+
 /// Return the default interface of the runtime-class TypeDef row, or
 /// null if the class has no `DefaultAttribute`-tagged InterfaceImpl.
 ///
@@ -995,6 +1033,30 @@ test "emitRuntimeClasses writes Uri handle" {
     // No interface names should appear here — those go through
     // `emitInterfaceHandles`.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable") == null);
+}
+
+test "emitDelegates writes opaque handles for WinRT delegates" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitDelegates(&buf.writer, &file, "Windows.Foundation");
+    const out = buf.written();
+
+    // AsyncActionCompletedHandler / DeferralCompletedHandler are
+    // non-generic delegates in Windows.Foundation.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const AsyncActionCompletedHandler = opaque {};") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const DeferralCompletedHandler = opaque {};") != null);
+
+    // Generic-arity delegates (AsyncOperationCompletedHandler`1 etc.)
+    // are skipped — no backticks in the output.
+    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+
+    // Interfaces and runtime classes must not leak into this emitter.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable") == null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Uri ") == null);
 }
 
 test "emitNamespace composes all sub-emitters for Windows.Foundation" {
