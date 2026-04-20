@@ -772,6 +772,32 @@ pub fn emitRuntimeClasses(
         const name = file.str(.type_def, row, 1);
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
 
+        // Resolve the default interface, if present. Every WinRT
+        // runtime class has at most one InterfaceImpl row carrying a
+        // `DefaultAttribute`; its `Interface` column (a TypeDefOrRef
+        // coded index) is the default-interface type whose vtable
+        // layout is what a `*<Class>` handle really points at.
+        const default_name = defaultInterface(file, row);
+
+        if (default_name) |tn| {
+            // Emit a typed vtable pointer only when the default
+            // interface lives in the same namespace — cross-namespace
+            // imports land in a later slice. Generic default
+            // interfaces (IVector`1 etc.) still fall back to opaque
+            // because their `_Vtbl` symbol isn't emitted either.
+            const same_ns = std.mem.eql(u8, tn.namespace, namespace);
+            const is_generic = std.mem.indexOfScalar(u8, tn.name, '`') != null;
+            if (same_ns and !is_generic) {
+                try writer.print(
+                    \\pub const {s} = extern struct {{
+                    \\    vtable: *const {s}_Vtbl,
+                    \\}};
+                    \\
+                , .{ name, tn.name });
+                continue;
+            }
+        }
+
         try writer.print(
             \\pub const {s} = extern struct {{
             \\    vtable: *const anyopaque,
@@ -779,6 +805,23 @@ pub fn emitRuntimeClasses(
             \\
         , .{name});
     }
+}
+
+/// Return the default interface of the runtime-class TypeDef row, or
+/// null if the class has no `DefaultAttribute`-tagged InterfaceImpl.
+///
+/// InterfaceImpl (§II.22.23) is sorted by Class, so we binary-search
+/// for the rows belonging to `class_row` (values are stored 1-based)
+/// and scan for the one with a `DefaultAttribute` custom attribute.
+fn defaultInterface(file: *const winmd.File, class_row: u32) ?winmd.TypeName {
+    const impls = file.equalRange(.interface_impl, 0, class_row + 1);
+    var i = impls.start;
+    while (i < impls.end) : (i += 1) {
+        if (!winmd.hasAttribute(file, .interface_impl, i, "DefaultAttribute")) continue;
+        const iface_tok = file.cell(.interface_impl, i, 1);
+        return winmd.resolveTypeDefOrRefName(file, iface_tok) catch null;
+    }
+    return null;
 }
 
 test "emitRuntimeClasses writes Uri handle" {
@@ -791,16 +834,15 @@ test "emitRuntimeClasses writes Uri handle" {
     try emitRuntimeClasses(&buf.writer, &file, "Windows.Foundation");
     const out = buf.written();
 
-    // `Uri` is the canonical WinRT runtime class in Windows.Foundation
-    // and is referenced by IUriRuntimeClassFactory vtbls.
+    // `Uri`'s default interface is `IUriRuntimeClass` — same namespace,
+    // non-generic — so we expect a typed vtable pointer.
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "pub const Uri = extern struct {\n    vtable: *const anyopaque,\n};",
+        "pub const Uri = extern struct {\n    vtable: *const IUriRuntimeClass_Vtbl,\n};",
     ) != null);
 
-    // WwwFormUrlDecoder is another Windows.Foundation runtime class;
-    // ensure we pick up more than one so namespace scanning works.
+    // WwwFormUrlDecoder is another Windows.Foundation runtime class.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
 
     // No interface names should appear here — those go through
