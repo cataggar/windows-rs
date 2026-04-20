@@ -518,6 +518,68 @@ pub const IInspectable_Vtbl = extern struct {
 /// through its `IInspectable` face.
 pub const IInspectable = Com(IInspectable_Vtbl);
 
+// ---- WinRT activation -----------------------------------------------------
+
+/// Apartment model passed to `RoInitialize`.
+pub const RO_INIT_TYPE = enum(i32) {
+    single_threaded = 0,
+    multi_threaded = 1,
+};
+
+/// Trust level returned from `IInspectable.GetTrustLevel`.
+pub const TrustLevel = enum(i32) {
+    base_trust = 0,
+    partial_trust = 1,
+    full_trust = 2,
+};
+
+/// Externs from the WinRT runtime (`combase.dll` at runtime, linked via
+/// the `api-ms-win-core-winrt-l1-1-0` API set).
+pub const winrt = struct {
+    pub extern "api-ms-win-core-winrt-l1-1-0" fn RoInitialize(
+        init_type: RO_INIT_TYPE,
+    ) callconv(.winapi) HRESULT;
+
+    pub extern "api-ms-win-core-winrt-l1-1-0" fn RoUninitialize() callconv(.winapi) void;
+
+    pub extern "api-ms-win-core-winrt-l1-1-0" fn RoGetActivationFactory(
+        class_name: HSTRING,
+        iid: *const GUID,
+        factory: *?*anyopaque,
+    ) callconv(.winapi) HRESULT;
+};
+
+/// `RPC_E_CHANGED_MODE` — raised by `RoInitialize` if the thread has
+/// already been initialized under a different apartment. Benign.
+pub const RPC_E_CHANGED_MODE: HRESULT = @bitCast(@as(u32, 0x80010106));
+
+/// Initialize the WinRT runtime on the current thread. Treats
+/// `RPC_E_CHANGED_MODE` as success so the caller can be robust against
+/// the thread already having been initialized by something else.
+pub fn roInitialize(init_type: RO_INIT_TYPE) !void {
+    const hr = winrt.RoInitialize(init_type);
+    if (hr == RPC_E_CHANGED_MODE) return;
+    try hresult.ok(hr);
+}
+
+/// Look up the activation factory for a WinRT runtime class by name,
+/// returning it as a `Com(V)`. The vtable type `V` must have a
+/// `pub const IID: GUID` constant (see `IUnknown_Vtbl` / `IInspectable_Vtbl`
+/// for the convention used elsewhere in this module; callers pass the IID
+/// explicitly here to keep the helper vtable-agnostic).
+pub fn activationFactory(
+    comptime V: type,
+    iid: *const GUID,
+    class_name: []const u16,
+) !Com(V) {
+    var name = try Hstring.create(class_name);
+    defer name.deinit();
+    var raw: ?*anyopaque = null;
+    try hresult.ok(winrt.RoGetActivationFactory(name.raw, iid, &raw));
+    // The factory must be non-null on success per WinRT contract.
+    return .{ .ptr = @ptrCast(@alignCast(raw.?)) };
+}
+
 // ---- Tests ----------------------------------------------------------------
 
 test "GUID parse roundtrip" {
@@ -729,4 +791,27 @@ test "IInspectable_Vtbl layout extends IUnknown" {
     // `base` must be the first field so IInspectable* is ABI-compatible
     // with IUnknown*.
     try std.testing.expectEqual(@as(usize, 0), @offsetOf(IInspectable_Vtbl, "base"));
+}
+
+test "RoGetActivationFactory returns a working IInspectable" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    try roInitialize(.multi_threaded);
+    defer winrt.RoUninitialize();
+
+    // "Windows.Foundation.Uri" — a pure runtime class with a well-known
+    // activation factory. We ask for the IInspectable face; the factory
+    // must be addressable through it.
+    const class = utf16Lit("Windows.Foundation.Uri");
+    const factory = try activationFactory(IInspectable_Vtbl, &IID_IInspectable, class);
+    defer factory.deinit();
+
+    var trust: i32 = -1;
+    const hr = factory.vtbl().GetTrustLevel(factory.ptr, &trust);
+    try hresult.ok(hr);
+    // Any of the three defined trust levels is acceptable. Shipping Windows
+    // returns `full_trust` in practice, but the contract only guarantees
+    // "one of the defined values".
+    try std.testing.expect(trust >= @intFromEnum(TrustLevel.base_trust) and
+        trust <= @intFromEnum(TrustLevel.full_trust));
 }
