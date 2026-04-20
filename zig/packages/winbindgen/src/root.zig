@@ -1130,10 +1130,10 @@ pub fn emitRuntimeClasses(
                 try writer.print(
                     \\pub const {s} = extern struct {{
                     \\    vtable: *const {s}_Vtbl,
-                    \\    pub const NAME: []const u8 = "{s}.{s}";
-                    \\}};
                     \\
-                , .{ name, tn.name, namespace, name });
+                , .{ name, tn.name });
+                try writeClassNames(writer, namespace, name);
+                try writer.writeAll("};\n");
                 continue;
             }
         }
@@ -1141,11 +1141,39 @@ pub fn emitRuntimeClasses(
         try writer.print(
             \\pub const {s} = extern struct {{
             \\    vtable: *const anyopaque,
-            \\    pub const NAME: []const u8 = "{s}.{s}";
-            \\}};
             \\
-        , .{ name, namespace, name });
+        , .{name});
+        try writeClassNames(writer, namespace, name);
+        try writer.writeAll("};\n");
     }
+}
+
+/// Emit the fully-qualified runtime class name as two compile-time
+/// constants inside a class's `extern struct` body:
+///   - `NAME`: UTF-8 `[]const u8`, handy for logs and diagnostics.
+///   - `NAME_W`: UTF-16 LE array, directly consumable by
+///     `win_core.activationFactory` (which takes `[]const u16`)
+///     and other WinRT string APIs. Runtime class names are ASCII
+///     by contract, so each byte widens 1:1 to a u16 code unit.
+fn writeClassNames(
+    writer: *std.Io.Writer,
+    namespace: []const u8,
+    name: []const u8,
+) !void {
+    try writer.print("    pub const NAME: []const u8 = \"{s}.{s}\";\n", .{ namespace, name });
+    const total_len = namespace.len + 1 + name.len;
+    try writer.print("    pub const NAME_W: [{d}]u16 = .{{", .{total_len});
+    var first = true;
+    for (namespace) |b| {
+        if (!first) try writer.writeAll(",");
+        try writer.print(" {d}", .{b});
+        first = false;
+    }
+    try writer.print(", {d}", .{@as(u8, '.')});
+    for (name) |b| {
+        try writer.print(", {d}", .{b});
+    }
+    try writer.writeAll(" };\n");
 }
 
 /// Emit an opaque handle struct for every WinRT delegate in
@@ -1208,17 +1236,17 @@ test "emitRuntimeClasses writes Uri handle" {
     const out = buf.written();
 
     // `Uri`'s default interface is `IUriRuntimeClass` — same namespace,
-    // non-generic — so we expect a typed vtable pointer and the full
-    // runtime class name baked in as a `NAME` constant.
-    try std.testing.expect(std.mem.indexOf(
-        u8,
-        out,
-        "pub const Uri = extern struct {\n    vtable: *const IUriRuntimeClass_Vtbl,\n    pub const NAME: []const u8 = \"Windows.Foundation.Uri\";\n};",
-    ) != null);
+    // non-generic — so we expect a typed vtable pointer plus both the
+    // UTF-8 `NAME` and UTF-16 `NAME_W` compile-time constants.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Uri = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "vtable: *const IUriRuntimeClass_Vtbl,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.Uri\";") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [22]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 85, 114, 105 };") != null);
 
     // WwwFormUrlDecoder is another Windows.Foundation runtime class.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.WwwFormUrlDecoder\";") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [36]u16 = .{") != null);
 
     // No interface names should appear here — those go through
     // `emitInterfaceHandles`.
