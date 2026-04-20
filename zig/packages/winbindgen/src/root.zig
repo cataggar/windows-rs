@@ -1215,9 +1215,10 @@ test "emitEnums writes AsyncStatus from Windows.Foundation" {
 ///
 /// First-slice scope:
 /// * Only non-generic, non-nested value types.
-/// * Only SequentialLayout (or AutoLayout, treated as sequential for
-///   the handful of metadata quirks). ExplicitLayout / union-shaped
-///   types are skipped — a later slice can emit `extern union`.
+/// * SequentialLayout / AutoLayout types emit as `extern struct`.
+/// * ExplicitLayout value types emit as `extern union` — Win32
+///   metadata uses ExplicitLayout exclusively for C unions (matches
+///   `windows-bindgen` convention).
 /// * If any instance field's type isn't currently representable
 ///   (e.g. a generic type arg), the whole struct is skipped rather
 ///   than emitted with a hole — this keeps the output compilable.
@@ -1257,7 +1258,7 @@ fn emitStructsImpl(
         const flags = file.cell(.type_def, row, 0);
         const vis = flags & VISIBILITY_MASK;
         if (vis != VIS_NOT_PUBLIC and vis != VIS_PUBLIC) continue; // nested
-        if ((flags & LAYOUT_MASK) == LAYOUT_EXPLICIT) continue;
+        const is_union = (flags & LAYOUT_MASK) == LAYOUT_EXPLICIT;
 
         const extends_tok = file.cell(.type_def, row, 3);
         if (extends_tok == 0) continue;
@@ -1292,7 +1293,7 @@ fn emitStructsImpl(
         }
         if (!all_ok) continue;
 
-        try writer.print("pub const {s} = extern struct {{\n", .{name});
+        try writer.print("pub const {s} = extern {s} {{\n", .{ name, if (is_union) "union" else "struct" });
         f = field_list.start;
         while (f < field_list.end) : (f += 1) {
             const field_flags = file.cell(.field, f, 0);
@@ -2237,4 +2238,26 @@ test "emitConstants emits Win32 HRESULT/NTSTATUS typed integer constants" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const FALSE: BOOL = 0;") != null);
     // STATUS_SUCCESS as NTSTATUS.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const STATUS_SUCCESS: NTSTATUS = 0;") != null);
+}
+
+test "emitStructs emits Win32 ExplicitLayout TypeDefs as extern union" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    // Windows.Win32.Storage.FileSystem contains FILE_SEGMENT_ELEMENT —
+    // a simple 2-field C union (Buffer/Alignment). ExplicitLayout in
+    // Win32 metadata always means a C union; windows-bindgen uses the
+    // same convention.
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem");
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const FILE_SEGMENT_ELEMENT = extern union") != null);
+    // And at least one normal struct still emits as `extern struct`.
+    try std.testing.expect(std.mem.indexOf(u8, out, "extern struct") != null);
 }
