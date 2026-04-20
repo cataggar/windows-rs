@@ -1552,6 +1552,50 @@ fn codedWidth(row_counts: []const u32) u8 {
     return 2;
 }
 
+// ---- Mmap-backed loader ---------------------------------------------------
+
+/// Owns a `MemoryMap` + `Io.File` pair together with a parsed `File` view.
+///
+/// Lifetime: `file` borrows from `mmap.memory`, so `MappedFile` must outlive
+/// every use of `file` and its derived `TypeIndex` etc. Call `deinit` to
+/// unmap and close in the correct order.
+pub const MappedFile = struct {
+    mmap: std.Io.File.MemoryMap,
+    io_file: std.Io.File,
+    file: File,
+
+    pub fn deinit(self: *MappedFile, io: std.Io) void {
+        self.mmap.destroy(io);
+        self.io_file.close(io);
+        self.* = undefined;
+    }
+};
+
+pub const OpenError = error{
+    WinmdTooLarge,
+} || Error || std.Io.File.MemoryMap.CreateError || std.Io.File.OpenError || std.Io.File.StatError;
+
+/// Open `sub_path` relative to `dir`, mmap it read-only, and parse the
+/// ECMA-335 metadata. Returned `MappedFile` owns the mapping; call `deinit`
+/// when done. Caller must pass a live `Io` instance (e.g. from
+/// `std.Io.Threaded.init(gpa, .{}).io()`).
+pub fn mmapAndParse(io: std.Io, dir: std.Io.Dir, sub_path: []const u8) OpenError!MappedFile {
+    var f = try dir.openFile(io, sub_path, .{ .mode = .read_only });
+    errdefer f.close(io);
+
+    const stat = try f.stat(io);
+    const len = std.math.cast(usize, stat.size) orelse return error.WinmdTooLarge;
+
+    var mmap = try std.Io.File.MemoryMap.create(io, f, .{
+        .len = len,
+        .protection = .{ .read = true, .write = false },
+    });
+    errdefer mmap.destroy(io);
+
+    const parsed = try parse(mmap.memory[0..len]);
+    return .{ .mmap = mmap, .io_file = f, .file = parsed };
+}
+
 // ---- Tests ----------------------------------------------------------------
 
 test "parse Windows.Win32.winmd and locate Point" {
@@ -1935,4 +1979,31 @@ test "parse Windows.Wdk.winmd: header, TypeIndex, and basic sigs" {
             else => return err,
         };
     }
+}
+
+test "mmapAndParse: load Windows.Win32.winmd from disk" {
+    if (@import("builtin").single_threaded) return error.SkipZigTest;
+
+    const gpa = std.testing.allocator;
+    var io_instance: std.Io.Threaded = .init(gpa, .{});
+    defer io_instance.deinit();
+    const io = io_instance.io();
+
+    // Resolve the vendored metadata relative to the winmd package root.
+    // The test binary's cwd is the build cache dir, so anchor via __FILE__
+    // is unreliable; the path is stable within this repo layout.
+    const repo_root = std.Io.Dir.cwd();
+    const path = "../crates/libs/bindgen/default/Windows.Win32.winmd";
+
+    var mf = mmapAndParse(io, repo_root, path) catch |err| switch (err) {
+        error.FileNotFound => return error.SkipZigTest,
+        else => return err,
+    };
+    defer mf.deinit(io);
+
+    try std.testing.expect(mf.file.rowCount(.type_def) > 5_000);
+
+    var index = try TypeIndex.init(gpa, &mf.file);
+    defer index.deinit();
+    try std.testing.expect(index.contains("Windows.Win32.Foundation", "HWND"));
 }
