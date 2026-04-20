@@ -221,11 +221,6 @@ pub fn emitFreeFunctions(
 
             const method_name = file.str(.method_def, m, 3);
             const import_name = file.implMapImportName(impl_map_row);
-            // Skip the rename case until `@extern(.{ .name = ... })`
-            // surfaces in the emitter; it covers ordinal-only imports
-            // too (metadata stores a decimal-string name for those,
-            // which never matches the MethodDef name).
-            if (!std.mem.eql(u8, method_name, import_name)) continue;
 
             const sig_blob = file.blob(.method_def, m, 4);
             const sig = winmd.readMethodSignature(arena, file, sig_blob) catch continue;
@@ -242,20 +237,47 @@ pub fn emitFreeFunctions(
             const dll_full = file.implMapDll(impl_map_row);
             const dll_base = stripDllSuffix(dll_full);
 
-            try writer.print("pub extern \"{s}\" fn {s}(", .{ dll_base, method_name });
-            for (sig.params, 0..) |p, i| {
-                if (i != 0) try writer.writeAll(", ");
-                try writer.print("p{d}: ", .{i});
-                try writeParam(writer, arena, p, namespace, cross);
-            }
-            try writer.writeAll(") callconv(.winapi) ");
-            if (sig.return_type == .void) {
-                try writer.writeAll("void");
+            if (std.mem.eql(u8, method_name, import_name)) {
+                try writer.print("pub extern \"{s}\" fn {s}", .{ dll_base, method_name });
+                try writeFnSig(writer, arena, sig, namespace, cross, true);
+                try writer.writeAll(";\n");
             } else {
-                _ = try writeZigTy(writer, arena, sig.return_type, namespace, cross);
+                // Renamed / ordinal-only import: metadata's
+                // MethodDef.Name is the Zig-facing identifier,
+                // while ImplMap.ImportName is the real symbol or
+                // "#<ordinal>". Use `@extern` so the two can differ.
+                try writer.print("pub const {s}: *const fn ", .{method_name});
+                try writeFnSig(writer, arena, sig, namespace, cross, false);
+                try writer.writeAll(" = @extern(*const fn ");
+                try writeFnSig(writer, arena, sig, namespace, cross, false);
+                try writer.print(", .{{ .name = \"{s}\", .library_name = \"{s}\" }});\n", .{ import_name, dll_base });
             }
-            try writer.writeAll(";\n");
         }
+    }
+}
+
+/// Write `(p0: T0, p1: T1, ...) callconv(.winapi) R` for a method
+/// signature. When `with_names` is false, parameter names are omitted
+/// so the text can stand in as a function *type* (used by `@extern`).
+fn writeFnSig(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    sig: winmd.MethodSignature,
+    namespace: []const u8,
+    cross: *CrossNsSet,
+    with_names: bool,
+) !void {
+    try writer.writeAll("(");
+    for (sig.params, 0..) |p, i| {
+        if (i != 0) try writer.writeAll(", ");
+        if (with_names) try writer.print("p{d}: ", .{i});
+        try writeParam(writer, arena, p, namespace, cross);
+    }
+    try writer.writeAll(") callconv(.winapi) ");
+    if (sig.return_type == .void) {
+        try writer.writeAll("void");
+    } else {
+        _ = try writeZigTy(writer, arena, sig.return_type, namespace, cross);
     }
 }
 
@@ -1850,6 +1872,29 @@ test "emitFreeFunctions emits kernel32 exports for Windows.Win32.Foundation" {
     // Every emitted line must use the extern / callconv framing —
     // there should never be a bare `fn ` outside `callconv(.winapi)`.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub extern ") != null);
+}
+
+test "emitFreeFunctions uses @extern for renamed P/Invoke (RtlGenRandom)" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    var cross: CrossNsSet = .empty;
+    try emitFreeFunctions(&buf.writer, arena.allocator(), &file, "Windows.Win32.Security.Authentication.Identity", &cross);
+    const out = buf.written();
+
+    // RtlGenRandom is exported from ADVAPI32 under the real name
+    // "SystemFunction036" — a textbook rename that requires
+    // `@extern(.., .{ .name = ..., .library_name = ... })`.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const RtlGenRandom: *const fn ") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "= @extern(*const fn ") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, ".name = \"SystemFunction036\"") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, ".library_name = \"ADVAPI32\"") != null);
 }
 
 test "emitConstants emits primitive Win32 constants" {
