@@ -1135,6 +1135,7 @@ pub fn emitRuntimeClasses(
                 , .{ name, tn.name });
                 try writeClassNames(writer, namespace, name);
                 try writeFactoryAlias(writer, arena, file, row, namespace);
+                try writeStaticsAliases(writer, arena, file, row, namespace);
                 try writer.writeAll("};\n");
                 continue;
             }
@@ -1147,6 +1148,7 @@ pub fn emitRuntimeClasses(
         , .{name});
         try writeClassNames(writer, namespace, name);
         try writeFactoryAlias(writer, arena, file, row, namespace);
+        try writeStaticsAliases(writer, arena, file, row, namespace);
         try writer.writeAll("};\n");
     }
 }
@@ -1248,6 +1250,55 @@ fn activationFactoryName(
     return null;
 }
 
+/// Emit zero or more `Statics` aliases on a runtime class's body —
+/// one per `[Static(typeof(IFooStatics), version)]` custom attribute.
+/// A class may advertise several statics interfaces across contract
+/// versions (e.g. `IUriRuntimeClassStatics` plus
+/// `IUriRuntimeClassStatics2`); the aliases are numbered in the
+/// order metadata presents them:
+///
+///     pub const Statics  = IUriRuntimeClassStatics;
+///     pub const Statics2 = IUriRuntimeClassStatics2;
+///
+/// Callers reach the IID via `Class.Statics.IID` and activate via
+/// `win_core.activationFactory(IFooStatics_Vtbl, &Class.Statics.IID,
+/// &Class.NAME_W)` — the same shape as `Factory`.
+///
+/// Only same-namespace, non-generic interfaces are aliased; anything
+/// else is skipped silently and picked up by the cross-namespace
+/// import slice.
+fn writeStaticsAliases(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    class_row: u32,
+    namespace: []const u8,
+) !void {
+    const range = winmd.attributes(file, .type_def, class_row);
+    var i = range.start;
+    var index: u32 = 0;
+    while (i < range.end) : (i += 1) {
+        const tn = winmd.attributeName(file, i) orelse continue;
+        if (!std.mem.eql(u8, tn.name, "StaticAttribute")) continue;
+
+        const args = winmd.readAttributeArgs(arena, file, i) catch continue;
+        if (args.len == 0) continue;
+        const statics = switch (args[0].value) {
+            .type_name => |t| t,
+            else => continue,
+        };
+        if (!std.mem.eql(u8, statics.namespace, namespace)) continue;
+        if (std.mem.indexOfScalar(u8, statics.name, '`') != null) continue;
+
+        index += 1;
+        if (index == 1) {
+            try writer.print("    pub const Statics = {s};\n", .{statics.name});
+        } else {
+            try writer.print("    pub const Statics{d} = {s};\n", .{ index, statics.name });
+        }
+    }
+}
+
 /// Emit an opaque handle struct for every WinRT delegate in
 /// `namespace`. Delegates (function-pointer contracts like
 /// `AsyncActionCompletedHandler`) are TypeDefs whose base is
@@ -1320,6 +1371,13 @@ test "emitRuntimeClasses writes Uri handle" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.Uri\";") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [22]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 85, 114, 105 };") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const Factory = IUriRuntimeClassFactory;") != null);
+    // `Uri` carries `[Static(typeof(IUriEscapeStatics), ...)]`, the
+    // home of `UnescapeComponent` / `EscapeComponent`.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Statics = IUriEscapeStatics;") != null);
+    // `GuidHelper` and `PropertyValue` are static-only runtime
+    // classes in the same namespace — both should pick up the alias.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Statics = IGuidHelperStatics;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Statics = IPropertyValueStatics;") != null);
 
     // WwwFormUrlDecoder is another Windows.Foundation runtime class.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
