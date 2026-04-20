@@ -57,6 +57,11 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     winbindgen_mod.addImport("winmd", winmd_mod);
+    // Same vendored metadata as `winmd` — exposed here so winbindgen's own
+    // tests (which drive the code generator end-to-end) can `@embedFile` them.
+    winbindgen_mod.addAnonymousImport("Windows.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
+    });
 
     const win_sys_mod = b.addModule("win-sys", .{
         .root_source_file = b.path("packages/win-sys/src/root.zig"),
