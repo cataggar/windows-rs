@@ -142,6 +142,7 @@ test "emitIidConstants writes IStringable from Windows.Foundation" {
 /// metadata we consume has none).
 pub fn emitInterfaceVtbls(
     writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
 ) !void {
@@ -167,29 +168,170 @@ pub fn emitInterfaceVtbls(
         var m = methods.start;
         while (m < methods.end) : (m += 1) {
             const method_name = file.str(.method_def, m, 3);
-            try writer.print("    {s}: *const anyopaque,\n", .{method_name});
+            try writer.print("    {s}: ", .{method_name});
+            try writeMethodPointer(writer, arena, file, m);
+            try writer.writeAll(",\n");
         }
 
         try writer.writeAll("};\n");
     }
 }
 
+/// Emit a function-pointer type for a single MethodDef row, WinRT-ABI
+/// shaped: `*const fn(this: *anyopaque, <in/out params>) callconv(.winapi) HRESULT`.
+///
+/// Any type in the signature that the first-slice type mapper cannot
+/// render falls the whole method back to `*const anyopaque`, so new
+/// type support can be added incrementally without breaking existing
+/// fixtures.
+fn writeMethodPointer(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    method_row: u32,
+) !void {
+    const sig_blob = file.blob(.method_def, method_row, 4);
+    const sig = winmd.readMethodSignature(arena, file, sig_blob) catch {
+        try writer.writeAll("*const anyopaque");
+        return;
+    };
+
+    // Representability check: every param + return must be renderable
+    // by `writeZigTy`, otherwise emit the opaque fallback.
+    if (!canRepresent(sig.return_type)) {
+        try writer.writeAll("*const anyopaque");
+        return;
+    }
+    for (sig.params) |p| {
+        if (!canRepresent(p)) {
+            try writer.writeAll("*const anyopaque");
+            return;
+        }
+    }
+
+    try writer.writeAll("*const fn (this: *anyopaque");
+    for (sig.params, 0..) |p, i| {
+        try writer.print(", p{d}: ", .{i});
+        try writeParam(writer, p);
+    }
+    if (sig.return_type != .void) {
+        try writer.writeAll(", result: *");
+        _ = try writeZigTy(writer, sig.return_type);
+    }
+    try writer.writeAll(") callconv(.winapi) HRESULT");
+}
+
+/// One parameter slot. WinRT conventions: `[out]` params arrive as
+/// `ELEMENT_TYPE_BYREF T` in the metadata blob (decoded as `ref_mut`
+/// / `ref_const` here). We render those as `*T` / `*const T`. In
+/// params are passed by value.
+fn writeParam(writer: *std.Io.Writer, ty: winmd.Ty) !void {
+    switch (ty) {
+        .ref_mut => |inner| {
+            try writer.writeAll("*");
+            _ = try writeZigTy(writer, inner.*);
+        },
+        .ref_const => |inner| {
+            try writer.writeAll("*const ");
+            _ = try writeZigTy(writer, inner.*);
+        },
+        else => _ = try writeZigTy(writer, ty),
+    }
+}
+
+/// Returns true iff `writeZigTy` / `writeParam` can render `ty` as
+/// a concrete Zig type with current first-slice support.
+fn canRepresent(ty: winmd.Ty) bool {
+    return switch (ty) {
+        .void,
+        .bool,
+        .char,
+        .i8,
+        .u8,
+        .i16,
+        .u16,
+        .i32,
+        .u32,
+        .i64,
+        .u64,
+        .f32,
+        .f64,
+        .string,
+        => true,
+        .ref_mut, .ref_const => |inner| canRepresent(inner.*),
+        .ptr_mut => |p| canRepresent(p.inner.*),
+        .ptr_const => |p| canRepresent(p.inner.*),
+        else => false,
+    };
+}
+
+/// Write a Zig type name for `ty`. Caller must have already verified
+/// via `canRepresent` that `ty` is supported; this function never
+/// returns `false` for supported input.
+fn writeZigTy(writer: *std.Io.Writer, ty: winmd.Ty) !bool {
+    switch (ty) {
+        .void => try writer.writeAll("void"),
+        .bool => try writer.writeAll("BOOL"),
+        .char => try writer.writeAll("u16"),
+        .i8 => try writer.writeAll("i8"),
+        .u8 => try writer.writeAll("u8"),
+        .i16 => try writer.writeAll("i16"),
+        .u16 => try writer.writeAll("u16"),
+        .i32 => try writer.writeAll("i32"),
+        .u32 => try writer.writeAll("u32"),
+        .i64 => try writer.writeAll("i64"),
+        .u64 => try writer.writeAll("u64"),
+        .f32 => try writer.writeAll("f32"),
+        .f64 => try writer.writeAll("f64"),
+        .string => try writer.writeAll("HSTRING"),
+        .ptr_mut => |p| {
+            var d: u32 = 0;
+            while (d < p.depth) : (d += 1) try writer.writeAll("*");
+            return writeZigTy(writer, p.inner.*);
+        },
+        .ptr_const => |p| {
+            var d: u32 = 0;
+            while (d < p.depth) : (d += 1) try writer.writeAll("*const ");
+            return writeZigTy(writer, p.inner.*);
+        },
+        else => return false,
+    }
+    return true;
+}
+
 test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     const bytes = @embedFile("Windows.winmd");
     var file = try winmd.parse(bytes);
 
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitInterfaceVtbls(&buf.writer, &file, "Windows.Foundation");
+    try emitInterfaceVtbls(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
     const out = buf.written();
 
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable_Vtbl = extern struct {") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "base: IInspectable_Vtbl") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "ToString: *const anyopaque") != null);
+    // IStringable.ToString: `HSTRING ToString()` → typed signature with
+    // a trailing *HSTRING out param and HRESULT return.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "ToString: *const fn (this: *anyopaque, result: *HSTRING) callconv(.winapi) HRESULT",
+    ) != null);
 
-    // IClosable.Close is a second canonical single-method interface —
-    // ensures we're not accidentally one-shot.
+    // IClosable.Close: `void Close()` → no trailing out param.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const IClosable_Vtbl = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "Close: *const anyopaque") != null);
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "Close: *const fn (this: *anyopaque) callconv(.winapi) HRESULT",
+    ) != null);
+
+    // At least one interface in Windows.Foundation uses types we don't
+    // yet support (e.g. `IReference`1` methods with classes) — those
+    // must degrade to opaque rather than fail the whole emit.
+    try std.testing.expect(std.mem.indexOf(u8, out, "*const anyopaque") != null);
 }
