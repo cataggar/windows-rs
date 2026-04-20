@@ -352,6 +352,305 @@ fn joinKey(alloc: std.mem.Allocator, namespace: []const u8, name: []const u8) ![
     return buf;
 }
 
+// ---- Signatures (ECMA-335 §II.23.2) --------------------------------------
+
+/// A namespace-qualified type reference extracted from a signature blob.
+/// Slices borrow from the parent `File.bytes` and must not outlive it.
+pub const TypeName = struct {
+    namespace: []const u8,
+    name: []const u8,
+};
+
+/// Decoded signature element tree. Recursive variants allocate their
+/// children in the arena passed to `readFieldSignature` / `readTypeSignature`;
+/// the whole tree is freed when the arena resets.
+pub const Ty = union(enum) {
+    void,
+    bool,
+    char,
+    i8,
+    u8,
+    i16,
+    u16,
+    i32,
+    u32,
+    i64,
+    u64,
+    f32,
+    f64,
+    isize,
+    usize,
+    string,
+    object,
+    /// ELEMENT_TYPE_VALUETYPE + TypeDefOrRef → a struct/enum.
+    value_name: TypeName,
+    /// ELEMENT_TYPE_CLASS + TypeDefOrRef → a COM/WinRT interface or class.
+    class_name: TypeName,
+    /// `depth` consecutive ELEMENT_TYPE_PTR wrappers around `inner`.
+    ptr_mut: struct { inner: *const Ty, depth: u32 },
+    ptr_const: struct { inner: *const Ty, depth: u32 },
+    /// ELEMENT_TYPE_BYREF (non-const).
+    ref_mut: *const Ty,
+    /// IsConst modopt without pointer indirection.
+    ref_const: *const Ty,
+    /// ELEMENT_TYPE_SZARRAY — single-dimension zero-based array.
+    array: *const Ty,
+    /// ELEMENT_TYPE_ARRAY with rank 1 and an explicit fixed size.
+    array_fixed: struct { inner: *const Ty, size: u32 },
+};
+
+/// CIL ELEMENT_TYPE codes we care about (ECMA-335 §II.23.1.16).
+const ELEMENT_TYPE_VOID: u8 = 0x01;
+const ELEMENT_TYPE_BOOLEAN: u8 = 0x02;
+const ELEMENT_TYPE_CHAR: u8 = 0x03;
+const ELEMENT_TYPE_I1: u8 = 0x04;
+const ELEMENT_TYPE_U1: u8 = 0x05;
+const ELEMENT_TYPE_I2: u8 = 0x06;
+const ELEMENT_TYPE_U2: u8 = 0x07;
+const ELEMENT_TYPE_I4: u8 = 0x08;
+const ELEMENT_TYPE_U4: u8 = 0x09;
+const ELEMENT_TYPE_I8: u8 = 0x0A;
+const ELEMENT_TYPE_U8: u8 = 0x0B;
+const ELEMENT_TYPE_R4: u8 = 0x0C;
+const ELEMENT_TYPE_R8: u8 = 0x0D;
+const ELEMENT_TYPE_STRING: u8 = 0x0E;
+const ELEMENT_TYPE_PTR: u8 = 0x0F;
+const ELEMENT_TYPE_BYREF: u8 = 0x10;
+const ELEMENT_TYPE_VALUETYPE: u8 = 0x11;
+const ELEMENT_TYPE_CLASS: u8 = 0x12;
+const ELEMENT_TYPE_VAR: u8 = 0x13;
+const ELEMENT_TYPE_ARRAY: u8 = 0x14;
+const ELEMENT_TYPE_GENERICINST: u8 = 0x15;
+const ELEMENT_TYPE_I: u8 = 0x18;
+const ELEMENT_TYPE_U: u8 = 0x19;
+const ELEMENT_TYPE_OBJECT: u8 = 0x1C;
+const ELEMENT_TYPE_SZARRAY: u8 = 0x1D;
+const ELEMENT_TYPE_CMOD_REQD: u8 = 0x1F;
+const ELEMENT_TYPE_CMOD_OPT: u8 = 0x20;
+
+/// Calling-convention byte that prefixes a field signature.
+const FIELD_SIG_PROLOG: u8 = 0x06;
+
+pub const SigError = error{
+    ShortBlob,
+    BadFieldProlog,
+    TrailingBytes,
+    InvalidCodedToken,
+    UnsupportedElement,
+    OutOfMemory,
+};
+
+/// Cursor over a signature blob. Keeps no ownership — `bytes` borrows
+/// from the owning `File`.
+const SigCursor = struct {
+    bytes: []const u8,
+    pos: usize = 0,
+
+    fn remaining(self: SigCursor) []const u8 {
+        return self.bytes[self.pos..];
+    }
+
+    fn eof(self: SigCursor) bool {
+        return self.pos >= self.bytes.len;
+    }
+
+    fn readU8(self: *SigCursor) !u8 {
+        if (self.pos >= self.bytes.len) return error.ShortBlob;
+        const v = self.bytes[self.pos];
+        self.pos += 1;
+        return v;
+    }
+
+    /// Peek a §II.24.2.4 compressed unsigned integer without consuming it.
+    fn peekCompressed(self: SigCursor) !struct { value: u32, size: u8 } {
+        if (self.pos >= self.bytes.len) return error.ShortBlob;
+        const b0 = self.bytes[self.pos];
+        if ((b0 & 0x80) == 0) {
+            return .{ .value = b0 & 0x7F, .size = 1 };
+        } else if ((b0 & 0xC0) == 0x80) {
+            if (self.pos + 1 >= self.bytes.len) return error.ShortBlob;
+            const b1 = self.bytes[self.pos + 1];
+            return .{ .value = (@as(u32, b0 & 0x3F) << 8) | b1, .size = 2 };
+        } else {
+            if (self.pos + 3 >= self.bytes.len) return error.ShortBlob;
+            const b1 = self.bytes[self.pos + 1];
+            const b2 = self.bytes[self.pos + 2];
+            const b3 = self.bytes[self.pos + 3];
+            return .{
+                .value = (@as(u32, b0 & 0x1F) << 24) |
+                    (@as(u32, b1) << 16) |
+                    (@as(u32, b2) << 8) |
+                    b3,
+                .size = 4,
+            };
+        }
+    }
+
+    fn readCompressed(self: *SigCursor) !u32 {
+        const p = try self.peekCompressed();
+        self.pos += p.size;
+        return p.value;
+    }
+
+    /// If the next compressed int equals `expected`, consume it and return true.
+    fn tryRead(self: *SigCursor, expected: u32) bool {
+        const p = self.peekCompressed() catch return false;
+        if (p.value != expected) return false;
+        self.pos += p.size;
+        return true;
+    }
+
+    /// Skip any leading CMOD_OPT/CMOD_REQD modifiers. Returns whether an
+    /// `IsConst` modopt was encountered (`System.Runtime.CompilerServices.IsConst`).
+    fn readModifiers(self: *SigCursor, file: *const File) !bool {
+        var is_const = false;
+        while (true) {
+            const p = self.peekCompressed() catch return is_const;
+            if (p.value != ELEMENT_TYPE_CMOD_OPT and p.value != ELEMENT_TYPE_CMOD_REQD) return is_const;
+            self.pos += p.size;
+            const tok = try self.readCompressed();
+            const name = resolveTypeDefOrRefName(file, tok) catch continue;
+            if (std.mem.eql(u8, name.namespace, "System.Runtime.CompilerServices") and
+                std.mem.eql(u8, name.name, "IsConst"))
+            {
+                is_const = true;
+            }
+        }
+    }
+};
+
+/// Decode a `TypeDefOrRef` coded token as it appears inside a signature blob.
+/// The token is a compressed unsigned integer with layout `(row << 2) | tag`,
+/// where row is 1-based (§II.23.2.8, II.24.2.6).
+fn resolveTypeDefOrRefName(file: *const File, token: u32) !TypeName {
+    const tag: u2 = @intCast(token & 0b11);
+    const row_1based: u32 = token >> 2;
+    if (row_1based == 0) return error.InvalidCodedToken;
+    const row = row_1based - 1;
+    switch (tag) {
+        0 => { // TypeDef
+            if (row >= file.rowCount(.type_def)) return error.InvalidCodedToken;
+            return .{
+                .namespace = file.str(.type_def, row, 2),
+                .name = file.str(.type_def, row, 1),
+            };
+        },
+        1 => { // TypeRef
+            if (row >= file.rowCount(.type_ref)) return error.InvalidCodedToken;
+            return .{
+                .namespace = file.str(.type_ref, row, 2),
+                .name = file.str(.type_ref, row, 1),
+            };
+        },
+        2 => return error.UnsupportedElement, // TypeSpec — not yet supported
+        else => return error.InvalidCodedToken,
+    }
+}
+
+fn boxTy(arena: std.mem.Allocator, value: Ty) !*const Ty {
+    const p = try arena.create(Ty);
+    p.* = value;
+    return p;
+}
+
+/// Decode a field signature blob (ECMA-335 §II.23.2.4).
+///
+///     FieldSig := FIELD (0x06) CustomMod* Type
+///
+/// Returns `error.BadFieldProlog` if the leading byte is wrong, or
+/// `error.TrailingBytes` if the blob contains data past the decoded type.
+pub fn readFieldSignature(arena: std.mem.Allocator, file: *const File, blob: []const u8) SigError!Ty {
+    var c: SigCursor = .{ .bytes = blob };
+    const prolog = try c.readU8();
+    if (prolog != FIELD_SIG_PROLOG) return error.BadFieldProlog;
+    const ty = try readTypeSignature(arena, file, &c);
+    if (!c.eof()) return error.TrailingBytes;
+    return ty;
+}
+
+/// Decode one `Type` element. Mirrors `Blob::read_type_signature` in the Rust
+/// reader but without the `generics` context — ELEMENT_TYPE_VAR and
+/// ELEMENT_TYPE_GENERICINST are deferred to a later phase.
+pub fn readTypeSignature(arena: std.mem.Allocator, file: *const File, c: *SigCursor) SigError!Ty {
+    const is_const = try c.readModifiers(file);
+    const is_ref = c.tryRead(ELEMENT_TYPE_BYREF);
+
+    if (c.tryRead(ELEMENT_TYPE_VOID)) return .void;
+
+    const is_array = c.tryRead(ELEMENT_TYPE_SZARRAY);
+
+    var pointers: u32 = 0;
+    while (c.tryRead(ELEMENT_TYPE_PTR)) : (pointers += 1) {}
+
+    const inner = try readTypeCode(arena, file, c);
+
+    if (pointers > 0) {
+        const child = try boxTy(arena, inner);
+        const ptr: Ty = if (is_const)
+            .{ .ptr_const = .{ .inner = child, .depth = pointers } }
+        else
+            .{ .ptr_mut = .{ .inner = child, .depth = pointers } };
+        if (is_array) return .{ .array = try boxTy(arena, ptr) };
+        if (is_ref) return .{ .ref_mut = try boxTy(arena, ptr) };
+        return ptr;
+    }
+    if (is_array) {
+        const arr: Ty = .{ .array = try boxTy(arena, inner) };
+        if (is_ref) return .{ .ref_mut = try boxTy(arena, arr) };
+        return arr;
+    }
+    if (is_const) return .{ .ref_const = try boxTy(arena, inner) };
+    if (is_ref) return .{ .ref_mut = try boxTy(arena, inner) };
+    return inner;
+}
+
+/// Decode the single-byte type code that identifies the kind of `Type`
+/// (§II.23.1.16 + §II.23.2.12). This is the recursive heart of the
+/// signature decoder.
+pub fn readTypeCode(arena: std.mem.Allocator, file: *const File, c: *SigCursor) SigError!Ty {
+    const code = try c.readU8();
+    return switch (code) {
+        ELEMENT_TYPE_VOID => .void,
+        ELEMENT_TYPE_BOOLEAN => .bool,
+        ELEMENT_TYPE_CHAR => .char,
+        ELEMENT_TYPE_I1 => .i8,
+        ELEMENT_TYPE_U1 => .u8,
+        ELEMENT_TYPE_I2 => .i16,
+        ELEMENT_TYPE_U2 => .u16,
+        ELEMENT_TYPE_I4 => .i32,
+        ELEMENT_TYPE_U4 => .u32,
+        ELEMENT_TYPE_I8 => .i64,
+        ELEMENT_TYPE_U8 => .u64,
+        ELEMENT_TYPE_R4 => .f32,
+        ELEMENT_TYPE_R8 => .f64,
+        ELEMENT_TYPE_I => .isize,
+        ELEMENT_TYPE_U => .usize,
+        ELEMENT_TYPE_STRING => .string,
+        ELEMENT_TYPE_OBJECT => .object,
+        ELEMENT_TYPE_VALUETYPE => .{ .value_name = try resolveTypeDefOrRefName(file, try c.readCompressed()) },
+        ELEMENT_TYPE_CLASS => .{ .class_name = try resolveTypeDefOrRefName(file, try c.readCompressed()) },
+        ELEMENT_TYPE_ARRAY => blk: {
+            // II.23.2.13 ArrayShape: Type Rank NumSizes Size* NumLoBounds LoBound*.
+            // Only rank-1, single-size arrays are supported in this port.
+            const inner = try readTypeSignature(arena, file, c);
+            const rank = try c.readCompressed();
+            if (rank != 1) return error.UnsupportedElement;
+            const num_sizes = try c.readCompressed();
+            if (num_sizes != 1) return error.UnsupportedElement;
+            const size = try c.readCompressed();
+            const num_lo = try c.readCompressed();
+            if (num_lo > 1) return error.UnsupportedElement;
+            var i: u32 = 0;
+            while (i < num_lo) : (i += 1) {
+                _ = try c.readCompressed();
+            }
+            break :blk .{ .array_fixed = .{ .inner = try boxTy(arena, inner), .size = size } };
+        },
+        ELEMENT_TYPE_VAR, ELEMENT_TYPE_GENERICINST => error.UnsupportedElement,
+        else => error.UnsupportedElement,
+    };
+}
+
 // ---- PE / COR20 constants -------------------------------------------------
 
 const IMAGE_DOS_SIGNATURE: u16 = 0x5A4D; // "MZ"
@@ -882,4 +1181,34 @@ test "TypeIndex locates Point and exercises parent/equalRange" {
     // assemblyName may be null for merged/special winmds; just confirm the
     // call doesn't panic and produces a consistent result.
     _ = f.assemblyName();
+}
+
+test "field signature decodes Point.X/Y as f32" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+    const point_row = index.get("Windows.Foundation", "Point")[0];
+    const fields = f.list(.type_def, point_row, 4, .field);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const x_sig = f.blob(.field, fields.start, 2);
+    // Field signature for a primitive: prolog byte (0x06) + element type.
+    try std.testing.expectEqual(@as(usize, 2), x_sig.len);
+    try std.testing.expectEqual(@as(u8, 0x06), x_sig[0]);
+    try std.testing.expectEqual(@as(u8, ELEMENT_TYPE_R4), x_sig[1]);
+
+    const x_ty = try readFieldSignature(arena.allocator(), &f, x_sig);
+    try std.testing.expectEqual(Ty.f32, x_ty);
+
+    const y_ty = try readFieldSignature(arena.allocator(), &f, f.blob(.field, fields.start + 1, 2));
+    try std.testing.expectEqual(Ty.f32, y_ty);
+
+    // Malformed blob with trailing bytes must be rejected.
+    try std.testing.expectError(error.TrailingBytes, readFieldSignature(arena.allocator(), &f, &[_]u8{ 0x06, 0x0C, 0x0C }));
+    // Wrong prolog must be rejected.
+    try std.testing.expectError(error.BadFieldProlog, readFieldSignature(arena.allocator(), &f, &[_]u8{ 0x07, 0x0C }));
 }
