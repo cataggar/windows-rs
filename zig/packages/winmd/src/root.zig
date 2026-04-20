@@ -91,7 +91,7 @@ pub const File = struct {
     }
 
     /// Read `column` of `row` in `table` as a usize. Returns 0 for empty tables.
-    pub fn cell(self: *const File, table: Table, row: u32, column: u2) u32 {
+    pub fn cell(self: *const File, table: Table, row: u32, column: u3) u32 {
         const t = &self.tables[@intFromEnum(table)];
         const col = t.columns[column];
         const offset = t.offset + row * @as(u32, t.width) + col.offset;
@@ -103,12 +103,76 @@ pub const File = struct {
     }
 
     /// Read `column` of `row` in `table` as a string from the #Strings heap.
-    pub fn str(self: *const File, table: Table, row: u32, column: u2) []const u8 {
+    pub fn str(self: *const File, table: Table, row: u32, column: u3) []const u8 {
         return self.strAt(self.cell(table, row, column));
     }
 
     pub fn rowCount(self: *const File, table: Table) u32 {
         return self.tables[@intFromEnum(table)].len;
+    }
+
+    /// Read `column` of `row` in `table` as a variable-length blob from the
+    /// #Blob heap. Returns a zero-copy slice into `bytes`. The leading
+    /// compressed length prefix is stripped.
+    pub fn blob(self: *const File, table: Table, row: u32, column: u3) []const u8 {
+        const offset = self.blobs + self.cell(table, row, column);
+        if (offset >= self.bytes.len) return &.{};
+        const initial: u8 = self.bytes[offset];
+        var size: usize = 0;
+        var prefix_len: usize = 0;
+        // ECMA-335 §II.24.2.4 compressed unsigned integer encoding.
+        if ((initial & 0x80) == 0) {
+            size = initial & 0x7f;
+            prefix_len = 1;
+        } else if ((initial & 0xC0) == 0x80) {
+            size = (@as(usize, initial & 0x3f) << 8) | self.bytes[offset + 1];
+            prefix_len = 2;
+        } else {
+            size = (@as(usize, initial & 0x1f) << 24) |
+                (@as(usize, self.bytes[offset + 1]) << 16) |
+                (@as(usize, self.bytes[offset + 2]) << 8) |
+                self.bytes[offset + 3];
+            prefix_len = 4;
+        }
+        const start = offset + prefix_len;
+        const end = start + size;
+        if (end > self.bytes.len) return &.{};
+        return self.bytes[start..end];
+    }
+
+    /// Read `column` of `row` in `table` as a 16-byte GUID from the #GUID
+    /// heap. Indices are 1-based; 0 means "no GUID" and returns all zeros.
+    pub fn guid(self: *const File, table: Table, row: u32, column: u3) [16]u8 {
+        const index = self.cell(table, row, column);
+        if (index == 0) return [_]u8{0} ** 16;
+        const offset = self.guids + (index - 1) * 16;
+        var out: [16]u8 = undefined;
+        @memcpy(&out, self.bytes[offset..][0..16]);
+        return out;
+    }
+
+    /// Read a list-column range: the half-open row range in `other_table`
+    /// owned by `row` of `table`, column `column`. The column stores a
+    /// 1-based index into `other_table`; the range ends where the next
+    /// row's column starts (or at the end of `other_table` for the last row).
+    pub fn list(self: *const File, table: Table, row: u32, column: u3, other_table: Table) Range {
+        const first = self.cell(table, row, column) -% 1;
+        const t = &self.tables[@intFromEnum(table)];
+        const last = if (row + 1 < t.len)
+            self.cell(table, row + 1, column) - 1
+        else
+            self.tables[@intFromEnum(other_table)].len;
+        return .{ .start = first, .end = last };
+    }
+};
+
+/// Half-open range `[start, end)` of rows in a child table.
+pub const Range = struct {
+    start: u32,
+    end: u32,
+
+    pub fn len(self: Range) u32 {
+        return self.end - self.start;
     }
 };
 
@@ -587,15 +651,27 @@ test "parse Windows.Win32.winmd and locate Point" {
     //   0: Flags (u32)   1: Name (str)   2: Namespace (str)
     //   3: Extends (TypeDefOrRef)   4: FieldList   5: MethodList
     const rows = f.rowCount(.type_def);
-    var found = false;
+    var point_row: ?u32 = null;
     var row: u32 = 0;
     while (row < rows) : (row += 1) {
         const ns = f.str(.type_def, row, 2);
         const name = f.str(.type_def, row, 1);
         if (std.mem.eql(u8, ns, "Windows.Foundation") and std.mem.eql(u8, name, "Point")) {
-            found = true;
+            point_row = row;
             break;
         }
     }
-    try std.testing.expect(found);
+    try std.testing.expect(point_row != null);
+
+    // Point is a struct with two f32 fields (X, Y). Exercise list(): the
+    // FieldList column (4) names a range of rows in the Field table.
+    const fields = f.list(.type_def, point_row.?, 4, .field);
+    try std.testing.expectEqual(@as(u32, 2), fields.len());
+    try std.testing.expectEqualStrings("X", f.str(.field, fields.start, 1));
+    try std.testing.expectEqualStrings("Y", f.str(.field, fields.start + 1, 1));
+
+    // Each Field has a non-empty signature blob (column 2). Don't decode it
+    // yet, just make sure the blob reader produces a plausible slice.
+    const sig = f.blob(.field, fields.start, 2);
+    try std.testing.expect(sig.len > 0);
 }
