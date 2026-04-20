@@ -79,7 +79,7 @@ pub fn emitNamespace(
     try emitStructsImpl(body_writer, arena, file, namespace, &cross);
     try emitInterfaceHandles(body_writer, arena, file, namespace, &cross);
     try emitDelegates(body_writer, file, namespace);
-    try emitRuntimeClasses(body_writer, arena, file, namespace);
+    try emitRuntimeClasses(body_writer, arena, file, namespace, &cross);
     try emitInterfaceVtblsImpl(body_writer, arena, file, namespace, &cross);
 
     try writer.writeAll(
@@ -1088,6 +1088,7 @@ pub fn emitRuntimeClasses(
     arena: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
+    cross: *CrossNsSet,
 ) !void {
     const VISIBILITY_MASK: u32 = 0x7;
     const VIS_NOT_PUBLIC: u32 = 0x0;
@@ -1134,8 +1135,8 @@ pub fn emitRuntimeClasses(
                     \\
                 , .{ name, tn.name });
                 try writeClassNames(writer, namespace, name);
-                try writeFactoryAlias(writer, arena, file, row, namespace);
-                try writeStaticsAliases(writer, arena, file, row, namespace);
+                try writeFactoryAlias(writer, arena, file, row, namespace, cross);
+                try writeStaticsAliases(writer, arena, file, row, namespace, cross);
                 try writer.writeAll("};\n");
                 continue;
             }
@@ -1147,8 +1148,8 @@ pub fn emitRuntimeClasses(
             \\
         , .{name});
         try writeClassNames(writer, namespace, name);
-        try writeFactoryAlias(writer, arena, file, row, namespace);
-        try writeStaticsAliases(writer, arena, file, row, namespace);
+        try writeFactoryAlias(writer, arena, file, row, namespace, cross);
+        try writeStaticsAliases(writer, arena, file, row, namespace, cross);
         try writer.writeAll("};\n");
     }
 }
@@ -1188,10 +1189,15 @@ fn writeClassNames(
 ///
 /// Classes with only the parameterless `[Activatable(version)]`
 /// overload activate through the generic `IActivationFactory` and
-/// need no class-specific alias — they are skipped. Classes whose
-/// factory interface lives in a different namespace are also skipped
-/// for now; cross-namespace factory aliases land alongside the rest
-/// of the cross-namespace imports.
+/// need no class-specific alias — they are skipped.
+///
+/// When the factory lives in a different projectable namespace
+/// (`Windows.*`) the alias is qualified through the namespace import
+/// block: `pub const Factory = @"Windows.Foo".IFooFactory;`, and the
+/// factory's namespace is recorded in `cross` so `emitNamespace`
+/// threads the matching `@import` into the file header. Generic
+/// factory interfaces and non-projectable namespaces are dropped
+/// silently.
 ///
 /// The emitted alias names the factory's *handle* type (not its
 /// `_Vtbl`) so callers reach `.IID`, the IUnknown wrappers, and any
@@ -1205,11 +1211,16 @@ fn writeFactoryAlias(
     file: *const winmd.File,
     class_row: u32,
     namespace: []const u8,
+    cross: *CrossNsSet,
 ) !void {
     const factory = activationFactoryName(arena, file, class_row) orelse return;
-    if (!std.mem.eql(u8, factory.namespace, namespace)) return;
     if (std.mem.indexOfScalar(u8, factory.name, '`') != null) return;
-    try writer.print("    pub const Factory = {s};\n", .{factory.name});
+    if (std.mem.eql(u8, factory.namespace, namespace)) {
+        try writer.print("    pub const Factory = {s};\n", .{factory.name});
+    } else if (isProjectableNs(factory.namespace)) {
+        try cross.put(arena, factory.namespace, {});
+        try writer.print("    pub const Factory = @\"{s}\".{s};\n", .{ factory.namespace, factory.name });
+    }
 }
 
 /// Scan the custom attributes on runtime-class row `class_row` for
@@ -1264,15 +1275,17 @@ fn activationFactoryName(
 /// `win_core.activationFactory(IFooStatics_Vtbl, &Class.Statics.IID,
 /// &Class.NAME_W)` — the same shape as `Factory`.
 ///
-/// Only same-namespace, non-generic interfaces are aliased; anything
-/// else is skipped silently and picked up by the cross-namespace
-/// import slice.
+/// Cross-namespace statics interfaces (inside another `Windows.*`
+/// namespace) are qualified via the namespace import block and
+/// recorded in `cross`; generic and non-projectable interfaces are
+/// skipped silently.
 fn writeStaticsAliases(
     writer: *std.Io.Writer,
     arena: std.mem.Allocator,
     file: *const winmd.File,
     class_row: u32,
     namespace: []const u8,
+    cross: *CrossNsSet,
 ) !void {
     const range = winmd.attributes(file, .type_def, class_row);
     var i = range.start;
@@ -1287,14 +1300,25 @@ fn writeStaticsAliases(
             .type_name => |t| t,
             else => continue,
         };
-        if (!std.mem.eql(u8, statics.namespace, namespace)) continue;
         if (std.mem.indexOfScalar(u8, statics.name, '`') != null) continue;
 
+        const same_ns = std.mem.eql(u8, statics.namespace, namespace);
+        if (!same_ns and !isProjectableNs(statics.namespace)) continue;
+
         index += 1;
-        if (index == 1) {
-            try writer.print("    pub const Statics = {s};\n", .{statics.name});
+        if (same_ns) {
+            if (index == 1) {
+                try writer.print("    pub const Statics = {s};\n", .{statics.name});
+            } else {
+                try writer.print("    pub const Statics{d} = {s};\n", .{ index, statics.name });
+            }
         } else {
-            try writer.print("    pub const Statics{d} = {s};\n", .{ index, statics.name });
+            try cross.put(arena, statics.namespace, {});
+            if (index == 1) {
+                try writer.print("    pub const Statics = @\"{s}\".{s};\n", .{ statics.namespace, statics.name });
+            } else {
+                try writer.print("    pub const Statics{d} = @\"{s}\".{s};\n", .{ index, statics.namespace, statics.name });
+            }
         }
     }
 }
@@ -1358,7 +1382,9 @@ test "emitRuntimeClasses writes Uri handle" {
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitRuntimeClasses(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    var cross: CrossNsSet = .empty;
+
+    try emitRuntimeClasses(&buf.writer, arena.allocator(), &file, "Windows.Foundation", &cross);
     const out = buf.written();
 
     // `Uri`'s default interface is `IUriRuntimeClass` — same namespace,
