@@ -359,6 +359,9 @@ fn joinKey(alloc: std.mem.Allocator, namespace: []const u8, name: []const u8) ![
 pub const TypeName = struct {
     namespace: []const u8,
     name: []const u8,
+    /// Generic instantiation arguments for GENERICINST (ECMA-335
+    /// §II.23.2.14). Empty for non-generic types.
+    generics: []const Ty = &.{},
 };
 
 /// Decoded signature element tree. Recursive variants allocate their
@@ -386,6 +389,12 @@ pub const Ty = union(enum) {
     value_name: TypeName,
     /// ELEMENT_TYPE_CLASS + TypeDefOrRef → a COM/WinRT interface or class.
     class_name: TypeName,
+    /// ELEMENT_TYPE_VAR — reference to a type generic parameter by
+    /// 0-based index within the containing TypeDef's GenericParam rows.
+    var_generic: u32,
+    /// ELEMENT_TYPE_MVAR — reference to a method generic parameter by
+    /// 0-based index within the containing MethodDef's GenericParam rows.
+    mvar_generic: u32,
     /// `depth` consecutive ELEMENT_TYPE_PTR wrappers around `inner`.
     ptr_mut: struct { inner: *const Ty, depth: u32 },
     ptr_const: struct { inner: *const Ty, depth: u32 },
@@ -425,6 +434,7 @@ const ELEMENT_TYPE_I: u8 = 0x18;
 const ELEMENT_TYPE_U: u8 = 0x19;
 const ELEMENT_TYPE_OBJECT: u8 = 0x1C;
 const ELEMENT_TYPE_SZARRAY: u8 = 0x1D;
+const ELEMENT_TYPE_MVAR: u8 = 0x1E;
 const ELEMENT_TYPE_CMOD_REQD: u8 = 0x1F;
 const ELEMENT_TYPE_CMOD_OPT: u8 = 0x20;
 
@@ -593,23 +603,25 @@ pub const MethodCallAttributes = packed struct(u8) {
 /// tree is freed when the arena resets.
 pub const MethodSignature = struct {
     flags: MethodCallAttributes,
+    /// Count of method-level generic parameters (M-VARs). Zero for
+    /// non-generic methods.
+    generic_param_count: u32 = 0,
     return_type: Ty,
     params: []Ty,
 };
 
 /// Decode a method signature blob (ECMA-335 §II.23.2.1).
 ///
-///     MethodDefSig := [HASTHIS [EXPLICITTHIS]] (DEFAULT|VARARG|...)
+///     MethodDefSig := [HASTHIS [EXPLICITTHIS]] (DEFAULT|VARARG|GENERIC)
 ///                     [GENPARAMCOUNT] ParamCount RetType Param*
 ///
-/// Generics (GENERIC flag, GENPARAMCOUNT) are not yet supported — a blob
-/// with the GENERIC bit set produces `error.UnsupportedElement`. The caller
-/// is responsible for signatures that contain ELEMENT_TYPE_VAR /
-/// ELEMENT_TYPE_GENERICINST inside their types; those also error out.
+/// When the GENERIC bit is set, a `GenParamCount` compressed integer
+/// precedes `ParamCount`; it's preserved on the returned struct so
+/// callers can bind MVARs to the right generic slot.
 pub fn readMethodSignature(arena: std.mem.Allocator, file: *const File, blob: []const u8) SigError!MethodSignature {
     var c: SigCursor = .{ .bytes = blob };
     const flags: MethodCallAttributes = .{ .raw = try c.readU8() };
-    if (flags.isGeneric()) return error.UnsupportedElement;
+    const gen_count: u32 = if (flags.isGeneric()) try c.readCompressed() else 0;
 
     const param_count = try c.readCompressed();
     const return_type = try readTypeSignature(arena, file, &c);
@@ -621,7 +633,7 @@ pub fn readMethodSignature(arena: std.mem.Allocator, file: *const File, blob: []
     }
 
     if (!c.eof()) return error.TrailingBytes;
-    return .{ .flags = flags, .return_type = return_type, .params = params };
+    return .{ .flags = flags, .generic_param_count = gen_count, .return_type = return_type, .params = params };
 }
 
 /// Decode one `Type` element. Mirrors `Blob::read_type_signature` in the Rust
@@ -702,7 +714,30 @@ pub fn readTypeCode(arena: std.mem.Allocator, file: *const File, c: *SigCursor) 
             }
             break :blk .{ .array_fixed = .{ .inner = try boxTy(arena, inner), .size = size } };
         },
-        ELEMENT_TYPE_VAR, ELEMENT_TYPE_GENERICINST => error.UnsupportedElement,
+        ELEMENT_TYPE_VAR => .{ .var_generic = try c.readCompressed() },
+        ELEMENT_TYPE_MVAR => .{ .mvar_generic = try c.readCompressed() },
+        ELEMENT_TYPE_GENERICINST => blk: {
+            const inner_code = try c.readU8();
+            if (inner_code != ELEMENT_TYPE_VALUETYPE and inner_code != ELEMENT_TYPE_CLASS) {
+                return error.UnsupportedElement;
+            }
+            const def_name = try resolveTypeDefOrRefName(file, try c.readCompressed());
+            const arg_count = try c.readCompressed();
+            const args = try arena.alloc(Ty, arg_count);
+            var i: u32 = 0;
+            while (i < arg_count) : (i += 1) {
+                args[i] = try readTypeSignature(arena, file, c);
+            }
+            const name: TypeName = .{
+                .namespace = def_name.namespace,
+                .name = def_name.name,
+                .generics = args,
+            };
+            break :blk if (inner_code == ELEMENT_TYPE_VALUETYPE)
+                .{ .value_name = name }
+            else
+                .{ .class_name = name };
+        },
         else => error.UnsupportedElement,
     };
 }
@@ -1727,4 +1762,92 @@ test "attribute values decode Point's ContractVersionAttribute" {
             else => return err,
         };
     }
+}
+
+test "generics: IAsyncOperation`1.GetResults returns VAR 0" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+
+    // TypeIndex strips the `N arity suffix when keying, so generic arities
+    // are bucketed together. Pick the single arity-1 row.
+    const rows = index.get("Windows.Foundation", "IAsyncOperation");
+    var iasync_row: ?u32 = null;
+    for (rows) |r| {
+        if (std.mem.eql(u8, f.str(.type_def, r, 1), "IAsyncOperation`1")) {
+            iasync_row = r;
+            break;
+        }
+    }
+    try std.testing.expect(iasync_row != null);
+
+    const methods = f.list(.type_def, iasync_row.?, 5, .method_def);
+    var get_results_row: ?u32 = null;
+    var i = methods.start;
+    while (i < methods.end) : (i += 1) {
+        if (std.mem.eql(u8, f.str(.method_def, i, 3), "GetResults")) {
+            get_results_row = i;
+            break;
+        }
+    }
+    try std.testing.expect(get_results_row != null);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const sig = f.blob(.method_def, get_results_row.?, 4);
+    const m = try readMethodSignature(arena.allocator(), &f, sig);
+    try std.testing.expect(m.flags.hasThis());
+    try std.testing.expect(!m.flags.isGeneric());
+    try std.testing.expectEqual(@as(u32, 0), m.generic_param_count);
+    try std.testing.expectEqual(@as(usize, 0), m.params.len);
+    try std.testing.expect(m.return_type == .var_generic);
+    try std.testing.expectEqual(@as(u32, 0), m.return_type.var_generic);
+}
+
+test "generics: IMap`2.GetView returns GENERICINST IMapView`2<K,V>" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+
+    const rows = index.get("Windows.Foundation.Collections", "IMap");
+    var imap_row: ?u32 = null;
+    for (rows) |r| {
+        if (std.mem.eql(u8, f.str(.type_def, r, 1), "IMap`2")) {
+            imap_row = r;
+            break;
+        }
+    }
+    try std.testing.expect(imap_row != null);
+
+    const methods = f.list(.type_def, imap_row.?, 5, .method_def);
+    var get_view_row: ?u32 = null;
+    var i = methods.start;
+    while (i < methods.end) : (i += 1) {
+        if (std.mem.eql(u8, f.str(.method_def, i, 3), "GetView")) {
+            get_view_row = i;
+            break;
+        }
+    }
+    try std.testing.expect(get_view_row != null);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const sig = f.blob(.method_def, get_view_row.?, 4);
+    const m = try readMethodSignature(arena.allocator(), &f, sig);
+    try std.testing.expectEqual(@as(usize, 0), m.params.len);
+    try std.testing.expect(m.return_type == .class_name);
+    const ret = m.return_type.class_name;
+    try std.testing.expectEqualStrings("Windows.Foundation.Collections", ret.namespace);
+    try std.testing.expectEqualStrings("IMapView`2", ret.name);
+    try std.testing.expectEqual(@as(usize, 2), ret.generics.len);
+    try std.testing.expect(ret.generics[0] == .var_generic);
+    try std.testing.expectEqual(@as(u32, 0), ret.generics[0].var_generic);
+    try std.testing.expect(ret.generics[1] == .var_generic);
+    try std.testing.expectEqual(@as(u32, 1), ret.generics[1].var_generic);
 }
