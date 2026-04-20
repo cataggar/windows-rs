@@ -42,6 +42,34 @@ fn isProjectableNs(ns: []const u8) bool {
 /// Placeholder — full CLI lands later in Phase 3.
 pub fn generate(_: std.mem.Allocator) !void {}
 
+/// Return true if the TypeDef / MethodDef at `(tag, row)` has no
+/// `SupportedArchitectureAttribute`, or has one whose bitmask includes
+/// x86_64 (bit 0x2, shared with arm64ec). This is the minimal arch
+/// filter that lets us emit a single set of x86_64-oriented bindings
+/// and drop the x86-only and arm64-only duplicates that would otherwise
+/// collide on the same name (e.g. `SLIST_HEADER` is defined three times
+/// in `Windows.Win32.System.Kernel`, one per arch).
+///
+/// The Rust `windows-bindgen` equivalent is
+/// `crates/libs/bindgen/src/config/cfg.rs::write_arches`, which expands
+/// to `#[cfg(target_arch = ...)]`. Proper multi-arch support for Zig
+/// is a later slice; for now we pick x86_64 and move on.
+fn supportsX64(file: *const winmd.File, tag: winmd.HasAttributeTag, row: u32) bool {
+    const ARCH_X64: i32 = 2;
+    const attr_row = winmd.findAttribute(file, tag, row, "SupportedArchitectureAttribute") orelse return true;
+    var fba_buf: [512]u8 = undefined;
+    var fba = std.heap.FixedBufferAllocator.init(&fba_buf);
+    const args = winmd.readAttributeArgs(fba.allocator(), file, attr_row) catch return true;
+    if (args.len == 0) return true;
+    const mask: i32 = switch (args[0].value) {
+        .i32_val => |x| x,
+        .u32_val => |x| @bitCast(x),
+        .enum_value => |e| e.value,
+        else => return true,
+    };
+    return (mask & ARCH_X64) != 0;
+}
+
 /// Emit every supported declaration for `namespace` to `writer`,
 /// preceded by a header that imports the win-core primitives
 /// (`HRESULT`, `HSTRING`, `IInspectable_Vtbl`, ...) the generated
@@ -289,6 +317,12 @@ pub fn emitFreeFunctions(
         var m: u32 = methods.start;
         while (m < methods.end) : (m += 1) {
             const impl_map_row = file.findImplMap(m) orelse continue;
+
+            // Arch-gated duplicates are filtered at the MethodDef level;
+            // functions carrying SupportedArchitectureAttribute without
+            // bit 0x2 (x86_64) are skipped for the same reason structs
+            // are — see `supportsX64` above.
+            if (!supportsX64(file, .method_def, m)) continue;
 
             const method_name = file.str(.method_def, m, 3);
             const import_name = file.implMapImportName(impl_map_row);
@@ -1265,6 +1299,11 @@ fn emitStructsImpl(
         const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
         if (!std.mem.eql(u8, base.namespace, "System")) continue;
         if (!std.mem.eql(u8, base.name, "ValueType")) continue;
+
+        // Drop arch-gated duplicates. `SLIST_HEADER` etc. appear once
+        // per supported arch in the metadata; emit only the x86_64
+        // variant until a later slice adds per-target emission.
+        if (!supportsX64(file, .type_def, row)) continue;
 
         const name = file.str(.type_def, row, 1);
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
