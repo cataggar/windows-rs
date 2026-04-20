@@ -264,6 +264,8 @@ pub const IUnknown_Vtbl = extern struct {
     ) callconv(.winapi) HRESULT,
     AddRef: *const fn (this: *anyopaque) callconv(.winapi) u32,
     Release: *const fn (this: *anyopaque) callconv(.winapi) u32,
+
+    pub const IID: GUID = GUID.parse("00000000-0000-0000-C000-000000000046");
 };
 
 /// `IID_IUnknown` — every COM object must answer `QueryInterface` for this.
@@ -522,6 +524,8 @@ pub const IInspectable_Vtbl = extern struct {
         this: *anyopaque,
         value: *i32,
     ) callconv(.winapi) HRESULT,
+
+    pub const IID = IID_IInspectable;
 };
 
 /// Shorthand for a `Com(IInspectable_Vtbl)` — any WinRT object, viewed
@@ -546,6 +550,8 @@ pub const IStringable_Vtbl = extern struct {
         this: *anyopaque,
         value: *HSTRING,
     ) callconv(.winapi) HRESULT,
+
+    pub const IID = IID_IStringable;
 };
 
 pub const IStringable = Com(IStringable_Vtbl);
@@ -577,6 +583,8 @@ pub const IUriRuntimeClassFactory_Vtbl = extern struct {
         relative_uri: HSTRING,
         instance: *?*anyopaque,
     ) callconv(.winapi) HRESULT,
+
+    pub const IID = IID_IUriRuntimeClassFactory;
 };
 
 pub const IUriRuntimeClassFactory = Com(IUriRuntimeClassFactory_Vtbl);
@@ -641,6 +649,78 @@ pub fn activationFactory(
     try hresult.ok(winrt.RoGetActivationFactory(name.raw, iid, &raw));
     // The factory must be non-null on success per WinRT contract.
     return .{ .ptr = @ptrCast(@alignCast(raw.?)) };
+}
+
+// ---- IActivationFactory ---------------------------------------------------
+
+/// IID of `IActivationFactory`: `{00000035-0000-0000-C000-000000000046}`.
+///
+/// The universal factory interface every WinRT runtime class that
+/// exposes parameterless activation (`[Activatable(version)]` with no
+/// typed factory argument) is queryable for. Calling its sole
+/// `ActivateInstance` method produces a default-constructed instance
+/// returned as `IInspectable`, which callers then `QueryInterface` to
+/// the runtime class's default interface.
+pub const IID_IActivationFactory: GUID = .{
+    .data1 = 0x00000035,
+    .data2 = 0x0000,
+    .data3 = 0x0000,
+    .data4 = .{ 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x46 },
+};
+
+/// `IActivationFactory` — the parameterless WinRT activation path.
+/// `ActivateInstance` takes no arguments and returns a freshly
+/// constructed instance as `IInspectable` (the caller owns one
+/// reference and must QI to the class's default interface).
+pub const IActivationFactory_Vtbl = extern struct {
+    base: IInspectable_Vtbl,
+
+    ActivateInstance: *const fn (
+        this: *anyopaque,
+        instance: *?*anyopaque,
+    ) callconv(.winapi) HRESULT,
+
+    pub const IID = IID_IActivationFactory;
+};
+
+pub const IActivationFactory = Com(IActivationFactory_Vtbl);
+
+/// Default-construct a WinRT runtime class by name and return its
+/// default interface as a raw pointer to `Iface` — a handle-like
+/// `extern struct { vtable: *const Iface_Vtbl, ... }`. The returned
+/// pointer owns one reference; the caller must eventually call
+/// `Release` through the vtable (or `@ptrCast` to the runtime-class
+/// struct, which shares the same layout, and call `Release` there).
+///
+/// `Iface` must expose `pub const IID: GUID` — every generated
+/// interface handle in `winbindgen` output satisfies this by
+/// convention. `class_name` is the UTF-16 runtime-class name (e.g.
+/// `&Windows.Data.Json.JsonObject.NAME_W`).
+///
+/// This helper chains the two canonical calls — `RoGetActivationFactory`
+/// for `IActivationFactory`, then `IActivationFactory.ActivateInstance`,
+/// then a `QueryInterface` to `Iface` — and releases the factory and
+/// the intermediate `IInspectable` on exit.
+pub fn activateInstance(
+    comptime Iface: type,
+    class_name: []const u16,
+) !*Iface {
+    const factory = try activationFactory(
+        IActivationFactory_Vtbl,
+        &IID_IActivationFactory,
+        class_name,
+    );
+    defer factory.deinit();
+
+    var inspectable_raw: ?*anyopaque = null;
+    try hresult.ok(factory.vtbl().ActivateInstance(factory.ptr, &inspectable_raw));
+    // ActivateInstance must hand back a non-null IInspectable on success.
+    const inspectable: IInspectable = .{ .ptr = @ptrCast(@alignCast(inspectable_raw.?)) };
+    defer inspectable.deinit();
+
+    var iface_raw: ?*anyopaque = null;
+    try hresult.ok(inspectable.queryInterface(&Iface.IID, &iface_raw));
+    return @ptrCast(@alignCast(iface_raw.?));
 }
 
 // ---- Tests ----------------------------------------------------------------
@@ -919,4 +999,32 @@ test "Windows.Foundation.Uri round-trips a URL through IStringable" {
     const n = try std.unicode.utf16LeToUtf8(&buf, got.slice());
     try std.testing.expect(std.mem.indexOf(u8, buf[0..n], "learn.microsoft.com") != null);
     try std.testing.expect(std.mem.indexOf(u8, buf[0..n], "/windows") != null);
+}
+
+test "activateInstance constructs a parameterless WinRT class" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    try roInitialize(.multi_threaded);
+    defer winrt.RoUninitialize();
+
+    // `Windows.Foundation.Collections.PropertySet` activates through
+    // the plain `IActivationFactory` path — its metadata carries a
+    // parameterless `[Activatable(version)]` — making it the canonical
+    // target for exercising `activateInstance` end to end. The returned
+    // instance must be queryable for `IInspectable` (every WinRT object
+    // is) so we use that as the target interface; `IInspectable_Vtbl`
+    // already carries `pub const IID` in this module.
+    const inspectable = try activateInstance(IInspectable_Vtbl, utf16Lit("Windows.Foundation.Collections.PropertySet"));
+    // `activateInstance` returns the underlying handle pointer (an
+    // `extern struct { vtable: *const IInspectable_Vtbl, ... }` as seen
+    // from winbindgen output); we hand-build a `Com` around it so the
+    // test owns the lifetime cleanly and can release.
+    const inst: IInspectable = .{ .ptr = inspectable };
+    defer inst.deinit();
+
+    // Non-null trust level proves the vtable is wired correctly.
+    var trust: i32 = -1;
+    try hresult.ok(inst.vtbl().GetTrustLevel(inst.ptr, &trust));
+    try std.testing.expect(trust >= @intFromEnum(TrustLevel.base_trust) and
+        trust <= @intFromEnum(TrustLevel.full_trust));
 }

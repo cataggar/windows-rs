@@ -1135,6 +1135,7 @@ pub fn emitRuntimeClasses(
                     \\
                 , .{ name, tn.name });
                 try writeClassNames(writer, namespace, name);
+                try writeActivateMethod(writer, arena, file, row, name, tn.name);
                 try writeFactoryAlias(writer, arena, file, row, namespace, cross);
                 try writeStaticsAliases(writer, arena, file, row, namespace, cross);
                 try writer.writeAll("};\n");
@@ -1152,6 +1153,46 @@ pub fn emitRuntimeClasses(
         try writeStaticsAliases(writer, arena, file, row, namespace, cross);
         try writer.writeAll("};\n");
     }
+}
+
+/// Emit a `pub fn activate() !*Self` convenience method inside a
+/// runtime-class body when the class can be default-constructed via
+/// the universal `IActivationFactory::ActivateInstance` path.
+///
+/// Gating: only emitted when `hasParameterlessActivation` is true for
+/// `class_row`. Classes whose `[Activatable]` attributes all name a
+/// typed factory (e.g. `Windows.Foundation.Uri`) construct through
+/// that factory instead and never receive this method.
+///
+/// Signature convention: returns a raw pointer to the runtime-class
+/// handle itself (`*Self`), not a `Com(...)` wrapper. The handle's
+/// layout is `extern struct { vtable: *const <DefaultInterface>_Vtbl }`
+/// — identical to the raw COM pointer `activateInstance` hands back,
+/// so the trailing `@ptrCast` is pure type punning. The caller owns
+/// one reference and must `Release` through the default-interface
+/// vtable before dropping the pointer.
+///
+/// The `default_iface_name` is the bare type name of the default
+/// interface (e.g. `"IJsonObject"`), used to name its `_Vtbl` symbol.
+/// It must live in the same projectable namespace as the class — the
+/// caller has already checked `same_ns and !is_generic` before invoking
+/// this helper, so cross-namespace defaults are not handled here.
+fn writeActivateMethod(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    class_row: u32,
+    class_name: []const u8,
+    default_iface_name: []const u8,
+) !void {
+    if (!hasParameterlessActivation(arena, file, class_row)) return;
+    try writer.print(
+        \\    pub fn activate() !*{s} {{
+        \\        const raw = try win_core.activateInstance({s}_Vtbl, &NAME_W);
+        \\        return @ptrCast(raw);
+        \\    }}
+        \\
+    , .{ class_name, default_iface_name });
 }
 
 /// Emit the fully-qualified runtime class name as two compile-time
@@ -1259,6 +1300,43 @@ fn activationFactoryName(
         }
     }
     return null;
+}
+
+/// Does this runtime class carry any parameterless `[Activatable]` attribute?
+///
+/// A WinRT class can be default-constructed when at least one of its
+/// `ActivatableAttribute` rows uses the *un*-typed overload — i.e. the
+/// first positional arg is a `uint` contract version rather than a
+/// `System.Type` factory. That overload tells the runtime "use the
+/// universal `IActivationFactory::ActivateInstance`"; it's the code
+/// path behind `winrt::default_activation_factory` in C++/WinRT and
+/// `IActivationFactory` in windows-rs.
+///
+/// A class can expose both overloads (a typed custom factory *and* a
+/// parameterless one). We only care whether at least one parameterless
+/// row exists — that's the signal to emit an `activate()` convenience.
+fn hasParameterlessActivation(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    class_row: u32,
+) bool {
+    const range = winmd.attributes(file, .type_def, class_row);
+    var i = range.start;
+    while (i < range.end) : (i += 1) {
+        const tn = winmd.attributeName(file, i) orelse continue;
+        if (!std.mem.eql(u8, tn.name, "ActivatableAttribute")) continue;
+
+        const args = winmd.readAttributeArgs(arena, file, i) catch continue;
+        if (args.len == 0) continue;
+        switch (args[0].value) {
+            // Typed factory overload; keep looking for a parameterless sibling.
+            .type_name => continue,
+            // Any non-type first arg (uint version in practice) means the
+            // parameterless `IActivationFactory` path applies.
+            else => return true,
+        }
+    }
+    return false;
 }
 
 /// Emit zero or more `Statics` aliases on a runtime class's body —
@@ -1410,9 +1488,56 @@ test "emitRuntimeClasses writes Uri handle" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.WwwFormUrlDecoder\";") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [36]u16 = .{") != null);
 
+    // `Uri` activates only through its typed factory
+    // (`[Activatable(typeof(IUriRuntimeClassFactory), ...)]` — no
+    // parameterless overload), so the `activate()` convenience must
+    // NOT be emitted.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn activate") == null);
+
     // No interface names should appear here — those go through
     // `emitInterfaceHandles`.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable") == null);
+}
+
+test "emitRuntimeClasses emits activate() on parameterless WinRT classes" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    var cross: CrossNsSet = .empty;
+
+    try emitRuntimeClasses(&buf.writer, arena.allocator(), &file, "Windows.Data.Json", &cross);
+    const out = buf.written();
+
+    // `JsonObject` and `JsonArray` both carry parameterless
+    // `[Activatable(version)]` attributes — they should pick up the
+    // default-construction convenience that delegates to
+    // `win_core.activateInstance`.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const JsonObject = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn activate() !*JsonObject {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "        const raw = try win_core.activateInstance(IJsonObject_Vtbl, &NAME_W);") != null);
+
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const JsonArray = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn activate() !*JsonArray {") != null);
+
+    // `JsonValue` has only `[Static(...)]` attributes — no activation
+    // at all, not even typed — so no `activate()` should be emitted
+    // on it.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const JsonValue = extern struct {") != null);
+    // Scan the slice of `out` starting at `JsonValue` up to the next
+    // top-level `pub const ` (i.e. the following class) for any
+    // `pub fn activate`. This is a stronger check than a raw
+    // `indexOf` on the whole buffer since JsonObject/JsonArray
+    // legitimately carry the method.
+    const jv_start = std.mem.indexOf(u8, out, "pub const JsonValue = extern struct {").?;
+    const jv_end_rel = std.mem.indexOf(u8, out[jv_start..], "\n};\n").?;
+    const jv_body = out[jv_start .. jv_start + jv_end_rel];
+    try std.testing.expect(std.mem.indexOf(u8, jv_body, "pub fn activate") == null);
 }
 
 test "emitDelegates writes opaque handles for WinRT delegates" {
