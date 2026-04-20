@@ -148,4 +148,31 @@ pub fn build(b: *std.Build) void {
     if (b.args) |user_args| run_winbindgen.addArgs(user_args);
     const run_step = b.step("run", "Run the winbindgen CLI (pass args with `--`)");
     run_step.dependOn(&run_winbindgen.step);
+
+    // ------------------------------------------------------------------
+    // Compile-check: run `winbindgen Windows.Foundation`, capture the
+    // generated Zig source, and compile it as an object against
+    // `win-core`. This turns the output of Phase 3's codegen into a
+    // continuously validated artifact — if a later slice regresses and
+    // emits something that won't type-check, `zig build test` catches
+    // it. Hooked into the `test` step.
+    // ------------------------------------------------------------------
+
+    const gen_run = b.addRunArtifact(winbindgen_exe);
+    gen_run.addArg("Windows.Foundation");
+    const gen_source = gen_run.captureStdOut(.{});
+
+    const gen_mod = b.createModule(.{
+        .root_source_file = gen_source,
+        .target = target,
+        .optimize = optimize,
+    });
+    gen_mod.addImport("win-core", win_core_mod);
+
+    const gen_obj = b.addTest(.{
+        .name = "compile-check-Windows.Foundation",
+        .root_module = gen_mod,
+    });
+    const run_gen_obj = b.addRunArtifact(gen_obj);
+    test_step.dependOn(&run_gen_obj.step);
 }
