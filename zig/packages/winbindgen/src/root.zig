@@ -92,6 +92,8 @@ pub fn emitNamespace(
         \\const HSTRING = win_core.HSTRING;
         \\const GUID = win_core.GUID;
         \\const BOOL = win_core.BOOL;
+        \\const NTSTATUS = win_core.NTSTATUS;
+        \\const BOOLEAN = win_core.BOOLEAN;
         \\const IInspectable_Vtbl = win_core.IInspectable_Vtbl;
         \\
     );
@@ -369,6 +371,8 @@ fn isPreludeAlias(namespace: []const u8, name: []const u8) bool {
     if (std.mem.eql(u8, namespace, "Windows.Win32.Foundation")) {
         if (std.mem.eql(u8, name, "HRESULT")) return true;
         if (std.mem.eql(u8, name, "BOOL")) return true;
+        if (std.mem.eql(u8, name, "NTSTATUS")) return true;
+        if (std.mem.eql(u8, name, "BOOLEAN")) return true;
     }
     if (std.mem.eql(u8, namespace, "Windows.Win32.System.WinRT")) {
         if (std.mem.eql(u8, name, "HSTRING")) return true;
@@ -469,6 +473,35 @@ pub fn emitConstants(
                     try writer.print("pub const {s}: [:0]const u16 = win_core.utf16Lit(\"", .{name});
                     try writeEscapedZigStringLit(writer, utf8);
                     try writer.writeAll("\");\n");
+                },
+                .value_name => |tn| {
+                    // Typed integer constants like `S_OK: HRESULT = 0` or
+                    // `STATUS_SUCCESS: NTSTATUS = 0`. We only handle the
+                    // four single-field Win32 typedefs that the prelude
+                    // aliases into `win-core` primitive ints. For those,
+                    // direct integer-literal assignment compiles because
+                    // the prelude name resolves to a type alias (not a
+                    // wrapper struct). Other typedef-wrapped constants
+                    // need generalized single-field resolution + possibly
+                    // cross-namespace qualification; deferred to a later
+                    // slice.
+                    if (!std.mem.eql(u8, tn.namespace, "Windows.Win32.Foundation")) continue;
+                    const is_i32_alias = std.mem.eql(u8, tn.name, "HRESULT") or
+                        std.mem.eql(u8, tn.name, "BOOL") or
+                        std.mem.eql(u8, tn.name, "NTSTATUS");
+                    const is_u8_alias = std.mem.eql(u8, tn.name, "BOOLEAN");
+                    if (!is_i32_alias and !is_u8_alias) continue;
+
+                    const type_code: u8 = @intCast(file.cell(.constant, range.start, 0) & 0xFF);
+                    const raw = readConstantValue(type_code, value_blob) orelse continue;
+                    if (is_i32_alias) {
+                        // Sign-extend from i32 so negative HRESULTs like
+                        // `E_FAIL = 0x80004005` print as `-2147467259`.
+                        const signed: i64 = @as(i64, @as(i32, @bitCast(@as(u32, @truncate(raw)))));
+                        try writer.print("pub const {s}: {s} = {d};\n", .{ name, tn.name, signed });
+                    } else {
+                        try writer.print("pub const {s}: {s} = {d};\n", .{ name, tn.name, @as(u8, @truncate(raw)) });
+                    }
                 },
                 else => continue,
             }
@@ -2180,4 +2213,28 @@ test "emitConstants emits Win32 PCWSTR string constants (SERVICES_ACTIVE_DATABAS
 
     // SERVICES_ACTIVE_DATABASE is "ServicesActive" as UTF-16 (PCWSTR).
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const SERVICES_ACTIVE_DATABASE: [:0]const u16 = win_core.utf16Lit(\"ServicesActive\");") != null);
+}
+
+test "emitConstants emits Win32 HRESULT/NTSTATUS typed integer constants" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitConstants(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation");
+    const out = buf.written();
+
+    // S_OK: HRESULT = 0 (prelude alias → direct int-literal assign).
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const S_OK: HRESULT = 0;") != null);
+    // E_FAIL = 0x80004005 sign-extends to -2147467259 (i32).
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const E_FAIL: HRESULT = -2147467259;") != null);
+    // TRUE/FALSE as BOOL.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const TRUE: BOOL = 1;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const FALSE: BOOL = 0;") != null);
+    // STATUS_SUCCESS as NTSTATUS.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const STATUS_SUCCESS: NTSTATUS = 0;") != null);
 }
