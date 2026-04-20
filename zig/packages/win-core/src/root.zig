@@ -106,6 +106,60 @@ pub const hresult = struct {
     pub inline fn code(hr: HRESULT) u16 {
         return @truncate(@as(u32, @bitCast(hr)));
     }
+
+    /// Curated Zig error set for the `HRESULT` values that have a clean
+    /// semantic mapping. Everything else collapses to `Unknown`, and the
+    /// raw code is stashed in `last_hresult` so callers can recover it.
+    pub const Error = error{
+        Aborted,
+        AccessDenied,
+        Fail,
+        InvalidArg,
+        NoInterface,
+        NotImplemented,
+        OutOfMemory,
+        Pointer,
+        Unknown,
+    };
+
+    /// The last `HRESULT` passed to `ok` / `toError`. Thread-local so
+    /// failures are not racy across threads. Callers that care about the
+    /// exact raw code (for logging or for HRESULT→COM interop) read this
+    /// after catching `Error.Unknown` — but it's correct for *any* error
+    /// returned by `ok`.
+    pub threadlocal var last_hresult: HRESULT = S_OK;
+
+    /// Map an `HRESULT` to its curated `Error` variant, without caring
+    /// whether it's a success or failure. Only useful on a known-failed
+    /// code; prefer `ok`.
+    pub fn toError(hr: HRESULT) Error {
+        last_hresult = hr;
+        return switch (hr) {
+            E_ABORT => error.Aborted,
+            E_ACCESSDENIED => error.AccessDenied,
+            E_FAIL => error.Fail,
+            E_INVALIDARG => error.InvalidArg,
+            E_NOINTERFACE => error.NoInterface,
+            E_NOTIMPL => error.NotImplemented,
+            E_OUTOFMEMORY => error.OutOfMemory,
+            E_POINTER => error.Pointer,
+            else => error.Unknown,
+        };
+    }
+
+    /// The `?` of Zig for COM calls. `S_OK` and `S_FALSE` (and every other
+    /// non-negative code) return `void`; failures become a curated `Error`.
+    ///
+    /// ```zig
+    /// try hresult.ok(vtbl.CreateSomething(this, &out));
+    /// ```
+    pub fn ok(hr: HRESULT) Error!void {
+        if (succeeded(hr)) {
+            last_hresult = hr;
+            return;
+        }
+        return toError(hr);
+    }
 };
 
 pub const ntstatus = struct {
@@ -347,6 +401,30 @@ test "pcstr.len/slice" {
     try std.testing.expectEqual(@as(usize, 5), pcstr.len(s));
     try std.testing.expectEqualStrings("hello", pcstr.slice(s));
     try std.testing.expectEqual(@as(usize, 0), pcstr.len(null));
+}
+
+test "hresult.ok maps success to void and known codes to named errors" {
+    try hresult.ok(hresult.S_OK);
+    try hresult.ok(hresult.S_FALSE);
+    try std.testing.expectEqual(hresult.S_FALSE, hresult.last_hresult);
+
+    try std.testing.expectError(hresult.Error.InvalidArg, hresult.ok(hresult.E_INVALIDARG));
+    try std.testing.expectEqual(hresult.E_INVALIDARG, hresult.last_hresult);
+
+    try std.testing.expectError(hresult.Error.NoInterface, hresult.ok(hresult.E_NOINTERFACE));
+    try std.testing.expectError(hresult.Error.OutOfMemory, hresult.ok(hresult.E_OUTOFMEMORY));
+    try std.testing.expectError(hresult.Error.AccessDenied, hresult.ok(hresult.E_ACCESSDENIED));
+    try std.testing.expectError(hresult.Error.Aborted, hresult.ok(hresult.E_ABORT));
+    try std.testing.expectError(hresult.Error.Fail, hresult.ok(hresult.E_FAIL));
+    try std.testing.expectError(hresult.Error.NotImplemented, hresult.ok(hresult.E_NOTIMPL));
+    try std.testing.expectError(hresult.Error.Pointer, hresult.ok(hresult.E_POINTER));
+}
+
+test "hresult.ok preserves the raw code through Unknown" {
+    // ERROR_FILE_NOT_FOUND (0x8007_0002) — not in the curated set.
+    const hr: HRESULT = @bitCast(@as(u32, 0x8007_0002));
+    try std.testing.expectError(hresult.Error.Unknown, hresult.ok(hr));
+    try std.testing.expectEqual(hr, hresult.last_hresult);
 }
 
 test "Com smart pointer drives a fake IUnknown vtable" {
