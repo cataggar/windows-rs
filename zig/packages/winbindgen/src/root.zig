@@ -79,7 +79,7 @@ pub fn emitNamespace(
     try emitStructsImpl(body_writer, arena, file, namespace, &cross);
     try emitInterfaceHandles(body_writer, arena, file, namespace, &cross);
     try emitDelegates(body_writer, file, namespace);
-    try emitRuntimeClasses(body_writer, file, namespace);
+    try emitRuntimeClasses(body_writer, arena, file, namespace);
     try emitInterfaceVtblsImpl(body_writer, arena, file, namespace, &cross);
 
     try writer.writeAll(
@@ -1085,6 +1085,7 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
 /// vtable pointer is a later slice.
 pub fn emitRuntimeClasses(
     writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
 ) !void {
@@ -1133,6 +1134,7 @@ pub fn emitRuntimeClasses(
                     \\
                 , .{ name, tn.name });
                 try writeClassNames(writer, namespace, name);
+                try writeFactoryAlias(writer, arena, file, row, namespace);
                 try writer.writeAll("};\n");
                 continue;
             }
@@ -1144,6 +1146,7 @@ pub fn emitRuntimeClasses(
             \\
         , .{name});
         try writeClassNames(writer, namespace, name);
+        try writeFactoryAlias(writer, arena, file, row, namespace);
         try writer.writeAll("};\n");
     }
 }
@@ -1174,6 +1177,75 @@ fn writeClassNames(
         try writer.print(", {d}", .{b});
     }
     try writer.writeAll(" };\n");
+}
+
+/// Emit `pub const Factory = <FactoryInterface>;` inside a runtime
+/// class body when the class carries an `ActivatableAttribute` whose
+/// first positional argument is a `System.Type` naming the factory
+/// interface (i.e. `[Activatable(typeof(IFooFactory), version)]`).
+///
+/// Classes with only the parameterless `[Activatable(version)]`
+/// overload activate through the generic `IActivationFactory` and
+/// need no class-specific alias — they are skipped. Classes whose
+/// factory interface lives in a different namespace are also skipped
+/// for now; cross-namespace factory aliases land alongside the rest
+/// of the cross-namespace imports.
+///
+/// The emitted alias names the factory's *handle* type (not its
+/// `_Vtbl`) so callers reach `.IID`, the IUnknown wrappers, and any
+/// typed method wrappers the factory interface exposes. For an
+/// activation call they then pass the vtbl type explicitly, e.g.
+/// `win_core.activationFactory(IUriRuntimeClassFactory_Vtbl,
+/// &Uri.Factory.IID, &Uri.NAME_W)`.
+fn writeFactoryAlias(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    class_row: u32,
+    namespace: []const u8,
+) !void {
+    const factory = activationFactoryName(arena, file, class_row) orelse return;
+    if (!std.mem.eql(u8, factory.namespace, namespace)) return;
+    if (std.mem.indexOfScalar(u8, factory.name, '`') != null) return;
+    try writer.print("    pub const Factory = {s};\n", .{factory.name});
+}
+
+/// Scan the custom attributes on runtime-class row `class_row` for
+/// an `ActivatableAttribute` whose first positional argument is a
+/// `System.Type` — i.e. the explicit-factory overload
+/// `[Activatable(typeof(IFooFactory), version)]`. Returns the
+/// resolved `TypeName` of that factory interface.
+///
+/// Classes can carry several `ActivatableAttribute` rows (one per
+/// contract version plus zero or more static-factory siblings). The
+/// first typed overload wins — in practice every class has at most
+/// one activation factory, and the version/contract ordering is not
+/// relevant for codegen.
+///
+/// Returns null when:
+///   - the class has no `ActivatableAttribute`,
+///   - every attribute uses the parameterless `[Activatable(version)]`
+///     overload (generic `IActivationFactory` path), or
+///   - the arg blob cannot be decoded (malformed metadata).
+fn activationFactoryName(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    class_row: u32,
+) ?winmd.TypeName {
+    const range = winmd.attributes(file, .type_def, class_row);
+    var i = range.start;
+    while (i < range.end) : (i += 1) {
+        const tn = winmd.attributeName(file, i) orelse continue;
+        if (!std.mem.eql(u8, tn.name, "ActivatableAttribute")) continue;
+
+        const args = winmd.readAttributeArgs(arena, file, i) catch continue;
+        if (args.len == 0) continue;
+        switch (args[0].value) {
+            .type_name => |factory| return factory,
+            else => continue,
+        }
+    }
+    return null;
 }
 
 /// Emit an opaque handle struct for every WinRT delegate in
@@ -1229,19 +1301,25 @@ test "emitRuntimeClasses writes Uri handle" {
     const bytes = @embedFile("Windows.winmd");
     var file = try winmd.parse(bytes);
 
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitRuntimeClasses(&buf.writer, &file, "Windows.Foundation");
+    try emitRuntimeClasses(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
     const out = buf.written();
 
     // `Uri`'s default interface is `IUriRuntimeClass` — same namespace,
     // non-generic — so we expect a typed vtable pointer plus both the
-    // UTF-8 `NAME` and UTF-16 `NAME_W` compile-time constants.
+    // UTF-8 `NAME` and UTF-16 `NAME_W` compile-time constants, plus a
+    // `Factory` alias pointing at `IUriRuntimeClassFactory` (from
+    // `[Activatable(typeof(IUriRuntimeClassFactory), ...)]`).
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const Uri = extern struct {") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "vtable: *const IUriRuntimeClass_Vtbl,") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.Uri\";") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [22]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 85, 114, 105 };") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Factory = IUriRuntimeClassFactory;") != null);
 
     // WwwFormUrlDecoder is another Windows.Foundation runtime class.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
