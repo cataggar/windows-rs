@@ -77,7 +77,7 @@ pub fn emitNamespace(
     try emitIidConstants(body_writer, arena, file, namespace);
     try emitEnums(body_writer, arena, file, namespace);
     try emitStructsImpl(body_writer, arena, file, namespace, &cross);
-    try emitInterfaceHandles(body_writer, file, namespace);
+    try emitInterfaceHandles(body_writer, arena, file, namespace, &cross);
     try emitDelegates(body_writer, file, namespace);
     try emitRuntimeClasses(body_writer, file, namespace);
     try emitInterfaceVtblsImpl(body_writer, arena, file, namespace, &cross);
@@ -414,7 +414,7 @@ fn emitInterfaceVtblsImpl(
         while (m < methods.end) : (m += 1) {
             const method_name = file.str(.method_def, m, 3);
             try writer.print("    {s}: ", .{method_name});
-            try writeMethodPointer(writer, arena, file, m, namespace, cross);
+            try writeMethodPointer(writer, arena, file, m, name, namespace, cross);
             try writer.writeAll(",\n");
         }
 
@@ -441,8 +441,10 @@ fn emitInterfaceVtblsImpl(
 /// references `<Name>_Vtbl` directly.
 pub fn emitInterfaceHandles(
     writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
+    cross: *CrossNsSet,
 ) !void {
     const rows = file.rowCount(.type_def);
     var row: u32 = 0;
@@ -457,14 +459,67 @@ pub fn emitInterfaceHandles(
         try writer.print(
             \\pub const {s} = extern struct {{
             \\    vtable: *const {s}_Vtbl,
-            \\}};
             \\
         , .{ name, name });
+
+        const methods = file.list(.type_def, row, 5, .method_def);
+        var m = methods.start;
+        while (m < methods.end) : (m += 1) {
+            try writeMethodWrapper(writer, arena, file, m, name, namespace, cross);
+        }
+
+        try writer.writeAll("};\n");
     }
 }
 
+/// Emit a method wrapper (`pub fn Name(self, args) HRESULT { return self.vtable.Name(self, args); }`)
+/// for one MethodDef row — but only if the signature is fully
+/// representable. Unrepresentable methods are skipped entirely (the
+/// raw vtbl slot still falls back to `*const anyopaque`, so callers
+/// can still reach them by hand).
+fn writeMethodWrapper(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    method_row: u32,
+    this_name: []const u8,
+    current_namespace: []const u8,
+    cross: *CrossNsSet,
+) !void {
+    const method_name = file.str(.method_def, method_row, 3);
+    const sig_blob = file.blob(.method_def, method_row, 4);
+    const sig = winmd.readMethodSignature(arena, file, sig_blob) catch return;
+
+    if (!canRepresent(sig.return_type)) return;
+    for (sig.params) |p| {
+        if (!canRepresent(p)) return;
+    }
+
+    try writer.print("    pub fn {s}(self: *const {s}", .{ method_name, this_name });
+    for (sig.params, 0..) |p, i| {
+        try writer.print(", p{d}: ", .{i});
+        try writeParam(writer, arena, p, current_namespace, cross);
+    }
+    if (sig.return_type != .void) {
+        try writer.writeAll(", result: *");
+        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross);
+    }
+    try writer.print(") callconv(.winapi) HRESULT {{\n        return self.vtable.{s}(self", .{method_name});
+    for (sig.params, 0..) |_, i| {
+        try writer.print(", p{d}", .{i});
+    }
+    if (sig.return_type != .void) {
+        try writer.writeAll(", result");
+    }
+    try writer.writeAll(");\n    }\n");
+}
+
 /// Emit a function-pointer type for a single MethodDef row, WinRT-ABI
-/// shaped: `*const fn(this: *anyopaque, <in/out params>) callconv(.winapi) HRESULT`.
+/// shaped: `*const fn(this: *const IFace, <in/out params>) callconv(.winapi) HRESULT`.
+///
+/// `this_name` is the simple name of the enclosing interface; it
+/// produces a typed self-pointer so method wrappers on the handle
+/// struct can pass `self` through without casts.
 ///
 /// Any type in the signature that the first-slice type mapper cannot
 /// render falls the whole method back to `*const anyopaque`, so new
@@ -475,6 +530,7 @@ fn writeMethodPointer(
     arena: std.mem.Allocator,
     file: *const winmd.File,
     method_row: u32,
+    this_name: []const u8,
     current_namespace: []const u8,
     cross: *CrossNsSet,
 ) !void {
@@ -497,7 +553,7 @@ fn writeMethodPointer(
         }
     }
 
-    try writer.writeAll("*const fn (this: *anyopaque");
+    try writer.print("*const fn (this: *const {s}", .{this_name});
     for (sig.params, 0..) |p, i| {
         try writer.print(", p{d}: ", .{i});
         try writeParam(writer, arena, p, current_namespace, cross);
@@ -659,7 +715,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "ToString: *const fn (this: *anyopaque, result: *HSTRING) callconv(.winapi) HRESULT",
+        "ToString: *const fn (this: *const IStringable, result: *HSTRING) callconv(.winapi) HRESULT",
     ) != null);
 
     // IClosable.Close: `void Close()` → no trailing out param.
@@ -667,7 +723,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "Close: *const fn (this: *anyopaque) callconv(.winapi) HRESULT",
+        "Close: *const fn (this: *const IClosable) callconv(.winapi) HRESULT",
     ) != null);
 
     // IUriRuntimeClassFactory.CreateUri(HSTRING uri) returns a
@@ -676,7 +732,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "CreateUri: *const fn (this: *anyopaque, p0: HSTRING, result: **Uri) callconv(.winapi) HRESULT",
+        "CreateUri: *const fn (this: *const IUriRuntimeClassFactory, p0: HSTRING, result: **Uri) callconv(.winapi) HRESULT",
     ) != null);
 
     // IAsyncInfo.get_Status returns the `AsyncStatus` enum — a
@@ -685,7 +741,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "get_Status: *const fn (this: *anyopaque, result: *AsyncStatus) callconv(.winapi) HRESULT",
+        "get_Status: *const fn (this: *const IAsyncInfo, result: *AsyncStatus) callconv(.winapi) HRESULT",
     ) != null);
 
     // At least one interface in Windows.Foundation uses types we don't
@@ -855,21 +911,42 @@ test "emitStructs writes Point/Rect/TimeSpan from Windows.Foundation" {
     try std.testing.expect(std.mem.indexOf(u8, out, "    Duration: i64,") != null);
 }
 
-test "emitInterfaceHandles writes IStringable handle" {
+test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     const bytes = @embedFile("Windows.winmd");
     var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
 
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitInterfaceHandles(&buf.writer, &file, "Windows.Foundation");
+    var cross: CrossNsSet = .empty;
+
+    try emitInterfaceHandles(&buf.writer, arena.allocator(), &file, "Windows.Foundation", &cross);
     const out = buf.written();
 
-    // Canonical COM object layout: first word is the vtbl pointer.
+    // Canonical COM object layout: first word is the vtbl pointer,
+    // followed by method wrappers that forward through the vtable.
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "pub const IStringable = extern struct {\n    vtable: *const IStringable_Vtbl,\n};",
+        "pub const IStringable = extern struct {\n    vtable: *const IStringable_Vtbl,\n",
+    ) != null);
+
+    // The ToString wrapper forwards to `self.vtable.ToString(self, result)`.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub fn ToString(self: *const IStringable, result: *HSTRING) callconv(.winapi) HRESULT {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.ToString(self, result);") != null);
+
+    // IClosable.Close: void-returning, no trailing out param.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub fn Close(self: *const IClosable) callconv(.winapi) HRESULT {",
     ) != null);
 
     // Many interfaces should have been emitted.
