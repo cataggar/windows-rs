@@ -843,6 +843,67 @@ pub fn hasAttribute(file: *const File, tag: HasAttributeTag, row: u32, name: []c
     return findAttribute(file, tag, row, name) != null;
 }
 
+/// Return a sorted, de-duplicated list of every distinct namespace
+/// present in the `TypeDef` table. The `<Module>` pseudo-type
+/// (TypeDef row 0) carries an empty namespace and is skipped.
+///
+/// The returned slice and its string elements are allocated from
+/// `arena` and borrow nothing from caller beyond the arena itself.
+/// Strings are copied out so they outlive any temporary views of
+/// `file.str(...)`.
+pub fn listNamespaces(arena: std.mem.Allocator, file: *const File) ![][]const u8 {
+    var seen = std.StringHashMap(void).init(arena);
+    defer seen.deinit();
+
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        const ns = file.str(.type_def, row, 2);
+        if (ns.len == 0) continue;
+        if (seen.contains(ns)) continue;
+        const copy = try arena.dupe(u8, ns);
+        try seen.put(copy, {});
+    }
+
+    var list = try arena.alloc([]const u8, seen.count());
+    var it = seen.keyIterator();
+    var i: usize = 0;
+    while (it.next()) |k| : (i += 1) list[i] = k.*;
+    std.mem.sort([]const u8, list, {}, struct {
+        fn lt(_: void, a: []const u8, b: []const u8) bool {
+            return std.mem.order(u8, a, b) == .lt;
+        }
+    }.lt);
+    return list;
+}
+
+test "listNamespaces returns sorted distinct namespaces" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const all = try listNamespaces(arena.allocator(), &file);
+    // Sanity: there's at least one namespace and the list is sorted.
+    try std.testing.expect(all.len > 0);
+    var i: usize = 1;
+    while (i < all.len) : (i += 1) {
+        try std.testing.expect(std.mem.order(u8, all[i - 1], all[i]) == .lt);
+    }
+
+    // Windows.Foundation is a canonical WinRT namespace and must be
+    // present in every shipped metadata bundle.
+    var found = false;
+    for (all) |n| {
+        if (std.mem.eql(u8, n, "Windows.Foundation")) {
+            found = true;
+            break;
+        }
+    }
+    try std.testing.expect(found);
+}
+
 // ---- Attribute value blobs (§II.23.3) ------------------------------------
 
 /// A single positional or named attribute argument, decoded from the
