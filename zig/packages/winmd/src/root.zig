@@ -808,6 +808,254 @@ pub fn hasAttribute(file: *const File, tag: HasAttributeTag, row: u32, name: []c
     return findAttribute(file, tag, row, name) != null;
 }
 
+// ---- Attribute value blobs (§II.23.3) ------------------------------------
+
+/// A single positional or named attribute argument, decoded from the
+/// Attribute.Value blob.
+///
+/// String and TypeName values borrow bytes from the blob heap of the
+/// source `File` and are only valid while those bytes live.
+pub const AttrValue = union(enum) {
+    bool_val: bool,
+    i8_val: i8,
+    u8_val: u8,
+    i16_val: i16,
+    u16_val: u16,
+    i32_val: i32,
+    u32_val: u32,
+    i64_val: i64,
+    u64_val: u64,
+    f32_val: f32,
+    f64_val: f64,
+    /// SerString (either `System.String` or a serialised enum/type name
+    /// when the wrapping type was `System.Type`). Null SerStrings decode
+    /// to an empty slice.
+    string: []const u8,
+    /// A `typeof(X)` literal split into namespace + simple name.
+    type_name: TypeName,
+    /// An enum constant; the underlying value is assumed `i32` — WinRT
+    /// enums on the types this reader processes are always 4-byte.
+    enum_value: struct { type: TypeName, value: i32 },
+};
+
+pub const AttrArg = struct {
+    /// Empty string for positional arguments; the field / property name
+    /// for named arguments (ECMA-335 §II.23.3, FIELD = 0x53 or PROPERTY
+    /// = 0x54).
+    name: []const u8,
+    value: AttrValue,
+};
+
+pub const AttrError = SigError || error{
+    BadPrologue,
+    BadSerString,
+    UnsupportedAttributeType,
+};
+
+const ATTR_ELEMENT_TYPE_STRING: u8 = 0x0E;
+const ATTR_ELEMENT_TYPE_TYPE: u8 = 0x50;
+const ATTR_ELEMENT_TYPE_BOXED: u8 = 0x51;
+const ATTR_ELEMENT_TYPE_FIELD: u8 = 0x53;
+const ATTR_ELEMENT_TYPE_PROPERTY: u8 = 0x54;
+const ATTR_ELEMENT_TYPE_ENUM: u8 = 0x55;
+
+/// Cursor over an attribute value blob. Distinct from `SigCursor`
+/// because primitives here are fixed-width little-endian reads (not
+/// compressed integers) and SerStrings have a nullable-length prefix.
+const AttrCursor = struct {
+    bytes: []const u8,
+    pos: usize = 0,
+
+    fn need(self: *AttrCursor, n: usize) AttrError![]const u8 {
+        if (self.pos + n > self.bytes.len) return error.ShortBlob;
+        const out = self.bytes[self.pos .. self.pos + n];
+        self.pos += n;
+        return out;
+    }
+
+    fn readU8(self: *AttrCursor) AttrError!u8 {
+        const s = try self.need(1);
+        return s[0];
+    }
+
+    fn readU16(self: *AttrCursor) AttrError!u16 {
+        const s = try self.need(2);
+        return std.mem.readInt(u16, s[0..2], .little);
+    }
+
+    fn readU32(self: *AttrCursor) AttrError!u32 {
+        const s = try self.need(4);
+        return std.mem.readInt(u32, s[0..4], .little);
+    }
+
+    fn readU64(self: *AttrCursor) AttrError!u64 {
+        const s = try self.need(8);
+        return std.mem.readInt(u64, s[0..8], .little);
+    }
+
+    /// Read an ECMA-335 compressed unsigned int (§II.23.2).
+    fn readCompressed(self: *AttrCursor) AttrError!u32 {
+        const b0 = try self.readU8();
+        if ((b0 & 0x80) == 0) return b0;
+        if ((b0 & 0xC0) == 0x80) {
+            const b1 = try self.readU8();
+            return (@as(u32, b0 & 0x3F) << 8) | b1;
+        }
+        if ((b0 & 0xE0) == 0xC0) {
+            const b1 = try self.readU8();
+            const b2 = try self.readU8();
+            const b3 = try self.readU8();
+            return (@as(u32, b0 & 0x1F) << 24) | (@as(u32, b1) << 16) | (@as(u32, b2) << 8) | b3;
+        }
+        return error.BadSerString;
+    }
+
+    /// Read a `SerString`: single `0xFF` marker means null (decoded as
+    /// empty slice); otherwise a compressed length followed by UTF-8 bytes.
+    fn readSerString(self: *AttrCursor) AttrError![]const u8 {
+        if (self.pos >= self.bytes.len) return error.ShortBlob;
+        if (self.bytes[self.pos] == 0xFF) {
+            self.pos += 1;
+            return "";
+        }
+        const len = try self.readCompressed();
+        return self.need(len);
+    }
+};
+
+/// Read one value of type `ty` from an attribute-value cursor.
+/// Not all signature types are expressible in attribute values; anything
+/// beyond primitives, strings, `System.Type` and enums returns
+/// `error.UnsupportedAttributeType`.
+fn readAttrValue(cur: *AttrCursor, ty: Ty) AttrError!AttrValue {
+    return switch (ty) {
+        .bool => .{ .bool_val = (try cur.readU8()) != 0 },
+        .i8 => .{ .i8_val = @bitCast(try cur.readU8()) },
+        .u8 => .{ .u8_val = try cur.readU8() },
+        .i16 => .{ .i16_val = @bitCast(try cur.readU16()) },
+        .u16 => .{ .u16_val = try cur.readU16() },
+        .i32 => .{ .i32_val = @bitCast(try cur.readU32()) },
+        .u32 => .{ .u32_val = try cur.readU32() },
+        .i64 => .{ .i64_val = @bitCast(try cur.readU64()) },
+        .u64 => .{ .u64_val = try cur.readU64() },
+        .f32 => .{ .f32_val = @bitCast(try cur.readU32()) },
+        .f64 => .{ .f64_val = @bitCast(try cur.readU64()) },
+        .string => .{ .string = try cur.readSerString() },
+        .class_name => |tn| blk: {
+            // System.Type is serialised as a SerString "Namespace.Name";
+            // any other class-ref is serialised as its underlying i32
+            // (WinRT convention — such references are always to enums).
+            if (std.mem.eql(u8, tn.namespace, "System") and std.mem.eql(u8, tn.name, "Type")) {
+                const s = try cur.readSerString();
+                if (std.mem.lastIndexOfScalar(u8, s, '.')) |dot| {
+                    break :blk .{ .type_name = .{ .namespace = s[0..dot], .name = s[dot + 1 ..] } };
+                }
+                break :blk .{ .type_name = .{ .namespace = "", .name = s } };
+            }
+            break :blk .{ .enum_value = .{ .type = tn, .value = @bitCast(try cur.readU32()) } };
+        },
+        .value_name => |tn| .{ .enum_value = .{ .type = tn, .value = @bitCast(try cur.readU32()) } },
+        else => error.UnsupportedAttributeType,
+    };
+}
+
+/// Resolve the signature blob of an attribute's constructor.
+/// Returns null if the ctor token is not a MethodDef or MemberRef.
+fn attributeCtorSignature(file: *const File, attr_row: u32) ?[]const u8 {
+    const coded = file.cell(.attribute, attr_row, 1);
+    const tag = coded & 0x07;
+    const row_1based = coded >> 3;
+    if (row_1based == 0) return null;
+    const row = row_1based - 1;
+    return switch (tag) {
+        2 => file.blob(.method_def, row, 4), // MethodDef.Signature
+        3 => file.blob(.member_ref, row, 2), // MemberRef.Signature
+        else => null,
+    };
+}
+
+/// Decode the positional and named arguments of an attribute.
+///
+/// Positional arguments are returned in ctor-declaration order with
+/// `name == ""`; named arguments follow, with the field/property name
+/// populated. All allocations live in `arena` — the return slice plus
+/// any signature types read to decode the positional section.
+pub fn readAttributeArgs(
+    arena: std.mem.Allocator,
+    file: *const File,
+    attr_row: u32,
+) AttrError![]AttrArg {
+    const sig_blob = attributeCtorSignature(file, attr_row) orelse return error.UnsupportedElement;
+    const sig = try readMethodSignature(arena, file, sig_blob);
+
+    const value_blob = file.blob(.attribute, attr_row, 2);
+    var cur: AttrCursor = .{ .bytes = value_blob };
+
+    const prolog = try cur.readU16();
+    if (prolog != 0x0001) return error.BadPrologue;
+
+    // Allocate for positional + named (named count unknown yet — grow
+    // by reading all positional first then appending named).
+    var out = try std.ArrayList(AttrArg).initCapacity(arena, sig.params.len);
+    for (sig.params) |ty| {
+        try out.append(arena, .{ .name = "", .value = try readAttrValue(&cur, ty) });
+    }
+
+    // A ctor with no positional args may still have no bytes left; the
+    // named-arg count is optional in that degenerate case.
+    if (cur.pos == cur.bytes.len) return out.toOwnedSlice(arena);
+    const named_count = try cur.readU16();
+
+    try out.ensureTotalCapacity(arena, out.items.len + named_count);
+    var i: u32 = 0;
+    while (i < named_count) : (i += 1) {
+        const kind = try cur.readU8();
+        if (kind != ATTR_ELEMENT_TYPE_FIELD and kind != ATTR_ELEMENT_TYPE_PROPERTY)
+            return error.UnsupportedAttributeType;
+        const ty = try readAttrNamedType(arena, file, &cur);
+        const name = try cur.readSerString();
+        try out.append(arena, .{ .name = name, .value = try readAttrValue(&cur, ty) });
+    }
+
+    return out.toOwnedSlice(arena);
+}
+
+/// Inline type descriptor for a named attribute argument (§II.23.3).
+///
+/// Values use the same ELEMENT_TYPE codes as signatures for primitives
+/// but have dedicated tags for `System.Type` (0x50) and enums (0x55).
+fn readAttrNamedType(arena: std.mem.Allocator, file: *const File, cur: *AttrCursor) AttrError!Ty {
+    const code = try cur.readU8();
+    return switch (code) {
+        ELEMENT_TYPE_BOOLEAN => .bool,
+        ELEMENT_TYPE_CHAR => .char,
+        ELEMENT_TYPE_I1 => .i8,
+        ELEMENT_TYPE_U1 => .u8,
+        ELEMENT_TYPE_I2 => .i16,
+        ELEMENT_TYPE_U2 => .u16,
+        ELEMENT_TYPE_I4 => .i32,
+        ELEMENT_TYPE_U4 => .u32,
+        ELEMENT_TYPE_I8 => .i64,
+        ELEMENT_TYPE_U8 => .u64,
+        ELEMENT_TYPE_R4 => .f32,
+        ELEMENT_TYPE_R8 => .f64,
+        ATTR_ELEMENT_TYPE_STRING => .string,
+        ATTR_ELEMENT_TYPE_TYPE => .{ .class_name = .{ .namespace = "System", .name = "Type" } },
+        ATTR_ELEMENT_TYPE_ENUM => blk: {
+            // The enum's fully-qualified name is serialised inline.
+            const s = try cur.readSerString();
+            _ = arena; // no arena allocation needed — slice borrows blob.
+            const tn: TypeName = if (std.mem.lastIndexOfScalar(u8, s, '.')) |dot|
+                .{ .namespace = s[0..dot], .name = s[dot + 1 ..] }
+            else
+                .{ .namespace = "", .name = s };
+            _ = file;
+            break :blk .{ .value_name = tn };
+        },
+        else => error.UnsupportedAttributeType,
+    };
+}
+
 // ---- PE / COR20 constants -------------------------------------------------
 
 const IMAGE_DOS_SIGNATURE: u16 = 0x5A4D; // "MZ"
@@ -1438,4 +1686,45 @@ test "attribute helpers find Point's ContractVersionAttribute" {
     // Coded-token encoding: ((row+1) << 5) | tag.
     try std.testing.expectEqual(@as(u32, (1 << 5) | 3), encodeHasAttribute(.type_def, 0));
     try std.testing.expectEqual(@as(u32, (5 << 5) | 0), encodeHasAttribute(.method_def, 4));
+}
+
+test "attribute values decode Point's ContractVersionAttribute" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+    const point_row = index.get("Windows.Foundation", "Point")[0];
+
+    const attr_row = findAttribute(&f, .type_def, point_row, "ContractVersionAttribute") orelse
+        return error.TestUnexpectedResult;
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const args = try readAttributeArgs(arena.allocator(), &f, attr_row);
+
+    // ContractVersionAttribute(Type, u32) on a struct encodes one
+    // positional Type arg (the contract name) and one u32 version; no
+    // named args.
+    try std.testing.expectEqual(@as(usize, 2), args.len);
+    try std.testing.expectEqualStrings("", args[0].name);
+    try std.testing.expect(args[0].value == .type_name);
+    try std.testing.expectEqualStrings("Windows.Foundation", args[0].value.type_name.namespace);
+    try std.testing.expectEqualStrings("FoundationContract", args[0].value.type_name.name);
+    try std.testing.expectEqualStrings("", args[1].name);
+    try std.testing.expect(args[1].value == .u32_val);
+    try std.testing.expect(args[1].value.u32_val != 0);
+
+    // Every decodable attribute on Point must round-trip without error.
+    const range = attributes(&f, .type_def, point_row);
+    var i = range.start;
+    while (i < range.end) : (i += 1) {
+        _ = readAttributeArgs(arena.allocator(), &f, i) catch |err| switch (err) {
+            // Complex attributes that use constructs this reader does
+            // not model yet (arrays, boxed args, generics, ...) are
+            // allowed to fail — they'll be covered in later phases.
+            error.UnsupportedAttributeType, error.UnsupportedElement => continue,
+            else => return err,
+        };
+    }
 }
