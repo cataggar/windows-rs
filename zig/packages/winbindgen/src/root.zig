@@ -75,6 +75,7 @@ pub fn emitNamespace(
     const body_writer = &body.writer;
 
     try emitIidConstants(body_writer, arena, file, namespace);
+    try emitGuidConstants(body_writer, arena, file, namespace);
     try emitEnums(body_writer, arena, file, namespace);
     try emitStructsImpl(body_writer, arena, file, namespace, &cross);
     try emitInterfaceHandles(body_writer, arena, file, namespace, &cross);
@@ -176,6 +177,74 @@ pub fn emitIidConstants(
                 parts[10],
             },
         );
+    }
+}
+
+/// Emit `pub const <NAME>: GUID = .{ ... };` for every static field on
+/// the `Apis` pseudo-class in `namespace` that carries a
+/// `GuidAttribute`. Win32 metadata stores CLSID/IID/GUID_* values this
+/// way (they are *not* HasConstant records, so `emitConstants` skips
+/// them). Fields without a `GuidAttribute` are silently skipped.
+pub fn emitGuidConstants(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+        if (!std.mem.eql(u8, file.str(.type_def, row, 1), "Apis")) continue;
+
+        const fields = file.list(.type_def, row, 4, .field);
+        var f: u32 = fields.start;
+        while (f < fields.end) : (f += 1) {
+            const attr_row = winmd.findAttribute(file, .field, f, "GuidAttribute") orelse continue;
+            const args = winmd.readAttributeArgs(arena, file, attr_row) catch continue;
+            if (args.len < 11) continue;
+
+            var parts: [11]u64 = undefined;
+            var ok = true;
+            inline for (0..11) |i| {
+                parts[i] = switch (args[i].value) {
+                    .u32_val => |v| v,
+                    .u16_val => |v| v,
+                    .u8_val => |v| v,
+                    else => blk: {
+                        ok = false;
+                        break :blk 0;
+                    },
+                };
+            }
+            if (!ok) continue;
+
+            const name = file.str(.field, f, 1);
+            try writer.print(
+                \\pub const {s}: GUID = .{{
+                \\    .data1 = 0x{X:0>8},
+                \\    .data2 = 0x{X:0>4},
+                \\    .data3 = 0x{X:0>4},
+                \\    .data4 = .{{ 0x{X:0>2}, 0x{X:0>2}, 0x{X:0>2}, 0x{X:0>2}, 0x{X:0>2}, 0x{X:0>2}, 0x{X:0>2}, 0x{X:0>2} }},
+                \\}};
+                \\
+            ,
+                .{
+                    name,
+                    parts[0],
+                    parts[1],
+                    parts[2],
+                    parts[3],
+                    parts[4],
+                    parts[5],
+                    parts[6],
+                    parts[7],
+                    parts[8],
+                    parts[9],
+                    parts[10],
+                },
+            );
+        }
     }
 }
 
@@ -1988,4 +2057,39 @@ test "emitNamespace produces a self-consistent body for Windows.Win32.Foundation
 
     // A well-known direct P/Invoke from this namespace.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub extern \"KERNEL32\" fn CloseHandle(") != null);
+}
+
+test "emitGuidConstants emits CLSID/FMTID fields for a Win32 namespace" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitGuidConstants(&buf.writer, arena.allocator(), &file, "Windows.Win32.System.Com");
+    const out = buf.written();
+
+    // Every emitted line should start with `pub const ` and carry the
+    // `GUID` type annotation so downstream compilation is well-formed.
+    try std.testing.expect(out.len > 0);
+    try std.testing.expect(std.mem.indexOf(u8, out, ": GUID = .{") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, ".data1 = 0x") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, ".data4 = .{") != null);
+
+    // Every line must start with "pub const " (emission framing).
+    var it = std.mem.splitScalar(u8, out, '\n');
+    while (it.next()) |line| {
+        if (line.len == 0) continue;
+        if (std.mem.startsWith(u8, line, "pub const ")) continue;
+        // Continuation lines of the multi-line initializer start with
+        // four spaces.
+        if (std.mem.startsWith(u8, line, "    .")) continue;
+        if (std.mem.eql(u8, line, "};")) continue;
+        // Anything else is unexpected.
+        std.debug.print("unexpected line: {s}\n", .{line});
+        try std.testing.expect(false);
+    }
 }
