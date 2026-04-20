@@ -158,21 +158,33 @@ pub fn build(b: *std.Build) void {
     // it. Hooked into the `test` step.
     // ------------------------------------------------------------------
 
-    const gen_run = b.addRunArtifact(winbindgen_exe);
-    gen_run.addArg("Windows.Foundation");
-    const gen_source = gen_run.captureStdOut(.{});
+    // Namespaces we compile-check every build. Expand this list to
+    // exercise more of the emitted surface; each entry regenerates
+    // on demand and type-checks against `win-core`.
+    const compile_check_namespaces = [_][]const u8{
+        "Windows.Foundation",
+        "Windows.Globalization",
+        "Windows.Data.Json",
+        "Windows.Storage.Streams",
+    };
 
-    const gen_mod = b.createModule(.{
-        .root_source_file = gen_source,
-        .target = target,
-        .optimize = optimize,
-    });
-    gen_mod.addImport("win-core", win_core_mod);
+    for (compile_check_namespaces) |ns| {
+        const gen_run = b.addRunArtifact(winbindgen_exe);
+        gen_run.addArg(ns);
+        const gen_source = gen_run.captureStdOut(.{});
 
-    const gen_obj = b.addTest(.{
-        .name = "compile-check-Windows.Foundation",
-        .root_module = gen_mod,
-    });
-    const run_gen_obj = b.addRunArtifact(gen_obj);
-    test_step.dependOn(&run_gen_obj.step);
+        const gen_mod = b.createModule(.{
+            .root_source_file = gen_source,
+            .target = target,
+            .optimize = optimize,
+        });
+        gen_mod.addImport("win-core", win_core_mod);
+
+        const gen_obj = b.addTest(.{
+            .name = b.fmt("compile-check-{s}", .{ns}),
+            .root_module = gen_mod,
+        });
+        const run_gen_obj = b.addRunArtifact(gen_obj);
+        test_step.dependOn(&run_gen_obj.step);
+    }
 }
