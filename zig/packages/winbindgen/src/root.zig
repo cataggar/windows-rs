@@ -124,3 +124,72 @@ test "emitIidConstants writes IStringable from Windows.Foundation" {
     }
     try std.testing.expect(count > 10);
 }
+
+/// Emit a `<Name>_Vtbl extern struct` per interface in `namespace`.
+///
+/// First-slice emission: each method is typed as `*const anyopaque`
+/// so we prove the method walker independently of the full
+/// type-mapping layer. Vtbl field order matches MethodDef row order,
+/// which is the ABI slot order for COM / WinRT. A later slice will
+/// replace the opaque fields with real
+/// `*const fn(...) callconv(.winapi) HRESULT` function pointers
+/// derived from the MethodDef signature blob.
+///
+/// Every WinRT interface's first three slots are IUnknown methods
+/// followed by three IInspectable methods — captured here by
+/// `base: IInspectable_Vtbl`. Classic COM interfaces that extend
+/// IUnknown directly are out of scope for this slice (the WinRT
+/// metadata we consume has none).
+pub fn emitInterfaceVtbls(
+    writer: *std.Io.Writer,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+        const flags = file.cell(.type_def, row, 0);
+        if ((flags & TYPE_ATTR_INTERFACE) == 0) continue;
+
+        const name = file.str(.type_def, row, 1);
+        // Skip generic placeholders like `IVector`1` — a later slice
+        // handles parameterised vtbls.
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+
+        try writer.print(
+            \\pub const {s}_Vtbl = extern struct {{
+            \\    base: IInspectable_Vtbl,
+            \\
+        , .{name});
+
+        const methods = file.list(.type_def, row, 5, .method_def);
+        var m = methods.start;
+        while (m < methods.end) : (m += 1) {
+            const method_name = file.str(.method_def, m, 3);
+            try writer.print("    {s}: *const anyopaque,\n", .{method_name});
+        }
+
+        try writer.writeAll("};\n");
+    }
+}
+
+test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitInterfaceVtbls(&buf.writer, &file, "Windows.Foundation");
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable_Vtbl = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "base: IInspectable_Vtbl") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "ToString: *const anyopaque") != null);
+
+    // IClosable.Close is a second canonical single-method interface —
+    // ensures we're not accidentally one-shot.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IClosable_Vtbl = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "Close: *const anyopaque") != null);
+}
