@@ -1277,12 +1277,6 @@ fn emitStructsImpl(
     const VISIBILITY_MASK: u32 = 0x7;
     const VIS_NOT_PUBLIC: u32 = 0x0;
     const VIS_PUBLIC: u32 = 0x1;
-    const LAYOUT_MASK: u32 = 0x18;
-    const LAYOUT_EXPLICIT: u32 = 0x10;
-    // FieldAttributes.Static — enum literal fields and class-level
-    // constants carry this bit and must be skipped when walking
-    // struct instance fields.
-    const FIELD_ATTR_STATIC: u32 = 0x10;
 
     const rows = file.rowCount(.type_def);
     var row: u32 = 0;
@@ -1292,7 +1286,6 @@ fn emitStructsImpl(
         const flags = file.cell(.type_def, row, 0);
         const vis = flags & VISIBILITY_MASK;
         if (vis != VIS_NOT_PUBLIC and vis != VIS_PUBLIC) continue; // nested
-        const is_union = (flags & LAYOUT_MASK) == LAYOUT_EXPLICIT;
 
         const extends_tok = file.cell(.type_def, row, 3);
         if (extends_tok == 0) continue;
@@ -1309,30 +1302,85 @@ fn emitStructsImpl(
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
         if (isPreludeAlias(namespace, name)) continue;
 
-        const field_list = file.list(.type_def, row, 4, .field);
-        if (field_list.start == field_list.end) continue;
+        try emitOneStruct(writer, arena, file, namespace, cross, row, name);
+    }
+}
 
-        // First pass: verify every non-static field is representable.
-        // If anything is out of scope we skip the whole struct rather
-        // than emit opaque fillers, which would break downstream
-        // size/alignment assumptions at the ABI boundary.
-        var all_ok = true;
-        var f: u32 = field_list.start;
-        while (f < field_list.end) : (f += 1) {
-            const field_flags = file.cell(.field, f, 0);
-            if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
-            const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch {
-                all_ok = false;
-                break;
-            };
-            if (!canRepresent(ty)) {
-                all_ok = false;
-                break;
-            }
+/// Emit a single TypeDef (struct or union) plus every TypeDef nested
+/// inside it, recursively.
+///
+/// MIDL-generated C++ headers often contain anonymous unions inside
+/// structs; the Windows metadata projects them as separately-named
+/// nested TypeDefs with mangled names like `_Anonymous_e__Union`,
+/// `_Privileges_e__Union`, or `_Attribute_e__Union`. The parent
+/// struct's field references these by simple name, so Zig can only
+/// compile the parent if the nested TypeDefs are also emitted as
+/// siblings in the same namespace module.
+///
+/// The Rust bindgen equivalent is
+/// `crates/libs/bindgen/src/types/cpp_struct.rs` which appends nested
+/// structs to the parent's TokenStream (lines 238-243). The
+/// `NestedClass` table (§II.22.32) is sorted by `EnclosingClass`
+/// (column 1), so `equalRange` on that column cheaply finds every
+/// nested TypeDef row of a given parent.
+fn emitOneStruct(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    namespace: []const u8,
+    cross: *CrossNsSet,
+    row: u32,
+    name: []const u8,
+) !void {
+    const LAYOUT_MASK: u32 = 0x18;
+    const LAYOUT_EXPLICIT: u32 = 0x10;
+    const FIELD_ATTR_STATIC: u32 = 0x10;
+
+    const flags = file.cell(.type_def, row, 0);
+    const is_union = (flags & LAYOUT_MASK) == LAYOUT_EXPLICIT;
+
+    const field_list = file.list(.type_def, row, 4, .field);
+    if (field_list.start == field_list.end) return;
+
+    // First pass: verify every non-static field is representable. If
+    // anything is out of scope skip the whole struct rather than emit
+    // opaque fillers, which would break downstream size/alignment
+    // assumptions at the ABI boundary. Nested TypeDefs referenced by
+    // name still need to be emitted below regardless.
+    var all_ok = true;
+    var f: u32 = field_list.start;
+    while (f < field_list.end) : (f += 1) {
+        const field_flags = file.cell(.field, f, 0);
+        if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
+        const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch {
+            all_ok = false;
+            break;
+        };
+        if (!canRepresent(ty)) {
+            all_ok = false;
+            break;
         }
-        if (!all_ok) continue;
+    }
 
+    if (all_ok) {
         try writer.print("pub const {s} = extern {s} {{\n", .{ name, if (is_union) "union" else "struct" });
+
+        // Emit nested TypeDefs as inner pub const decls so field types
+        // like `_Anonymous_e__Union` resolve via Zig struct-scope lookup
+        // without polluting the namespace. Multiple parents can each
+        // have their own `_Anonymous_e__Union` without colliding.
+        const nested = file.equalRange(.nested_class, 1, row + 1);
+        var i: u32 = nested.start;
+        while (i < nested.end) : (i += 1) {
+            const nested_typedef = file.cell(.nested_class, i, 0);
+            if (nested_typedef == 0) continue;
+            const child_row = nested_typedef - 1;
+            if (!supportsX64(file, .type_def, child_row)) continue;
+            const child_name = file.str(.type_def, child_row, 1);
+            if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
+            try emitOneStruct(writer, arena, file, namespace, cross, child_row, child_name);
+        }
+
         f = field_list.start;
         while (f < field_list.end) : (f += 1) {
             const field_flags = file.cell(.field, f, 0);
