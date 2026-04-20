@@ -568,6 +568,62 @@ pub fn readFieldSignature(arena: std.mem.Allocator, file: *const File, blob: []c
     return ty;
 }
 
+/// MethodDef / MemberRef calling-convention flags (ECMA-335 §II.23.2.3).
+/// The low nibble is the calling convention; the high nibble carries
+/// HASTHIS / EXPLICITTHIS / GENERIC / VARARG bits.
+pub const MethodCallAttributes = packed struct(u8) {
+    raw: u8,
+
+    pub fn hasThis(self: MethodCallAttributes) bool {
+        return (self.raw & 0x20) != 0;
+    }
+    pub fn explicitThis(self: MethodCallAttributes) bool {
+        return (self.raw & 0x40) != 0;
+    }
+    pub fn isGeneric(self: MethodCallAttributes) bool {
+        return (self.raw & 0x10) != 0;
+    }
+    pub fn isVarArg(self: MethodCallAttributes) bool {
+        return (self.raw & 0x05) == 0x05;
+    }
+};
+
+/// Decoded method signature. `return_type` and every entry of `params` are
+/// arena-allocated; the `params` slice is also arena-allocated. The whole
+/// tree is freed when the arena resets.
+pub const MethodSignature = struct {
+    flags: MethodCallAttributes,
+    return_type: Ty,
+    params: []Ty,
+};
+
+/// Decode a method signature blob (ECMA-335 §II.23.2.1).
+///
+///     MethodDefSig := [HASTHIS [EXPLICITTHIS]] (DEFAULT|VARARG|...)
+///                     [GENPARAMCOUNT] ParamCount RetType Param*
+///
+/// Generics (GENERIC flag, GENPARAMCOUNT) are not yet supported — a blob
+/// with the GENERIC bit set produces `error.UnsupportedElement`. The caller
+/// is responsible for signatures that contain ELEMENT_TYPE_VAR /
+/// ELEMENT_TYPE_GENERICINST inside their types; those also error out.
+pub fn readMethodSignature(arena: std.mem.Allocator, file: *const File, blob: []const u8) SigError!MethodSignature {
+    var c: SigCursor = .{ .bytes = blob };
+    const flags: MethodCallAttributes = .{ .raw = try c.readU8() };
+    if (flags.isGeneric()) return error.UnsupportedElement;
+
+    const param_count = try c.readCompressed();
+    const return_type = try readTypeSignature(arena, file, &c);
+
+    const params = try arena.alloc(Ty, param_count);
+    var i: u32 = 0;
+    while (i < param_count) : (i += 1) {
+        params[i] = try readTypeSignature(arena, file, &c);
+    }
+
+    if (!c.eof()) return error.TrailingBytes;
+    return .{ .flags = flags, .return_type = return_type, .params = params };
+}
+
 /// Decode one `Type` element. Mirrors `Blob::read_type_signature` in the Rust
 /// reader but without the `generics` context — ELEMENT_TYPE_VAR and
 /// ELEMENT_TYPE_GENERICINST are deferred to a later phase.
@@ -1211,4 +1267,42 @@ test "field signature decodes Point.X/Y as f32" {
     try std.testing.expectError(error.TrailingBytes, readFieldSignature(arena.allocator(), &f, &[_]u8{ 0x06, 0x0C, 0x0C }));
     // Wrong prolog must be rejected.
     try std.testing.expectError(error.BadFieldProlog, readFieldSignature(arena.allocator(), &f, &[_]u8{ 0x07, 0x0C }));
+}
+
+test "method signature decodes IClosable.Close as void()" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+
+    // IClosable is a WinRT interface with a single method: void Close().
+    const rows = index.get("Windows.Foundation", "IClosable");
+    try std.testing.expectEqual(@as(usize, 1), rows.len);
+    const methods = f.list(.type_def, rows[0], 5, .method_def);
+    try std.testing.expect(methods.len() >= 1);
+
+    // Find the Close method by name — robust to WinRT ordering.
+    var close_row: ?u32 = null;
+    var i = methods.start;
+    while (i < methods.end) : (i += 1) {
+        if (std.mem.eql(u8, f.str(.method_def, i, 3), "Close")) {
+            close_row = i;
+            break;
+        }
+    }
+    try std.testing.expect(close_row != null);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const sig = f.blob(.method_def, close_row.?, 4);
+    const m = try readMethodSignature(arena.allocator(), &f, sig);
+    try std.testing.expect(m.flags.hasThis());
+    try std.testing.expect(!m.flags.isGeneric());
+    try std.testing.expectEqual(@as(usize, 0), m.params.len);
+    try std.testing.expectEqual(Ty.void, m.return_type);
+
+    // Malformed blob: claims 1 param but has no type byte after void return.
+    try std.testing.expectError(error.ShortBlob, readMethodSignature(arena.allocator(), &f, &[_]u8{ 0x20, 0x01, 0x01 }));
 }
