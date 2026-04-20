@@ -707,6 +707,107 @@ pub fn readTypeCode(arena: std.mem.Allocator, file: *const File, c: *SigCursor) 
     };
 }
 
+// ---- Attributes (ECMA-335 §II.22.10 CustomAttribute) ---------------------
+
+/// Tag values for the HasCustomAttribute coded-index (§II.24.2.6).
+/// A HasCustomAttribute token is `((row + 1) << 5) | tag` where row is
+/// 0-based. Only the subset the generator cares about is exposed here;
+/// other tags are valid in the file format but not needed by the tooling.
+pub const HasAttributeTag = enum(u5) {
+    method_def = 0,
+    field = 1,
+    type_ref = 2,
+    type_def = 3,
+    method_param = 4,
+    interface_impl = 5,
+    member_ref = 6,
+    type_spec = 13,
+    generic_param = 19,
+};
+
+/// Encode `(table, row)` into a HasCustomAttribute coded token that can be
+/// passed to `File.equalRange(.attribute, 0, ...)`.
+pub fn encodeHasAttribute(tag: HasAttributeTag, row: u32) u32 {
+    return ((row + 1) << 5) | @intFromEnum(tag);
+}
+
+/// Half-open range of rows in the Attribute table whose Parent column
+/// equals `(tag, row)`. The table is sorted by Parent per §II.22.10 so
+/// the lookup is a binary search.
+pub fn attributes(file: *const File, tag: HasAttributeTag, row: u32) Range {
+    return file.equalRange(.attribute, 0, encodeHasAttribute(tag, row));
+}
+
+/// Resolve the `(namespace, name)` of the attribute class referenced by
+/// row `attr_row` of the Attribute table. Returns null if the constructor
+/// token uses a tag or parent kind this reader does not yet handle.
+///
+/// The Attribute.Type column is a CustomAttributeType coded index
+/// (§II.24.2.6, 3 bits): tag 2 = MethodDef, tag 3 = MemberRef. Attribute
+/// classes are reached through the ctor's containing type.
+pub fn attributeName(file: *const File, attr_row: u32) ?TypeName {
+    const coded = file.cell(.attribute, attr_row, 1);
+    if (coded == 0) return null;
+    const tag = coded & 0x07;
+    const row_1based = coded >> 3;
+    if (row_1based == 0) return null;
+    const row = row_1based - 1;
+
+    switch (tag) {
+        // MethodDef: the ctor is a method inside the attribute class. The
+        // containing TypeDef is recovered via TypeDef.MethodList (column 5).
+        2 => {
+            const type_row = file.parent(.type_def, 5, row);
+            return .{
+                .namespace = file.str(.type_def, type_row, 2),
+                .name = file.str(.type_def, type_row, 1),
+            };
+        },
+        // MemberRef: the ctor references an external class. MemberRef.Class
+        // (column 0) is a MemberRefParent coded index (3 bits): tag 0 =
+        // TypeDef, tag 1 = TypeRef. Only TypeRef is common for attributes
+        // defined outside the current winmd (e.g. mscorlib / Windows.Foundation).
+        3 => {
+            const parent_coded = file.cell(.member_ref, row, 0);
+            const parent_tag = parent_coded & 0x07;
+            const parent_row_1based = parent_coded >> 3;
+            if (parent_row_1based == 0) return null;
+            const parent_row = parent_row_1based - 1;
+            return switch (parent_tag) {
+                0 => .{
+                    .namespace = file.str(.type_def, parent_row, 2),
+                    .name = file.str(.type_def, parent_row, 1),
+                },
+                1 => .{
+                    .namespace = file.str(.type_ref, parent_row, 2),
+                    .name = file.str(.type_ref, parent_row, 1),
+                },
+                else => null,
+            };
+        },
+        else => return null,
+    }
+}
+
+/// Find the first attribute row attached to `(tag, row)` whose class
+/// simple name equals `name`. Namespace is ignored to match the Rust
+/// reader's `find_attribute`.
+pub fn findAttribute(file: *const File, tag: HasAttributeTag, row: u32, name: []const u8) ?u32 {
+    const range = attributes(file, tag, row);
+    var i = range.start;
+    while (i < range.end) : (i += 1) {
+        if (attributeName(file, i)) |tn| {
+            if (std.mem.eql(u8, tn.name, name)) return i;
+        }
+    }
+    return null;
+}
+
+/// Convenience: does any attribute on `(tag, row)` have simple name `name`?
+pub fn hasAttribute(file: *const File, tag: HasAttributeTag, row: u32, name: []const u8) bool {
+    return findAttribute(file, tag, row, name) != null;
+}
+
 // ---- PE / COR20 constants -------------------------------------------------
 
 const IMAGE_DOS_SIGNATURE: u16 = 0x5A4D; // "MZ"
@@ -1305,4 +1406,36 @@ test "method signature decodes IClosable.Close as void()" {
 
     // Malformed blob: claims 1 param but has no type byte after void return.
     try std.testing.expectError(error.ShortBlob, readMethodSignature(arena.allocator(), &f, &[_]u8{ 0x20, 0x01, 0x01 }));
+}
+
+test "attribute helpers find Point's ContractVersionAttribute" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+    const point_row = index.get("Windows.Foundation", "Point")[0];
+
+    // Point is a WinRT struct; WinRT projections decorate every public
+    // type with ContractVersionAttribute to record the API contract
+    // version it first appeared in.
+    const range = attributes(&f, .type_def, point_row);
+    try std.testing.expect(range.len() >= 1);
+
+    // Every attribute row in the range must name a resolvable class,
+    // and at least one must mention ContractVersion.
+    var saw_contract = false;
+    var i = range.start;
+    while (i < range.end) : (i += 1) {
+        const tn = attributeName(&f, i);
+        try std.testing.expect(tn != null);
+        if (std.mem.eql(u8, tn.?.name, "ContractVersionAttribute")) saw_contract = true;
+    }
+    try std.testing.expect(saw_contract);
+    try std.testing.expect(hasAttribute(&f, .type_def, point_row, "ContractVersionAttribute"));
+    try std.testing.expect(!hasAttribute(&f, .type_def, point_row, "ThisDoesNotExistAttribute"));
+
+    // Coded-token encoding: ((row+1) << 5) | tag.
+    try std.testing.expectEqual(@as(u32, (1 << 5) | 3), encodeHasAttribute(.type_def, 0));
+    try std.testing.expectEqual(@as(u32, (5 << 5) | 0), encodeHasAttribute(.method_def, 4));
 }
