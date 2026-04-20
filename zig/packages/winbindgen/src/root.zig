@@ -257,6 +257,7 @@ fn canRepresent(ty: winmd.Ty) bool {
         .f32,
         .f64,
         .string,
+        .class_name,
         => true,
         .ref_mut, .ref_const => |inner| canRepresent(inner.*),
         .ptr_mut => |p| canRepresent(p.inner.*),
@@ -284,6 +285,12 @@ fn writeZigTy(writer: *std.Io.Writer, ty: winmd.Ty) !bool {
         .f32 => try writer.writeAll("f32"),
         .f64 => try writer.writeAll("f64"),
         .string => try writer.writeAll("HSTRING"),
+        // WinRT / COM interface reference. At the ABI boundary this is
+        // always an opaque pointer to the object's vtbl; the concrete
+        // `<Name>_Vtbl` type isn't always in scope at the emission site
+        // (could be cross-namespace), so emit the type-erased form.
+        // Upstream windows-rs renders the same shape as `*mut c_void`.
+        .class_name => try writer.writeAll("*anyopaque"),
         .ptr_mut => |p| {
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*");
@@ -328,6 +335,15 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
         u8,
         out,
         "Close: *const fn (this: *anyopaque) callconv(.winapi) HRESULT",
+    ) != null);
+
+    // IUriRuntimeClassFactory.CreateUri(HSTRING uri) returns
+    // IUriRuntimeClass — a class_name reference, ABI-shaped as an
+    // opaque pointer. The out param therefore becomes `**anyopaque`.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "CreateUri: *const fn (this: *anyopaque, p0: HSTRING, result: **anyopaque) callconv(.winapi) HRESULT",
     ) != null);
 
     // At least one interface in Windows.Foundation uses types we don't
