@@ -467,12 +467,15 @@ fn writeZigTy(writer: *std.Io.Writer, ty: winmd.Ty) !bool {
         .f32 => try writer.writeAll("f32"),
         .f64 => try writer.writeAll("f64"),
         .string => try writer.writeAll("HSTRING"),
-        // WinRT / COM interface reference. At the ABI boundary this is
-        // always an opaque pointer to the object's vtbl; the concrete
-        // `<Name>_Vtbl` type isn't always in scope at the emission site
-        // (could be cross-namespace), so emit the type-erased form.
-        // Upstream windows-rs renders the same shape as `*mut c_void`.
-        .class_name => try writer.writeAll("*anyopaque"),
+        // WinRT / COM interface reference. In metadata this is
+        // inherently a pointer — ELEMENT_TYPE_CLASS represents the
+        // object by reference — so we emit `*<ShortName>` pointing at
+        // the handle struct produced by `emitInterfaceHandles`. The
+        // consumer is expected to have the handle in scope (same
+        // namespace, or imported cross-namespace). Fully-qualified
+        // emission lands with the cross-namespace import story in a
+        // later slice.
+        .class_name => |tn| try writer.print("*{s}", .{tn.name}),
         // WinRT value type (enum or struct) passed by value. First
         // slice: emit the short name and trust that the same
         // declaration is in scope at the import site. Namespace-aware
@@ -525,13 +528,13 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
         "Close: *const fn (this: *anyopaque) callconv(.winapi) HRESULT",
     ) != null);
 
-    // IUriRuntimeClassFactory.CreateUri(HSTRING uri) returns
-    // IUriRuntimeClass — a class_name reference, ABI-shaped as an
-    // opaque pointer. The out param therefore becomes `**anyopaque`.
+    // IUriRuntimeClassFactory.CreateUri(HSTRING uri) returns a
+    // runtime class (`Uri`) — a class_name reference. With typed
+    // interface handles the out param becomes `**Uri`.
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "CreateUri: *const fn (this: *anyopaque, p0: HSTRING, result: **anyopaque) callconv(.winapi) HRESULT",
+        "CreateUri: *const fn (this: *anyopaque, p0: HSTRING, result: **Uri) callconv(.winapi) HRESULT",
     ) != null);
 
     // IAsyncInfo.get_Status returns the `AsyncStatus` enum — a
