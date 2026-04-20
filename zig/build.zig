@@ -41,10 +41,12 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    // `win-core` calls into `OleAut32.dll` for `BSTR` helpers; link it on
-    // Windows targets. No-op elsewhere (the BSTR code is gated on the OS).
+    // `win-core` calls into `OleAut32.dll` for `BSTR` helpers and into
+    // `combase.dll` (via the `api-ms-win-core-winrt-string-l1-1-0` API set)
+    // for `HSTRING` helpers. Link both on Windows targets.
     if (target.result.os.tag == .windows) {
         win_core_mod.linkSystemLibrary("oleaut32", .{});
+        win_core_mod.linkSystemLibrary("api-ms-win-core-winrt-string-l1-1-0", .{});
     }
 
     const winbindgen_mod = b.addModule("winbindgen", .{

@@ -404,6 +404,120 @@ pub const Bstr = struct {
     }
 };
 
+// ---- HSTRING --------------------------------------------------------------
+
+/// Opaque WinRT string handle, allocated and freed exclusively by
+/// `combase.dll`. Null is a valid empty value (per MSDN).
+pub const HSTRING = ?*opaque {};
+
+/// Externs from the WinRT string API set. At runtime these resolve to
+/// `combase.dll`, but we link against the API-set import library that
+/// ships with Zig's MinGW distribution (`combase` itself is not shipped).
+pub const combase = struct {
+    pub extern "api-ms-win-core-winrt-string-l1-1-0" fn WindowsCreateString(
+        source: ?[*]const u16,
+        length: u32,
+        string: *HSTRING,
+    ) callconv(.winapi) HRESULT;
+
+    pub extern "api-ms-win-core-winrt-string-l1-1-0" fn WindowsDeleteString(
+        string: HSTRING,
+    ) callconv(.winapi) HRESULT;
+
+    pub extern "api-ms-win-core-winrt-string-l1-1-0" fn WindowsGetStringRawBuffer(
+        string: HSTRING,
+        length: ?*u32,
+    ) callconv(.winapi) ?[*]const u16;
+
+    pub extern "api-ms-win-core-winrt-string-l1-1-0" fn WindowsGetStringLen(
+        string: HSTRING,
+    ) callconv(.winapi) u32;
+};
+
+/// Owning `HSTRING` wrapper. Free-at-drop via `WindowsDeleteString`.
+/// Null is a valid empty value and `deinit` is idempotent.
+pub const Hstring = struct {
+    raw: HSTRING = null,
+
+    /// Wrap a raw `HSTRING` already owned by the caller.
+    pub fn fromRaw(raw: HSTRING) Hstring {
+        return .{ .raw = raw };
+    }
+
+    /// Allocate an `HSTRING` from a UTF-16 slice via `WindowsCreateString`.
+    pub fn create(text: []const u16) !Hstring {
+        var out: HSTRING = null;
+        const source: ?[*]const u16 = if (text.len == 0) null else text.ptr;
+        const hr = combase.WindowsCreateString(source, @intCast(text.len), &out);
+        try hresult.ok(hr);
+        return .{ .raw = out };
+    }
+
+    /// Allocate an `HSTRING` from a UTF-8 slice. Caller-owned scratch
+    /// buffer is used transiently via `allocator`.
+    pub fn createUtf8(allocator: std.mem.Allocator, text: []const u8) !Hstring {
+        const wide = try std.unicode.utf8ToUtf16LeAlloc(allocator, text);
+        defer allocator.free(wide);
+        return create(wide);
+    }
+
+    /// Number of UTF-16 code units. Null maps to 0.
+    pub fn len(self: Hstring) u32 {
+        return combase.WindowsGetStringLen(self.raw);
+    }
+
+    /// Borrowed view of the UTF-16 code units. Empty for null.
+    /// The returned slice is valid until the next mutation of `self`.
+    pub fn slice(self: Hstring) []const u16 {
+        const n = self.len();
+        if (n == 0) return &[_]u16{};
+        const p = combase.WindowsGetStringRawBuffer(self.raw, null) orelse
+            return &[_]u16{};
+        return p[0..n];
+    }
+
+    /// Release the OS-owned storage. Idempotent; leaves `raw` null.
+    pub fn deinit(self: *Hstring) void {
+        _ = combase.WindowsDeleteString(self.raw);
+        self.raw = null;
+    }
+};
+
+// ---- IInspectable (WinRT base) --------------------------------------------
+
+/// IID of `IInspectable`: `{AF86E2E0-B12D-4C6A-9C5A-D7AA65101E90}`.
+pub const IID_IInspectable: GUID = .{
+    .data1 = 0xAF86E2E0,
+    .data2 = 0xB12D,
+    .data3 = 0x4C6A,
+    .data4 = .{ 0x9C, 0x5A, 0xD7, 0xAA, 0x65, 0x10, 0x1E, 0x90 },
+};
+
+/// WinRT `IInspectable` vtable. All WinRT runtime interfaces inherit this.
+pub const IInspectable_Vtbl = extern struct {
+    base: IUnknown_Vtbl,
+
+    GetIids: *const fn (
+        this: *anyopaque,
+        count: *u32,
+        values: *?[*]GUID,
+    ) callconv(.winapi) HRESULT,
+
+    GetRuntimeClassName: *const fn (
+        this: *anyopaque,
+        value: *HSTRING,
+    ) callconv(.winapi) HRESULT,
+
+    GetTrustLevel: *const fn (
+        this: *anyopaque,
+        value: *i32,
+    ) callconv(.winapi) HRESULT,
+};
+
+/// Shorthand for a `Com(IInspectable_Vtbl)` — any WinRT object, viewed
+/// through its `IInspectable` face.
+pub const IInspectable = Com(IInspectable_Vtbl);
+
 // ---- Tests ----------------------------------------------------------------
 
 test "GUID parse roundtrip" {
@@ -581,4 +695,38 @@ test "Bstr round-trips through OleAut32" {
     // 'H','i',' ','\u2603' -> 4 UTF-16 code units.
     try std.testing.expectEqual(@as(u32, 4), u8b.len());
     try std.testing.expectEqual(@as(u16, 0x2603), u8b.slice()[3]);
+}
+
+test "Hstring round-trips through combase" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    // Empty / null round-trip.
+    var empty: Hstring = .{};
+    try std.testing.expectEqual(@as(u32, 0), empty.len());
+    try std.testing.expectEqual(@as(usize, 0), empty.slice().len);
+    empty.deinit();
+
+    // Create from UTF-16 and read back.
+    const msg = [_]u16{ 'H', 'e', 'l', 'l', 'o' };
+    var h = try Hstring.create(&msg);
+    defer h.deinit();
+    try std.testing.expectEqual(@as(u32, 5), h.len());
+    try std.testing.expectEqualSlices(u16, &msg, h.slice());
+
+    // Create from UTF-8; a snowman maps to a single BMP code unit.
+    var h8 = try Hstring.createUtf8(std.testing.allocator, "Hi \xe2\x98\x83");
+    defer h8.deinit();
+    try std.testing.expectEqual(@as(u32, 4), h8.len());
+    try std.testing.expectEqual(@as(u16, 0x2603), h8.slice()[3]);
+}
+
+test "IInspectable_Vtbl layout extends IUnknown" {
+    // IInspectable adds exactly three methods on top of IUnknown's three.
+    try std.testing.expectEqual(
+        @sizeOf(IUnknown_Vtbl) + 3 * @sizeOf(usize),
+        @sizeOf(IInspectable_Vtbl),
+    );
+    // `base` must be the first field so IInspectable* is ABI-compatible
+    // with IUnknown*.
+    try std.testing.expectEqual(@as(usize, 0), @offsetOf(IInspectable_Vtbl, "base"));
 }
