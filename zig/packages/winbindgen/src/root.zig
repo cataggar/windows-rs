@@ -451,6 +451,25 @@ pub fn emitConstants(
                     const val: f64 = @bitCast(bits);
                     try writer.print("pub const {s}: f64 = {d};\n", .{ name, val });
                 },
+                .string => {
+                    // ECMA-335 §II.23.3: ET_STRING Constant.Value is raw
+                    // UTF-16LE code units (no length prefix beyond the blob
+                    // itself, no terminator). Decode to UTF-8, escape for
+                    // a Zig string literal, and emit via the
+                    // `win_core.utf16Lit` comptime helper so the result is
+                    // a sentinel-terminated `[:0]const u16` — the same
+                    // shape `PCWSTR` expects to point at.
+                    if (value_blob.len % 2 != 0) continue;
+                    const units_n = value_blob.len / 2;
+                    const units = try arena.alloc(u16, units_n);
+                    for (0..units_n) |i| {
+                        units[i] = std.mem.readInt(u16, value_blob[i * 2 ..][0..2], .little);
+                    }
+                    const utf8 = std.unicode.utf16LeToUtf8Alloc(arena, units) catch continue;
+                    try writer.print("pub const {s}: [:0]const u16 = win_core.utf16Lit(\"", .{name});
+                    try writeEscapedZigStringLit(writer, utf8);
+                    try writer.writeAll("\");\n");
+                },
                 else => continue,
             }
         }
@@ -595,6 +614,24 @@ fn readConstantValue(type_code: u8, blob: []const u8) ?u64 {
             return std.mem.readInt(u64, blob[0..8], .little);
         },
         else => return null,
+    }
+}
+
+/// Escape `s` so it can be the body of a Zig double-quoted string
+/// literal. Assumes valid UTF-8; non-ASCII bytes pass through verbatim
+/// (Zig string literals are UTF-8). Control chars outside the common
+/// named escapes fall back to `\xNN`.
+fn writeEscapedZigStringLit(writer: *std.Io.Writer, s: []const u8) !void {
+    for (s) |c| {
+        switch (c) {
+            '\\' => try writer.writeAll("\\\\"),
+            '"' => try writer.writeAll("\\\""),
+            '\n' => try writer.writeAll("\\n"),
+            '\r' => try writer.writeAll("\\r"),
+            '\t' => try writer.writeAll("\\t"),
+            0x00...0x08, 0x0B, 0x0C, 0x0E...0x1F, 0x7F => try writer.print("\\x{x:0>2}", .{c}),
+            else => try writer.writeByte(c),
+        }
     }
 }
 
@@ -2126,4 +2163,21 @@ test "emitConstants emits Win32 f32 constants (D3D11_DEFAULT_BLEND_FACTOR_ALPHA)
 
     // D3D11_DEFAULT_BLEND_FACTOR_{R,G,B,A} are f32 literals = 1.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const D3D11_DEFAULT_BLEND_FACTOR_ALPHA: f32 = 1") != null);
+}
+
+test "emitConstants emits Win32 PCWSTR string constants (SERVICES_ACTIVE_DATABASE)" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitConstants(&buf.writer, arena.allocator(), &file, "Windows.Win32.System.Services");
+    const out = buf.written();
+
+    // SERVICES_ACTIVE_DATABASE is "ServicesActive" as UTF-16 (PCWSTR).
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SERVICES_ACTIVE_DATABASE: [:0]const u16 = win_core.utf16Lit(\"ServicesActive\");") != null);
 }
