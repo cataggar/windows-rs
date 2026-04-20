@@ -1130,9 +1130,10 @@ pub fn emitRuntimeClasses(
                 try writer.print(
                     \\pub const {s} = extern struct {{
                     \\    vtable: *const {s}_Vtbl,
+                    \\    pub const NAME: []const u8 = "{s}.{s}";
                     \\}};
                     \\
-                , .{ name, tn.name });
+                , .{ name, tn.name, namespace, name });
                 continue;
             }
         }
@@ -1140,9 +1141,10 @@ pub fn emitRuntimeClasses(
         try writer.print(
             \\pub const {s} = extern struct {{
             \\    vtable: *const anyopaque,
+            \\    pub const NAME: []const u8 = "{s}.{s}";
             \\}};
             \\
-        , .{name});
+        , .{ name, namespace, name });
     }
 }
 
@@ -1206,15 +1208,17 @@ test "emitRuntimeClasses writes Uri handle" {
     const out = buf.written();
 
     // `Uri`'s default interface is `IUriRuntimeClass` — same namespace,
-    // non-generic — so we expect a typed vtable pointer.
+    // non-generic — so we expect a typed vtable pointer and the full
+    // runtime class name baked in as a `NAME` constant.
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "pub const Uri = extern struct {\n    vtable: *const IUriRuntimeClass_Vtbl,\n};",
+        "pub const Uri = extern struct {\n    vtable: *const IUriRuntimeClass_Vtbl,\n    pub const NAME: []const u8 = \"Windows.Foundation.Uri\";\n};",
     ) != null);
 
     // WwwFormUrlDecoder is another Windows.Foundation runtime class.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.WwwFormUrlDecoder\";") != null);
 
     // No interface names should appear here — those go through
     // `emitInterfaceHandles`.
