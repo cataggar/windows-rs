@@ -728,3 +728,82 @@ test "emitInterfaceHandles writes IStringable handle" {
     }
     try std.testing.expect(count > 5);
 }
+
+/// Emit opaque handle structs for every WinRT runtime class in
+/// `namespace`. A runtime class is a `TypeDef` that:
+///
+///   * is not an interface (`tdInterface` clear),
+///   * is not `System.ValueType` / `System.Enum` / `System.MulticastDelegate`
+///     derived,
+///   * extends `System.Object`.
+///
+/// This is what vtbls produced by `emitInterfaceVtbls` reference when
+/// a method returns or consumes a runtime class (e.g.
+/// `IUriRuntimeClassFactory.CreateUri` returns `**Uri`). Emitting
+/// these as `extern struct { vtable: *const anyopaque }` gives the
+/// generated code a valid, pointer-compatible destination for those
+/// references; resolving the default interface to produce a typed
+/// vtable pointer is a later slice.
+pub fn emitRuntimeClasses(
+    writer: *std.Io.Writer,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    const VISIBILITY_MASK: u32 = 0x7;
+    const VIS_NOT_PUBLIC: u32 = 0x0;
+    const VIS_PUBLIC: u32 = 0x1;
+
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+
+        const flags = file.cell(.type_def, row, 0);
+        const vis = flags & VISIBILITY_MASK;
+        if (vis != VIS_NOT_PUBLIC and vis != VIS_PUBLIC) continue;
+        if ((flags & TYPE_ATTR_INTERFACE) != 0) continue;
+
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok == 0) continue;
+        const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+        if (!std.mem.eql(u8, base.namespace, "System")) continue;
+        if (!std.mem.eql(u8, base.name, "Object")) continue;
+
+        const name = file.str(.type_def, row, 1);
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+
+        try writer.print(
+            \\pub const {s} = extern struct {{
+            \\    vtable: *const anyopaque,
+            \\}};
+            \\
+        , .{name});
+    }
+}
+
+test "emitRuntimeClasses writes Uri handle" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitRuntimeClasses(&buf.writer, &file, "Windows.Foundation");
+    const out = buf.written();
+
+    // `Uri` is the canonical WinRT runtime class in Windows.Foundation
+    // and is referenced by IUriRuntimeClassFactory vtbls.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub const Uri = extern struct {\n    vtable: *const anyopaque,\n};",
+    ) != null);
+
+    // WwwFormUrlDecoder is another Windows.Foundation runtime class;
+    // ensure we pick up more than one so namespace scanning works.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
+
+    // No interface names should appear here — those go through
+    // `emitInterfaceHandles`.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable") == null);
+}
