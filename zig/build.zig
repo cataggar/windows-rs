@@ -119,4 +119,33 @@ pub fn build(b: *std.Build) void {
         "Regenerate win-sys and win sources from the vendored .winmd files",
     );
     _ = bindings_step; // will depend on winbindgen artifact once Phase 3 lands
+
+    // ------------------------------------------------------------------
+    // `winbindgen` CLI executable — drives `emitNamespace` against the
+    // bundled `Windows.winmd`. Handy for eyeballing generated output
+    // with `zig build run -- Windows.Foundation` while Phase 3 lands
+    // the full bindings pipeline.
+    // ------------------------------------------------------------------
+
+    const winbindgen_main_mod = b.createModule(.{
+        .root_source_file = b.path("packages/winbindgen/src/main.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    winbindgen_main_mod.addImport("winbindgen", winbindgen_mod);
+    winbindgen_main_mod.addImport("winmd", winmd_mod);
+    winbindgen_main_mod.addAnonymousImport("Windows.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
+    });
+
+    const winbindgen_exe = b.addExecutable(.{
+        .name = "winbindgen",
+        .root_module = winbindgen_main_mod,
+    });
+    b.installArtifact(winbindgen_exe);
+
+    const run_winbindgen = b.addRunArtifact(winbindgen_exe);
+    if (b.args) |user_args| run_winbindgen.addArgs(user_args);
+    const run_step = b.step("run", "Run the winbindgen CLI (pass args with `--`)");
+    run_step.dependOn(&run_winbindgen.step);
 }
