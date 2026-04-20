@@ -462,6 +462,8 @@ pub fn emitInterfaceHandles(
             \\
         , .{ name, name });
 
+        try writeInterfaceIid(writer, arena, file, row);
+
         const methods = file.list(.type_def, row, 5, .method_def);
         var m = methods.start;
         while (m < methods.end) : (m += 1) {
@@ -470,6 +472,51 @@ pub fn emitInterfaceHandles(
 
         try writer.writeAll("};\n");
     }
+}
+
+/// Emit `pub const IID: GUID = .{ ... };` inside an interface handle's
+/// struct body when the TypeDef carries a `GuidAttribute`. The WinRT
+/// `Windows.Foundation.Metadata.GuidAttribute` ctor has eleven
+/// positional args (`u32, u16, u16, u8, u8, u8, u8, u8, u8, u8, u8`)
+/// that assemble into a standard COM GUID. Interfaces with no Guid
+/// (generic parameterizations, odd synthetic types) just get no IID
+/// decl — callers that need it will have to fall back to hand-written
+/// constants until a later slice handles them.
+fn writeInterfaceIid(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    type_def_row: u32,
+) !void {
+    const attr_row = winmd.findAttribute(file, .type_def, type_def_row, "GuidAttribute") orelse return;
+
+    const args = winmd.readAttributeArgs(arena, file, attr_row) catch return;
+    if (args.len != 11) return;
+
+    const d1 = switch (args[0].value) {
+        .u32_val => |v| v,
+        else => return,
+    };
+    const d2 = switch (args[1].value) {
+        .u16_val => |v| v,
+        else => return,
+    };
+    const d3 = switch (args[2].value) {
+        .u16_val => |v| v,
+        else => return,
+    };
+    var d4: [8]u8 = undefined;
+    for (0..8) |i| {
+        d4[i] = switch (args[3 + i].value) {
+            .u8_val => |v| v,
+            else => return,
+        };
+    }
+
+    try writer.print(
+        "    pub const IID: GUID = .{{ .data1 = 0x{x:0>8}, .data2 = 0x{x:0>4}, .data3 = 0x{x:0>4}, .data4 = .{{ 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2} }} }};\n",
+        .{ d1, d2, d3, d4[0], d4[1], d4[2], d4[3], d4[4], d4[5], d4[6], d4[7] },
+    );
 }
 
 /// Emit a method wrapper (`pub fn Name(self, args) HRESULT { return self.vtable.Name(self, args); }`)
@@ -941,6 +988,13 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
         "pub fn ToString(self: *const IStringable, result: *HSTRING) callconv(.winapi) HRESULT {",
     ) != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.ToString(self, result);") != null);
+
+    // IStringable's IID from WinRT metadata: {96369f54-8eb6-48f0-abce-c1b211e627c3}.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub const IID: GUID = .{ .data1 = 0x96369f54, .data2 = 0x8eb6, .data3 = 0x48f0, .data4 = .{ 0xab, 0xce, 0xc1, 0xb2, 0x11, 0xe6, 0x27, 0xc3 } };",
+    ) != null);
 
     // IClosable.Close: void-returning, no trailing out param.
     try std.testing.expect(std.mem.indexOf(
