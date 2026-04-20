@@ -143,6 +143,12 @@ pub fn build(b: *std.Build) void {
     winbindgen_main_mod.addAnonymousImport("Windows.winmd", .{
         .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
     });
+    winbindgen_main_mod.addAnonymousImport("Windows.Win32.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Win32.winmd"),
+    });
+    winbindgen_main_mod.addAnonymousImport("Windows.Wdk.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Wdk.winmd"),
+    });
 
     const winbindgen_exe = b.addExecutable(.{
         .name = "winbindgen",
