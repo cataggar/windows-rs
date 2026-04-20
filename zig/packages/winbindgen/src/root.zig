@@ -409,32 +409,49 @@ pub fn emitConstants(
             if ((attr & FIELD_ATTR_LITERAL) == 0) continue;
 
             const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
-            const repr = zigReprFor(ty) orelse continue;
 
             // HasConstant coded index: tag 0 = Field, row is 1-based.
             const parent_tok = (@as(u32, f + 1) << 2) | 0;
             const range = file.equalRange(.constant, 1, parent_tok);
             if (range.start == range.end) continue;
 
-            const type_code: u8 = @intCast(file.cell(.constant, range.start, 0) & 0xFF);
             const value_blob = file.blob(.constant, range.start, 2);
-            const raw = readConstantValue(type_code, value_blob) orelse continue;
-
             const name = file.str(.field, f, 1);
-            if (isSignedRepr(ty)) {
-                // Sign-extend from the original width so the printed
-                // decimal matches the intent of the metadata value
-                // (e.g. `-1` not `0xFFFFFFFF`).
-                const signed: i64 = switch (ty) {
-                    .i8 => @as(i64, @as(i8, @bitCast(@as(u8, @truncate(raw))))),
-                    .i16 => @as(i64, @as(i16, @bitCast(@as(u16, @truncate(raw))))),
-                    .i32 => @as(i64, @as(i32, @bitCast(@as(u32, @truncate(raw))))),
-                    .i64 => @bitCast(raw),
-                    else => @bitCast(raw),
-                };
-                try writer.print("pub const {s}: {s} = {d};\n", .{ name, repr, signed });
-            } else {
-                try writer.print("pub const {s}: {s} = {d};\n", .{ name, repr, raw });
+
+            switch (ty) {
+                .i8, .u8, .i16, .u16, .i32, .u32, .i64, .u64 => {
+                    const repr = zigReprFor(ty).?;
+                    const type_code: u8 = @intCast(file.cell(.constant, range.start, 0) & 0xFF);
+                    const raw = readConstantValue(type_code, value_blob) orelse continue;
+                    if (isSignedRepr(ty)) {
+                        // Sign-extend from the original width so the printed
+                        // decimal matches the intent of the metadata value
+                        // (e.g. `-1` not `0xFFFFFFFF`).
+                        const signed: i64 = switch (ty) {
+                            .i8 => @as(i64, @as(i8, @bitCast(@as(u8, @truncate(raw))))),
+                            .i16 => @as(i64, @as(i16, @bitCast(@as(u16, @truncate(raw))))),
+                            .i32 => @as(i64, @as(i32, @bitCast(@as(u32, @truncate(raw))))),
+                            .i64 => @bitCast(raw),
+                            else => @bitCast(raw),
+                        };
+                        try writer.print("pub const {s}: {s} = {d};\n", .{ name, repr, signed });
+                    } else {
+                        try writer.print("pub const {s}: {s} = {d};\n", .{ name, repr, raw });
+                    }
+                },
+                .f32 => {
+                    if (value_blob.len < 4) continue;
+                    const bits = std.mem.readInt(u32, value_blob[0..4], .little);
+                    const val: f32 = @bitCast(bits);
+                    try writer.print("pub const {s}: f32 = {d};\n", .{ name, val });
+                },
+                .f64 => {
+                    if (value_blob.len < 8) continue;
+                    const bits = std.mem.readInt(u64, value_blob[0..8], .little);
+                    const val: f64 = @bitCast(bits);
+                    try writer.print("pub const {s}: f64 = {d};\n", .{ name, val });
+                },
+                else => continue,
             }
         }
     }
@@ -2092,4 +2109,21 @@ test "emitGuidConstants emits CLSID/FMTID fields for a Win32 namespace" {
         std.debug.print("unexpected line: {s}\n", .{line});
         try std.testing.expect(false);
     }
+}
+
+test "emitConstants emits Win32 f32 constants (D3D11_DEFAULT_BLEND_FACTOR_ALPHA)" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitConstants(&buf.writer, arena.allocator(), &file, "Windows.Win32.Graphics.Direct3D11");
+    const out = buf.written();
+
+    // D3D11_DEFAULT_BLEND_FACTOR_{R,G,B,A} are f32 literals = 1.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const D3D11_DEFAULT_BLEND_FACTOR_ALPHA: f32 = 1") != null);
 }
