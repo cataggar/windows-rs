@@ -1964,3 +1964,28 @@ test "emitStructs suppresses HRESULT and BOOL in Windows.Win32.Foundation" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = extern struct") == null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = extern struct") == null);
 }
+
+test "emitNamespace produces a self-consistent body for Windows.Win32.Foundation" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation");
+    const out = buf.written();
+
+    // Prelude must appear exactly once.
+    try std.testing.expect(std.mem.indexOf(u8, out, "const win_core = @import(\"win-core\");") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "const HRESULT = win_core.HRESULT;") != null);
+
+    // No duplicate HRESULT/BOOL emitted from metadata.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = extern struct") == null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = extern struct") == null);
+
+    // A well-known direct P/Invoke from this namespace.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub extern \"KERNEL32\" fn CloseHandle(") != null);
+}
