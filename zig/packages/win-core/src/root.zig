@@ -198,6 +198,87 @@ pub fn utf16Lit(comptime s: []const u8) [:0]const u16 {
     return std.unicode.utf8ToUtf16LeStringLiteral(s);
 }
 
+// ---- COM ------------------------------------------------------------------
+
+/// The `IUnknown` vtable — the first `@sizeOf(IUnknown_Vtbl)` bytes of every
+/// COM vtable in existence. Lays out exactly as documented in `Unknwn.h`.
+pub const IUnknown_Vtbl = extern struct {
+    QueryInterface: *const fn (
+        this: *anyopaque,
+        iid: *const GUID,
+        interface: *?*anyopaque,
+    ) callconv(.winapi) HRESULT,
+    AddRef: *const fn (this: *anyopaque) callconv(.winapi) u32,
+    Release: *const fn (this: *anyopaque) callconv(.winapi) u32,
+};
+
+/// `IID_IUnknown` — every COM object must answer `QueryInterface` for this.
+pub const IID_IUnknown = GUID.parse("00000000-0000-0000-C000-000000000046");
+
+/// Owning COM interface pointer. `Vtbl` must begin (layout-wise) with the
+/// three `IUnknown` slots; this is how every COM vtable is defined, either
+/// by inheritance (C++) or by convention (C).
+///
+/// The smart pointer owns one reference: `deinit` calls `Release`, `clone`
+/// calls `AddRef`. Use `from` to wrap a raw pointer returned by a COM API
+/// (which already has a refcount on your behalf).
+pub fn Com(comptime Vtbl: type) type {
+    return struct {
+        const Self = @This();
+
+        /// Pointer to the underlying object. The first pointer-sized field
+        /// of the object is its vtable pointer.
+        ptr: *anyopaque,
+
+        /// Wrap a raw COM pointer obtained from a factory / QI call. Takes
+        /// ownership of the reference returned by the callee.
+        pub inline fn from(raw: *anyopaque) Self {
+            return .{ .ptr = raw };
+        }
+
+        /// Read the per-interface vtable off the object.
+        pub inline fn vtbl(self: Self) *const Vtbl {
+            return @as(*const *const Vtbl, @ptrCast(@alignCast(self.ptr))).*;
+        }
+
+        /// View the vtable as its `IUnknown` prefix.
+        pub inline fn unknown(self: Self) *const IUnknown_Vtbl {
+            return @ptrCast(self.vtbl());
+        }
+
+        pub inline fn addRef(self: Self) u32 {
+            return self.unknown().AddRef(self.ptr);
+        }
+
+        pub inline fn release(self: Self) u32 {
+            return self.unknown().Release(self.ptr);
+        }
+
+        pub inline fn queryInterface(
+            self: Self,
+            iid: *const GUID,
+            out: *?*anyopaque,
+        ) HRESULT {
+            return self.unknown().QueryInterface(self.ptr, iid, out);
+        }
+
+        /// Bump the refcount and hand back a fresh smart pointer.
+        pub fn clone(self: Self) Self {
+            _ = self.addRef();
+            return self;
+        }
+
+        /// Release one reference. Safe to call exactly once per owner.
+        pub fn deinit(self: Self) void {
+            _ = self.release();
+        }
+    };
+}
+
+/// Shorthand for a `Com(IUnknown_Vtbl)` — any COM object, viewed through its
+/// `IUnknown` face.
+pub const IUnknown = Com(IUnknown_Vtbl);
+
 // ---- Tests ----------------------------------------------------------------
 
 test "GUID parse roundtrip" {
@@ -266,4 +347,65 @@ test "pcstr.len/slice" {
     try std.testing.expectEqual(@as(usize, 5), pcstr.len(s));
     try std.testing.expectEqualStrings("hello", pcstr.slice(s));
     try std.testing.expectEqual(@as(usize, 0), pcstr.len(null));
+}
+
+test "Com smart pointer drives a fake IUnknown vtable" {
+    // In-process fake COM object: object layout is { vtbl_ptr, refcount }.
+    const Fake = extern struct {
+        vtbl: *const IUnknown_Vtbl,
+        refcount: u32,
+
+        fn qi(this: *anyopaque, iid: *const GUID, out: *?*anyopaque) callconv(.winapi) HRESULT {
+            const self: *@This() = @ptrCast(@alignCast(this));
+            if (std.meta.eql(iid.*, IID_IUnknown)) {
+                self.refcount += 1;
+                out.* = this;
+                return hresult.S_OK;
+            }
+            out.* = null;
+            return hresult.E_NOINTERFACE;
+        }
+        fn addRef(this: *anyopaque) callconv(.winapi) u32 {
+            const self: *@This() = @ptrCast(@alignCast(this));
+            self.refcount += 1;
+            return self.refcount;
+        }
+        fn release(this: *anyopaque) callconv(.winapi) u32 {
+            const self: *@This() = @ptrCast(@alignCast(this));
+            self.refcount -= 1;
+            return self.refcount;
+        }
+    };
+    const vtbl: IUnknown_Vtbl = .{
+        .QueryInterface = Fake.qi,
+        .AddRef = Fake.addRef,
+        .Release = Fake.release,
+    };
+    var obj: Fake = .{ .vtbl = &vtbl, .refcount = 1 };
+
+    const p = IUnknown.from(&obj);
+    try std.testing.expectEqual(@as(u32, 2), p.addRef());
+    try std.testing.expectEqual(@as(u32, 1), p.release());
+
+    // QI for IID_IUnknown succeeds and bumps the count.
+    var out: ?*anyopaque = null;
+    const hr = p.queryInterface(&IID_IUnknown, &out);
+    try std.testing.expect(hresult.isOk(hr));
+    try std.testing.expectEqual(@as(u32, 2), obj.refcount);
+    try std.testing.expectEqual(@as(?*anyopaque, &obj), out);
+
+    // QI for a random IID fails cleanly.
+    const other = GUID.parse("11111111-2222-3333-4444-555566667777");
+    out = &obj;
+    try std.testing.expectEqual(hresult.E_NOINTERFACE, p.queryInterface(&other, &out));
+    try std.testing.expectEqual(@as(?*anyopaque, null), out);
+
+    // clone/deinit balance out.
+    const q = p.clone();
+    try std.testing.expectEqual(@as(u32, 3), obj.refcount);
+    q.deinit();
+    try std.testing.expectEqual(@as(u32, 2), obj.refcount);
+    _ = p.release();
+    _ = p.release();
+    try std.testing.expectEqual(@as(u32, 0), obj.refcount);
 }
