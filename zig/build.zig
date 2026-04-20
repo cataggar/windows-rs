@@ -178,6 +178,7 @@ pub fn build(b: *std.Build) void {
         "Windows.Globalization",
         "Windows.Data.Json",
         "Windows.Storage.Streams",
+        "Windows.Win32.Foundation",
     };
 
     for (compile_check_namespaces) |ns| {
