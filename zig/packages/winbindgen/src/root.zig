@@ -541,3 +541,119 @@ test "emitEnums writes AsyncStatus from Windows.Foundation" {
     }
     try std.testing.expect(count >= 1);
 }
+
+/// Emit `extern struct` declarations for every `System.ValueType`
+/// TypeDef in `namespace` that isn't an enum and whose fields all
+/// map to representable Zig types. Examples in Windows.Foundation:
+/// `Point { X: f32, Y: f32 }`, `Rect { X, Y, Width, Height: f32 }`,
+/// `TimeSpan { Duration: i64 }`.
+///
+/// First-slice scope:
+/// * Only non-generic, non-nested value types.
+/// * Only SequentialLayout (or AutoLayout, treated as sequential for
+///   the handful of metadata quirks). ExplicitLayout / union-shaped
+///   types are skipped — a later slice can emit `extern union`.
+/// * If any instance field's type isn't currently representable
+///   (e.g. a generic type arg), the whole struct is skipped rather
+///   than emitted with a hole — this keeps the output compilable.
+pub fn emitStructs(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    // TypeAttributes bits (ECMA-335 §II.23.1.15).
+    const VISIBILITY_MASK: u32 = 0x7;
+    const VIS_NOT_PUBLIC: u32 = 0x0;
+    const VIS_PUBLIC: u32 = 0x1;
+    const LAYOUT_MASK: u32 = 0x18;
+    const LAYOUT_EXPLICIT: u32 = 0x10;
+    // FieldAttributes.Static — enum literal fields and class-level
+    // constants carry this bit and must be skipped when walking
+    // struct instance fields.
+    const FIELD_ATTR_STATIC: u32 = 0x10;
+
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+
+        const flags = file.cell(.type_def, row, 0);
+        const vis = flags & VISIBILITY_MASK;
+        if (vis != VIS_NOT_PUBLIC and vis != VIS_PUBLIC) continue; // nested
+        if ((flags & LAYOUT_MASK) == LAYOUT_EXPLICIT) continue;
+
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok == 0) continue;
+        const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+        if (!std.mem.eql(u8, base.namespace, "System")) continue;
+        if (!std.mem.eql(u8, base.name, "ValueType")) continue;
+
+        const name = file.str(.type_def, row, 1);
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+
+        const field_list = file.list(.type_def, row, 4, .field);
+        if (field_list.start == field_list.end) continue;
+
+        // First pass: verify every non-static field is representable.
+        // If anything is out of scope we skip the whole struct rather
+        // than emit opaque fillers, which would break downstream
+        // size/alignment assumptions at the ABI boundary.
+        var all_ok = true;
+        var f: u32 = field_list.start;
+        while (f < field_list.end) : (f += 1) {
+            const field_flags = file.cell(.field, f, 0);
+            if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
+            const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch {
+                all_ok = false;
+                break;
+            };
+            if (!canRepresent(ty)) {
+                all_ok = false;
+                break;
+            }
+        }
+        if (!all_ok) continue;
+
+        try writer.print("pub const {s} = extern struct {{\n", .{name});
+        f = field_list.start;
+        while (f < field_list.end) : (f += 1) {
+            const field_flags = file.cell(.field, f, 0);
+            if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
+            const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
+            const field_name = file.str(.field, f, 1);
+            try writer.print("    {s}: ", .{field_name});
+            _ = try writeZigTy(writer, ty);
+            try writer.writeAll(",\n");
+        }
+        try writer.writeAll("};\n");
+    }
+}
+
+test "emitStructs writes Point/Rect/TimeSpan from Windows.Foundation" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    const out = buf.written();
+
+    // Point — classic two-f32 struct, a canary for sequential layout.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Point = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    X: f32,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Y: f32,") != null);
+
+    // Rect — four f32s in declaration order.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Rect = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Width: f32,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Height: f32,") != null);
+
+    // TimeSpan — single i64 field, exercises non-f32 primitives.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const TimeSpan = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Duration: i64,") != null);
+}
