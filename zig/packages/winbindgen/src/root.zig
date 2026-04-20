@@ -292,6 +292,21 @@ fn stripDllSuffix(name: []const u8) []const u8 {
     return name;
 }
 
+/// Return true if `(namespace, name)` is already surfaced by the
+/// `emitNamespace` prelude as an alias into `win-core`. Such types
+/// must not be re-emitted from metadata or Zig would see two
+/// top-level decls with the same name.
+fn isPreludeAlias(namespace: []const u8, name: []const u8) bool {
+    if (std.mem.eql(u8, namespace, "Windows.Win32.Foundation")) {
+        if (std.mem.eql(u8, name, "HRESULT")) return true;
+        if (std.mem.eql(u8, name, "BOOL")) return true;
+    }
+    if (std.mem.eql(u8, namespace, "Windows.Win32.System.WinRT")) {
+        if (std.mem.eql(u8, name, "HSTRING")) return true;
+    }
+    return false;
+}
+
 /// Emit `pub const NAME: T = VAL;` declarations for every Win32
 /// primitive-integer constant in `namespace`. Constants live as
 /// static+literal fields of the magic `Apis` TypeDef, with their
@@ -1096,6 +1111,7 @@ fn emitStructsImpl(
 
         const name = file.str(.type_def, row, 1);
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (isPreludeAlias(namespace, name)) continue;
 
         const field_list = file.list(.type_def, row, 4, .field);
         if (field_list.start == field_list.end) continue;
@@ -1923,4 +1939,28 @@ test "emitConstants emits primitive Win32 constants" {
         if (line.len == 0) continue;
         try std.testing.expect(std.mem.startsWith(u8, line, "pub const "));
     }
+}
+
+test "emitStructs suppresses HRESULT and BOOL in Windows.Win32.Foundation" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+    _ = &file;
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    var cross: CrossNsSet = .empty;
+
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation");
+    _ = &cross;
+    const out = buf.written();
+
+    // Prelude aliases must NOT be re-emitted from metadata as
+    // `pub const HRESULT = extern struct ...`; they resolve through
+    // `win_core` via the prelude aliases written by emitNamespace.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = extern struct") == null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = extern struct") == null);
 }
