@@ -65,6 +65,9 @@ pub fn build(b: *std.Build) void {
     winbindgen_mod.addAnonymousImport("Windows.Win32.winmd", .{
         .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Win32.winmd"),
     });
+    winbindgen_mod.addAnonymousImport("Windows.Wdk.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Wdk.winmd"),
+    });
 
     const win_sys_mod = b.addModule("win-sys", .{
         .root_source_file = b.path("packages/win-sys/src/root.zig"),

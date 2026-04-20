@@ -2261,3 +2261,37 @@ test "emitStructs emits Win32 ExplicitLayout TypeDefs as extern union" {
     // And at least one normal struct still emits as `extern struct`.
     try std.testing.expect(std.mem.indexOf(u8, out, "extern struct") != null);
 }
+
+test "emitNamespace succeeds on every Windows.Wdk namespace" {
+    const bytes = @embedFile("Windows.Wdk.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    // Collect distinct namespaces.
+    var seen = std.StringArrayHashMapUnmanaged(void).empty;
+    defer seen.deinit(std.testing.allocator);
+
+    const n = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < n) : (row += 1) {
+        const ns = file.str(.type_def, row, 2);
+        if (ns.len == 0) continue;
+        try seen.put(std.testing.allocator, ns, {});
+    }
+
+    // Every namespace must emit without panic. At least one namespace
+    // must produce a non-empty body so we know the Wdk pipeline is
+    // actually wired up (not silently skipped).
+    var any_non_empty = false;
+    var it = seen.iterator();
+    while (it.next()) |e| {
+        var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+        defer buf.deinit();
+
+        try emitNamespace(&buf.writer, arena.allocator(), &file, e.key_ptr.*);
+        if (buf.written().len > 0) any_non_empty = true;
+    }
+    try std.testing.expect(any_non_empty);
+}
