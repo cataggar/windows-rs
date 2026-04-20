@@ -203,6 +203,37 @@ pub const File = struct {
         if (self.rowCount(.assembly) == 0) return null;
         return self.str(.assembly, 0, 4);
     }
+
+    /// Locate the `impl_map` row whose `MemberForwarded` coded index
+    /// points at `method_row` (zero-based MethodDef index). Returns
+    /// `null` when the method has no PInvoke mapping — the common
+    /// case for WinRT methods and for Win32 COM vtable slots.
+    ///
+    /// `MemberForwarded` is `{Field, MethodDef}`: the stored value is
+    /// `(row_1based << 1) | tag` with tag 1 selecting MethodDef. The
+    /// `impl_map` table is sorted by `MemberForwarded`
+    /// (ECMA-335 §22.22), so the lookup is O(log n).
+    pub fn findImplMap(self: *const File, method_row: u32) ?u32 {
+        const encoded: u32 = ((method_row + 1) << 1) | 1;
+        const range = self.equalRange(.impl_map, 1, encoded);
+        if (range.len() == 0) return null;
+        return range.start;
+    }
+
+    /// DLL name declared by the `module_ref` row the `impl_map` at
+    /// `impl_map_row` points at. Returns `""` when the row is missing
+    /// or its scope is zero.
+    pub fn implMapDll(self: *const File, impl_map_row: u32) []const u8 {
+        const mr_1based = self.cell(.impl_map, impl_map_row, 3);
+        if (mr_1based == 0 or mr_1based > self.rowCount(.module_ref)) return "";
+        return self.str(.module_ref, mr_1based - 1, 0);
+    }
+
+    /// Unmangled import name (column 2). Empty for ordinal-only imports;
+    /// the ordinal (if any) lives in the `MappingFlags` word.
+    pub fn implMapImportName(self: *const File, impl_map_row: u32) []const u8 {
+        return self.str(.impl_map, impl_map_row, 2);
+    }
 };
 
 fn lowerBound(f: *const File, table: Table, first_in: u32, last: u32, column: u3, value: u32) u32 {
@@ -1431,22 +1462,22 @@ fn layoutTables(f: *File, td: u32) !void {
 
     // Unused tables still participate in offset math; keep them local.
     var module: TableInfo = .{ .len = module_rows };
-    var event_map: TableInfo = .{};
+    var event_map: TableInfo = .{ .len = r(&rows, .event_map) };
     var event: TableInfo = .{ .len = event_rows };
-    var property_map: TableInfo = .{};
+    var property_map: TableInfo = .{ .len = r(&rows, .property_map) };
     var property: TableInfo = .{ .len = property_rows };
-    var method_semantics: TableInfo = .{};
-    var method_impl: TableInfo = .{};
-    var field_layout: TableInfo = .{};
-    var field_marshal: TableInfo = .{};
-    var field_rva: TableInfo = .{};
-    var decl_security: TableInfo = .{};
+    var method_semantics: TableInfo = .{ .len = r(&rows, .method_semantics) };
+    var method_impl: TableInfo = .{ .len = r(&rows, .method_impl) };
+    var field_layout: TableInfo = .{ .len = r(&rows, .field_layout) };
+    var field_marshal: TableInfo = .{ .len = r(&rows, .field_marshal) };
+    var field_rva: TableInfo = .{ .len = r(&rows, .field_rva) };
+    var decl_security: TableInfo = .{ .len = r(&rows, .decl_security) };
     var standalone_sig: TableInfo = .{ .len = standalone_sig_rows };
-    var assembly_os: TableInfo = .{};
-    var assembly_processor: TableInfo = .{};
+    var assembly_os: TableInfo = .{ .len = r(&rows, .assembly_os) };
+    var assembly_processor: TableInfo = .{ .len = r(&rows, .assembly_processor) };
     var assembly_ref: TableInfo = .{ .len = assembly_ref_rows };
-    var assembly_ref_os: TableInfo = .{};
-    var assembly_ref_processor: TableInfo = .{};
+    var assembly_ref_os: TableInfo = .{ .len = r(&rows, .assembly_ref_os) };
+    var assembly_ref_processor: TableInfo = .{ .len = r(&rows, .assembly_ref_processor) };
     var file_tbl: TableInfo = .{ .len = file_rows };
     var exported_type: TableInfo = .{ .len = exported_type_rows };
     var manifest_resource: TableInfo = .{ .len = manifest_resource_rows };
@@ -2011,6 +2042,56 @@ test "parse Windows.Win32.winmd: header, TypeIndex, and method-sig sweep" {
     }
     // Most Win32 method sigs use plain primitives + structs + pointers.
     try std.testing.expect(ok > total_methods / 2);
+}
+
+test "findImplMap resolves a Win32 MethodDef to its DLL + import name" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+
+    // Windows.Win32.Foundation.Apis.CloseHandle — a stable, ancient
+    // kernel32 export with a trivial signature (BOOL(HANDLE)). If
+    // impl_map parsing ever regresses this test will catch it loudly.
+    const apis = index.get("Windows.Win32.Foundation", "Apis");
+    try std.testing.expect(apis.len >= 1);
+
+    const methods = f.list(.type_def, apis[0], 5, .method_def);
+    var found: ?u32 = null;
+    var i = methods.start;
+    while (i < methods.end) : (i += 1) {
+        if (std.mem.eql(u8, f.str(.method_def, i, 3), "CloseHandle")) {
+            found = i;
+            break;
+        }
+    }
+    try std.testing.expect(found != null);
+
+    const imp = f.findImplMap(found.?);
+    try std.testing.expect(imp != null);
+    try std.testing.expectEqualStrings("CloseHandle", f.implMapImportName(imp.?));
+    // DLL name is case-sensitive in metadata ("KERNEL32.dll").
+    const dll = f.implMapDll(imp.?);
+    try std.testing.expect(std.ascii.eqlIgnoreCase(dll, "kernel32.dll"));
+
+    // A method with no PInvoke mapping returns null. Pick a COM
+    // vtable slot: `IUnknown.QueryInterface`. Its MethodDef is
+    // whichever row under `Windows.Win32.System.Com.IUnknown` has
+    // name "QueryInterface".
+    const iunknown = index.get("Windows.Win32.System.Com", "IUnknown");
+    try std.testing.expect(iunknown.len >= 1);
+    const qi_methods = f.list(.type_def, iunknown[0], 5, .method_def);
+    var qi_row: ?u32 = null;
+    var j = qi_methods.start;
+    while (j < qi_methods.end) : (j += 1) {
+        if (std.mem.eql(u8, f.str(.method_def, j, 3), "QueryInterface")) {
+            qi_row = j;
+            break;
+        }
+    }
+    try std.testing.expect(qi_row != null);
+    try std.testing.expectEqual(@as(?u32, null), f.findImplMap(qi_row.?));
 }
 
 test "parse Windows.Wdk.winmd: header, TypeIndex, and basic sigs" {
