@@ -1323,6 +1323,29 @@ fn emitStructsImpl(
 /// `NestedClass` table (§II.22.32) is sorted by `EnclosingClass`
 /// (column 1), so `equalRange` on that column cheaply finds every
 /// nested TypeDef row of a given parent.
+fn typeDefRepresentable(file: *const winmd.File, arena: std.mem.Allocator, row: u32) bool {
+    const FIELD_ATTR_STATIC: u32 = 0x10;
+    const field_list = file.list(.type_def, row, 4, .field);
+    var f: u32 = field_list.start;
+    while (f < field_list.end) : (f += 1) {
+        const field_flags = file.cell(.field, f, 0);
+        if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
+        const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch return false;
+        if (!canRepresent(ty)) return false;
+    }
+    const nc_total = file.rowCount(.nested_class);
+    var i: u32 = 0;
+    while (i < nc_total) : (i += 1) {
+        if (file.cell(.nested_class, i, 1) != row + 1) continue;
+        const nested_typedef = file.cell(.nested_class, i, 0);
+        if (nested_typedef == 0) continue;
+        const child_row = nested_typedef - 1;
+        if (!supportsX64(file, .type_def, child_row)) continue;
+        if (!typeDefRepresentable(file, arena, child_row)) return false;
+    }
+    return true;
+}
+
 fn emitOneStruct(
     writer: *std.Io.Writer,
     arena: std.mem.Allocator,
@@ -1342,57 +1365,46 @@ fn emitOneStruct(
     const field_list = file.list(.type_def, row, 4, .field);
     if (field_list.start == field_list.end) return;
 
-    // First pass: verify every non-static field is representable. If
-    // anything is out of scope skip the whole struct rather than emit
-    // opaque fillers, which would break downstream size/alignment
-    // assumptions at the ABI boundary. Nested TypeDefs referenced by
-    // name still need to be emitted below regardless.
-    var all_ok = true;
+    // Representability is checked transitively over all nested TypeDefs
+    // because we emit each nested as an inline `pub const` in the parent
+    // body. A nested type with an out-of-scope field type would leave a
+    // dangling identifier in the parent's field list, so drop the whole
+    // tree rather than emit half of it.
+    if (!typeDefRepresentable(file, arena, row)) return;
+
+    try writer.print("pub const {s} = extern {s} {{\n", .{ name, if (is_union) "union" else "struct" });
+
+    // Emit nested TypeDefs as inner pub const decls so field types
+    // like `_Anonymous_e__Union` resolve via Zig struct-scope lookup
+    // without polluting the namespace. Multiple parents can each
+    // have their own `_Anonymous_e__Union` without colliding. The
+    // nested_class table is sorted by NestedClass (column 0), not
+    // EnclosingClass, so linear-scan to collect all children of this
+    // row.
+    const nc_total = file.rowCount(.nested_class);
+    var i: u32 = 0;
+    while (i < nc_total) : (i += 1) {
+        if (file.cell(.nested_class, i, 1) != row + 1) continue;
+        const nested_typedef = file.cell(.nested_class, i, 0);
+        if (nested_typedef == 0) continue;
+        const child_row = nested_typedef - 1;
+        if (!supportsX64(file, .type_def, child_row)) continue;
+        const child_name = file.str(.type_def, child_row, 1);
+        if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
+        try emitOneStruct(writer, arena, file, namespace, cross, child_row, child_name);
+    }
+
     var f: u32 = field_list.start;
     while (f < field_list.end) : (f += 1) {
         const field_flags = file.cell(.field, f, 0);
         if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
-        const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch {
-            all_ok = false;
-            break;
-        };
-        if (!canRepresent(ty)) {
-            all_ok = false;
-            break;
-        }
+        const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
+        const field_name = file.str(.field, f, 1);
+        try writer.print("    {s}: ", .{field_name});
+        _ = try writeZigTy(writer, arena, ty, namespace, cross);
+        try writer.writeAll(",\n");
     }
-
-    if (all_ok) {
-        try writer.print("pub const {s} = extern {s} {{\n", .{ name, if (is_union) "union" else "struct" });
-
-        // Emit nested TypeDefs as inner pub const decls so field types
-        // like `_Anonymous_e__Union` resolve via Zig struct-scope lookup
-        // without polluting the namespace. Multiple parents can each
-        // have their own `_Anonymous_e__Union` without colliding.
-        const nested = file.equalRange(.nested_class, 1, row + 1);
-        var i: u32 = nested.start;
-        while (i < nested.end) : (i += 1) {
-            const nested_typedef = file.cell(.nested_class, i, 0);
-            if (nested_typedef == 0) continue;
-            const child_row = nested_typedef - 1;
-            if (!supportsX64(file, .type_def, child_row)) continue;
-            const child_name = file.str(.type_def, child_row, 1);
-            if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
-            try emitOneStruct(writer, arena, file, namespace, cross, child_row, child_name);
-        }
-
-        f = field_list.start;
-        while (f < field_list.end) : (f += 1) {
-            const field_flags = file.cell(.field, f, 0);
-            if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
-            const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
-            const field_name = file.str(.field, f, 1);
-            try writer.print("    {s}: ", .{field_name});
-            _ = try writeZigTy(writer, arena, ty, namespace, cross);
-            try writer.writeAll(",\n");
-        }
-        try writer.writeAll("};\n");
-    }
+    try writer.writeAll("};\n");
 }
 
 test "emitStructs writes Point/Rect/TimeSpan from Windows.Foundation" {

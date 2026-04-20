@@ -200,4 +200,45 @@ pub fn build(b: *std.Build) void {
         const run_gen_obj = b.addRunArtifact(gen_obj);
         test_step.dependOn(&run_gen_obj.step);
     }
+
+    // ------------------------------------------------------------------
+    // Bundle compile-check: drop several generated namespace files into
+    // one WriteFiles directory and type-check them together. This
+    // exercises cross-namespace `@import("Other.Namespace.zig")`
+    // references that the single-namespace checks above can't catch.
+    // Each additional namespace added to the bundle is one more
+    // dependency surface continuously validated by `zig build test`.
+    // ------------------------------------------------------------------
+
+    const bundle_namespaces = [_][]const u8{
+        "Windows.Win32.Foundation",
+        "Windows.Win32.System.IO",
+        "Windows.Win32.System.Kernel",
+    };
+
+    const bundle_wf = b.addWriteFiles();
+    for (bundle_namespaces) |ns| {
+        const gen_run = b.addRunArtifact(winbindgen_exe);
+        gen_run.addArg(ns);
+        const gen_source = gen_run.captureStdOut(.{});
+        _ = bundle_wf.addCopyFile(gen_source, b.fmt("{s}.zig", .{ns}));
+    }
+
+    // Use the first namespace as the root of the bundle module; sibling
+    // `@import("OtherNamespace.zig")` references resolve via the shared
+    // WriteFiles directory.
+    const bundle_root = bundle_wf.getDirectory().path(b, b.fmt("{s}.zig", .{bundle_namespaces[0]}));
+    const bundle_mod = b.createModule(.{
+        .root_source_file = bundle_root,
+        .target = target,
+        .optimize = optimize,
+    });
+    bundle_mod.addImport("win-core", win_core_mod);
+
+    const bundle_obj = b.addTest(.{
+        .name = "compile-check-bundle",
+        .root_module = bundle_mod,
+    });
+    const run_bundle_obj = b.addRunArtifact(bundle_obj);
+    test_step.dependOn(&run_bundle_obj.step);
 }
