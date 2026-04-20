@@ -164,7 +164,78 @@ pub const File = struct {
             self.tables[@intFromEnum(other_table)].len;
         return .{ .start = first, .end = last };
     }
+
+    /// Half-open range of rows in `table` whose `column` equals `value`.
+    /// Requires the table to be sorted by `column` (true for Attribute,
+    /// Constant, FieldMarshal, NestedClass, etc. per ECMA-335 §22).
+    pub fn equalRange(self: *const File, table: Table, column: u3, value: u32) Range {
+        var first: u32 = 0;
+        const total: u32 = self.tables[@intFromEnum(table)].len;
+        var count: u32 = total;
+        while (count != 0) {
+            const half = count / 2;
+            const middle = first + half;
+            const mid_val = self.cell(table, middle, column);
+            if (mid_val < value) {
+                first = middle + 1;
+                count -= half + 1;
+            } else if (mid_val > value) {
+                count = half;
+            } else {
+                const lo = lowerBound(self, table, first, middle, column, value);
+                const hi = upperBound(self, table, middle + 1, first + count, column, value);
+                return .{ .start = lo, .end = hi };
+            }
+        }
+        return .{ .start = first, .end = first };
+    }
+
+    /// For a sorted `table`, return the last row whose `column` value is
+    /// <= `child_row + 1`. Used to recover the parent row of a child (e.g.
+    /// the TypeDef that owns a Field by searching TypeDef.FieldList).
+    pub fn parent(self: *const File, table: Table, column: u3, child_row: u32) u32 {
+        const len = self.tables[@intFromEnum(table)].len;
+        return upperBound(self, table, 0, len, column, child_row + 1) - 1;
+    }
+
+    /// Assembly table column 4 is the assembly name string.
+    pub fn assemblyName(self: *const File) ?[]const u8 {
+        if (self.rowCount(.assembly) == 0) return null;
+        return self.str(.assembly, 0, 4);
+    }
 };
+
+fn lowerBound(f: *const File, table: Table, first_in: u32, last: u32, column: u3, value: u32) u32 {
+    var first = first_in;
+    var count: u32 = last - first;
+    while (count > 0) {
+        const half = count / 2;
+        const middle = first + half;
+        if (f.cell(table, middle, column) < value) {
+            first = middle + 1;
+            count -= half + 1;
+        } else {
+            count = half;
+        }
+    }
+    return first;
+}
+
+fn upperBound(f: *const File, table: Table, first_in: u32, last: u32, column: u3, value: u32) u32 {
+    var first = first_in;
+    var count: u32 = last - first;
+    while (count > 0) {
+        const half = count / 2;
+        const middle = first + half;
+        if (value < f.cell(table, middle, column)) {
+            count = half;
+        } else {
+            first = middle + 1;
+            count -= half + 1;
+        }
+    }
+    return first;
+}
 
 /// Half-open range `[start, end)` of rows in a child table.
 pub const Range = struct {
@@ -175,6 +246,111 @@ pub const Range = struct {
         return self.end - self.start;
     }
 };
+
+// ---- TypeIndex ------------------------------------------------------------
+
+/// `namespace` → `name` → TypeDef row indices. Built once, cheap to query.
+pub const TypeIndex = struct {
+    file: *const File,
+    /// Key is `"namespace\x00name"`; value is a slice of TypeDef row indices.
+    types: std.StringHashMapUnmanaged([]u32) = .empty,
+    /// Namespaces with at least one exported type.
+    namespaces: std.StringHashMapUnmanaged(void) = .empty,
+    arena: std.heap.ArenaAllocator,
+
+    pub fn init(gpa: std.mem.Allocator, file: *const File) !TypeIndex {
+        var self: TypeIndex = .{
+            .file = file,
+            .arena = std.heap.ArenaAllocator.init(gpa),
+        };
+        errdefer self.arena.deinit();
+        const arena_alloc = self.arena.allocator();
+
+        // First pass: count rows per (namespace, name) so we can allocate exact slices.
+        var counts: std.StringHashMapUnmanaged(u32) = .empty;
+        defer counts.deinit(gpa);
+
+        const rows = file.rowCount(.type_def);
+        var row: u32 = 0;
+        while (row < rows) : (row += 1) {
+            const ns = file.str(.type_def, row, 2);
+            if (ns.len == 0) continue; // <Module> and nested types
+            const name = trimTick(file.str(.type_def, row, 1));
+            const key = try joinKey(arena_alloc, ns, name);
+            const gop = try counts.getOrPut(gpa, key);
+            if (!gop.found_existing) gop.value_ptr.* = 0;
+            gop.value_ptr.* += 1;
+        }
+
+        // Second pass: allocate slices, fill them, and populate `namespaces`.
+        var it = counts.iterator();
+        while (it.next()) |entry| {
+            const buf = try arena_alloc.alloc(u32, entry.value_ptr.*);
+            try self.types.put(arena_alloc, entry.key_ptr.*, buf);
+        }
+
+        // Reset counters and do the real fill.
+        var fill_counts: std.StringHashMapUnmanaged(u32) = .empty;
+        defer fill_counts.deinit(gpa);
+
+        row = 0;
+        while (row < rows) : (row += 1) {
+            const ns = file.str(.type_def, row, 2);
+            if (ns.len == 0) continue;
+            const name = trimTick(file.str(.type_def, row, 1));
+
+            // Remember the namespace (one copy in the arena).
+            if (self.namespaces.get(ns) == null) {
+                const ns_copy = try arena_alloc.dupe(u8, ns);
+                try self.namespaces.put(arena_alloc, ns_copy, {});
+            }
+
+            const key = try joinKey(arena_alloc, ns, name);
+            const bucket = self.types.get(key).?;
+            const gop = try fill_counts.getOrPut(gpa, key);
+            if (!gop.found_existing) gop.value_ptr.* = 0;
+            bucket[gop.value_ptr.*] = row;
+            gop.value_ptr.* += 1;
+        }
+
+        return self;
+    }
+
+    pub fn deinit(self: *TypeIndex) void {
+        self.arena.deinit();
+    }
+
+    /// TypeDef rows matching `namespace.name` (may contain multiple entries
+    /// for generic arities, e.g. `IList` and `IList\`1`).
+    pub fn get(self: *const TypeIndex, namespace: []const u8, name: []const u8) []const u32 {
+        var buf: [512]u8 = undefined;
+        const key = std.fmt.bufPrint(&buf, "{s}\x00{s}", .{ namespace, name }) catch return &.{};
+        return self.types.get(key) orelse &.{};
+    }
+
+    pub fn contains(self: *const TypeIndex, namespace: []const u8, name: []const u8) bool {
+        return self.get(namespace, name).len > 0;
+    }
+
+    pub fn containsNamespace(self: *const TypeIndex, namespace: []const u8) bool {
+        return self.namespaces.contains(namespace);
+    }
+};
+
+/// Strip the `\`<arity>` suffix that WinRT uses to distinguish generic
+/// arities (e.g. `IVector\`1` → `IVector`).
+fn trimTick(name: []const u8) []const u8 {
+    if (std.mem.indexOfScalar(u8, name, '`')) |i| return name[0..i];
+    return name;
+}
+
+fn joinKey(alloc: std.mem.Allocator, namespace: []const u8, name: []const u8) ![]u8 {
+    const buf = try alloc.alloc(u8, namespace.len + 1 + name.len);
+    @memcpy(buf[0..namespace.len], namespace);
+    buf[namespace.len] = 0;
+    @memcpy(buf[namespace.len + 1 ..], name);
+    return buf;
+}
 
 // ---- PE / COR20 constants -------------------------------------------------
 
@@ -674,4 +850,36 @@ test "parse Windows.Win32.winmd and locate Point" {
     // yet, just make sure the blob reader produces a plausible slice.
     const sig = f.blob(.field, fields.start, 2);
     try std.testing.expect(sig.len > 0);
+}
+
+test "TypeIndex locates Point and exercises parent/equalRange" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+
+    try std.testing.expect(index.containsNamespace("Windows.Foundation"));
+    try std.testing.expect(!index.containsNamespace("Not.A.Namespace"));
+    try std.testing.expect(index.contains("Windows.Foundation", "Point"));
+
+    const rows = index.get("Windows.Foundation", "Point");
+    try std.testing.expectEqual(@as(usize, 1), rows.len);
+    const point_row = rows[0];
+
+    // parent(): given any field owned by Point, we should recover point_row
+    // via TypeDef.FieldList (column 4).
+    const fields = f.list(.type_def, point_row, 4, .field);
+    try std.testing.expect(fields.len() >= 1);
+    const parent_row = f.parent(.type_def, 4, fields.start);
+    try std.testing.expectEqual(point_row, parent_row);
+
+    // equalRange(): NestedClass (column 1 = enclosing TypeDef row, 1-based,
+    // sorted) should find zero NestedClass rows whose parent is Point.
+    const nested = f.equalRange(.nested_class, 1, point_row + 1);
+    try std.testing.expectEqual(@as(u32, 0), nested.len());
+
+    // assemblyName may be null for merged/special winmds; just confirm the
+    // call doesn't panic and produces a consistent result.
+    _ = f.assemblyName();
 }
