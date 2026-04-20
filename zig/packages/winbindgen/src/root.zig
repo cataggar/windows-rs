@@ -317,6 +317,47 @@ pub fn emitInterfaceVtbls(
     }
 }
 
+/// Emit a top-level handle type for each non-generic interface in
+/// `namespace`. Shape:
+///
+///     pub const IStringable = extern struct {
+///         vtable: *const IStringable_Vtbl,
+///     };
+///
+/// This is the canonical COM object shape: every interface pointer
+/// points to an object whose first word is the vtbl pointer. Having a
+/// named type per interface lets callers write `*IStringable` rather
+/// than juggling raw `*anyopaque` values, and is the foundation for a
+/// later slice that replaces `class_name → *anyopaque` in vtbl params
+/// with typed pointers.
+///
+/// Must be paired with `emitInterfaceVtbls` in the same compilation
+/// unit (or with the vtbls in scope via import), since the handle
+/// references `<Name>_Vtbl` directly.
+pub fn emitInterfaceHandles(
+    writer: *std.Io.Writer,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+        const flags = file.cell(.type_def, row, 0);
+        if ((flags & TYPE_ATTR_INTERFACE) == 0) continue;
+
+        const name = file.str(.type_def, row, 1);
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+
+        try writer.print(
+            \\pub const {s} = extern struct {{
+            \\    vtable: *const {s}_Vtbl,
+            \\}};
+            \\
+        , .{ name, name });
+    }
+}
+
 /// Emit a function-pointer type for a single MethodDef row, WinRT-ABI
 /// shaped: `*const fn(this: *anyopaque, <in/out params>) callconv(.winapi) HRESULT`.
 ///
@@ -656,4 +697,31 @@ test "emitStructs writes Point/Rect/TimeSpan from Windows.Foundation" {
     // TimeSpan — single i64 field, exercises non-f32 primitives.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const TimeSpan = extern struct {") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "    Duration: i64,") != null);
+}
+
+test "emitInterfaceHandles writes IStringable handle" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitInterfaceHandles(&buf.writer, &file, "Windows.Foundation");
+    const out = buf.written();
+
+    // Canonical COM object layout: first word is the vtbl pointer.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub const IStringable = extern struct {\n    vtable: *const IStringable_Vtbl,\n};",
+    ) != null);
+
+    // Many interfaces should have been emitted.
+    var count: usize = 0;
+    var search = out;
+    while (std.mem.indexOf(u8, search, "pub const I")) |idx| {
+        count += 1;
+        search = search[idx + 1 ..];
+    }
+    try std.testing.expect(count > 5);
 }
