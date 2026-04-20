@@ -144,6 +144,10 @@ pub fn emitIidConstants(
         }
 
         const name = file.str(.type_def, row, 1);
+        // Skip WinRT parameterized-generic typedefs (names like
+        // `IAsyncOperation\`1`). `\`` is not a legal Zig identifier
+        // character and instantiating generics is deferred to v0.2.
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
         try writer.print(
             \\pub const IID_{s}: GUID = .{{
             \\    .data1 = 0x{X:0>8},
@@ -225,6 +229,7 @@ pub fn emitEnums(
         const repr_str = zigReprFor(repr_ty) orelse continue;
 
         const name = file.str(.type_def, row, 1);
+        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
         try writer.print("pub const {s} = enum({s}) {{\n", .{ name, repr_str });
 
         var f: u32 = fields.start;
@@ -587,7 +592,13 @@ fn writeZigTy(
         // as `*@"Windows.Foo".Name` and record `Windows.Foo` in
         // `cross` so `emitNamespace` adds the matching `@import`.
         .class_name => |tn| {
-            if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
+            // Generic WinRT interfaces (`IReference\`1` etc.) cannot
+            // round-trip through a Zig identifier. Treat them as
+            // opaque pointers until parameterized generics land in
+            // a later phase.
+            if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
+                try writer.writeAll("*anyopaque");
+            } else if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
                 try cross.put(gpa, tn.namespace, {});
                 try writer.print("*@\"{s}\".{s}", .{ tn.namespace, tn.name });
             } else {
@@ -598,7 +609,9 @@ fn writeZigTy(
         // cross-namespace rule as `class_name`, just without the
         // leading `*`.
         .value_name => |tn| {
-            if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
+            if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
+                return false;
+            } else if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
                 try cross.put(gpa, tn.namespace, {});
                 try writer.print("@\"{s}\".{s}", .{ tn.namespace, tn.name });
             } else {
@@ -1063,4 +1076,29 @@ test "emitNamespace qualifies cross-namespace refs and emits import aliases" {
     if (std.mem.indexOf(u8, out, "pub const ")) |decl_idx| {
         try std.testing.expect(import_idx < decl_idx);
     }
+}
+
+test "emitNamespace skips generic-arity typedefs (no backticks in output)" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    // Windows.Foundation contains `IAsyncOperation\`1`, `IReference\`1`,
+    // etc. Their names contain a backtick which is not a legal Zig
+    // identifier character, and instantiating WinRT generics is
+    // deferred to a later phase — so emitted output must contain no
+    // literal backticks anywhere.
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+
+    // Spot check: non-generic declarations are still there.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IID_IStringable") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const AsyncStatus") != null);
 }
