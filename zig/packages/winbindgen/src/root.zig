@@ -521,12 +521,15 @@ fn writeInterfaceIid(
 }
 
 /// Emit typed `QueryInterface` / `AddRef` / `Release` method
-/// wrappers on a WinRT interface handle. Every WinRT vtbl's first
-/// three slots are the IUnknown methods (reached here as
-/// `self.vtable.base.base.*` — `base: IInspectable_Vtbl` which has
-/// its own `base: IUnknown_Vtbl`). The underlying fn pointers take
-/// `this: *anyopaque`, so we `@ptrCast` the typed `self` at each
-/// call site and keep the caller's API pointer-typed.
+/// wrappers plus a `cast(comptime T)` convenience on a WinRT
+/// interface handle. Every WinRT vtbl's first three slots are the
+/// IUnknown methods (reached here as `self.vtable.base.base.*` —
+/// `base: IInspectable_Vtbl` which has its own `base: IUnknown_Vtbl`).
+/// The underlying fn pointers take `this: *anyopaque`, so we
+/// `@ptrCast` the typed `self` at each call site and keep the
+/// caller's API pointer-typed. `cast` looks up `T.IID` (emitted on
+/// every interface by `writeInterfaceIid`) and returns a typed
+/// `?*const T` without the caller ever seeing `*anyopaque`.
 fn writeIUnknownWrappers(writer: *std.Io.Writer, name: []const u8) !void {
     try writer.print(
         \\    pub fn QueryInterface(self: *const {s}, iid: *const GUID, interface: *?*anyopaque) callconv(.winapi) HRESULT {{
@@ -538,8 +541,13 @@ fn writeIUnknownWrappers(writer: *std.Io.Writer, name: []const u8) !void {
         \\    pub fn Release(self: *const {s}) callconv(.winapi) u32 {{
         \\        return self.vtable.base.base.Release(@ptrCast(@constCast(self)));
         \\    }}
+        \\    pub fn cast(self: *const {s}, comptime T: type) ?*const T {{
+        \\        var out: ?*anyopaque = null;
+        \\        if (self.QueryInterface(&T.IID, &out) < 0) return null;
+        \\        return @ptrCast(@alignCast(out));
+        \\    }}
         \\
-    , .{ name, name, name });
+    , .{ name, name, name, name });
 }
 
 /// Emit a method wrapper (`pub fn Name(self, args) HRESULT { return self.vtable.Name(self, args); }`)
@@ -1026,6 +1034,15 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     ) != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub fn AddRef(self: *const IStringable) callconv(.winapi) u32 {") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub fn Release(self: *const IStringable) callconv(.winapi) u32 {") != null);
+
+    // `cast` is the typed QueryInterface convenience — looks up
+    // `T.IID` (emitted by writeInterfaceIid on every interface).
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub fn cast(self: *const IStringable, comptime T: type) ?*const T {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "if (self.QueryInterface(&T.IID, &out) < 0) return null;") != null);
 
     // IStringable's IID from WinRT metadata: {96369f54-8eb6-48f0-abce-c1b211e627c3}.
     try std.testing.expect(std.mem.indexOf(
