@@ -316,6 +316,16 @@ pub fn Com(comptime Vtbl: type) type {
             return self.unknown().QueryInterface(self.ptr, iid, out);
         }
 
+        /// Typed `QueryInterface`. Asks the underlying object for the
+        /// interface identified by `iid`, expects a pointer back, and
+        /// wraps it as `Com(V2)`. The returned smart pointer owns the
+        /// fresh reference produced by `QueryInterface`.
+        pub fn cast(self: Self, comptime V2: type, iid: *const GUID) !Com(V2) {
+            var raw: ?*anyopaque = null;
+            try hresult.ok(self.queryInterface(iid, &raw));
+            return .{ .ptr = @ptrCast(@alignCast(raw.?)) };
+        }
+
         /// Bump the refcount and hand back a fresh smart pointer.
         pub fn clone(self: Self) Self {
             _ = self.addRef();
@@ -517,6 +527,59 @@ pub const IInspectable_Vtbl = extern struct {
 /// Shorthand for a `Com(IInspectable_Vtbl)` — any WinRT object, viewed
 /// through its `IInspectable` face.
 pub const IInspectable = Com(IInspectable_Vtbl);
+
+// ---- IStringable (Windows.Foundation) -------------------------------------
+
+/// IID of `IStringable`: `{96369F54-8EB6-48F0-ABCE-C1B211E627C3}`.
+pub const IID_IStringable: GUID = .{
+    .data1 = 0x96369F54,
+    .data2 = 0x8EB6,
+    .data3 = 0x48F0,
+    .data4 = .{ 0xAB, 0xCE, 0xC1, 0xB2, 0x11, 0xE6, 0x27, 0xC3 },
+};
+
+/// `Windows.Foundation.IStringable` — the WinRT analogue of `ToString`.
+pub const IStringable_Vtbl = extern struct {
+    base: IInspectable_Vtbl,
+
+    ToString: *const fn (
+        this: *anyopaque,
+        value: *HSTRING,
+    ) callconv(.winapi) HRESULT,
+};
+
+pub const IStringable = Com(IStringable_Vtbl);
+
+// ---- IUriRuntimeClassFactory (Windows.Foundation) -------------------------
+
+/// IID of `IUriRuntimeClassFactory`: `{44A9796F-723E-4FDF-A218-033E75B0C084}`.
+pub const IID_IUriRuntimeClassFactory: GUID = .{
+    .data1 = 0x44A9796F,
+    .data2 = 0x723E,
+    .data3 = 0x4FDF,
+    .data4 = .{ 0xA2, 0x18, 0x03, 0x3E, 0x75, 0xB0, 0xC0, 0x84 },
+};
+
+/// Activation factory for `Windows.Foundation.Uri`. Two `CreateUri`
+/// overloads in the IDL — we only declare the single-argument form here.
+pub const IUriRuntimeClassFactory_Vtbl = extern struct {
+    base: IInspectable_Vtbl,
+
+    CreateUri: *const fn (
+        this: *anyopaque,
+        uri: HSTRING,
+        instance: *?*anyopaque,
+    ) callconv(.winapi) HRESULT,
+
+    CreateWithRelativeUri: *const fn (
+        this: *anyopaque,
+        base_uri: HSTRING,
+        relative_uri: HSTRING,
+        instance: *?*anyopaque,
+    ) callconv(.winapi) HRESULT,
+};
+
+pub const IUriRuntimeClassFactory = Com(IUriRuntimeClassFactory_Vtbl);
 
 // ---- WinRT activation -----------------------------------------------------
 
@@ -814,4 +877,46 @@ test "RoGetActivationFactory returns a working IInspectable" {
     // "one of the defined values".
     try std.testing.expect(trust >= @intFromEnum(TrustLevel.base_trust) and
         trust <= @intFromEnum(TrustLevel.full_trust));
+}
+
+test "Windows.Foundation.Uri round-trips a URL through IStringable" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    try roInitialize(.multi_threaded);
+    defer winrt.RoUninitialize();
+
+    // Get the activation factory typed as IUriRuntimeClassFactory directly,
+    // so we can call CreateUri without a separate QueryInterface.
+    const class = utf16Lit("Windows.Foundation.Uri");
+    const factory = try activationFactory(
+        IUriRuntimeClassFactory_Vtbl,
+        &IID_IUriRuntimeClassFactory,
+        class,
+    );
+    defer factory.deinit();
+
+    // Construct a Uri instance.
+    const url = utf16Lit("https://learn.microsoft.com/windows/");
+    var url_h = try Hstring.create(url);
+    defer url_h.deinit();
+
+    var raw: ?*anyopaque = null;
+    try hresult.ok(factory.vtbl().CreateUri(factory.ptr, url_h.raw, &raw));
+    const uri = IInspectable{ .ptr = @ptrCast(@alignCast(raw.?)) };
+    defer uri.deinit();
+
+    // QI to IStringable and read it back.
+    const stringable = try uri.cast(IStringable_Vtbl, &IID_IStringable);
+    defer stringable.deinit();
+
+    var out: HSTRING = null;
+    try hresult.ok(stringable.vtbl().ToString(stringable.ptr, &out));
+    var got = Hstring.fromRaw(out);
+    defer got.deinit();
+
+    // The Uri normalizes its input but should preserve the host + path.
+    var buf: [256]u8 = undefined;
+    const n = try std.unicode.utf16LeToUtf8(&buf, got.slice());
+    try std.testing.expect(std.mem.indexOf(u8, buf[0..n], "learn.microsoft.com") != null);
+    try std.testing.expect(std.mem.indexOf(u8, buf[0..n], "/windows") != null);
 }
