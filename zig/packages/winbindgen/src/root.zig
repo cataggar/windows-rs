@@ -258,6 +258,7 @@ fn canRepresent(ty: winmd.Ty) bool {
         .f64,
         .string,
         .class_name,
+        .value_name,
         => true,
         .ref_mut, .ref_const => |inner| canRepresent(inner.*),
         .ptr_mut => |p| canRepresent(p.inner.*),
@@ -291,6 +292,12 @@ fn writeZigTy(writer: *std.Io.Writer, ty: winmd.Ty) !bool {
         // (could be cross-namespace), so emit the type-erased form.
         // Upstream windows-rs renders the same shape as `*mut c_void`.
         .class_name => try writer.writeAll("*anyopaque"),
+        // WinRT value type (enum or struct) passed by value. First
+        // slice: emit the short name and trust that the same
+        // declaration is in scope at the import site. Namespace-aware
+        // resolution is a later slice once the enum/struct emitters
+        // land and we know which names need qualifying.
+        .value_name => |tn| try writer.writeAll(tn.name),
         .ptr_mut => |p| {
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*");
@@ -344,6 +351,15 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
         u8,
         out,
         "CreateUri: *const fn (this: *anyopaque, p0: HSTRING, result: **anyopaque) callconv(.winapi) HRESULT",
+    ) != null);
+
+    // IAsyncInfo.get_Status returns the `AsyncStatus` enum — a
+    // by-value value_name reference. The mapper should emit the
+    // short name verbatim so downstream can resolve it via @import.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "get_Status: *const fn (this: *anyopaque, result: *AsyncStatus) callconv(.winapi) HRESULT",
     ) != null);
 
     // At least one interface in Windows.Foundation uses types we don't
