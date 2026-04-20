@@ -24,6 +24,11 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    // Expose the vendored WinRT metadata file to the winmd module so tests
+    // (and any comptime consumer) can @embedFile it by a stable name.
+    winmd_mod.addAnonymousImport("Windows.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
+    });
 
     const win_core_mod = b.addModule("win-core", .{
         .root_source_file = b.path("packages/win-core/src/root.zig"),
