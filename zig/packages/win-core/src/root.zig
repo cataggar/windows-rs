@@ -333,6 +333,77 @@ pub fn Com(comptime Vtbl: type) type {
 /// `IUnknown` face.
 pub const IUnknown = Com(IUnknown_Vtbl);
 
+// ---- BSTR -----------------------------------------------------------------
+
+/// Raw OLE Automation string: a UTF-16LE `[*]const u16` whose four bytes
+/// *before* the pointer hold the byte length. Null is a valid empty value.
+/// Allocated and freed exclusively by `OleAut32.dll`.
+pub const BSTR = ?[*]const u16;
+
+/// Externs from `OleAut32.dll` for `BSTR` management.
+pub const oleaut32 = struct {
+    pub extern "oleaut32" fn SysAllocStringLen(
+        str: ?[*]const u16,
+        len: u32,
+    ) callconv(.winapi) BSTR;
+
+    pub extern "oleaut32" fn SysFreeString(bstr: BSTR) callconv(.winapi) void;
+
+    pub extern "oleaut32" fn SysStringLen(bstr: BSTR) callconv(.winapi) u32;
+};
+
+/// Owning `BSTR` wrapper. Free-at-drop via `SysFreeString`; cheap to move
+/// (it's just a pointer); cannot be cloned without the OS allocator.
+///
+/// The four-byte length prefix that lives before the pointer is managed
+/// by `SysAllocStringLen` / `SysStringLen`, so this type never needs to
+/// touch it directly.
+pub const Bstr = struct {
+    raw: BSTR = null,
+
+    /// Take ownership of a `BSTR` returned by a Win32 API (which allocated
+    /// it via `SysAllocString*`).
+    pub inline fn fromRaw(raw: BSTR) Bstr {
+        return .{ .raw = raw };
+    }
+
+    /// Allocate a fresh `BSTR` copy of the given UTF-16 slice.
+    pub fn alloc(utf16: []const u16) error{OutOfMemory}!Bstr {
+        const raw = oleaut32.SysAllocStringLen(
+            if (utf16.len == 0) null else utf16.ptr,
+            @intCast(utf16.len),
+        );
+        if (raw == null and utf16.len != 0) return error.OutOfMemory;
+        return .{ .raw = raw };
+    }
+
+    /// Allocate a fresh `BSTR` from a UTF-8 string, converting to UTF-16LE
+    /// on the fly using the provided allocator for the intermediate buffer.
+    pub fn allocUtf8(allocator: std.mem.Allocator, s: []const u8) !Bstr {
+        const utf16 = try std.unicode.utf8ToUtf16LeAlloc(allocator, s);
+        defer allocator.free(utf16);
+        return alloc(utf16);
+    }
+
+    /// Number of UTF-16 code units in the string, excluding the NUL.
+    pub fn len(self: Bstr) u32 {
+        if (self.raw == null) return 0;
+        return oleaut32.SysStringLen(self.raw);
+    }
+
+    /// View the string as a slice. Returns an empty slice for null.
+    pub fn slice(self: Bstr) []const u16 {
+        const p = self.raw orelse return &[_]u16{};
+        return p[0..oleaut32.SysStringLen(self.raw)];
+    }
+
+    /// Release the OS-owned storage. Idempotent; leaves `raw` null.
+    pub fn deinit(self: *Bstr) void {
+        oleaut32.SysFreeString(self.raw);
+        self.raw = null;
+    }
+};
+
 // ---- Tests ----------------------------------------------------------------
 
 test "GUID parse roundtrip" {
@@ -486,4 +557,28 @@ test "Com smart pointer drives a fake IUnknown vtable" {
     _ = p.release();
     _ = p.release();
     try std.testing.expectEqual(@as(u32, 0), obj.refcount);
+}
+
+test "Bstr round-trips through OleAut32" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    // Empty
+    var empty: Bstr = .{};
+    try std.testing.expectEqual(@as(u32, 0), empty.len());
+    try std.testing.expectEqual(@as(usize, 0), empty.slice().len);
+    empty.deinit();
+
+    // Allocate from UTF-16 and read it back.
+    const msg = [_]u16{ 'H', 'e', 'l', 'l', 'o' };
+    var b = try Bstr.alloc(&msg);
+    defer b.deinit();
+    try std.testing.expectEqual(@as(u32, 5), b.len());
+    try std.testing.expectEqualSlices(u16, &msg, b.slice());
+
+    // Allocate from UTF-8 via an allocator.
+    var u8b = try Bstr.allocUtf8(std.testing.allocator, "Hi \xe2\x98\x83");
+    defer u8b.deinit();
+    // 'H','i',' ','\u2603' -> 4 UTF-16 code units.
+    try std.testing.expectEqual(@as(u32, 4), u8b.len());
+    try std.testing.expectEqual(@as(u16, 0x2603), u8b.slice()[3]);
 }

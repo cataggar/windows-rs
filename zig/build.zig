@@ -41,6 +41,11 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
+    // `win-core` calls into `OleAut32.dll` for `BSTR` helpers; link it on
+    // Windows targets. No-op elsewhere (the BSTR code is gated on the OS).
+    if (target.result.os.tag == .windows) {
+        win_core_mod.linkSystemLibrary("oleaut32", .{});
+    }
 
     const winbindgen_mod = b.addModule("winbindgen", .{
         .root_source_file = b.path("packages/winbindgen/src/root.zig"),
