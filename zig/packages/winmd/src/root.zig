@@ -529,10 +529,10 @@ const SigCursor = struct {
     }
 };
 
-/// Decode a `TypeDefOrRef` coded token as it appears inside a signature blob.
-/// The token is a compressed unsigned integer with layout `(row << 2) | tag`,
-/// where row is 1-based (§II.23.2.8, II.24.2.6).
-fn resolveTypeDefOrRefName(file: *const File, token: u32) !TypeName {
+/// Decode a `TypeDefOrRef` coded token as it appears inside a signature blob
+/// or a TypeDef `Extends` column. The token is a compressed unsigned integer
+/// with layout `(row << 2) | tag`, where row is 1-based (§II.23.2.8, II.24.2.6).
+pub fn resolveTypeDefOrRefName(file: *const File, token: u32) !TypeName {
     const tag: u2 = @intCast(token & 0b11);
     const row_1based: u32 = token >> 2;
     if (row_1based == 0) return error.InvalidCodedToken;

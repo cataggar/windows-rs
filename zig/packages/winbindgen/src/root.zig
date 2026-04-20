@@ -89,6 +89,146 @@ test "placeholder" {
     try std.testing.expect(true);
 }
 
+/// Emit a `pub const <Name> = enum(<repr>) { ... };` for every enum
+/// TypeDef in `namespace`. An enum is a TypeDef whose `Extends` column
+/// resolves to `System.Enum`; its first field (instance, name `value__`)
+/// carries the underlying integer type, and every subsequent field is a
+/// `static literal` whose value lives in the Constant table.
+///
+/// Emitted enums are non-exhaustive (`_`) so that OR'd flag values —
+/// common in `FlagsAttribute`-decorated enums — remain representable at
+/// the API surface. Duplicate declared values would still be rejected by
+/// the Zig compiler; if any such enum surfaces in metadata we'll need a
+/// second strategy for that kind.
+pub fn emitEnums(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    namespace: []const u8,
+) !void {
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok == 0) continue;
+        const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+        if (!std.mem.eql(u8, base.namespace, "System") or !std.mem.eql(u8, base.name, "Enum")) continue;
+
+        const fields = file.list(.type_def, row, 4, .field);
+        if (fields.start == fields.end) continue;
+
+        // Locate `value__` (instance field, FieldAttributes.SpecialName=0x200,
+        // FieldAttributes.RTSpecialName=0x400). In practice it's always the
+        // first field of the enum TypeDef; fall back to a name check.
+        var repr_field: u32 = fields.start;
+        const first_name = file.str(.field, fields.start, 1);
+        if (!std.mem.eql(u8, first_name, "value__")) {
+            var f: u32 = fields.start;
+            while (f < fields.end) : (f += 1) {
+                if (std.mem.eql(u8, file.str(.field, f, 1), "value__")) {
+                    repr_field = f;
+                    break;
+                }
+            } else continue;
+        }
+
+        const repr_ty = winmd.readFieldSignature(arena, file, file.blob(.field, repr_field, 2)) catch continue;
+        const repr_str = zigReprFor(repr_ty) orelse continue;
+
+        const name = file.str(.type_def, row, 1);
+        try writer.print("pub const {s} = enum({s}) {{\n", .{ name, repr_str });
+
+        var f: u32 = fields.start;
+        while (f < fields.end) : (f += 1) {
+            if (f == repr_field) continue;
+
+            // Static literal fields are flagged FieldAttributes.Static=0x10 |
+            // Literal=0x40. The Constant row is sorted by Parent so a
+            // binary-search range of one row is expected.
+            const parent_tok = (@as(u32, f + 1) << 2) | 0; // HasConstant tag 0 = Field
+            const range = file.equalRange(.constant, 1, parent_tok);
+            if (range.start == range.end) continue;
+
+            const type_code: u8 = @intCast(file.cell(.constant, range.start, 0) & 0xFF);
+            const value_blob = file.blob(.constant, range.start, 2);
+            const raw = readConstantValue(type_code, value_blob) orelse continue;
+
+            const variant_name = file.str(.field, f, 1);
+            // Print as signed when underlying type is signed, unsigned
+            // otherwise; match the declared enum tag type.
+            if (isSignedRepr(repr_ty)) {
+                const signed: i64 = @bitCast(raw);
+                try writer.print("    {s} = {d},\n", .{ variant_name, signed });
+            } else {
+                try writer.print("    {s} = {d},\n", .{ variant_name, raw });
+            }
+        }
+
+        try writer.writeAll("    _,\n};\n");
+    }
+}
+
+/// Map a primitive `Ty` to its Zig name for use as an enum tag type.
+/// Returns null for anything that can't back a CLI enum.
+fn zigReprFor(ty: winmd.Ty) ?[]const u8 {
+    return switch (ty) {
+        .i8 => "i8",
+        .u8 => "u8",
+        .i16 => "i16",
+        .u16 => "u16",
+        .i32 => "i32",
+        .u32 => "u32",
+        .i64 => "i64",
+        .u64 => "u64",
+        else => null,
+    };
+}
+
+fn isSignedRepr(ty: winmd.Ty) bool {
+    return switch (ty) {
+        .i8, .i16, .i32, .i64 => true,
+        else => false,
+    };
+}
+
+/// Decode a Constant.Value blob as a `u64` bit pattern. Only integer
+/// ELEMENT_TYPE codes relevant to enums are handled. Returns null for
+/// unsupported or truncated blobs.
+fn readConstantValue(type_code: u8, blob: []const u8) ?u64 {
+    // ELEMENT_TYPE codes from ECMA-335 §II.23.1.16.
+    const ET_BOOLEAN: u8 = 0x02;
+    const ET_CHAR: u8 = 0x03;
+    const ET_I1: u8 = 0x04;
+    const ET_U1: u8 = 0x05;
+    const ET_I2: u8 = 0x06;
+    const ET_U2: u8 = 0x07;
+    const ET_I4: u8 = 0x08;
+    const ET_U4: u8 = 0x09;
+    const ET_I8: u8 = 0x0A;
+    const ET_U8: u8 = 0x0B;
+    switch (type_code) {
+        ET_BOOLEAN, ET_I1, ET_U1 => {
+            if (blob.len < 1) return null;
+            return @as(u64, blob[0]);
+        },
+        ET_CHAR, ET_I2, ET_U2 => {
+            if (blob.len < 2) return null;
+            return @as(u64, std.mem.readInt(u16, blob[0..2], .little));
+        },
+        ET_I4, ET_U4 => {
+            if (blob.len < 4) return null;
+            return @as(u64, std.mem.readInt(u32, blob[0..4], .little));
+        },
+        ET_I8, ET_U8 => {
+            if (blob.len < 8) return null;
+            return std.mem.readInt(u64, blob[0..8], .little);
+        },
+        else => return null,
+    }
+}
+
 test "emitIidConstants writes IStringable from Windows.Foundation" {
     const bytes = @embedFile("Windows.winmd");
     var file = try winmd.parse(bytes);
@@ -366,4 +506,38 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // yet support (e.g. `IReference`1` methods with classes) — those
     // must degrade to opaque rather than fail the whole emit.
     try std.testing.expect(std.mem.indexOf(u8, out, "*const anyopaque") != null);
+}
+
+test "emitEnums writes AsyncStatus from Windows.Foundation" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitEnums(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    const out = buf.written();
+
+    // AsyncStatus is the canonical WinRT i32-backed async-operation enum.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const AsyncStatus = enum(i32) {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Started = 0,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Completed = 1,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Canceled = 2,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "    Error = 3,") != null);
+    // Non-exhaustive marker lets OR'd flag values in other enums remain
+    // representable without re-declaration.
+    try std.testing.expect(std.mem.indexOf(u8, out, "    _,\n};") != null);
+
+    // At least one enum is expected in Windows.Foundation (AsyncStatus
+    // above) — the exact count varies by metadata vintage.
+    var count: usize = 0;
+    var search = out;
+    while (std.mem.indexOf(u8, search, "pub const ")) |idx| {
+        count += 1;
+        search = search[idx + 1 ..];
+    }
+    try std.testing.expect(count >= 1);
 }
