@@ -1,20 +1,24 @@
-//! Phase 6 sample: dynamic lookup via `GetModuleHandleW` +
-//! `GetProcAddress`, projected from the
-//! `Windows.Win32.System.LibraryLoader` namespace.
-//!
-//! Exercises Phase 4's cross-namespace projection: both functions
-//! live in `System.LibraryLoader` but their signatures reference
-//! `Foundation` handles (HMODULE, PWSTR, PSTR). The compiler walks
-//! LibraryLoader's `resolveTypeRef` table + the shared alias table
-//! to materialize the right extern fn pointers.
+//! Phase 6 sample: dynamic lookup via `LoadLibraryW` +
+//! `GetProcAddress` + `FreeLibrary`. Exercises Phase 4's
+//! cross-namespace projection: `LoadLibraryW` / `GetProcAddress`
+//! come from `Windows.Win32.System.LibraryLoader`, but
+//! `FreeLibrary` is authored in `Windows.Win32.Foundation.Apis` in
+//! the winmd (unlike the MSDN headers where everything sits in
+//! `libloaderapi.h`). Projecting two namespaces in a single
+//! `project(...)` call proves the filter struct iteration works
+//! across namespaces and that each namespace's `resolveTypeRef`
+//! table is consulted independently.
 
 const std = @import("std");
 const win_sys = @import("win-sys");
 
 const win = win_sys.project(.{
     .@"Windows.Win32.System.LibraryLoader" = .{
-        "GetModuleHandleW",
+        "LoadLibraryW",
         "GetProcAddress",
+    },
+    .@"Windows.Win32.Foundation" = .{
+        "FreeLibrary",
     },
 });
 
@@ -30,14 +34,13 @@ pub fn main(init: std.process.Init) !void {
     var stdout_writer = std.Io.File.stdout().writer(io, &stdout_buffer);
     const stdout = &stdout_writer.interface;
 
-    // GetModuleHandleW returns the already-loaded kernel32 module.
-    // kernel32 is always present in every Win32 process, so there's
-    // nothing to free. PWSTR is `?[*:0]u16` (mutable) in the winmd;
-    // copy the comptime literal into a mutable buffer to feed it.
+    // PWSTR is `?[*:0]u16` (mutable) in the winmd; copy the comptime
+    // literal into a mutable buffer to feed LoadLibraryW.
     var kernel32_name = std.unicode.utf8ToUtf16LeStringLiteral("kernel32.dll").*;
-    const hmod = win.GetModuleHandleW(&kernel32_name);
-    if (hmod == 0) return error.GetModuleHandleWFailed;
-    try stdout.print("GetModuleHandleW(kernel32.dll) = 0x{x}\n", .{@as(usize, @bitCast(hmod))});
+    const hmod = win.LoadLibraryW(&kernel32_name);
+    if (hmod == 0) return error.LoadLibraryWFailed;
+    try stdout.print("LoadLibraryW(kernel32.dll) = 0x{x}\n", .{@as(usize, @bitCast(hmod))});
+    defer _ = win.FreeLibrary(hmod);
 
     // `GetCurrentProcessId` is exported by name. PSTR in the winmd
     // is a mutable `[*:0]u8`; string literals are `const`, so copy
