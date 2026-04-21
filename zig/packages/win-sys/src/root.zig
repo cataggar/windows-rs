@@ -21,16 +21,26 @@ test "prebuilt index: Windows.Win32.Foundation has SysAllocString" {
     const std = @import("std");
     // Comptime lookup — this is the same call the Phase 4 `project()`
     // helper will make per filter name.
-    const row = comptime index.@"Windows.Win32.Foundation"
+    const rec = comptime index.@"Windows.Win32.Foundation"
         .method_def_by_name.get("SysAllocString");
-    try std.testing.expect(row != null);
-    // Row number is metadata-snapshot dependent; just verify it's in
-    // a plausible range for Win32.winmd MethodDef (tens of thousands).
-    try std.testing.expect(row.? > 0 and row.? < 100_000);
+    try std.testing.expect(rec != null);
+
+    // Library and import name must be populated. SysAllocString is a
+    // BSTR helper exported from OLEAUT32.DLL.
+    try std.testing.expectEqualStrings("OLEAUT32", rec.?.library);
+    try std.testing.expectEqualStrings("SysAllocString", rec.?.import);
+
+    // Signature is a raw MethodDef sig blob. First byte is the
+    // calling-convention flags per ECMA-335 §II.23.2.1 (0x00 for
+    // HASTHIS=0 DEFAULT, 0x20+ when HASTHIS is set). Non-empty + a
+    // plausible first byte is enough here; signature parsing is
+    // exercised separately.
+    try std.testing.expect(rec.?.signature.len > 0);
+    try std.testing.expect(rec.?.signature[0] <= 0x20);
 
     // Unknown names must miss.
     try std.testing.expectEqual(
-        @as(?u32, null),
+        @as(?@TypeOf(rec.?), null),
         index.@"Windows.Win32.Foundation".method_def_by_name.get("NotARealApi"),
     );
 }

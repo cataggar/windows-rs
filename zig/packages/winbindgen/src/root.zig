@@ -523,8 +523,21 @@ pub fn emitMethodIndex(
     namespace: []const u8,
     arch: Arch,
 ) !void {
+    // Emits a StaticStringMap keyed by MethodDef name with a rich
+    // record value: library, import name, and the raw MethodDef
+    // signature blob (as a byte-escaped string literal). This is the
+    // Phase 4 option-(c) shape — `project()` reads everything it
+    // needs from this table and never touches the winmd at comptime
+    // (see checkpoint 059 for why parse-at-comptime isn't viable on
+    // 23 MB).
     try writer.writeAll(
-        \\pub const method_def_by_name = std.static_string_map.StaticStringMap(u32).initComptime(.{
+        \\pub const MethodRecord = struct {
+        \\    library: []const u8,
+        \\    import: []const u8,
+        \\    signature: []const u8,
+        \\};
+        \\
+        \\pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
         \\
     );
     const rows = file.rowCount(.type_def);
@@ -536,13 +549,32 @@ pub fn emitMethodIndex(
         const methods = file.list(.type_def, row, 5, .method_def);
         var m: u32 = methods.start;
         while (m < methods.end) : (m += 1) {
-            if (file.findImplMap(m) == null) continue;
+            const impl_map_row = file.findImplMap(m) orelse continue;
             if (!supportsArch(file, .method_def, m, arch)) continue;
             const method_name = file.str(.method_def, m, 3);
-            try writer.print("    .{{ \"{s}\", {d} }},\n", .{ method_name, m });
+            const import_name = file.implMapImportName(impl_map_row);
+            const dll_full = file.implMapDll(impl_map_row);
+            const dll_base = stripDllSuffix(dll_full);
+            const sig_blob = file.blob(.method_def, m, 4);
+
+            try writer.print(
+                "    .{{ \"{s}\", MethodRecord{{ .library = \"{s}\", .import = \"{s}\", .signature = \"",
+                .{ method_name, dll_base, import_name },
+            );
+            try writeZigByteString(writer, sig_blob);
+            try writer.writeAll("\" } },\n");
         }
     }
     try writer.writeAll("});\n");
+}
+
+/// Escape a binary blob as a Zig string literal (`\xNN` per byte).
+/// Used by `emitMethodIndex` to inline MethodDef signature blobs
+/// into the generated index verbatim.
+fn writeZigByteString(writer: *std.Io.Writer, bytes: []const u8) !void {
+    for (bytes) |b| {
+        try writer.print("\\x{x:0>2}", .{b});
+    }
 }
 
 /// Return true if `(namespace, name)` is already surfaced by the
@@ -2333,15 +2365,24 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
     try std.testing.expect(std.mem.startsWith(
         u8,
         out,
-        "pub const method_def_by_name = std.static_string_map.StaticStringMap(u32).initComptime(.{\n",
+        "pub const MethodRecord = struct {\n",
     ));
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{\n",
+    ) != null);
     try std.testing.expect(std.mem.endsWith(u8, out, "});\n"));
 
     // GetLastError lives in Windows.Win32.Foundation.Apis and is
-    // exported from KERNEL32. The exact row number depends on the
-    // metadata snapshot, so the test only asserts the entry exists in
-    // the emitted "{ name, row }" form.
-    try std.testing.expect(std.mem.indexOf(u8, out, "\"GetLastError\"") != null);
+    // exported from KERNEL32. The exact signature bytes depend on
+    // the metadata snapshot, so the test only asserts the entry
+    // exists with the expected library + import name.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "\"GetLastError\", MethodRecord{ .library = \"KERNEL32\", .import = \"GetLastError\", .signature = \"",
+    ) != null);
 }
 
 test "emitConstants emits primitive Win32 constants" {
