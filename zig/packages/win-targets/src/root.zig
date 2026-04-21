@@ -79,6 +79,43 @@ test "dlltoolMachine covers common Windows targets" {
     try std.testing.expect(dlltoolMachine(.riscv64) == null);
 }
 
+/// Options for `addImportLibFromWinmd`.
+pub const ImportLibFromWinmdOptions = struct {
+    /// DLL basename without extension — e.g. `"kernel32"`. Forwarded
+    /// both to the `windef` CLI (to select exports from the winmds)
+    /// and to `addImportLib` (as the output filename / DLL stamp).
+    name: []const u8,
+    /// `windef` executable artifact. Callers typically build this in
+    /// their own `build.zig` via `b.addExecutable` on
+    /// `packages/winbindgen/src/windef.zig`, or import it from the
+    /// `winbindgen` package once that's exposed via `build.zig.zon`.
+    windef_exe: *std.Build.Step.Compile,
+    /// Controls the COFF machine type of the resulting import lib.
+    target: std.Build.ResolvedTarget,
+};
+
+/// End-to-end: run `windef <name>` to get a `.def` on stdout, capture
+/// it into a file, then feed that file to `addImportLib` so `zig
+/// dlltool` turns it into an import library. Returns a `LazyPath` to
+/// the generated `<name>.lib`.
+///
+/// This is the build-graph analogue of the pipeline exercised by the
+/// `end-to-end` test above, and the one-call API most consumers want.
+pub fn addImportLibFromWinmd(b: *std.Build, opts: ImportLibFromWinmdOptions) std.Build.LazyPath {
+    const run_windef = b.addRunArtifact(opts.windef_exe);
+    run_windef.addArg(opts.name);
+
+    const def_path = run_windef.captureStdOut(.{
+        .basename = b.fmt("{s}.def", .{opts.name}),
+    });
+
+    return addImportLib(b, .{
+        .name = opts.name,
+        .def = def_path,
+        .target = opts.target,
+    });
+}
+
 /// IMAGE_FILE_MACHINE_* constants — see PECOFF §3.3.
 const IMAGE_FILE_MACHINE = struct {
     const I386: u16 = 0x014C;

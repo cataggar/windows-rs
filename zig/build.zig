@@ -216,6 +216,33 @@ pub fn build(b: *std.Build) void {
     windef_run_step.dependOn(&run_windef.step);
 
     // ------------------------------------------------------------------
+    // `lib` step — end-to-end demo of Phase 5: winmd -> .def -> .lib
+    // via `win-targets.addImportLibFromWinmd`. Installs the generated
+    // `<dll>.lib` under `zig-out/lib/` for inspection. Defaults to
+    // `kernel32`; override with `zig build lib -Ddll=<name>`.
+    // ------------------------------------------------------------------
+
+    const win_targets = @import("packages/win-targets/src/root.zig");
+
+    const lib_dll_name = b.option(
+        []const u8,
+        "dll",
+        "DLL basename for `zig build lib` (default: kernel32)",
+    ) orelse "kernel32";
+
+    const lib_path = win_targets.addImportLibFromWinmd(b, .{
+        .name = lib_dll_name,
+        .windef_exe = windef_exe,
+        .target = target,
+    });
+    const install_lib = b.addInstallFile(
+        lib_path,
+        b.fmt("lib/{s}.lib", .{lib_dll_name}),
+    );
+    const lib_step = b.step("lib", "Generate <dll>.lib from winmd via windef + dlltool");
+    lib_step.dependOn(&install_lib.step);
+
+    // ------------------------------------------------------------------
     // Compile-check: run `winbindgen Windows.Foundation`, capture the
     // generated Zig source, and compile it as an object against
     // `win-core`. This turns the output of Phase 3's codegen into a
