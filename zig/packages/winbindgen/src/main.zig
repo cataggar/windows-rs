@@ -69,6 +69,7 @@ pub fn main(init: std.process.Init) !void {
     // to change.
     var arch: winbindgen.Arch = .x64;
     var index_only = false;
+    var structs_only = false;
     var namespace_arg: ?[]const u8 = null;
     {
         var i: usize = 1;
@@ -89,11 +90,13 @@ pub fn main(init: std.process.Init) !void {
                 }
             } else if (std.mem.eql(u8, a, "--index")) {
                 index_only = true;
+            } else if (std.mem.eql(u8, a, "--structs")) {
+                structs_only = true;
             } else if (namespace_arg == null) {
                 namespace_arg = a;
             } else {
                 try stderr.writeAll(
-                    \\usage: winbindgen [--arch=x86|x64|arm64] [--index] <namespace>
+                    \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs] <namespace>
                     \\       winbindgen --list
                     \\
                 );
@@ -105,7 +108,7 @@ pub fn main(init: std.process.Init) !void {
 
     const namespace = namespace_arg orelse {
         try stderr.writeAll(
-            \\usage: winbindgen [--arch=x86|x64|arm64] [--index] <namespace>
+            \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs] <namespace>
             \\       winbindgen --list
             \\
         );
@@ -129,6 +132,12 @@ pub fn main(init: std.process.Init) !void {
         // without scanning winmd inside the comptime VM.
         try buf.writer.writeAll("const std = @import(\"std\");\n\n");
         try winbindgen.emitMethodIndex(&buf.writer, init.arena.allocator(), &file, namespace, arch);
+    } else if (structs_only) {
+        // `--structs` emits a standalone `<ns>.structs.zig` sidecar
+        // that can be `@import`ed into a consumer module; header
+        // pulls in `win-core` aliases and sibling struct sidecars
+        // for any cross-namespace TypeRefs encountered.
+        try winbindgen.emitStructsFile(&buf.writer, init.arena.allocator(), &file, namespace, arch);
     } else {
         try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
     }
