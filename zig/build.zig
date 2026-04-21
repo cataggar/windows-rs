@@ -768,6 +768,7 @@ pub fn build(b: *std.Build) void {
         .{ .name = "last-error", .root = "samples/last_error/main.zig" },
         .{ .name = "load-library", .root = "samples/load_library/main.zig" },
         .{ .name = "threading", .root = "samples/threading/main.zig" },
+        .{ .name = "event-roundtrip", .root = "samples/event_roundtrip/main.zig" },
     };
 
     for (samples) |s| {

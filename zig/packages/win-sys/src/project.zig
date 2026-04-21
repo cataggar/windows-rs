@@ -70,6 +70,18 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     // surfaces them as opaque so callers @ptrCast to the concrete
     // signature they need (GetProcAddress's whole point).
     if (std.mem.eql(u8, name, "FARPROC")) return ?*const anyopaque;
+
+    // Struct TypeRefs that win-sys treats as opaque: callers pass
+    // pointers (usually null) rather than filling fields in. The
+    // high-level `win` layer will wrap these with proper structs
+    // when a call actually needs to populate them.
+    //
+    // SECURITY_ATTRIBUTES is the canonical example — almost every
+    // handle-creating Win32 API takes `LPSECURITY_ATTRIBUTES` as a
+    // "pass null for default" parameter. Keeping it opaque lets
+    // CreateEventW/CreateMutex/etc. project without pulling in the
+    // whole Security namespace's struct layouts.
+    if (std.mem.eql(u8, name, "SECURITY_ATTRIBUTES")) return anyopaque;
     return null;
 }
 
