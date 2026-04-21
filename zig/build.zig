@@ -183,6 +183,7 @@ pub fn build(b: *std.Build) void {
     // signature blob — without scanning winmd at comptime.
     const index_canaries = [_][]const u8{
         "Windows.Win32.Foundation",
+        "Windows.Win32.System.LibraryLoader",
     };
     for (index_canaries) |ns| {
         const idx_run = b.addRunArtifact(winbindgen_exe);
@@ -764,6 +765,7 @@ pub fn build(b: *std.Build) void {
     const Sample = struct { name: []const u8, root: []const u8 };
     const samples = [_]Sample{
         .{ .name = "last-error", .root = "samples/last_error/main.zig" },
+        .{ .name = "load-library", .root = "samples/load_library/main.zig" },
     };
 
     for (samples) |s| {

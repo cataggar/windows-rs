@@ -36,6 +36,8 @@ const sig_mod = @import("sig.zig");
 const index = struct {
     pub const @"Windows.Win32.Foundation" =
         @import("generated/Windows.Win32.Foundation.index.zig");
+    pub const @"Windows.Win32.System.LibraryLoader" =
+        @import("generated/Windows.Win32.System.LibraryLoader.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -52,13 +54,19 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "WIN32_ERROR")) return u32;
     if (std.mem.eql(u8, name, "DUPLICATE_HANDLE_OPTIONS")) return u32;
     if (std.mem.eql(u8, name, "HANDLE_FLAGS")) return u32;
+    if (std.mem.eql(u8, name, "LOAD_LIBRARY_FLAGS")) return u32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
     if (std.mem.eql(u8, name, "HGLOBAL")) return isize;
     if (std.mem.eql(u8, name, "HLOCAL")) return isize;
+    if (std.mem.eql(u8, name, "HRSRC")) return isize;
     if (std.mem.eql(u8, name, "BSTR")) return ?[*:0]u16;
     if (std.mem.eql(u8, name, "PWSTR")) return ?[*:0]u16;
     if (std.mem.eql(u8, name, "PSTR")) return ?[*:0]u8;
+    // FARPROC and friends are raw function pointers; project()
+    // surfaces them as opaque so callers @ptrCast to the concrete
+    // signature they need (GetProcAddress's whole point).
+    if (std.mem.eql(u8, name, "FARPROC")) return ?*const anyopaque;
     return null;
 }
 
@@ -240,4 +248,39 @@ test "project: Foundation { SysAllocString } returns BSTR" {
     const fn_info = @typeInfo(info).@"fn";
     try std.testing.expectEqual(@as(u32, 1), fn_info.params.len);
     try std.testing.expectEqual(@as(?type, ?[*:0]u16), fn_info.return_type);
+}
+
+test "project: LibraryLoader { GetModuleHandleW, GetProcAddress, LoadLibraryW } type-checks" {
+    // Cross-namespace projection: all three functions live in
+    // System.LibraryLoader but take Foundation handles (HMODULE,
+    // PWSTR, PSTR, BOOL) — resolved through LibraryLoader's own
+    // resolveTypeRef table + the shared alias table.
+    const win = project(.{
+        .@"Windows.Win32.System.LibraryLoader" = .{
+            "GetModuleHandleW",
+            "GetProcAddress",
+            "LoadLibraryW",
+        },
+    });
+
+    // GetModuleHandleW(PCWSTR) -> HMODULE
+    const GetModuleHandleWT = @TypeOf(win.GetModuleHandleW);
+    try std.testing.expectEqual(
+        @as(type, *const fn (?[*:0]u16) callconv(.winapi) isize),
+        GetModuleHandleWT,
+    );
+
+    // GetProcAddress(HMODULE, PCSTR) -> FARPROC (opaque fn ptr)
+    const GetProcAddressT = @TypeOf(win.GetProcAddress);
+    try std.testing.expectEqual(
+        @as(type, *const fn (isize, ?[*:0]u8) callconv(.winapi) ?*const anyopaque),
+        GetProcAddressT,
+    );
+
+    // LoadLibraryW(PCWSTR) -> HMODULE
+    const LoadLibraryWT = @TypeOf(win.LoadLibraryW);
+    try std.testing.expectEqual(
+        @as(type, *const fn (?[*:0]u16) callconv(.winapi) isize),
+        LoadLibraryWT,
+    );
 }
