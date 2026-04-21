@@ -254,6 +254,21 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.Networking.WinSock",
         "Windows.Win32.Networking.WinHttp",
         "Windows.Win32.Networking.WinInet",
+        // Win32 deps pulled in by the Wdk bundle below.
+        "Windows.Win32.Devices.Properties",
+        "Windows.Win32.Storage.IscsiDisc",
+        "Windows.Win32.System.Diagnostics.Etw",
+        "Windows.Win32.System.Ioctl",
+        "Windows.Win32.System.Power",
+        "Windows.Win32.System.SystemServices",
+        // Wdk namespaces — kernel-mode surface layered on top of Win32.
+        "Windows.Wdk.Foundation",
+        "Windows.Wdk.System.SystemServices",
+        "Windows.Wdk.System.Threading",
+        "Windows.Wdk.System.Memory",
+        "Windows.Wdk.System.IO",
+        "Windows.Wdk.System.Registry",
+        "Windows.Wdk.Storage.FileSystem",
     };
 
     const bundle_wf = b.addWriteFiles();
