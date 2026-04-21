@@ -89,7 +89,6 @@ pub fn build(b: *std.Build) void {
         .target = target,
         .optimize = optimize,
     });
-    _ = win_targets_mod;
 
     // ------------------------------------------------------------------
     // Unit tests
@@ -105,6 +104,7 @@ pub fn build(b: *std.Build) void {
         .{ .name = "winmd", .mod = winmd_mod },
         .{ .name = "win-core", .mod = win_core_mod },
         .{ .name = "winbindgen", .mod = winbindgen_mod },
+        .{ .name = "win-targets", .mod = win_targets_mod },
     };
 
     for (test_pkgs) |p| {
