@@ -533,12 +533,20 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.System.Power",
         // Wdk namespaces — kernel-mode surface layered on top of Win32.
         "Windows.Wdk.Foundation",
+        "Windows.Wdk.Devices.Bluetooth",
+        "Windows.Wdk.Devices.HumanInterfaceDevice",
+        "Windows.Wdk.Graphics.Direct3D",
+        "Windows.Wdk.NetworkManagement.Ndis",
+        "Windows.Wdk.NetworkManagement.WindowsFilteringPlatform",
         "Windows.Wdk.System.SystemServices",
         "Windows.Wdk.System.Threading",
         "Windows.Wdk.System.Memory",
         "Windows.Wdk.System.IO",
+        "Windows.Wdk.System.OfflineRegistry",
         "Windows.Wdk.System.Registry",
+        "Windows.Wdk.System.SystemInformation",
         "Windows.Wdk.Storage.FileSystem",
+        "Windows.Wdk.Storage.FileSystem.Minifilters",
     };
 
     const bundle_wf = b.addWriteFiles();
