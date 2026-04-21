@@ -68,6 +68,7 @@ pub fn main(init: std.process.Init) !void {
     // be the namespace. Default to x64 so existing callers don't have
     // to change.
     var arch: winbindgen.Arch = .x64;
+    var index_only = false;
     var namespace_arg: ?[]const u8 = null;
     {
         var i: usize = 1;
@@ -86,11 +87,13 @@ pub fn main(init: std.process.Init) !void {
                     try stderr.flush();
                     std.process.exit(2);
                 }
+            } else if (std.mem.eql(u8, a, "--index")) {
+                index_only = true;
             } else if (namespace_arg == null) {
                 namespace_arg = a;
             } else {
                 try stderr.writeAll(
-                    \\usage: winbindgen [--arch=x86|x64|arm64] <namespace>
+                    \\usage: winbindgen [--arch=x86|x64|arm64] [--index] <namespace>
                     \\       winbindgen --list
                     \\
                 );
@@ -102,7 +105,7 @@ pub fn main(init: std.process.Init) !void {
 
     const namespace = namespace_arg orelse {
         try stderr.writeAll(
-            \\usage: winbindgen [--arch=x86|x64|arm64] <namespace>
+            \\usage: winbindgen [--arch=x86|x64|arm64] [--index] <namespace>
             \\       winbindgen --list
             \\
         );
@@ -117,7 +120,18 @@ pub fn main(init: std.process.Init) !void {
 
     const bytes = selectBytes(namespace);
     var file = try winmd.parse(bytes);
-    try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
+    if (index_only) {
+        // `--index` emits a standalone `.zig` fragment: a header that
+        // pulls in `std` (required for `std.static_string_map`) plus
+        // the `pub const method_def_by_name = ...` entry written by
+        // `emitMethodIndex`. This is the exact shape Phase 4's
+        // `project()` helper `@import`s to perform O(1) method lookups
+        // without scanning winmd inside the comptime VM.
+        try buf.writer.writeAll("const std = @import(\"std\");\n\n");
+        try winbindgen.emitMethodIndex(&buf.writer, &file, namespace, arch);
+    } else {
+        try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
+    }
 
     try stdout.writeAll(buf.written());
     try stdout.flush();

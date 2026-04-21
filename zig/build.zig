@@ -174,6 +174,26 @@ pub fn build(b: *std.Build) void {
             b.fmt("packages/win-sys/src/generated/{s}.zig", .{ns}),
         );
     }
+
+    // Canary method-index files. Phase 4's comptime `project()` helper
+    // will `@import` one of these per namespace it wants to project
+    // from, read the MethodDef row from the `StaticStringMap`, and
+    // materialize the corresponding `extern fn` directly from the
+    // signature blob — without scanning winmd at comptime.
+    const index_canaries = [_][]const u8{
+        "Windows.Win32.Foundation",
+    };
+    for (index_canaries) |ns| {
+        const idx_run = b.addRunArtifact(winbindgen_exe);
+        idx_run.addArg("--arch=x64");
+        idx_run.addArg("--index");
+        idx_run.addArg(ns);
+        const idx_source = idx_run.captureStdOut(.{});
+        gen_update.addCopyFileToSource(
+            idx_source,
+            b.fmt("packages/win-sys/src/generated/{s}.index.zig", .{ns}),
+        );
+    }
     bindings_step.dependOn(&gen_update.step);
 
     const run_winbindgen = b.addRunArtifact(winbindgen_exe);

@@ -1,0 +1,26 @@
+const std = @import("std");
+
+pub const method_def_by_name = std.static_string_map.StaticStringMap(u32).initComptime(.{
+    .{ "SysAllocString", 2323 },
+    .{ "SysReAllocString", 2324 },
+    .{ "SysAllocStringLen", 2325 },
+    .{ "SysReAllocStringLen", 2326 },
+    .{ "SysAddRefString", 2327 },
+    .{ "SysReleaseString", 2328 },
+    .{ "SysFreeString", 2329 },
+    .{ "SysStringLen", 2330 },
+    .{ "SysStringByteLen", 2331 },
+    .{ "SysAllocStringByteLen", 2332 },
+    .{ "CloseHandle", 2333 },
+    .{ "DuplicateHandle", 2334 },
+    .{ "CompareObjectHandles", 2335 },
+    .{ "GetHandleInformation", 2336 },
+    .{ "SetHandleInformation", 2337 },
+    .{ "FreeLibrary", 2338 },
+    .{ "GetLastError", 2339 },
+    .{ "SetLastError", 2340 },
+    .{ "SetLastErrorEx", 2341 },
+    .{ "GlobalFree", 2342 },
+    .{ "LocalFree", 2343 },
+    .{ "RtlNtStatusToDosError", 2344 },
+});

@@ -111,93 +111,93 @@ pub const OBJECT_NAME_INFORMATION = extern struct {
     Name: @"Windows.Win32.Foundation".UNICODE_STRING,
 };
 pub const DISPATCHER_HEADER = extern struct {
-    pub const _Anonymous_e__Union = extern union {
-        pub const _Anonymous1_e__Union = extern union {
-            Lock: i32,
-            LockNV: i32,
-        };
-        pub const _Anonymous2_e__Struct = extern struct {
-            Type: u8,
-            Signalling: u8,
-            Size: u8,
-            Reserved1: u8,
-        };
-        pub const _Anonymous3_e__Struct = extern struct {
-            pub const _Anonymous1_e__Union = extern union {
-                pub const _Anonymous_e__Struct = extern struct {
-                    _bitfield: u8,
-                };
-                TimerControlFlags: u8,
-                Anonymous: _Anonymous_e__Struct,
-            };
-            pub const _Anonymous2_e__Union = extern union {
-                pub const _Anonymous_e__Struct = extern struct {
-                    _bitfield: u8,
-                };
-                TimerMiscFlags: u8,
-                Anonymous: _Anonymous_e__Struct,
-            };
-            TimerType: u8,
-            Anonymous1: _Anonymous1_e__Union,
-            Hand: u8,
-            Anonymous2: _Anonymous2_e__Union,
-        };
-        pub const _Anonymous4_e__Struct = extern struct {
-            pub const _Anonymous_e__Union = extern union {
-                pub const _Anonymous_e__Struct = extern struct {
-                    _bitfield: u8,
-                };
-                Timer2Flags: u8,
-                Anonymous: _Anonymous_e__Struct,
-            };
-            Timer2Type: u8,
-            Anonymous: _Anonymous_e__Union,
-            Timer2ComponentId: u8,
-            Timer2RelativeId: u8,
-        };
-        pub const _Anonymous5_e__Struct = extern struct {
-            pub const _Anonymous_e__Union = extern union {
-                pub const _Anonymous_e__Struct = extern struct {
-                    _bitfield: u8,
-                };
-                QueueControlFlags: u8,
-                Anonymous: _Anonymous_e__Struct,
-            };
-            QueueType: u8,
-            Anonymous: _Anonymous_e__Union,
-            QueueSize: u8,
-            QueueReserved: u8,
-        };
-        pub const _Anonymous6_e__Struct = extern struct {
-            pub const _Anonymous1_e__Union = extern union {
-                pub const _Anonymous_e__Struct = extern struct {
-                    _bitfield: u8,
-                };
-                ThreadControlFlags: u8,
-                Anonymous: _Anonymous_e__Struct,
-            };
-            pub const _Anonymous2_e__Union = extern union {
-                DebugActive: u8,
-            };
-            ThreadType: u8,
-            ThreadReserved: u8,
-            Anonymous1: _Anonymous1_e__Union,
-            Anonymous2: _Anonymous2_e__Union,
-        };
-        pub const _Anonymous7_e__Struct = extern struct {
-            MutantType: u8,
-            MutantSize: u8,
-            DpcActive: @"Windows.Win32.Foundation".BOOLEAN,
-            MutantReserved: u8,
-        };
-        Anonymous1: _Anonymous1_e__Union,
-        Anonymous2: _Anonymous2_e__Struct,
-        Anonymous3: _Anonymous3_e__Struct,
-        Anonymous4: _Anonymous4_e__Struct,
-        Anonymous5: _Anonymous5_e__Struct,
-        Anonymous6: _Anonymous6_e__Struct,
-        Anonymous7: _Anonymous7_e__Struct,
-    };
+pub const _Anonymous_e__Union = extern union {
+pub const _Anonymous1_e__Union = extern union {
+    Lock: i32,
+    LockNV: i32,
+};
+pub const _Anonymous2_e__Struct = extern struct {
+    Type: u8,
+    Signalling: u8,
+    Size: u8,
+    Reserved1: u8,
+};
+pub const _Anonymous3_e__Struct = extern struct {
+pub const _Anonymous1_e__Union = extern union {
+pub const _Anonymous_e__Struct = extern struct {
+    _bitfield: u8,
+};
+    TimerControlFlags: u8,
+    Anonymous: _Anonymous_e__Struct,
+};
+pub const _Anonymous2_e__Union = extern union {
+pub const _Anonymous_e__Struct = extern struct {
+    _bitfield: u8,
+};
+    TimerMiscFlags: u8,
+    Anonymous: _Anonymous_e__Struct,
+};
+    TimerType: u8,
+    Anonymous1: _Anonymous1_e__Union,
+    Hand: u8,
+    Anonymous2: _Anonymous2_e__Union,
+};
+pub const _Anonymous4_e__Struct = extern struct {
+pub const _Anonymous_e__Union = extern union {
+pub const _Anonymous_e__Struct = extern struct {
+    _bitfield: u8,
+};
+    Timer2Flags: u8,
+    Anonymous: _Anonymous_e__Struct,
+};
+    Timer2Type: u8,
+    Anonymous: _Anonymous_e__Union,
+    Timer2ComponentId: u8,
+    Timer2RelativeId: u8,
+};
+pub const _Anonymous5_e__Struct = extern struct {
+pub const _Anonymous_e__Union = extern union {
+pub const _Anonymous_e__Struct = extern struct {
+    _bitfield: u8,
+};
+    QueueControlFlags: u8,
+    Anonymous: _Anonymous_e__Struct,
+};
+    QueueType: u8,
+    Anonymous: _Anonymous_e__Union,
+    QueueSize: u8,
+    QueueReserved: u8,
+};
+pub const _Anonymous6_e__Struct = extern struct {
+pub const _Anonymous1_e__Union = extern union {
+pub const _Anonymous_e__Struct = extern struct {
+    _bitfield: u8,
+};
+    ThreadControlFlags: u8,
+    Anonymous: _Anonymous_e__Struct,
+};
+pub const _Anonymous2_e__Union = extern union {
+    DebugActive: u8,
+};
+    ThreadType: u8,
+    ThreadReserved: u8,
+    Anonymous1: _Anonymous1_e__Union,
+    Anonymous2: _Anonymous2_e__Union,
+};
+pub const _Anonymous7_e__Struct = extern struct {
+    MutantType: u8,
+    MutantSize: u8,
+    DpcActive: @"Windows.Win32.Foundation".BOOLEAN,
+    MutantReserved: u8,
+};
+    Anonymous1: _Anonymous1_e__Union,
+    Anonymous2: _Anonymous2_e__Struct,
+    Anonymous3: _Anonymous3_e__Struct,
+    Anonymous4: _Anonymous4_e__Struct,
+    Anonymous5: _Anonymous5_e__Struct,
+    Anonymous6: _Anonymous6_e__Struct,
+    Anonymous7: _Anonymous7_e__Struct,
+};
     Anonymous: _Anonymous_e__Union,
     SignalState: i32,
     WaitListHead: @"Windows.Win32.System.Kernel".LIST_ENTRY,
@@ -224,10 +224,10 @@ pub const SECURITY_SUBJECT_CONTEXT = extern struct {
     ProcessAuditId: *void,
 };
 pub const ACCESS_STATE = extern struct {
-    pub const _Privileges_e__Union = extern union {
-        InitialPrivilegeSet: @"Windows.Wdk.System.SystemServices".INITIAL_PRIVILEGE_SET,
-        PrivilegeSet: @"Windows.Win32.Security".PRIVILEGE_SET,
-    };
+pub const _Privileges_e__Union = extern union {
+    InitialPrivilegeSet: @"Windows.Wdk.System.SystemServices".INITIAL_PRIVILEGE_SET,
+    PrivilegeSet: @"Windows.Win32.Security".PRIVILEGE_SET,
+};
     OperationID: @"Windows.Win32.Foundation".LUID,
     SecurityEvaluated: @"Windows.Win32.Foundation".BOOLEAN,
     GenerateAudit: @"Windows.Win32.Foundation".BOOLEAN,
@@ -282,10 +282,10 @@ pub const IO_SECURITY_CONTEXT = extern struct {
     FullCreateOptions: u32,
 };
 pub const DEVICE_OBJECT = extern struct {
-    pub const _Queue_e__Union = extern union {
-        ListEntry: @"Windows.Win32.System.Kernel".LIST_ENTRY,
-        Wcb: @"Windows.Wdk.System.SystemServices".WAIT_CONTEXT_BLOCK,
-    };
+pub const _Queue_e__Union = extern union {
+    ListEntry: @"Windows.Win32.System.Kernel".LIST_ENTRY,
+    Wcb: @"Windows.Wdk.System.SystemServices".WAIT_CONTEXT_BLOCK,
+};
     Type: i16,
     Size: u16,
     ReferenceCount: i32,
