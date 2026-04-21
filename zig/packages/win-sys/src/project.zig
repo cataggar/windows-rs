@@ -158,6 +158,10 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
 const generated_structs = struct {
     pub const @"Windows.Win32.Foundation" =
         @import("generated/Windows.Win32.Foundation.structs.zig");
+    pub const @"Windows.Win32.Security" =
+        @import("generated/Windows.Win32.Security.structs.zig");
+    pub const @"Windows.Win32.Storage.FileSystem" =
+        @import("generated/Windows.Win32.Storage.FileSystem.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
@@ -172,23 +176,13 @@ pub const structs = struct {
     /// §winbase.h. Projected from `Windows.Win32.Foundation.structs.zig`.
     pub const FILETIME = generated_structs.@"Windows.Win32.Foundation".FILETIME;
 
-    /// §minwinbase.h. Out-param of FindFirstFileW / FindNextFileW.
-    /// cFileName has room for MAX_PATH (260) wide chars including
-    /// NUL. cAlternateFileName is the 8.3 short name (14 wide
-    /// chars). The struct is 592 bytes — verify with @sizeOf at
-    /// call sites if tightly-coupled code depends on layout.
-    pub const WIN32_FIND_DATAW = extern struct {
-        dwFileAttributes: u32,
-        ftCreationTime: FILETIME,
-        ftLastAccessTime: FILETIME,
-        ftLastWriteTime: FILETIME,
-        nFileSizeHigh: u32,
-        nFileSizeLow: u32,
-        dwReserved0: u32,
-        dwReserved1: u32,
-        cFileName: [260]u16,
-        cAlternateFileName: [14]u16,
-    };
+    /// §minwinbase.h. Projected from
+    /// `Windows.Win32.Storage.FileSystem.structs.zig`. Out-param
+    /// of FindFirstFileW / FindNextFileW. cFileName has room for
+    /// MAX_PATH (260) wide chars including NUL; cAlternateFileName
+    /// is the 8.3 short name (14 wide chars). Struct is 592 bytes.
+    pub const WIN32_FIND_DATAW =
+        generated_structs.@"Windows.Win32.Storage.FileSystem".WIN32_FIND_DATAW;
 
     /// §sysinfoapi.h. Out-param of GetSystemInfo / GetNativeSystemInfo.
     /// The first field is an anonymous union — Windows chose the
