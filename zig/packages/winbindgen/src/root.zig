@@ -1473,6 +1473,7 @@ fn canRepresent(ty: winmd.Ty) bool {
         .ref_mut, .ref_const => |inner| canRepresent(inner.*),
         .ptr_mut => |p| canRepresent(p.inner.*),
         .ptr_const => |p| canRepresent(p.inner.*),
+        .array_fixed => |a| canRepresent(a.inner.*),
         else => false,
     };
 }
@@ -1566,6 +1567,13 @@ fn writeZigTy(
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*const ");
             return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross);
+        },
+        .array_fixed => |a| {
+            // ELEMENT_TYPE_ARRAY with explicit size — projects as a
+            // fixed-length Zig array whose element type follows the
+            // same representability rules as a standalone field.
+            try writer.print("[{d}]", .{a.size});
+            return writeZigTy(writer, gpa, a.inner.*, current_namespace, cross);
         },
         else => return false,
     }
@@ -2858,6 +2866,30 @@ test "emitStructs emits SYSTEM_INFO with usize and *anyopaque" {
     try std.testing.expect(std.mem.indexOf(u8, out, "dwActiveProcessorMask: usize,") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "lpMinimumApplicationAddress: *anyopaque,") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "lpMaximumApplicationAddress: *anyopaque,") != null);
+}
+
+test "emitStructs emits WIN32_FIND_DATAW with fixed-size u16 arrays" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    // WIN32_FIND_DATAW has two ELEMENT_TYPE_ARRAY fields — `cFileName`
+    // ([260]WCHAR) and `cAlternateFileName` ([14]WCHAR) — which were
+    // previously rejected by `canRepresent` and caused the entire
+    // struct to be dropped from the generator output. `tyToZigType`
+    // in hand-written `project.zig` projects WCHAR as `u16`, and the
+    // generator matches that.
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem", .x64);
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "cFileName: [260]u16,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "cAlternateFileName: [14]u16,") != null);
 }
 
 test "emitNamespace succeeds on every Windows.Wdk namespace" {
