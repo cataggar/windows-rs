@@ -78,3 +78,112 @@ test "dlltoolMachine covers common Windows targets" {
     try std.testing.expectEqualStrings("arm", dlltoolMachine(.thumb).?);
     try std.testing.expect(dlltoolMachine(.riscv64) == null);
 }
+
+/// IMAGE_FILE_MACHINE_* constants — see PECOFF §3.3.
+const IMAGE_FILE_MACHINE = struct {
+    const I386: u16 = 0x014C;
+    const AMD64: u16 = 0x8664;
+    const ARMNT: u16 = 0x01C4;
+    const ARM64: u16 = 0xAA64;
+};
+
+/// Scan a COFF archive for the first "short import" object and
+/// return its machine field. Short imports start with the magic
+/// bytes `00 00 FF FF 00 00` followed by a little-endian u16
+/// machine code (PECOFF §7 "Import Library Format"). Returns
+/// `null` if no short import is found.
+fn findShortImportMachine(lib_bytes: []const u8) ?u16 {
+    const magic = [_]u8{ 0x00, 0x00, 0xFF, 0xFF, 0x00, 0x00 };
+    var i: usize = 0;
+    while (i + magic.len + 2 <= lib_bytes.len) : (i += 1) {
+        if (std.mem.eql(u8, lib_bytes[i .. i + magic.len], &magic)) {
+            return std.mem.readInt(u16, lib_bytes[i + magic.len ..][0..2], .little);
+        }
+    }
+    return null;
+}
+
+/// Drive `zig dlltool` out-of-process for `(def, machine)` and
+/// return the resulting import-lib bytes. Used by the end-to-end
+/// test below; kept as a helper so the body stays readable.
+fn runDlltool(
+    arena: std.mem.Allocator,
+    io: std.Io,
+    cwd: []const u8,
+    def_name: []const u8,
+    machine: []const u8,
+    dll_name: []const u8,
+    out_name: []const u8,
+) !void {
+    const res = try std.process.run(arena, io, .{
+        .cwd = .{ .path = cwd },
+        .argv = &.{
+            "zig", "dlltool",
+            "-m",  machine,
+            "-D",  dll_name,
+            "-d",  def_name,
+            "-l",  out_name,
+        },
+    });
+    switch (res.term) {
+        .exited => |c| if (c != 0) {
+            std.debug.print("dlltool stderr: {s}\n", .{res.stderr});
+            return error.DlltoolFailed;
+        },
+        else => return error.DlltoolCrashed,
+    }
+}
+
+test "end-to-end: .def -> .lib via zig dlltool produces correct machine type" {
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+    const gpa = arena.allocator();
+
+    // Tiny, representative .def — two named imports plus one
+    // ordinal-only to exercise both emit paths.
+    const def_body =
+        \\LIBRARY kernel32.dll
+        \\EXPORTS
+        \\    CloseHandle
+        \\    CreateFileW
+        \\    @42
+        \\
+    ;
+
+    const io = std.testing.io;
+
+    var tmp = std.testing.tmpDir(.{});
+    defer tmp.cleanup();
+
+    try tmp.dir.writeFile(io, .{ .sub_path = "kernel32.def", .data = def_body });
+
+    // The tmp dir lives at `.zig-cache/tmp/<sub_path>` relative to cwd.
+    // Pass that as the child's cwd so dlltool uses simple relative names.
+    const tmp_rel = try std.fs.path.join(gpa, &.{ ".zig-cache", "tmp", &tmp.sub_path });
+
+    const cases = [_]struct {
+        machine_arg: []const u8,
+        expected: u16,
+        lib_name: []const u8,
+    }{
+        .{ .machine_arg = "i386", .expected = IMAGE_FILE_MACHINE.I386, .lib_name = "x86.lib" },
+        .{ .machine_arg = "i386:x86-64", .expected = IMAGE_FILE_MACHINE.AMD64, .lib_name = "x64.lib" },
+        .{ .machine_arg = "arm64", .expected = IMAGE_FILE_MACHINE.ARM64, .lib_name = "aarch64.lib" },
+    };
+
+    for (cases) |c| {
+        try runDlltool(gpa, io, tmp_rel, "kernel32.def", c.machine_arg, "kernel32.dll", c.lib_name);
+
+        const lib_bytes = try tmp.dir.readFileAlloc(io, c.lib_name, gpa, .limited(16 * 1024 * 1024));
+
+        // Every COFF archive starts with `!<arch>\n`.
+        try std.testing.expect(lib_bytes.len > 8);
+        try std.testing.expectEqualStrings("!<arch>\n", lib_bytes[0..8]);
+
+        const actual = findShortImportMachine(lib_bytes) orelse {
+            std.debug.print("no short import found in {s}\n", .{c.lib_name});
+            return error.MissingShortImport;
+        };
+        try std.testing.expectEqual(c.expected, actual);
+    }
+}
