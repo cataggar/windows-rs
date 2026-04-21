@@ -2158,3 +2158,44 @@ test "mmapAndParse: load Windows.Win32.winmd from disk" {
     defer index.deinit();
     try std.testing.expect(index.contains("Windows.Win32.Foundation", "HWND"));
 }
+
+test "comptime: parse Windows.winmd and locate Point" {
+    // Phase 4 foundation: verify the reader runs inside the comptime VM
+    // against `@embedFile`'d metadata. This is a prerequisite for
+    // `project(.{ .filter = ... })` — without it, no comptime projection.
+    //
+    // We use the small `Windows.winmd` (WinRT) already @embedFile'd by the
+    // runtime test above, not the multi-megabyte Win32 metadata, to keep
+    // the eval branch quota bounded. A separate benchmark will explore
+    // the real upper limit; here we only prove the mechanism works.
+    @setEvalBranchQuota(10_000_000);
+    const bytes = @embedFile("Windows.winmd");
+    const f = comptime parse(bytes) catch unreachable;
+
+    // Sanity: thousands of TypeDef rows, same as the runtime test.
+    comptime {
+        std.debug.assert(f.rowCount(.type_def) > 100);
+    }
+
+    // Locate `Windows.Foundation.Point` entirely at comptime.
+    const point_row: u32 = comptime blk: {
+        const rows = f.rowCount(.type_def);
+        var row: u32 = 0;
+        while (row < rows) : (row += 1) {
+            const ns = f.str(.type_def, row, 2);
+            const name = f.str(.type_def, row, 1);
+            if (std.mem.eql(u8, ns, "Windows.Foundation") and
+                std.mem.eql(u8, name, "Point"))
+            {
+                break :blk row;
+            }
+        }
+        @compileError("Windows.Foundation.Point not found at comptime");
+    };
+
+    // Exercise `list()` at comptime and check the two f32 field names.
+    const fields = comptime f.list(.type_def, point_row, 4, .field);
+    try std.testing.expectEqual(@as(u32, 2), fields.len());
+    try std.testing.expectEqualStrings("X", comptime f.str(.field, fields.start, 1));
+    try std.testing.expectEqualStrings("Y", comptime f.str(.field, fields.start + 1, 1));
+}
