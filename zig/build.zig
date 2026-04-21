@@ -225,6 +225,7 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.Storage.FileSystem",
         "Windows.Win32.System.Memory",
         "Windows.Win32.System.SystemInformation",
+        "Windows.Win32.Security",
     };
     for (index_canaries) |ns| {
         const idx_run = b.addRunArtifact(winbindgen_exe);
@@ -825,6 +826,11 @@ pub fn build(b: *std.Build) void {
         .{ .name = "heap-alloc", .root = "samples/heap_alloc/main.zig" },
         .{ .name = "system-info", .root = "samples/system_info/main.zig" },
         .{ .name = "virtual-alloc", .root = "samples/virtual_alloc/main.zig" },
+        .{
+            .name = "well-known-sid",
+            .root = "samples/well_known_sid/main.zig",
+            .extra_libs = &.{"advapi32"},
+        },
     };
 
     for (samples) |s| {

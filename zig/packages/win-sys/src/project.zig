@@ -54,6 +54,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.System.Memory.index.zig");
     pub const @"Windows.Win32.System.SystemInformation" =
         @import("generated/Windows.Win32.System.SystemInformation.index.zig");
+    pub const @"Windows.Win32.Security" =
+        @import("generated/Windows.Win32.Security.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -83,6 +85,12 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "VIRTUAL_ALLOCATION_TYPE")) return u32;
     if (std.mem.eql(u8, name, "VIRTUAL_FREE_TYPE")) return u32;
     if (std.mem.eql(u8, name, "PAGE_PROTECTION_FLAGS")) return u32;
+    // Security namespace — WELL_KNOWN_SID_TYPE is a C-style enum
+    // (first member `value__: i32`), and PSID is a raw opaque
+    // pointer (`*mut c_void` in windows-rs). Callers pass buffers
+    // or previously-returned handles; we don't inspect fields.
+    if (std.mem.eql(u8, name, "WELL_KNOWN_SID_TYPE")) return i32;
+    if (std.mem.eql(u8, name, "PSID")) return ?*anyopaque;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;

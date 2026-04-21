@@ -46,6 +46,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.System.Memory.index.zig");
     pub const @"Windows.Win32.System.SystemInformation" =
         @import("generated/Windows.Win32.System.SystemInformation.index.zig");
+    pub const @"Windows.Win32.Security" =
+        @import("generated/Windows.Win32.Security.index.zig");
 };
 
 test "prebuilt index: Windows.Win32.Foundation has SysAllocString" {
