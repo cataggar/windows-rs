@@ -103,6 +103,7 @@ pub fn build(b: *std.Build) void {
     const test_pkgs = [_]TestPkg{
         .{ .name = "winmd", .mod = winmd_mod },
         .{ .name = "win-core", .mod = win_core_mod },
+        .{ .name = "win-sys", .mod = win_sys_mod },
         .{ .name = "winbindgen", .mod = winbindgen_mod },
         .{ .name = "win-targets", .mod = win_targets_mod },
     };
