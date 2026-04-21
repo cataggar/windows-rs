@@ -282,4 +282,61 @@ pub fn build(b: *std.Build) void {
     });
     const run_bundle_obj = b.addRunArtifact(bundle_obj);
     test_step.dependOn(&run_bundle_obj.step);
+
+    // ------------------------------------------------------------------
+    // Per-arch cross-compile bundle checks. We can't *run* foreign
+    // binaries, so these depend on the test-exe compile step directly
+    // instead of going through `addRunArtifact`. Each variant re-runs
+    // `winbindgen --arch=<arch>` to regenerate the 35 namespaces against
+    // that arch's SupportedArchitecture filter, then type-checks the
+    // bundle against a cross-compiled `win-core` for that target.
+    // ------------------------------------------------------------------
+
+    const CrossArch = struct {
+        name: []const u8,
+        flag: []const u8,
+        query: std.Target.Query,
+    };
+    const cross_arches = [_]CrossArch{
+        .{ .name = "x86", .flag = "--arch=x86", .query = .{ .cpu_arch = .x86, .os_tag = .windows, .abi = .gnu } },
+        .{ .name = "x64", .flag = "--arch=x64", .query = .{ .cpu_arch = .x86_64, .os_tag = .windows, .abi = .gnu } },
+        .{ .name = "arm64", .flag = "--arch=arm64", .query = .{ .cpu_arch = .aarch64, .os_tag = .windows, .abi = .gnu } },
+    };
+
+    for (cross_arches) |ca| {
+        const cross_target = b.resolveTargetQuery(ca.query);
+
+        const cross_core_mod = b.createModule(.{
+            .root_source_file = b.path("packages/win-core/src/root.zig"),
+            .target = cross_target,
+            .optimize = optimize,
+        });
+        cross_core_mod.linkSystemLibrary("oleaut32", .{});
+        cross_core_mod.linkSystemLibrary("api-ms-win-core-winrt-string-l1-1-0", .{});
+        cross_core_mod.linkSystemLibrary("api-ms-win-core-winrt-l1-1-0", .{});
+
+        const cross_wf = b.addWriteFiles();
+        for (bundle_namespaces) |ns| {
+            const gen_run = b.addRunArtifact(winbindgen_exe);
+            gen_run.addArg(ca.flag);
+            gen_run.addArg(ns);
+            const gen_source = gen_run.captureStdOut(.{});
+            _ = cross_wf.addCopyFile(gen_source, b.fmt("{s}.zig", .{ns}));
+        }
+        const cross_root = cross_wf.getDirectory().path(b, b.fmt("{s}.zig", .{bundle_namespaces[0]}));
+
+        const cross_mod = b.createModule(.{
+            .root_source_file = cross_root,
+            .target = cross_target,
+            .optimize = optimize,
+        });
+        cross_mod.addImport("win-core", cross_core_mod);
+
+        const cross_obj = b.addTest(.{
+            .name = b.fmt("compile-check-bundle-{s}", .{ca.name}),
+            .root_module = cross_mod,
+        });
+        // Compile only — do not run (foreign binary when ca != host).
+        test_step.dependOn(&cross_obj.step);
+    }
 }
