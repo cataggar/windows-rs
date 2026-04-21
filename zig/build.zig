@@ -222,6 +222,7 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.System.Threading",
         "Windows.Win32.System.Console",
         "Windows.Win32.UI.WindowsAndMessaging",
+        "Windows.Win32.Storage.FileSystem",
     };
     for (index_canaries) |ns| {
         const idx_run = b.addRunArtifact(winbindgen_exe);
@@ -818,6 +819,7 @@ pub fn build(b: *std.Build) void {
             .root = "samples/desktop_window/main.zig",
             .extra_libs = &.{"user32"},
         },
+        .{ .name = "file-write", .root = "samples/file_write/main.zig" },
     };
 
     for (samples) |s| {

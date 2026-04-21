@@ -44,6 +44,8 @@ const index = struct {
         @import("generated/Windows.Win32.System.Console.index.zig");
     pub const @"Windows.Win32.UI.WindowsAndMessaging" =
         @import("generated/Windows.Win32.UI.WindowsAndMessaging.index.zig");
+    pub const @"Windows.Win32.Storage.FileSystem" =
+        @import("generated/Windows.Win32.Storage.FileSystem.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -66,6 +68,9 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "CONSOLE_MODE")) return u32;
     if (std.mem.eql(u8, name, "MESSAGEBOX_STYLE")) return u32;
     if (std.mem.eql(u8, name, "MESSAGEBOX_RESULT")) return i32;
+    if (std.mem.eql(u8, name, "FILE_SHARE_MODE")) return u32;
+    if (std.mem.eql(u8, name, "FILE_CREATION_DISPOSITION")) return u32;
+    if (std.mem.eql(u8, name, "FILE_FLAGS_AND_ATTRIBUTES")) return u32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
@@ -91,6 +96,11 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     // CreateEventW/CreateMutex/etc. project without pulling in the
     // whole Security namespace's struct layouts.
     if (std.mem.eql(u8, name, "SECURITY_ATTRIBUTES")) return anyopaque;
+    // OVERLAPPED is the async-I/O control block used by ReadFile/
+    // WriteFile. Synchronous callers pass null; async callers will
+    // eventually want the real struct, but keep opaque at the sys
+    // layer until the I/O namespace is actually wired.
+    if (std.mem.eql(u8, name, "OVERLAPPED")) return anyopaque;
     return null;
 }
 
@@ -180,6 +190,12 @@ fn namespaceIndex(comptime ns: []const u8) type {
 /// requested method, typed `*const FnType` where FnType is
 /// reconstructed from the method's signature blob.
 fn ProjectType(comptime filter: anytype) type {
+    // StaticStringMap.get() on the big namespace indexes
+    // (Storage.FileSystem has 300+ entries, UI.WindowsAndMessaging
+    // similar) blows the default 1000-branch quota after just a
+    // handful of lookups. Bump generously — comptime eval is still
+    // one-shot per project() call.
+    @setEvalBranchQuota(100_000);
     const Filter = @TypeOf(filter);
     comptime var total: usize = 0;
     inline for (@typeInfo(Filter).@"struct".fields) |nsf| {
@@ -224,6 +240,7 @@ fn ProjectType(comptime filter: anytype) type {
 /// method names. Returns a populated struct value whose fields
 /// are the projected extern function pointers.
 pub fn project(comptime filter: anytype) ProjectType(filter) {
+    @setEvalBranchQuota(100_000);
     const T = ProjectType(filter);
     var out: T = undefined;
     inline for (@typeInfo(@TypeOf(filter)).@"struct".fields) |nsf| {
@@ -390,5 +407,46 @@ test "project: WindowsAndMessaging { MessageBoxW } type-checks" {
             *const fn (isize, ?[*:0]u16, ?[*:0]u16, u32) callconv(.winapi) i32,
         ),
         @TypeOf(win.MessageBoxW),
+    );
+}
+
+test "project: Storage.FileSystem { CreateFileW, WriteFile, DeleteFileW } type-checks" {
+    // CreateFileW signature:
+    //   HANDLE CreateFileW(
+    //       PCWSTR                lpFileName,        -- PWSTR in winmd
+    //       u32                   dwDesiredAccess,   -- bare u32 (no enum wrapper)
+    //       FILE_SHARE_MODE       dwShareMode,       -- u32 alias
+    //       SECURITY_ATTRIBUTES*  lpSecurityAttrs,   -- anyopaque alias → ?*anyopaque
+    //       FILE_CREATION_DISPOSITION dwCreationDisposition, -- u32 alias
+    //       FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes,  -- u32 alias
+    //       HANDLE                hTemplateFile,
+    //   );
+    //
+    // WriteFile(HANDLE, *const u8, u32, *u32, OVERLAPPED*) -> BOOL.
+    //   OVERLAPPED aliases to anyopaque so synchronous callers pass null.
+    //
+    // DeleteFileW(PCWSTR) -> BOOL. Exercises a single-PWSTR API and
+    // keeps the sample able to clean up its temp file without leaking.
+    const win = project(.{
+        .@"Windows.Win32.Storage.FileSystem" = .{ "CreateFileW", "WriteFile", "DeleteFileW" },
+    });
+
+    try std.testing.expectEqual(
+        @as(
+            type,
+            *const fn (?[*:0]u16, u32, u32, ?*anyopaque, u32, u32, isize) callconv(.winapi) isize,
+        ),
+        @TypeOf(win.CreateFileW),
+    );
+    try std.testing.expectEqual(
+        @as(
+            type,
+            *const fn (isize, ?*u8, u32, ?*u32, ?*anyopaque) callconv(.winapi) i32,
+        ),
+        @TypeOf(win.WriteFile),
+    );
+    try std.testing.expectEqual(
+        @as(type, *const fn (?[*:0]u16) callconv(.winapi) i32),
+        @TypeOf(win.DeleteFileW),
     );
 }
