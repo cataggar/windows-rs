@@ -15,6 +15,13 @@ pub const sig = @import("sig.zig");
 /// function pointers into a populated struct value.
 pub const project = @import("project.zig").project;
 
+/// Concrete Win32 struct projections that callers need to read or
+/// write field-wise (e.g. `WIN32_FIND_DATAW.cFileName`). Opaque
+/// structs stay in the alias table inside `project.zig` — only
+/// structs that leak their layout through sample code are surfaced
+/// here. Generator will eventually emit these from winmd.
+pub const structs = @import("project.zig").structs;
+
 test {
     // Pull in tests from sibling modules — `@import` alone won't
     // make the Zig test runner discover them.

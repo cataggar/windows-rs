@@ -128,8 +128,51 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     // eventually want the real struct, but keep opaque at the sys
     // layer until the I/O namespace is actually wired.
     if (std.mem.eql(u8, name, "OVERLAPPED")) return anyopaque;
+
+    // Concrete Win32 structs that callers need to *read* field-wise.
+    // Unlike the opaque aliases above, these expose their layout so
+    // samples can access e.g. cFileName without @ptrCast gymnastics.
+    //
+    // The generator will eventually emit these from winmd TypeDef
+    // Field tables; for now, handcraft them here as the first test
+    // of the pattern. Layouts are `extern struct` to guarantee C
+    // ABI compat — Zig is free to reorder plain structs but extern
+    // is fixed field order, no padding insertions beyond C rules.
+    if (std.mem.eql(u8, name, "FILETIME")) return structs.FILETIME;
+    if (std.mem.eql(u8, name, "WIN32_FIND_DATAW")) return structs.WIN32_FIND_DATAW;
     return null;
 }
+
+/// Concrete struct projections. Public so callers can name the
+/// types in their own declarations (e.g. `var fd: win_sys.structs
+/// .WIN32_FIND_DATAW = undefined;`). Field names mirror the Win32
+/// headers verbatim for grep-ability.
+pub const structs = struct {
+    /// §winbase.h. 64-bit FILETIME split as two u32s because the
+    /// struct predates native 64-bit alignment on x86.
+    pub const FILETIME = extern struct {
+        dwLowDateTime: u32,
+        dwHighDateTime: u32,
+    };
+
+    /// §minwinbase.h. Out-param of FindFirstFileW / FindNextFileW.
+    /// cFileName has room for MAX_PATH (260) wide chars including
+    /// NUL. cAlternateFileName is the 8.3 short name (14 wide
+    /// chars). The struct is 592 bytes — verify with @sizeOf at
+    /// call sites if tightly-coupled code depends on layout.
+    pub const WIN32_FIND_DATAW = extern struct {
+        dwFileAttributes: u32,
+        ftCreationTime: FILETIME,
+        ftLastAccessTime: FILETIME,
+        ftLastWriteTime: FILETIME,
+        nFileSizeHigh: u32,
+        nFileSizeLow: u32,
+        dwReserved0: u32,
+        dwReserved1: u32,
+        cFileName: [260]u16,
+        cAlternateFileName: [14]u16,
+    };
+};
 
 /// Map a decoded `Ty` to a Zig type. `NamespaceIndex` must expose
 /// a `resolveTypeRef(u32) ?TypeRefEntry` function (all generated
