@@ -208,25 +208,35 @@ pub fn build(b: *std.Build) void {
         else => null,
     };
 
-    for (compile_check_namespaces) |ns| {
-        const gen_run = b.addRunArtifact(winbindgen_exe);
-        if (arch_flag) |f| gen_run.addArg(f);
-        gen_run.addArg(ns);
-        const gen_source = gen_run.captureStdOut(.{});
+    // The native `gen_obj` / `bundle_obj` checks below link against real
+    // Windows system libraries (kernel32, ntdll, oleaut32, ...) and execute
+    // the resulting test binary. That only works when the host target *is*
+    // Windows. On non-Windows hosts we still get full coverage via the
+    // per-arch cross loop further down (compile-only against x86/x64/arm64
+    // Windows targets). Skip the host-linked checks when cross-compiling.
+    const host_is_windows = target.result.os.tag == .windows;
 
-        const gen_mod = b.createModule(.{
-            .root_source_file = gen_source,
-            .target = target,
-            .optimize = optimize,
-        });
-        gen_mod.addImport("win-core", win_core_mod);
+    if (host_is_windows) {
+        for (compile_check_namespaces) |ns| {
+            const gen_run = b.addRunArtifact(winbindgen_exe);
+            if (arch_flag) |f| gen_run.addArg(f);
+            gen_run.addArg(ns);
+            const gen_source = gen_run.captureStdOut(.{});
 
-        const gen_obj = b.addTest(.{
-            .name = b.fmt("compile-check-{s}", .{ns}),
-            .root_module = gen_mod,
-        });
-        const run_gen_obj = b.addRunArtifact(gen_obj);
-        test_step.dependOn(&run_gen_obj.step);
+            const gen_mod = b.createModule(.{
+                .root_source_file = gen_source,
+                .target = target,
+                .optimize = optimize,
+            });
+            gen_mod.addImport("win-core", win_core_mod);
+
+            const gen_obj = b.addTest(.{
+                .name = b.fmt("compile-check-{s}", .{ns}),
+                .root_module = gen_mod,
+            });
+            const run_gen_obj = b.addRunArtifact(gen_obj);
+            test_step.dependOn(&run_gen_obj.step);
+        }
     }
 
     // ------------------------------------------------------------------
@@ -589,12 +599,16 @@ pub fn build(b: *std.Build) void {
     });
     bundle_mod.addImport("win-core", win_core_mod);
 
-    const bundle_obj = b.addTest(.{
-        .name = "compile-check-bundle",
-        .root_module = bundle_mod,
-    });
-    const run_bundle_obj = b.addRunArtifact(bundle_obj);
-    test_step.dependOn(&run_bundle_obj.step);
+    if (host_is_windows) {
+        const bundle_obj = b.addTest(.{
+            .name = "compile-check-bundle",
+            .root_module = bundle_mod,
+        });
+        const run_bundle_obj = b.addRunArtifact(bundle_obj);
+        test_step.dependOn(&run_bundle_obj.step);
+    }
+    // Non-Windows hosts rely on the per-arch cross loop below for
+    // compile-only coverage (x86/x64/arm64 Windows targets).
 
     // ------------------------------------------------------------------
     // Per-arch cross-compile bundle checks. We can't *run* foreign
