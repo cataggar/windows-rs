@@ -226,6 +226,7 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.System.Memory",
         "Windows.Win32.System.SystemInformation",
         "Windows.Win32.Security",
+        "Windows.Win32.System.Diagnostics.Debug",
     };
     for (index_canaries) |ns| {
         const idx_run = b.addRunArtifact(winbindgen_exe);
@@ -831,6 +832,7 @@ pub fn build(b: *std.Build) void {
             .root = "samples/well_known_sid/main.zig",
             .extra_libs = &.{"advapi32"},
         },
+        .{ .name = "debug-output", .root = "samples/debug_output/main.zig" },
     };
 
     for (samples) |s| {

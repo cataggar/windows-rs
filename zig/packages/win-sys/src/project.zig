@@ -56,6 +56,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.System.SystemInformation.index.zig");
     pub const @"Windows.Win32.Security" =
         @import("generated/Windows.Win32.Security.index.zig");
+    pub const @"Windows.Win32.System.Diagnostics.Debug" =
+        @import("generated/Windows.Win32.System.Diagnostics.Debug.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
