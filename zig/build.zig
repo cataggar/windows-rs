@@ -182,6 +182,40 @@ pub fn build(b: *std.Build) void {
     run_step.dependOn(&run_winbindgen.step);
 
     // ------------------------------------------------------------------
+    // `windef` CLI — same metadata wiring as `winbindgen`, different
+    // entry point. Emits one `.def` body per invocation; feeds
+    // `win-targets.addImportLib` downstream.
+    // ------------------------------------------------------------------
+
+    const windef_main_mod = b.createModule(.{
+        .root_source_file = b.path("packages/winbindgen/src/windef.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+    windef_main_mod.addImport("winbindgen", winbindgen_mod);
+    windef_main_mod.addImport("winmd", winmd_mod);
+    windef_main_mod.addAnonymousImport("Windows.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
+    });
+    windef_main_mod.addAnonymousImport("Windows.Win32.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Win32.winmd"),
+    });
+    windef_main_mod.addAnonymousImport("Windows.Wdk.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Wdk.winmd"),
+    });
+
+    const windef_exe = b.addExecutable(.{
+        .name = "windef",
+        .root_module = windef_main_mod,
+    });
+    b.installArtifact(windef_exe);
+
+    const run_windef = b.addRunArtifact(windef_exe);
+    if (b.args) |user_args| run_windef.addArgs(user_args);
+    const windef_run_step = b.step("windef", "Run the windef CLI (pass args with `--`)");
+    windef_run_step.dependOn(&run_windef.step);
+
+    // ------------------------------------------------------------------
     // Compile-check: run `winbindgen Windows.Foundation`, capture the
     // generated Zig source, and compile it as an object against
     // `win-core`. This turns the output of Phase 3's codegen into a
