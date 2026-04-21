@@ -167,7 +167,9 @@ pub const File = struct {
 
     /// Half-open range of rows in `table` whose `column` equals `value`.
     /// Requires the table to be sorted by `column` (true for Attribute,
-    /// Constant, FieldMarshal, NestedClass, etc. per ECMA-335 §22).
+    /// Constant, FieldMarshal, etc. per ECMA-335 §22). Note: NestedClass
+    /// is sorted only by column 0 (NestedClass), NOT column 1
+    /// (EnclosingClass) — use a linear scan to find children of an outer.
     pub fn equalRange(self: *const File, table: Table, column: u3, value: u32) Range {
         var first: u32 = 0;
         const total: u32 = self.tables[@intFromEnum(table)].len;
@@ -1749,10 +1751,17 @@ test "TypeIndex locates Point and exercises parent/equalRange" {
     const parent_row = f.parent(.type_def, 4, fields.start);
     try std.testing.expectEqual(point_row, parent_row);
 
-    // equalRange(): NestedClass (column 1 = enclosing TypeDef row, 1-based,
-    // sorted) should find zero NestedClass rows whose parent is Point.
-    const nested = f.equalRange(.nested_class, 1, point_row + 1);
-    try std.testing.expectEqual(@as(u32, 0), nested.len());
+    // NestedClass col 1 (EnclosingClass) is NOT sorted (the table is
+    // sorted by col 0, NestedClass, per ECMA-335 §II.22.32), so we must
+    // linear-scan to find children of a given outer. Point has no
+    // nested types, so the count should be zero.
+    const nc_rows = f.rowCount(.nested_class);
+    var nested_children: u32 = 0;
+    var nc_i: u32 = 0;
+    while (nc_i < nc_rows) : (nc_i += 1) {
+        if (f.cell(.nested_class, nc_i, 1) == point_row + 1) nested_children += 1;
+    }
+    try std.testing.expectEqual(@as(u32, 0), nested_children);
 
     // assemblyName may be null for merged/special winmds; just confirm the
     // call doesn't panic and produces a consistent result.
