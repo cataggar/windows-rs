@@ -140,6 +140,13 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     // is fixed field order, no padding insertions beyond C rules.
     if (std.mem.eql(u8, name, "FILETIME")) return structs.FILETIME;
     if (std.mem.eql(u8, name, "WIN32_FIND_DATAW")) return structs.WIN32_FIND_DATAW;
+    // SYSTEM_INFO has an anonymous union (`Anonymous: SYSTEM_INFO_0`)
+    // at offset 0 — the winmd encodes this as a NestedType reference
+    // `SYSTEM_INFO_0 → SYSTEM_INFO`. For now, match the top-level
+    // struct by its canonical name; the inner union and `_0_0` struct
+    // are only referenced *from inside* SYSTEM_INFO's layout, so they
+    // never surface through an API signature and don't need aliases.
+    if (std.mem.eql(u8, name, "SYSTEM_INFO")) return structs.SYSTEM_INFO;
     return null;
 }
 
@@ -171,6 +178,43 @@ pub const structs = struct {
         dwReserved1: u32,
         cFileName: [260]u16,
         cAlternateFileName: [14]u16,
+    };
+
+    /// §sysinfoapi.h. Out-param of GetSystemInfo / GetNativeSystemInfo.
+    /// The first field is an anonymous union — Windows chose the
+    /// `dwOemId` compatibility alias in the union head, but every
+    /// modern caller reads `Anonymous.Anonymous.wProcessorArchitecture`.
+    /// Size is 48 on x86 / 56 on x64 (pointer & usize fields drive the
+    /// spread). Zig's `extern union` honors C union semantics: all
+    /// variants overlap at offset 0, alignment = max variant align.
+    pub const SYSTEM_INFO = extern struct {
+        Anonymous: SYSTEM_INFO_0,
+        dwPageSize: u32,
+        lpMinimumApplicationAddress: ?*anyopaque,
+        lpMaximumApplicationAddress: ?*anyopaque,
+        dwActiveProcessorMask: usize,
+        dwNumberOfProcessors: u32,
+        dwProcessorType: u32,
+        dwAllocationGranularity: u32,
+        wProcessorLevel: u16,
+        wProcessorRevision: u16,
+    };
+
+    /// Anonymous union inside SYSTEM_INFO. Name `_0` mirrors the
+    /// suffix windows-rs generates for unnamed nested types, so a
+    /// future generator pass can emit matching identifiers without
+    /// renaming.
+    pub const SYSTEM_INFO_0 = extern union {
+        dwOemId: u32,
+        Anonymous: SYSTEM_INFO_0_0,
+    };
+
+    /// Anonymous struct inside SYSTEM_INFO_0. `wProcessorArchitecture`
+    /// is the field modern callers read (PROCESSOR_ARCHITECTURE enum
+    /// is u16; kept as raw u16 here pending enum projection).
+    pub const SYSTEM_INFO_0_0 = extern struct {
+        wProcessorArchitecture: u16,
+        wReserved: u16,
     };
 };
 

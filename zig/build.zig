@@ -841,6 +841,7 @@ pub fn build(b: *std.Build) void {
         .{ .name = "file-attributes", .root = "samples/file_attributes/main.zig" },
         .{ .name = "temp-path", .root = "samples/temp_path/main.zig" },
         .{ .name = "find-files", .root = "samples/find_files/main.zig" },
+        .{ .name = "native-system-info", .root = "samples/native_system_info/main.zig" },
     };
 
     for (samples) |s| {
