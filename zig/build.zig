@@ -824,6 +824,7 @@ pub fn build(b: *std.Build) void {
         .{ .name = "file-write", .root = "samples/file_write/main.zig" },
         .{ .name = "heap-alloc", .root = "samples/heap_alloc/main.zig" },
         .{ .name = "system-info", .root = "samples/system_info/main.zig" },
+        .{ .name = "virtual-alloc", .root = "samples/virtual_alloc/main.zig" },
     };
 
     for (samples) |s| {
