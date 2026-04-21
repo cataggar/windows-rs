@@ -42,20 +42,31 @@ fn isProjectableNs(ns: []const u8) bool {
 /// Placeholder — full CLI lands later in Phase 3.
 pub fn generate(_: std.mem.Allocator) !void {}
 
+/// Architecture filter for SupportedArchitectureAttribute bitmasks.
+/// Values match the ECMA attribute bit layout that `windows-bindgen`
+/// uses in `crates/libs/bindgen/src/config/cfg.rs`.
+pub const Arch = enum(i32) {
+    x86 = 0x1,
+    x64 = 0x2,
+    arm64 = 0x4,
+};
+
 /// Return true if the TypeDef / MethodDef at `(tag, row)` has no
 /// `SupportedArchitectureAttribute`, or has one whose bitmask includes
-/// x86_64 (bit 0x2, shared with arm64ec). This is the minimal arch
-/// filter that lets us emit a single set of x86_64-oriented bindings
-/// and drop the x86-only and arm64-only duplicates that would otherwise
-/// collide on the same name (e.g. `SLIST_HEADER` is defined three times
-/// in `Windows.Win32.System.Kernel`, one per arch).
+/// `arch`. The attribute lists every arch a declaration applies to;
+/// declarations without it are arch-agnostic. This is the minimal arch
+/// filter that lets us emit a single set of per-target bindings and
+/// drop the off-target duplicates that would otherwise collide on the
+/// same name (e.g. `SLIST_HEADER` is defined three times in
+/// `Windows.Win32.System.Kernel`, one per arch).
 ///
 /// The Rust `windows-bindgen` equivalent is
 /// `crates/libs/bindgen/src/config/cfg.rs::write_arches`, which expands
-/// to `#[cfg(target_arch = ...)]`. Proper multi-arch support for Zig
-/// is a later slice; for now we pick x86_64 and move on.
-fn supportsX64(file: *const winmd.File, tag: winmd.HasAttributeTag, row: u32) bool {
-    const ARCH_X64: i32 = 2;
+/// to `#[cfg(target_arch = ...)]`. Zig does not have `cfg`, so the
+/// caller picks one arch per generation run and any cross-arch
+/// divergence is observed by running the generator with a different
+/// `--arch` value.
+fn supportsArch(file: *const winmd.File, tag: winmd.HasAttributeTag, row: u32, arch: Arch) bool {
     const attr_row = winmd.findAttribute(file, tag, row, "SupportedArchitectureAttribute") orelse return true;
     var fba_buf: [512]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&fba_buf);
@@ -67,7 +78,7 @@ fn supportsX64(file: *const winmd.File, tag: winmd.HasAttributeTag, row: u32) bo
         .enum_value => |e| e.value,
         else => return true,
     };
-    return (mask & ARCH_X64) != 0;
+    return (mask & @intFromEnum(arch)) != 0;
 }
 
 /// Emit every supported declaration for `namespace` to `writer`,
@@ -92,6 +103,7 @@ pub fn emitNamespace(
     arena: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
+    arch: Arch,
 ) !void {
     // Buffer the body into an arena-backed `Allocating` writer so the
     // cross-namespace alias list at the top is emitted *after* all
@@ -105,12 +117,12 @@ pub fn emitNamespace(
     try emitIidConstants(body_writer, arena, file, namespace);
     try emitGuidConstants(body_writer, arena, file, namespace);
     try emitEnums(body_writer, arena, file, namespace);
-    try emitStructsImpl(body_writer, arena, file, namespace, &cross);
+    try emitStructsImpl(body_writer, arena, file, namespace, &cross, arch);
     try emitInterfaceHandles(body_writer, arena, file, namespace, &cross);
     try emitDelegates(body_writer, file, namespace);
     try emitRuntimeClasses(body_writer, arena, file, namespace, &cross);
     try emitInterfaceVtblsImpl(body_writer, arena, file, namespace, &cross);
-    try emitFreeFunctions(body_writer, arena, file, namespace, &cross);
+    try emitFreeFunctions(body_writer, arena, file, namespace, &cross, arch);
     try emitConstants(body_writer, arena, file, namespace);
 
     try writer.writeAll(
@@ -306,6 +318,7 @@ pub fn emitFreeFunctions(
     file: *const winmd.File,
     namespace: []const u8,
     cross: *CrossNsSet,
+    arch: Arch,
 ) !void {
     const rows = file.rowCount(.type_def);
     var row: u32 = 0;
@@ -320,9 +333,9 @@ pub fn emitFreeFunctions(
 
             // Arch-gated duplicates are filtered at the MethodDef level;
             // functions carrying SupportedArchitectureAttribute without
-            // bit 0x2 (x86_64) are skipped for the same reason structs
-            // are — see `supportsX64` above.
-            if (!supportsX64(file, .method_def, m)) continue;
+            // the selected arch bit are skipped for the same reason
+            // structs are — see `supportsArch` above.
+            if (!supportsArch(file, .method_def, m, arch)) continue;
 
             const method_name = file.str(.method_def, m, 3);
             const import_name = file.implMapImportName(impl_map_row);
@@ -1261,9 +1274,10 @@ pub fn emitStructs(
     arena: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
+    arch: Arch,
 ) !void {
     var cross: CrossNsSet = .empty;
-    try emitStructsImpl(writer, arena, file, namespace, &cross);
+    try emitStructsImpl(writer, arena, file, namespace, &cross, arch);
 }
 
 fn emitStructsImpl(
@@ -1272,6 +1286,7 @@ fn emitStructsImpl(
     file: *const winmd.File,
     namespace: []const u8,
     cross: *CrossNsSet,
+    arch: Arch,
 ) !void {
     // TypeAttributes bits (ECMA-335 §II.23.1.15).
     const VISIBILITY_MASK: u32 = 0x7;
@@ -1293,16 +1308,16 @@ fn emitStructsImpl(
         if (!std.mem.eql(u8, base.namespace, "System")) continue;
         if (!std.mem.eql(u8, base.name, "ValueType")) continue;
 
-        // Drop arch-gated duplicates. `SLIST_HEADER` etc. appear once
-        // per supported arch in the metadata; emit only the x86_64
-        // variant until a later slice adds per-target emission.
-        if (!supportsX64(file, .type_def, row)) continue;
+        // Drop off-target arch-gated duplicates. `SLIST_HEADER` etc.
+        // appear once per supported arch in the metadata; emit only
+        // the variant targeting the requested `arch`.
+        if (!supportsArch(file, .type_def, row, arch)) continue;
 
         const name = file.str(.type_def, row, 1);
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
         if (isPreludeAlias(namespace, name)) continue;
 
-        try emitOneStruct(writer, arena, file, namespace, cross, row, name);
+        try emitOneStruct(writer, arena, file, namespace, cross, row, name, arch);
     }
 }
 
@@ -1323,7 +1338,7 @@ fn emitStructsImpl(
 /// `NestedClass` table (§II.22.32) is sorted by `EnclosingClass`
 /// (column 1), so `equalRange` on that column cheaply finds every
 /// nested TypeDef row of a given parent.
-fn typeDefRepresentable(file: *const winmd.File, arena: std.mem.Allocator, row: u32) bool {
+fn typeDefRepresentable(file: *const winmd.File, arena: std.mem.Allocator, row: u32, arch: Arch) bool {
     const FIELD_ATTR_STATIC: u32 = 0x10;
     const field_list = file.list(.type_def, row, 4, .field);
     var f: u32 = field_list.start;
@@ -1340,8 +1355,8 @@ fn typeDefRepresentable(file: *const winmd.File, arena: std.mem.Allocator, row: 
         const nested_typedef = file.cell(.nested_class, i, 0);
         if (nested_typedef == 0) continue;
         const child_row = nested_typedef - 1;
-        if (!supportsX64(file, .type_def, child_row)) continue;
-        if (!typeDefRepresentable(file, arena, child_row)) return false;
+        if (!supportsArch(file, .type_def, child_row, arch)) continue;
+        if (!typeDefRepresentable(file, arena, child_row, arch)) return false;
     }
     return true;
 }
@@ -1354,6 +1369,7 @@ fn emitOneStruct(
     cross: *CrossNsSet,
     row: u32,
     name: []const u8,
+    arch: Arch,
 ) !void {
     const LAYOUT_MASK: u32 = 0x18;
     const LAYOUT_EXPLICIT: u32 = 0x10;
@@ -1370,7 +1386,7 @@ fn emitOneStruct(
     // body. A nested type with an out-of-scope field type would leave a
     // dangling identifier in the parent's field list, so drop the whole
     // tree rather than emit half of it.
-    if (!typeDefRepresentable(file, arena, row)) return;
+    if (!typeDefRepresentable(file, arena, row, arch)) return;
 
     try writer.print("pub const {s} = extern {s} {{\n", .{ name, if (is_union) "union" else "struct" });
 
@@ -1388,10 +1404,10 @@ fn emitOneStruct(
         const nested_typedef = file.cell(.nested_class, i, 0);
         if (nested_typedef == 0) continue;
         const child_row = nested_typedef - 1;
-        if (!supportsX64(file, .type_def, child_row)) continue;
+        if (!supportsArch(file, .type_def, child_row, arch)) continue;
         const child_name = file.str(.type_def, child_row, 1);
         if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
-        try emitOneStruct(writer, arena, file, namespace, cross, child_row, child_name);
+        try emitOneStruct(writer, arena, file, namespace, cross, child_row, child_name, arch);
     }
 
     var f: u32 = field_list.start;
@@ -1417,7 +1433,7 @@ test "emitStructs writes Point/Rect/TimeSpan from Windows.Foundation" {
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Foundation", .x64);
     const out = buf.written();
 
     // Point — classic two-f32 struct, a canary for sequential layout.
@@ -2020,7 +2036,7 @@ test "emitNamespace composes all sub-emitters for Windows.Foundation" {
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation", .x64);
     const out = buf.written();
 
     // Header establishes the win-core dependency and bridges the
@@ -2059,7 +2075,7 @@ test "emitNamespace qualifies cross-namespace refs and emits import aliases" {
     // Windows.Globalization pulls types from Windows.Foundation and
     // Windows.System (e.g. `User`, `DateTime`) — a known-busy namespace
     // for exercising the cross-ns emit path.
-    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Globalization");
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Globalization", .x64);
     const out = buf.written();
 
     // Each referenced namespace gets a `const @"<ns>" = @import("<ns>.zig");`
@@ -2106,7 +2122,7 @@ test "emitNamespace skips generic-arity typedefs (no backticks in output)" {
     // identifier character, and instantiating WinRT generics is
     // deferred to a later phase — so emitted output must contain no
     // literal backticks anywhere.
-    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation", .x64);
     const out = buf.written();
 
     try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
@@ -2127,7 +2143,7 @@ test "emitFreeFunctions emits kernel32 exports for Windows.Win32.Foundation" {
     defer buf.deinit();
 
     var cross: CrossNsSet = .empty;
-    try emitFreeFunctions(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation", &cross);
+    try emitFreeFunctions(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation", &cross, .x64);
     const out = buf.written();
 
     // CloseHandle(HANDLE) -> BOOL. HANDLE is a typedef over *mut c_void
@@ -2157,7 +2173,7 @@ test "emitFreeFunctions uses @extern for renamed P/Invoke (RtlGenRandom)" {
     defer buf.deinit();
 
     var cross: CrossNsSet = .empty;
-    try emitFreeFunctions(&buf.writer, arena.allocator(), &file, "Windows.Win32.Security.Authentication.Identity", &cross);
+    try emitFreeFunctions(&buf.writer, arena.allocator(), &file, "Windows.Win32.Security.Authentication.Identity", &cross, .x64);
     const out = buf.written();
 
     // RtlGenRandom is exported from ADVAPI32 under the real name
@@ -2210,7 +2226,7 @@ test "emitStructs suppresses HRESULT and BOOL in Windows.Win32.Foundation" {
 
     var cross: CrossNsSet = .empty;
 
-    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation");
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation", .x64);
     _ = &cross;
     const out = buf.written();
 
@@ -2231,7 +2247,7 @@ test "emitNamespace produces a self-consistent body for Windows.Win32.Foundation
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation");
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation", .x64);
     const out = buf.written();
 
     // Prelude must appear exactly once.
@@ -2353,7 +2369,7 @@ test "emitStructs emits Win32 ExplicitLayout TypeDefs as extern union" {
     // a simple 2-field C union (Buffer/Alignment). ExplicitLayout in
     // Win32 metadata always means a C union; windows-bindgen uses the
     // same convention.
-    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem");
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem", .x64);
     const out = buf.written();
 
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const FILE_SEGMENT_ELEMENT = extern union") != null);
@@ -2389,7 +2405,7 @@ test "emitNamespace succeeds on every Windows.Wdk namespace" {
         var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
         defer buf.deinit();
 
-        try emitNamespace(&buf.writer, arena.allocator(), &file, e.key_ptr.*);
+        try emitNamespace(&buf.writer, arena.allocator(), &file, e.key_ptr.*, .x64);
         if (buf.written().len > 0) any_non_empty = true;
     }
     try std.testing.expect(any_non_empty);

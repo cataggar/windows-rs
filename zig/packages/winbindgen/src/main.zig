@@ -6,13 +6,15 @@
 //!   * everything else    → `Windows.winmd` (WinRT)
 //!
 //! Usage:
-//!     winbindgen <namespace>
+//!     winbindgen [--arch=x86|x64|arm64] <namespace>
 //!     winbindgen --list
 //!
 //! `--list` prints every distinct namespace across all three metadata
 //! files, one per line. Otherwise the single positional argument is
 //! the namespace to emit via `winbindgen.emitNamespace`, and its
-//! output is written to stdout.
+//! output is written to stdout. `--arch` picks which
+//! `SupportedArchitectureAttribute`-gated overloads to emit; default
+//! is `x64`.
 //!
 //! The metadata files are baked in via `@embedFile` — this is still a
 //! driver over `emitNamespace` rather than a full bindgen pipeline.
@@ -62,24 +64,60 @@ pub fn main(init: std.process.Init) !void {
         return;
     }
 
-    if (args.len != 2) {
+    // Parse `--arch=...` optional flag; the remaining positional must
+    // be the namespace. Default to x64 so existing callers don't have
+    // to change.
+    var arch: winbindgen.Arch = .x64;
+    var namespace_arg: ?[]const u8 = null;
+    {
+        var i: usize = 1;
+        while (i < args.len) : (i += 1) {
+            const a = args[i];
+            if (std.mem.startsWith(u8, a, "--arch=")) {
+                const v = a["--arch=".len..];
+                if (std.mem.eql(u8, v, "x86")) {
+                    arch = .x86;
+                } else if (std.mem.eql(u8, v, "x64")) {
+                    arch = .x64;
+                } else if (std.mem.eql(u8, v, "arm64")) {
+                    arch = .arm64;
+                } else {
+                    try stderr.print("unknown --arch value: {s}\n", .{v});
+                    try stderr.flush();
+                    std.process.exit(2);
+                }
+            } else if (namespace_arg == null) {
+                namespace_arg = a;
+            } else {
+                try stderr.writeAll(
+                    \\usage: winbindgen [--arch=x86|x64|arm64] <namespace>
+                    \\       winbindgen --list
+                    \\
+                );
+                try stderr.flush();
+                std.process.exit(2);
+            }
+        }
+    }
+
+    const namespace = namespace_arg orelse {
         try stderr.writeAll(
-            \\usage: winbindgen <namespace>
+            \\usage: winbindgen [--arch=x86|x64|arm64] <namespace>
             \\       winbindgen --list
             \\
         );
         try stderr.flush();
         std.process.exit(2);
-    }
+    };
 
     // Keep the full emitted source in memory first so an error mid-emit
     // doesn't leave partial output on stdout.
     var buf: std.Io.Writer.Allocating = .init(gpa);
     defer buf.deinit();
 
-    const bytes = selectBytes(args[1]);
+    const bytes = selectBytes(namespace);
     var file = try winmd.parse(bytes);
-    try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, args[1]);
+    try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
 
     try stdout.writeAll(buf.written());
     try stdout.flush();
