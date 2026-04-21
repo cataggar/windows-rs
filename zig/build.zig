@@ -839,6 +839,7 @@ pub fn build(b: *std.Build) void {
             .extra_libs = &.{"advapi32"},
         },
         .{ .name = "file-attributes", .root = "samples/file_attributes/main.zig" },
+        .{ .name = "temp-path", .root = "samples/temp_path/main.zig" },
     };
 
     for (samples) |s| {
