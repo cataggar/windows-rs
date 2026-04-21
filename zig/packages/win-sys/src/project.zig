@@ -162,6 +162,8 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.Security.structs.zig");
     pub const @"Windows.Win32.Storage.FileSystem" =
         @import("generated/Windows.Win32.Storage.FileSystem.structs.zig");
+    pub const @"Windows.Win32.System.SystemInformation" =
+        @import("generated/Windows.Win32.System.SystemInformation.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
@@ -184,42 +186,24 @@ pub const structs = struct {
     pub const WIN32_FIND_DATAW =
         generated_structs.@"Windows.Win32.Storage.FileSystem".WIN32_FIND_DATAW;
 
-    /// §sysinfoapi.h. Out-param of GetSystemInfo / GetNativeSystemInfo.
-    /// The first field is an anonymous union — Windows chose the
-    /// `dwOemId` compatibility alias in the union head, but every
-    /// modern caller reads `Anonymous.Anonymous.wProcessorArchitecture`.
-    /// Size is 48 on x86 / 56 on x64 (pointer & usize fields drive the
-    /// spread). Zig's `extern union` honors C union semantics: all
-    /// variants overlap at offset 0, alignment = max variant align.
-    pub const SYSTEM_INFO = extern struct {
-        Anonymous: SYSTEM_INFO_0,
-        dwPageSize: u32,
-        lpMinimumApplicationAddress: ?*anyopaque,
-        lpMaximumApplicationAddress: ?*anyopaque,
-        dwActiveProcessorMask: usize,
-        dwNumberOfProcessors: u32,
-        dwProcessorType: u32,
-        dwAllocationGranularity: u32,
-        wProcessorLevel: u16,
-        wProcessorRevision: u16,
-    };
+    /// §sysinfoapi.h. Projected from
+    /// `Windows.Win32.System.SystemInformation.structs.zig`. Out-param
+    /// of GetSystemInfo / GetNativeSystemInfo. Nested anonymous
+    /// union/struct (`SYSTEM_INFO_0`, `SYSTEM_INFO_0_0`) are emitted
+    /// as struct-scoped `pub const` decls inside the sidecar and
+    /// resolved via Zig's struct-scope lookup; they are not part of
+    /// this `structs` namespace. Size 48 on x86 / 56 on x64.
+    pub const SYSTEM_INFO =
+        generated_structs.@"Windows.Win32.System.SystemInformation".SYSTEM_INFO;
 
-    /// Anonymous union inside SYSTEM_INFO. Name `_0` mirrors the
-    /// suffix windows-rs generates for unnamed nested types, so a
-    /// future generator pass can emit matching identifiers without
-    /// renaming.
-    pub const SYSTEM_INFO_0 = extern union {
-        dwOemId: u32,
-        Anonymous: SYSTEM_INFO_0_0,
-    };
+    /// Anonymous union inside SYSTEM_INFO. Re-exported from the
+    /// sidecar's struct-scoped decl so existing callers that name it
+    /// directly (e.g. layout asserts) keep working.
+    pub const SYSTEM_INFO_0 = SYSTEM_INFO.SYSTEM_INFO_0;
 
-    /// Anonymous struct inside SYSTEM_INFO_0. `wProcessorArchitecture`
-    /// is the field modern callers read (PROCESSOR_ARCHITECTURE enum
-    /// is u16; kept as raw u16 here pending enum projection).
-    pub const SYSTEM_INFO_0_0 = extern struct {
-        wProcessorArchitecture: u16,
-        wReserved: u16,
-    };
+    /// Anonymous struct inside SYSTEM_INFO_0. Re-exported for the
+    /// same reason as `SYSTEM_INFO_0`.
+    pub const SYSTEM_INFO_0_0 = SYSTEM_INFO_0.SYSTEM_INFO_0_0;
 };
 
 /// Map a decoded `Ty` to a Zig type. `NamespaceIndex` must expose
