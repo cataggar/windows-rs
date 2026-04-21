@@ -93,6 +93,11 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     // or previously-returned handles; we don't inspect fields.
     if (std.mem.eql(u8, name, "WELL_KNOWN_SID_TYPE")) return i32;
     if (std.mem.eql(u8, name, "PSID")) return ?*anyopaque;
+    // TOKEN_ACCESS_MASK is a flags enum (TOKEN_QUERY, TOKEN_ADJUST_*,
+    // etc.) backed by DWORD. TOKEN_INFORMATION_CLASS is a C enum
+    // selector for GetTokenInformation (TokenElevation = 20, etc.).
+    if (std.mem.eql(u8, name, "TOKEN_ACCESS_MASK")) return u32;
+    if (std.mem.eql(u8, name, "TOKEN_INFORMATION_CLASS")) return i32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
@@ -171,6 +176,15 @@ fn tyToZigType(
         // `?[*]` for explicitly array-shaped uses, but we can't
         // distinguish at this level). `?*T` round-trips through
         // the C ABI as a plain pointer.
+        //
+        // Special case: `Ptr<void>` (LPVOID) is the C idiom for an
+        // opaque pointer. Zig's `?*void` is a zero-sized-pointer
+        // oddity that refuses integer casts; `?*anyopaque` is the
+        // idiomatic replacement and lets callers `@ptrCast`
+        // arbitrary buffers through.
+        if (depth == 0 and ty == void) {
+            ty = anyopaque;
+        }
         ty = ?*ty;
     }
     return ty;

@@ -833,6 +833,11 @@ pub fn build(b: *std.Build) void {
             .extra_libs = &.{"advapi32"},
         },
         .{ .name = "debug-output", .root = "samples/debug_output/main.zig" },
+        .{
+            .name = "token-elevation",
+            .root = "samples/token_elevation/main.zig",
+            .extra_libs = &.{"advapi32"},
+        },
     };
 
     for (samples) |s| {
