@@ -42,6 +42,8 @@ const index = struct {
         @import("generated/Windows.Win32.System.Threading.index.zig");
     pub const @"Windows.Win32.System.Console" =
         @import("generated/Windows.Win32.System.Console.index.zig");
+    pub const @"Windows.Win32.UI.WindowsAndMessaging" =
+        @import("generated/Windows.Win32.UI.WindowsAndMessaging.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -63,6 +65,7 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "STD_HANDLE")) return u32;
     if (std.mem.eql(u8, name, "CONSOLE_MODE")) return u32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
+    if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
     if (std.mem.eql(u8, name, "HGLOBAL")) return isize;
     if (std.mem.eql(u8, name, "HLOCAL")) return isize;
@@ -347,5 +350,23 @@ test "project: Console { GetStdHandle, GetConsoleCP } type-checks" {
     try std.testing.expectEqual(
         @as(type, *const fn () callconv(.winapi) u32),
         @TypeOf(win.GetConsoleCP),
+    );
+}
+
+test "project: WindowsAndMessaging { GetDesktopWindow, IsWindow } type-checks" {
+    // Fifth namespace wired. Exercises the new HWND -> isize alias.
+    // GetDesktopWindow() -> HWND is the minimal HWND-returning call;
+    // IsWindow(HWND) -> BOOL exercises HWND as a parameter + BOOL return.
+    const win = project(.{
+        .@"Windows.Win32.UI.WindowsAndMessaging" = .{ "GetDesktopWindow", "IsWindow" },
+    });
+
+    try std.testing.expectEqual(
+        @as(type, *const fn () callconv(.winapi) isize),
+        @TypeOf(win.GetDesktopWindow),
+    );
+    try std.testing.expectEqual(
+        @as(type, *const fn (isize) callconv(.winapi) i32),
+        @TypeOf(win.IsWindow),
     );
 }

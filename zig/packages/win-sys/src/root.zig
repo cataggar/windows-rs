@@ -38,6 +38,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.System.Threading.index.zig");
     pub const @"Windows.Win32.System.Console" =
         @import("generated/Windows.Win32.System.Console.index.zig");
+    pub const @"Windows.Win32.UI.WindowsAndMessaging" =
+        @import("generated/Windows.Win32.UI.WindowsAndMessaging.index.zig");
 };
 
 test "prebuilt index: Windows.Win32.Foundation has SysAllocString" {
