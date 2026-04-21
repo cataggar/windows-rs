@@ -1464,6 +1464,8 @@ fn canRepresent(ty: winmd.Ty) bool {
         .u64,
         .f32,
         .f64,
+        .isize,
+        .usize,
         .string,
         .class_name,
         .value_name,
@@ -1499,6 +1501,8 @@ fn writeZigTy(
         .u64 => try writer.writeAll("u64"),
         .f32 => try writer.writeAll("f32"),
         .f64 => try writer.writeAll("f64"),
+        .isize => try writer.writeAll("isize"),
+        .usize => try writer.writeAll("usize"),
         .string => try writer.writeAll("HSTRING"),
         // WinRT / COM interface reference. In metadata this is
         // inherently a pointer — ELEMENT_TYPE_CLASS represents the
@@ -1539,11 +1543,26 @@ fn writeZigTy(
             }
         },
         .ptr_mut => |p| {
+            // `*void` is illegal in Zig — the C idiom `LPVOID` projects
+            // as `*anyopaque` for the innermost indirection, with any
+            // outer pointer layers prepended unchanged.
+            if (p.inner.* == .void) {
+                var d: u32 = 0;
+                while (d + 1 < p.depth) : (d += 1) try writer.writeAll("*");
+                try writer.writeAll("*anyopaque");
+                return true;
+            }
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*");
             return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross);
         },
         .ptr_const => |p| {
+            if (p.inner.* == .void) {
+                var d: u32 = 0;
+                while (d + 1 < p.depth) : (d += 1) try writer.writeAll("*const ");
+                try writer.writeAll("*const anyopaque");
+                return true;
+            }
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*const ");
             return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross);
@@ -2813,6 +2832,32 @@ test "emitStructs emits Win32 ExplicitLayout TypeDefs as extern union" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const FILE_SEGMENT_ELEMENT = extern union") != null);
     // And at least one normal struct still emits as `extern struct`.
     try std.testing.expect(std.mem.indexOf(u8, out, "extern struct") != null);
+}
+
+test "emitStructs emits SYSTEM_INFO with usize and *anyopaque" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    // SYSTEM_INFO exercises two projection codepaths that were
+    // previously blocking `emitStructs`:
+    //   * `dwActiveProcessorMask: DWORD_PTR` → ELEMENT_TYPE_U → `usize`
+    //   * `lpMinimumApplicationAddress: LPVOID` → `PTR(VOID)` → `*anyopaque`
+    // Both were rejected by `canRepresent`/`writeZigTy` in earlier
+    // drafts, causing SYSTEM_INFO to silently drop out of the output
+    // even though it's referenced by GetSystemInfo/GetNativeSystemInfo.
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.System.SystemInformation", .x64);
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SYSTEM_INFO = extern struct") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "dwActiveProcessorMask: usize,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "lpMinimumApplicationAddress: *anyopaque,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "lpMaximumApplicationAddress: *anyopaque,") != null);
 }
 
 test "emitNamespace succeeds on every Windows.Wdk namespace" {
