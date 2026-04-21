@@ -410,6 +410,95 @@ fn stripDllSuffix(name: []const u8) []const u8 {
     return name;
 }
 
+/// One imported DLL plus the set of symbols imported from it.
+/// `dll` is the full DLL filename as stored in metadata (e.g.
+/// "KERNEL32.dll"); `imports` is a deduplicated, sorted list of the
+/// import names (plain symbol names or `#<ordinal>` strings).
+pub const DllImports = struct {
+    dll: []const u8,
+    imports: [][]const u8,
+};
+
+/// Scan every `MethodDef` across the whole winmd and group the
+/// `ImplMap` → `ModuleRef` pairs by DLL. Used by Phase 5 to emit
+/// per-DLL `.def` files that feed Zig 0.16's native `.def → import
+/// lib` pipeline, replacing the per-triple `.lib` blobs that
+/// `windows-rs` ships under `crates/targets`.
+///
+/// The result is sorted: outer slice by DLL basename (case-
+/// insensitive), inner slice by import name (case-sensitive).
+/// Duplicates (overloads sharing a symbol, or the same symbol reached
+/// through multiple TypeDefs) are collapsed.
+pub fn collectImports(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+) ![]DllImports {
+    // Bucket: DLL name → set of import names. Both keys point into
+    // the mmapped `#Strings` blob; no copying needed.
+    var buckets = std.StringArrayHashMapUnmanaged(std.StringArrayHashMapUnmanaged(void)){};
+
+    const method_rows = file.rowCount(.method_def);
+    var m: u32 = 0;
+    while (m < method_rows) : (m += 1) {
+        const impl_map_row = file.findImplMap(m) orelse continue;
+        const dll = file.implMapDll(impl_map_row);
+        if (dll.len == 0) continue;
+        const name = file.implMapImportName(impl_map_row);
+        if (name.len == 0) continue;
+
+        const gop = try buckets.getOrPut(arena, dll);
+        if (!gop.found_existing) gop.value_ptr.* = .{};
+        _ = try gop.value_ptr.getOrPut(arena, name);
+    }
+
+    const out = try arena.alloc(DllImports, buckets.count());
+    var it = buckets.iterator();
+    var i: usize = 0;
+    while (it.next()) |entry| : (i += 1) {
+        const names = try arena.alloc([]const u8, entry.value_ptr.count());
+        const keys = entry.value_ptr.keys();
+        for (keys, 0..) |k, j| names[j] = k;
+        std.mem.sort([]const u8, names, {}, struct {
+            fn lt(_: void, a: []const u8, b: []const u8) bool {
+                return std.mem.lessThan(u8, a, b);
+            }
+        }.lt);
+        out[i] = .{ .dll = entry.key_ptr.*, .imports = names };
+    }
+    std.mem.sort(DllImports, out, {}, struct {
+        fn lt(_: void, a: DllImports, b: DllImports) bool {
+            return std.ascii.lessThanIgnoreCase(a.dll, b.dll);
+        }
+    }.lt);
+    return out;
+}
+
+/// Write a Microsoft module-definition (`.def`) file for a single
+/// DLL's imports. The output is the canonical form consumed by
+/// `zig dlltool` / Zig 0.16's native `.def → import lib` step:
+///
+/// ```
+/// LIBRARY kernel32.dll
+/// EXPORTS
+/// CloseHandle
+/// CreateFileW
+/// ...
+/// ```
+///
+/// Ordinal-only imports stored as `#<ordinal>` in metadata round-trip
+/// verbatim as `EXPORTS` entries — dlltool accepts the `@<ordinal>`
+/// form, so we rewrite `#N` to `@N` on the way out.
+pub fn emitDef(writer: *std.Io.Writer, d: DllImports) !void {
+    try writer.print("LIBRARY {s}\nEXPORTS\n", .{d.dll});
+    for (d.imports) |name| {
+        if (name.len > 0 and name[0] == '#') {
+            try writer.print("    @{s}\n", .{name[1..]});
+        } else {
+            try writer.print("    {s}\n", .{name});
+        }
+    }
+}
+
 /// Return true if `(namespace, name)` is already surfaced by the
 /// `emitNamespace` prelude as an alias into `win-core`. Such types
 /// must not be re-emitted from metadata or Zig would see two
@@ -2409,4 +2498,61 @@ test "emitNamespace succeeds on every Windows.Wdk namespace" {
         if (buf.written().len > 0) any_non_empty = true;
     }
     try std.testing.expect(any_non_empty);
+}
+
+test "collectImports groups Win32 MethodDefs by DLL" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const groups = try collectImports(arena.allocator(), &file);
+
+    // Win32 has hundreds of distinct DLLs; anything less than a few
+    // dozen means the scan is broken. Also verify outer ordering is
+    // case-insensitive ascending.
+    try std.testing.expect(groups.len > 50);
+    var prev: []const u8 = "";
+    for (groups) |g| {
+        try std.testing.expect(g.imports.len > 0);
+        if (prev.len != 0) {
+            try std.testing.expect(!std.ascii.lessThanIgnoreCase(g.dll, prev));
+        }
+        prev = g.dll;
+    }
+
+    // kernel32 must carry at least the usual suspects.
+    var k32: ?DllImports = null;
+    for (groups) |g| if (std.ascii.eqlIgnoreCase(g.dll, "KERNEL32.dll")) {
+        k32 = g;
+        break;
+    };
+    try std.testing.expect(k32 != null);
+    var has_create_file_w = false;
+    var has_close_handle = false;
+    for (k32.?.imports) |n| {
+        if (std.mem.eql(u8, n, "CreateFileW")) has_create_file_w = true;
+        if (std.mem.eql(u8, n, "CloseHandle")) has_close_handle = true;
+    }
+    try std.testing.expect(has_create_file_w);
+    try std.testing.expect(has_close_handle);
+}
+
+test "emitDef writes LIBRARY/EXPORTS with ordinal rewrite" {
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    var imports_buf = [_][]const u8{ "CloseHandle", "CreateFileW", "#42" };
+    try emitDef(&buf.writer, .{ .dll = "kernel32.dll", .imports = &imports_buf });
+
+    const expected =
+        \\LIBRARY kernel32.dll
+        \\EXPORTS
+        \\    CloseHandle
+        \\    CreateFileW
+        \\    @42
+        \\
+    ;
+    try std.testing.expectEqualStrings(expected, buf.written());
 }
