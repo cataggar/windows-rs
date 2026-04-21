@@ -395,7 +395,7 @@ fn writeFnSig(
     if (sig.return_type == .void) {
         try writer.writeAll("void");
     } else {
-        _ = try writeZigTy(writer, arena, sig.return_type, namespace, cross);
+        _ = try writeZigTy(writer, arena, sig.return_type, namespace, cross, null);
     }
 }
 
@@ -1360,7 +1360,7 @@ fn writeMethodWrapper(
     }
     if (sig.return_type != .void) {
         try writer.writeAll(", result: *");
-        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross);
+        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null);
     }
     try writer.print(") callconv(.winapi) HRESULT {{\n        return self.vtable.{s}(self", .{method_name});
     for (sig.params, 0..) |_, i| {
@@ -1418,7 +1418,7 @@ fn writeMethodPointer(
     }
     if (sig.return_type != .void) {
         try writer.writeAll(", result: *");
-        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross);
+        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null);
     }
     try writer.writeAll(") callconv(.winapi) HRESULT");
 }
@@ -1437,13 +1437,13 @@ fn writeParam(
     switch (ty) {
         .ref_mut => |inner| {
             try writer.writeAll("*");
-            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross);
+            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross, null);
         },
         .ref_const => |inner| {
             try writer.writeAll("*const ");
-            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross);
+            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross, null);
         },
-        else => _ = try writeZigTy(writer, gpa, ty, current_namespace, cross),
+        else => _ = try writeZigTy(writer, gpa, ty, current_namespace, cross, null),
     }
 }
 
@@ -1481,12 +1481,19 @@ fn canRepresent(ty: winmd.Ty) bool {
 /// Write a Zig type name for `ty`. Caller must have already verified
 /// via `canRepresent` that `ty` is supported; this function never
 /// returns `false` for supported input.
+///
+/// `renames`, when non-null, remaps `.value_name` references whose
+/// namespace matches `current_namespace` and whose name is a key in
+/// the map. Used by `emitOneStruct` to rewrite MIDL-mangled anon
+/// nested type names (`_Anonymous_e__Union`) into stable
+/// `<outer>_<index>` names that match `windows-bindgen` conventions.
 fn writeZigTy(
     writer: *std.Io.Writer,
     gpa: std.mem.Allocator,
     ty: winmd.Ty,
     current_namespace: []const u8,
     cross: *CrossNsSet,
+    renames: ?*const std.StringHashMapUnmanaged([]const u8),
 ) !bool {
     switch (ty) {
         .void => try writer.writeAll("void"),
@@ -1539,6 +1546,14 @@ fn writeZigTy(
             } else if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
                 try cross.put(gpa, tn.namespace, {});
                 try writer.print("@\"{s}\".{s}", .{ tn.namespace, tn.name });
+            } else if (renames) |r| {
+                // Rewrite references to MIDL anon nested siblings
+                // like `_Anonymous_e__Union` → `<outer>_<i>`.
+                if (r.get(tn.name)) |new_name| {
+                    try writer.writeAll(new_name);
+                } else {
+                    try writer.writeAll(tn.name);
+                }
             } else {
                 try writer.writeAll(tn.name);
             }
@@ -1555,7 +1570,7 @@ fn writeZigTy(
             }
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*");
-            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross);
+            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross, renames);
         },
         .ptr_const => |p| {
             if (p.inner.* == .void) {
@@ -1566,14 +1581,14 @@ fn writeZigTy(
             }
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*const ");
-            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross);
+            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross, renames);
         },
         .array_fixed => |a| {
             // ELEMENT_TYPE_ARRAY with explicit size — projects as a
             // fixed-length Zig array whose element type follows the
             // same representability rules as a standalone field.
             try writer.print("[{d}]", .{a.size});
-            return writeZigTy(writer, gpa, a.inner.*, current_namespace, cross);
+            return writeZigTy(writer, gpa, a.inner.*, current_namespace, cross, renames);
         },
         else => return false,
     }
@@ -1812,6 +1827,16 @@ fn emitOneStruct(
     // nested_class table is sorted by NestedClass (column 0), not
     // EnclosingClass, so linear-scan to collect all children of this
     // row.
+    //
+    // MIDL-generated anon unions/structs come through the metadata as
+    // `_Anonymous_e__Union` / `_Anonymous_e__Struct`, which survive
+    // verbatim in `windows-sys` but are renamed by `windows-bindgen`
+    // into stable `<outer>_<index>` identifiers. We follow the Rust
+    // convention so consumers can switch between projections without
+    // hunting for renamed field types, and so nested siblings get
+    // unique names instead of colliding on `_Anonymous_e__Struct`.
+    var renames: std.StringHashMapUnmanaged([]const u8) = .empty;
+    var anon_index: u32 = 0;
     const nc_total = file.rowCount(.nested_class);
     var i: u32 = 0;
     while (i < nc_total) : (i += 1) {
@@ -1822,7 +1847,15 @@ fn emitOneStruct(
         if (!supportsArch(file, .type_def, child_row, arch)) continue;
         const child_name = file.str(.type_def, child_row, 1);
         if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
-        try emitOneStruct(writer, arena, file, namespace, cross, child_row, child_name, arch);
+
+        const effective_name = if (std.mem.startsWith(u8, child_name, "_Anonymous")) blk: {
+            const renamed = try std.fmt.allocPrint(arena, "{s}_{d}", .{ name, anon_index });
+            anon_index += 1;
+            try renames.put(arena, child_name, renamed);
+            break :blk renamed;
+        } else child_name;
+
+        try emitOneStruct(writer, arena, file, namespace, cross, child_row, effective_name, arch);
     }
 
     var f: u32 = field_list.start;
@@ -1832,7 +1865,7 @@ fn emitOneStruct(
         const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
         const field_name = file.str(.field, f, 1);
         try writer.print("    {s}: ", .{field_name});
-        _ = try writeZigTy(writer, arena, ty, namespace, cross);
+        _ = try writeZigTy(writer, arena, ty, namespace, cross, if (renames.count() == 0) null else &renames);
         try writer.writeAll(",\n");
     }
     try writer.writeAll("};\n");
@@ -2890,6 +2923,38 @@ test "emitStructs emits WIN32_FIND_DATAW with fixed-size u16 arrays" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "cFileName: [260]u16,") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "cAlternateFileName: [14]u16,") != null);
+}
+
+test "emitStructs renames MIDL anon nested types to <outer>_<index>" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    // SYSTEM_INFO has a `_Anonymous_e__Union` which itself contains a
+    // `_Anonymous_e__Struct`. The raw MIDL mangled names are stable
+    // but ugly and, worse, can collide when one parent has several
+    // anon children. `windows-bindgen` renames them to
+    // `<outer>_<index>` (`SYSTEM_INFO_0`, `SYSTEM_INFO_0_0`) so
+    // consumers can switch between the Rust and Zig projections
+    // without renaming every field access. We follow the same rule.
+    try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.System.SystemInformation", .x64);
+    const out = buf.written();
+
+    // The outer union is renamed, and the struct inside the union is
+    // renamed relative to its own (already-renamed) parent. Both the
+    // declaration and the field-type reference must use the new name.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SYSTEM_INFO_0 = extern union") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SYSTEM_INFO_0_0 = extern struct") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "Anonymous: SYSTEM_INFO_0,") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "Anonymous: SYSTEM_INFO_0_0,") != null);
+    // The raw MIDL names must not leak through.
+    try std.testing.expect(std.mem.indexOf(u8, out, "_Anonymous_e__Union") == null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "_Anonymous_e__Struct") == null);
 }
 
 test "emitNamespace succeeds on every Windows.Wdk namespace" {
