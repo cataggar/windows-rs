@@ -115,3 +115,46 @@ jobs:
             }
             Write-Host "::endgroup::"
           }
+
+  lib:
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-windows
+            expected: 0x8664  # IMAGE_FILE_MACHINE_AMD64
+          - target: x86-windows
+            expected: 0x014c  # IMAGE_FILE_MACHINE_I386
+          - target: aarch64-windows
+            expected: 0xaa64  # IMAGE_FILE_MACHINE_ARM64
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - name: Build kernel32.lib for ${{ matrix.target }}
+        working-directory: zig
+        run: zig build lib -Dtarget=${{ matrix.target }}
+      - name: Verify COFF machine type
+        working-directory: zig
+        shell: bash
+        run: |
+          lib=zig-out/lib/kernel32.lib
+          test -s "$lib" || { echo "::error::$lib missing or empty"; exit 1; }
+          # Short-import header is `00 00 FF FF 00 00 <machine:u16 LE>`;
+          # scan the first short-import object and compare machine bytes.
+          machine_hex=$(python3 -c "
+          import sys
+          data = open('$lib','rb').read()
+          i = data.find(b'\x00\x00\xff\xff\x00\x00')
+          if i < 0:
+              sys.exit('no short import found')
+          m = data[i+6] | (data[i+7] << 8)
+          print(f'0x{m:04x}')
+          ")
+          echo "machine = $machine_hex (expected ${{ matrix.expected }})"
+          [ "$machine_hex" = "${{ matrix.expected }}" ] \
+            || { echo "::error::machine type mismatch for ${{ matrix.target }}"; exit 1; }

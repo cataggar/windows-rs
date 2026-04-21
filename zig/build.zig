@@ -133,13 +133,48 @@ pub fn build(b: *std.Build) void {
     // the full bindings pipeline.
     // ------------------------------------------------------------------
 
-    const winbindgen_main_mod = b.createModule(.{
-        .root_source_file = b.path("packages/winbindgen/src/main.zig"),
-        .target = target,
+    // Build-tool executables (winbindgen, windef) must run on the *host*,
+    // regardless of any user-supplied `-Dtarget` (which applies only to
+    // the emitted import libs in Phase 5). Create host-targeted copies
+    // of the `winmd` and `winbindgen` modules for that purpose.
+    const winmd_host_mod = b.createModule(.{
+        .root_source_file = b.path("packages/winmd/src/root.zig"),
+        .target = b.graph.host,
         .optimize = optimize,
     });
-    winbindgen_main_mod.addImport("winbindgen", winbindgen_mod);
-    winbindgen_main_mod.addImport("winmd", winmd_mod);
+    winmd_host_mod.addAnonymousImport("Windows.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
+    });
+    winmd_host_mod.addAnonymousImport("Windows.Win32.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Win32.winmd"),
+    });
+    winmd_host_mod.addAnonymousImport("Windows.Wdk.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Wdk.winmd"),
+    });
+
+    const winbindgen_host_mod = b.createModule(.{
+        .root_source_file = b.path("packages/winbindgen/src/root.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    winbindgen_host_mod.addImport("winmd", winmd_host_mod);
+    winbindgen_host_mod.addAnonymousImport("Windows.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
+    });
+    winbindgen_host_mod.addAnonymousImport("Windows.Win32.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Win32.winmd"),
+    });
+    winbindgen_host_mod.addAnonymousImport("Windows.Wdk.winmd", .{
+        .root_source_file = b.path("../crates/libs/bindgen/default/Windows.Wdk.winmd"),
+    });
+
+    const winbindgen_main_mod = b.createModule(.{
+        .root_source_file = b.path("packages/winbindgen/src/main.zig"),
+        .target = b.graph.host,
+        .optimize = optimize,
+    });
+    winbindgen_main_mod.addImport("winbindgen", winbindgen_host_mod);
+    winbindgen_main_mod.addImport("winmd", winmd_host_mod);
     winbindgen_main_mod.addAnonymousImport("Windows.winmd", .{
         .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
     });
@@ -214,11 +249,14 @@ pub fn build(b: *std.Build) void {
 
     const windef_main_mod = b.createModule(.{
         .root_source_file = b.path("packages/winbindgen/src/windef.zig"),
-        .target = target,
+        // `windef` is a build-time tool — it must run on the host,
+        // regardless of `-Dtarget` (which applies to the emitted
+        // import lib, not the DLL-scanning CLI that produces the .def).
+        .target = b.graph.host,
         .optimize = optimize,
     });
-    windef_main_mod.addImport("winbindgen", winbindgen_mod);
-    windef_main_mod.addImport("winmd", winmd_mod);
+    windef_main_mod.addImport("winbindgen", winbindgen_host_mod);
+    windef_main_mod.addImport("winmd", winmd_host_mod);
     windef_main_mod.addAnonymousImport("Windows.winmd", .{
         .root_source_file = b.path("../crates/libs/bindgen/default/Windows.winmd"),
     });
