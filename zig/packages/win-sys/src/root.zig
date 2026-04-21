@@ -5,6 +5,17 @@
 
 pub const core = @import("win-core");
 
+/// Comptime-only MethodDef signature decoder used by `project()`.
+/// Exposed as a module so downstream packages can reuse the
+/// decoder without pulling the full `winmd` reader.
+pub const sig = @import("sig.zig");
+
+test {
+    // Pull in tests from sibling modules — `@import` alone won't
+    // make the Zig test runner discover them.
+    _ = sig;
+}
+
 // Generated namespaces land here in Phase 3.
 
 /// Prebuilt MethodDef indexes (see checkpoints 055–057). Each entry
