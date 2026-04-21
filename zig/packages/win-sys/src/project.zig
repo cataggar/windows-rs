@@ -40,6 +40,8 @@ const index = struct {
         @import("generated/Windows.Win32.System.LibraryLoader.index.zig");
     pub const @"Windows.Win32.System.Threading" =
         @import("generated/Windows.Win32.System.Threading.index.zig");
+    pub const @"Windows.Win32.System.Console" =
+        @import("generated/Windows.Win32.System.Console.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -58,6 +60,8 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "HANDLE_FLAGS")) return u32;
     if (std.mem.eql(u8, name, "LOAD_LIBRARY_FLAGS")) return u32;
     if (std.mem.eql(u8, name, "WAIT_EVENT")) return u32;
+    if (std.mem.eql(u8, name, "STD_HANDLE")) return u32;
+    if (std.mem.eql(u8, name, "CONSOLE_MODE")) return u32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
     if (std.mem.eql(u8, name, "HGLOBAL")) return isize;
@@ -319,5 +323,29 @@ test "project: Threading { GetCurrentThreadId, Sleep } type-checks" {
     try std.testing.expectEqual(
         @as(type, *const fn (u32) callconv(.winapi) void),
         @TypeOf(win.Sleep),
+    );
+}
+
+test "project: Console { GetStdHandle, GetConsoleCP } type-checks" {
+    // Fourth namespace wired. Exercises two new VALUETYPE → u32
+    // flag enum aliases added to the alias table:
+    //   - STD_HANDLE    (param of GetStdHandle)
+    //   - CONSOLE_MODE  (unused here but registered alongside)
+    // Plus a no-alias primitive-only API (GetConsoleCP) as a
+    // sanity check that the Console namespace resolves at all.
+    const win = project(.{
+        .@"Windows.Win32.System.Console" = .{ "GetStdHandle", "GetConsoleCP" },
+    });
+
+    // GetStdHandle(STD_HANDLE) -> HANDLE
+    try std.testing.expectEqual(
+        @as(type, *const fn (u32) callconv(.winapi) isize),
+        @TypeOf(win.GetStdHandle),
+    );
+
+    // GetConsoleCP() -> u32
+    try std.testing.expectEqual(
+        @as(type, *const fn () callconv(.winapi) u32),
+        @TypeOf(win.GetConsoleCP),
     );
 }
