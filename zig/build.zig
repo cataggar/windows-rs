@@ -838,6 +838,7 @@ pub fn build(b: *std.Build) void {
             .root = "samples/token_elevation/main.zig",
             .extra_libs = &.{"advapi32"},
         },
+        .{ .name = "file-attributes", .root = "samples/file_attributes/main.zig" },
     };
 
     for (samples) |s| {

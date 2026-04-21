@@ -105,7 +105,7 @@ jobs:
         working-directory: zig
         shell: pwsh
         run: |
-          $samples = @('last-error', 'load-library', 'threading', 'event-roundtrip', 'desktop-window', 'file-write', 'heap-alloc', 'system-info', 'virtual-alloc', 'well-known-sid', 'debug-output', 'token-elevation')
+          $samples = @('last-error', 'load-library', 'threading', 'event-roundtrip', 'desktop-window', 'file-write', 'heap-alloc', 'system-info', 'virtual-alloc', 'well-known-sid', 'debug-output', 'token-elevation', 'file-attributes')
           foreach ($s in $samples) {
             Write-Host "::group::run-$s"
             zig build "run-$s"
