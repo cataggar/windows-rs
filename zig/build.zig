@@ -181,8 +181,16 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.Foundation",
     };
 
+    const arch_flag: ?[]const u8 = switch (target.result.cpu.arch) {
+        .x86 => "--arch=x86",
+        .x86_64 => "--arch=x64",
+        .aarch64 => "--arch=arm64",
+        else => null,
+    };
+
     for (compile_check_namespaces) |ns| {
         const gen_run = b.addRunArtifact(winbindgen_exe);
+        if (arch_flag) |f| gen_run.addArg(f);
         gen_run.addArg(ns);
         const gen_source = gen_run.captureStdOut(.{});
 
@@ -251,6 +259,7 @@ pub fn build(b: *std.Build) void {
     const bundle_wf = b.addWriteFiles();
     for (bundle_namespaces) |ns| {
         const gen_run = b.addRunArtifact(winbindgen_exe);
+        if (arch_flag) |f| gen_run.addArg(f);
         gen_run.addArg(ns);
         const gen_source = gen_run.captureStdOut(.{});
         _ = bundle_wf.addCopyFile(gen_source, b.fmt("{s}.zig", .{ns}));
