@@ -1,5 +1,0 @@
-# This directory mirrors `crates/tools/bindings/src/` from the Rust tree.
-#
-# During bootstrap it is empty. Phase 3 copies the real filter manifests
-# (`windows.txt`, `windows_sys.txt`, etc.) here and adds a CI check that
-# keeps the two in sync.

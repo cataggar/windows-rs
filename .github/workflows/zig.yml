@@ -8,11 +8,13 @@ on:
     paths:
       - 'zig/**'
       - 'crates/libs/bindgen/default/*.winmd'
+      - 'crates/tools/bindings/src/*.txt'
       - '.github/workflows/zig.yml'
   push:
     paths:
       - 'zig/**'
       - 'crates/libs/bindgen/default/*.winmd'
+      - 'crates/tools/bindings/src/*.txt'
       - '.github/workflows/zig.yml'
     branches:
       - master
@@ -35,6 +37,16 @@ jobs:
       - name: Check formatting
         working-directory: zig
         run: zig fmt --check .
+
+  filter-sync:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Check filter files match Rust side
+        run: |
+          diff -ruN crates/tools/bindings/src/ zig/tools/bindings/src/ \
+            || { echo '::error::zig/tools/bindings/src/*.txt is out of sync with crates/tools/bindings/src/*.txt'; exit 1; }
 
   test:
     runs-on: windows-2025
