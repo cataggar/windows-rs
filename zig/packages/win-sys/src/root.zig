@@ -55,3 +55,32 @@ test "prebuilt index: Windows.Win32.Foundation has SysAllocString" {
         index.@"Windows.Win32.Foundation".method_def_by_name.get("NotARealApi"),
     );
 }
+
+test "prebuilt index: resolveTypeRef maps SysAllocString return's BSTR coded index" {
+    const std = @import("std");
+    // SysAllocString's signature: \x00\x01\x11\x8d\x35\x11\x05
+    // Byte 2: flags=0, byte 3: 1 param, bytes 4..: return = VALUETYPE
+    // + 2-byte compressed coded-index 0x8d35 → 0x0d35.
+    const rec = comptime index.@"Windows.Win32.Foundation"
+        .method_def_by_name.get("SysAllocString").?;
+
+    // Byte 2 is VALUETYPE (0x11). Bytes 3-4 are the 2-byte compressed
+    // form of the coded-index. For a 2-byte compressed value, mask
+    // off the continuation bit: (b0 & 0x3f) << 8 | b1.
+    const b0 = rec.signature[2 + 1];
+    const b1 = rec.signature[2 + 2];
+    try std.testing.expectEqual(@as(u8, 0x11), rec.signature[2]);
+    const coded: u32 = (@as(u32, b0 & 0x3f) << 8) | b1;
+
+    const resolved = comptime index.@"Windows.Win32.Foundation"
+        .resolveTypeRef(coded);
+    try std.testing.expect(resolved != null);
+    try std.testing.expectEqualStrings("BSTR", resolved.?.name);
+    try std.testing.expectEqualStrings("Windows.Win32.Foundation", resolved.?.namespace);
+
+    // Unknown coded indices return null.
+    try std.testing.expectEqual(
+        @as(?@TypeOf(resolved.?), null),
+        index.@"Windows.Win32.Foundation".resolveTypeRef(0xFFFFFFFF),
+    );
+}

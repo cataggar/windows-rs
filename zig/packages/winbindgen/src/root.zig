@@ -519,17 +519,20 @@ pub fn emitDef(writer: *std.Io.Writer, d: DllImports) !void {
 /// declaration `project()` would actually be able to materialize.
 pub fn emitMethodIndex(
     writer: *std.Io.Writer,
+    gpa: std.mem.Allocator,
     file: *const winmd.File,
     namespace: []const u8,
     arch: Arch,
 ) !void {
     // Emits a StaticStringMap keyed by MethodDef name with a rich
     // record value: library, import name, and the raw MethodDef
-    // signature blob (as a byte-escaped string literal). This is the
-    // Phase 4 option-(c) shape — `project()` reads everything it
-    // needs from this table and never touches the winmd at comptime
-    // (see checkpoint 059 for why parse-at-comptime isn't viable on
-    // 23 MB).
+    // signature blob (as a byte-escaped string literal), plus a
+    // sidecar `resolveTypeRef` function that maps the coded-index
+    // values found inside those signatures to `{namespace, name}`
+    // pairs. This is the Phase 4 option-(c) shape — `project()`
+    // reads everything it needs from this table and never touches
+    // the winmd at comptime (see checkpoint 059 for why
+    // parse-at-comptime isn't viable on 23 MB).
     try writer.writeAll(
         \\pub const MethodRecord = struct {
         \\    library: []const u8,
@@ -537,9 +540,22 @@ pub fn emitMethodIndex(
         \\    signature: []const u8,
         \\};
         \\
+        \\pub const TypeRefEntry = struct {
+        \\    namespace: []const u8,
+        \\    name: []const u8,
+        \\};
+        \\
         \\pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
         \\
     );
+
+    // First pass: emit method records and collect every coded-index
+    // value that appears in a VALUETYPE/CLASS position inside any
+    // signature. The set is used in the second pass to build the
+    // `resolveTypeRef` lookup.
+    var coded_indices: std.AutoArrayHashMapUnmanaged(u32, void) = .empty;
+    defer coded_indices.deinit(gpa);
+
     const rows = file.rowCount(.type_def);
     var row: u32 = 0;
     while (row < rows) : (row += 1) {
@@ -557,6 +573,8 @@ pub fn emitMethodIndex(
             const dll_base = stripDllSuffix(dll_full);
             const sig_blob = file.blob(.method_def, m, 4);
 
+            try collectSignatureCodedIndices(gpa, &coded_indices, sig_blob);
+
             try writer.print(
                 "    .{{ \"{s}\", MethodRecord{{ .library = \"{s}\", .import = \"{s}\", .signature = \"",
                 .{ method_name, dll_base, import_name },
@@ -565,7 +583,114 @@ pub fn emitMethodIndex(
             try writer.writeAll("\" } },\n");
         }
     }
-    try writer.writeAll("});\n");
+    try writer.writeAll("});\n\n");
+
+    // Second pass: emit `resolveTypeRef(coded: u32) ?TypeRefEntry`
+    // as a switch over the collected coded indices. Using a switch
+    // (rather than a StaticStringMap keyed by a u32 stringification)
+    // keeps the comptime lookup truly O(1) and avoids any
+    // allocations inside the comptime VM.
+    try writer.writeAll(
+        \\pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
+        \\    return switch (coded) {
+        \\
+    );
+
+    // Sort for deterministic output — AutoArrayHashMap insertion
+    // order depends on the iteration order of winmd rows which is
+    // stable, but explicit sort makes diffs obvious when metadata
+    // adds new TypeRefs.
+    const sorted = try gpa.alloc(u32, coded_indices.count());
+    defer gpa.free(sorted);
+    for (coded_indices.keys(), 0..) |k, i| sorted[i] = k;
+    std.mem.sort(u32, sorted, {}, std.sort.asc(u32));
+
+    for (sorted) |coded| {
+        const resolved = winmd.resolveTypeDefOrRefName(file, coded) catch continue;
+        try writer.print(
+            "        0x{x} => TypeRefEntry{{ .namespace = \"{s}\", .name = \"{s}\" }},\n",
+            .{ coded, resolved.namespace, resolved.name },
+        );
+    }
+
+    try writer.writeAll(
+        \\        else => null,
+        \\    };
+        \\}
+        \\
+    );
+}
+
+/// Walk a MethodDef signature blob and record every TypeDefOrRef
+/// coded-index value that appears in a VALUETYPE or CLASS position.
+/// This is a minimal byte-level scan — it doesn't need to faithfully
+/// reconstruct the type graph, only to enumerate reachable
+/// TypeRefs. Unknown/unsupported element codes cause an early
+/// return (the rest of the blob may be malformed or use features
+/// we don't yet understand).
+fn collectSignatureCodedIndices(
+    gpa: std.mem.Allocator,
+    out: *std.AutoArrayHashMapUnmanaged(u32, void),
+    blob: []const u8,
+) !void {
+    if (blob.len < 2) return;
+    var pos: usize = 0;
+    const flags = blob[pos];
+    pos += 1;
+    if (flags & 0x10 != 0) {
+        // GENERIC — has a generic param count prefix (§II.23.2.1).
+        _ = readCompressedAt(blob, &pos) catch return;
+    }
+    const param_count = readCompressedAt(blob, &pos) catch return;
+
+    // Return type + params.
+    var remaining: u32 = param_count + 1;
+    while (remaining > 0) : (remaining -= 1) {
+        collectOneType(gpa, out, blob, &pos) catch return;
+    }
+}
+
+fn collectOneType(
+    gpa: std.mem.Allocator,
+    out: *std.AutoArrayHashMapUnmanaged(u32, void),
+    blob: []const u8,
+    pos: *usize,
+) !void {
+    while (pos.* < blob.len) {
+        const code = blob[pos.*];
+        pos.* += 1;
+        switch (code) {
+            // ELEMENT_TYPE_VOID, BOOLEAN, CHAR, I1..U, STRING, OBJECT
+            0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x18, 0x19, 0x1c => return,
+            0x0f, 0x10 => continue, // ELEMENT_TYPE_PTR / BYREF — recurse into inner
+            0x1d => continue, // ELEMENT_TYPE_SZARRAY
+            0x11, 0x12 => { // VALUETYPE / CLASS
+                const ci = try readCompressedAt(blob, pos);
+                try out.put(gpa, ci, {});
+                return;
+            },
+            else => return, // modifiers, generics, arrays, sentinel — bail
+        }
+    }
+}
+
+fn readCompressedAt(bytes: []const u8, pos: *usize) !u32 {
+    if (pos.* >= bytes.len) return error.ShortBlob;
+    const b0 = bytes[pos.*];
+    pos.* += 1;
+    if (b0 & 0x80 == 0) return b0;
+    if (pos.* >= bytes.len) return error.ShortBlob;
+    const b1 = bytes[pos.*];
+    pos.* += 1;
+    if (b0 & 0xc0 == 0x80) {
+        return (@as(u32, b0 & 0x3f) << 8) | b1;
+    }
+    if (pos.* + 1 >= bytes.len) return error.ShortBlob;
+    const b2 = bytes[pos.*];
+    pos.* += 1;
+    const b3 = bytes[pos.*];
+    pos.* += 1;
+    return (@as(u32, b0 & 0x1f) << 24) | (@as(u32, b1) << 16) | (@as(u32, b2) << 8) | b3;
 }
 
 /// Escape a binary blob as a Zig string literal (`\xNN` per byte).
@@ -2356,10 +2481,13 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
     const bytes = @embedFile("Windows.Win32.winmd");
     var file = try winmd.parse(bytes);
 
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
     var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
     defer buf.deinit();
 
-    try emitMethodIndex(&buf.writer, &file, "Windows.Win32.Foundation", .x64);
+    try emitMethodIndex(&buf.writer, arena.allocator(), &file, "Windows.Win32.Foundation", .x64);
     const out = buf.written();
 
     try std.testing.expect(std.mem.startsWith(
@@ -2372,7 +2500,6 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
         out,
         "pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{\n",
     ) != null);
-    try std.testing.expect(std.mem.endsWith(u8, out, "});\n"));
 
     // GetLastError lives in Windows.Win32.Foundation.Apis and is
     // exported from KERNEL32. The exact signature bytes depend on
@@ -2382,6 +2509,21 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
         u8,
         out,
         "\"GetLastError\", MethodRecord{ .library = \"KERNEL32\", .import = \"GetLastError\", .signature = \"",
+    ) != null);
+
+    // The sidecar `resolveTypeRef` switch must also be emitted and
+    // include at least one entry (GetLastError's return type is
+    // WIN32_ERROR, a VALUETYPE TypeRef).
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "=> TypeRefEntry{") != null);
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        ".name = \"WIN32_ERROR\"",
     ) != null);
 }
 

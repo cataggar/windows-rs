@@ -6,6 +6,11 @@ pub const MethodRecord = struct {
     signature: []const u8,
 };
 
+pub const TypeRefEntry = struct {
+    namespace: []const u8,
+    name: []const u8,
+};
+
 pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
     .{ "SysAllocString", MethodRecord{ .library = "OLEAUT32", .import = "SysAllocString", .signature = "\x00\x01\x11\x8d\x35\x11\x05" } },
     .{ "SysReAllocString", MethodRecord{ .library = "OLEAUT32", .import = "SysReAllocString", .signature = "\x00\x02\x08\x0f\x11\x8d\x35\x11\x05" } },
@@ -30,3 +35,22 @@ pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecor
     .{ "LocalFree", MethodRecord{ .library = "KERNEL32", .import = "LocalFree", .signature = "\x00\x01\x11\x8d\x3d\x11\x8d\x3d" } },
     .{ "RtlNtStatusToDosError", MethodRecord{ .library = "ntdll", .import = "RtlNtStatusToDosError", .signature = "\x00\x01\x09\x11\x84\x71" } },
 });
+
+pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
+    return switch (coded) {
+        0x5 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "PWSTR" },
+        0x3d => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "PSTR" },
+        0x59 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "BOOL" },
+        0x79 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HRESULT" },
+        0x85 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HANDLE" },
+        0x101 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "WIN32_ERROR" },
+        0x181 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HMODULE" },
+        0x471 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "NTSTATUS" },
+        0xd21 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "DUPLICATE_HANDLE_OPTIONS" },
+        0xd25 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HANDLE_FLAGS" },
+        0xd35 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "BSTR" },
+        0xd39 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HGLOBAL" },
+        0xd3d => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HLOCAL" },
+        else => null,
+    };
+}

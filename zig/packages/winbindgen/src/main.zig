@@ -128,7 +128,7 @@ pub fn main(init: std.process.Init) !void {
         // `project()` helper `@import`s to perform O(1) method lookups
         // without scanning winmd inside the comptime VM.
         try buf.writer.writeAll("const std = @import(\"std\");\n\n");
-        try winbindgen.emitMethodIndex(&buf.writer, &file, namespace, arch);
+        try winbindgen.emitMethodIndex(&buf.writer, init.arena.allocator(), &file, namespace, arch);
     } else {
         try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
     }
