@@ -10,10 +10,16 @@ pub const core = @import("win-core");
 /// decoder without pulling the full `winmd` reader.
 pub const sig = @import("sig.zig");
 
+/// Comptime `project()` helper — consumes `index.<ns>.method_def_by_name`,
+/// `sig.decode`, and `index.<ns>.resolveTypeRef` to materialize extern
+/// function pointers into a populated struct value.
+pub const project = @import("project.zig").project;
+
 test {
     // Pull in tests from sibling modules — `@import` alone won't
     // make the Zig test runner discover them.
     _ = sig;
+    _ = @import("project.zig");
 }
 
 // Generated namespaces land here in Phase 3.
