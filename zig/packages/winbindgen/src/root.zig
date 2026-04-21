@@ -395,7 +395,7 @@ fn writeFnSig(
     if (sig.return_type == .void) {
         try writer.writeAll("void");
     } else {
-        _ = try writeZigTy(writer, arena, sig.return_type, namespace, cross, null);
+        _ = try writeZigTy(writer, arena, sig.return_type, namespace, cross, null, null, null);
     }
 }
 
@@ -1026,6 +1026,32 @@ pub fn emitEnums(
     }
 }
 
+/// Resolve the underlying Zig integer repr (e.g. `"u32"`) for an
+/// enum TypeDef row. Returns null if the row isn't an enum or the
+/// repr isn't an integer we project. Mirrors the lookup
+/// `emitEnums` uses on the `value__` field.
+fn enumUnderlyingReprForRow(
+    file: *const winmd.File,
+    arena: std.mem.Allocator,
+    row: u32,
+) ?[]const u8 {
+    const fields = file.list(.type_def, row, 4, .field);
+    if (fields.start == fields.end) return null;
+    var repr_field: u32 = fields.start;
+    const first_name = file.str(.field, fields.start, 1);
+    if (!std.mem.eql(u8, first_name, "value__")) {
+        var f: u32 = fields.start;
+        while (f < fields.end) : (f += 1) {
+            if (std.mem.eql(u8, file.str(.field, f, 1), "value__")) {
+                repr_field = f;
+                break;
+            }
+        } else return null;
+    }
+    const repr_ty = winmd.readFieldSignature(arena, file, file.blob(.field, repr_field, 2)) catch return null;
+    return zigReprFor(repr_ty);
+}
+
 /// Map a primitive `Ty` to its Zig name for use as an enum tag type.
 /// Returns null for anything that can't back a CLI enum.
 fn zigReprFor(ty: winmd.Ty) ?[]const u8 {
@@ -1360,7 +1386,7 @@ fn writeMethodWrapper(
     }
     if (sig.return_type != .void) {
         try writer.writeAll(", result: *");
-        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null);
+        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
     }
     try writer.print(") callconv(.winapi) HRESULT {{\n        return self.vtable.{s}(self", .{method_name});
     for (sig.params, 0..) |_, i| {
@@ -1418,7 +1444,7 @@ fn writeMethodPointer(
     }
     if (sig.return_type != .void) {
         try writer.writeAll(", result: *");
-        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null);
+        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
     }
     try writer.writeAll(") callconv(.winapi) HRESULT");
 }
@@ -1437,13 +1463,13 @@ fn writeParam(
     switch (ty) {
         .ref_mut => |inner| {
             try writer.writeAll("*");
-            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross, null);
+            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross, null, null, null);
         },
         .ref_const => |inner| {
             try writer.writeAll("*const ");
-            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross, null);
+            _ = try writeZigTy(writer, gpa, inner.*, current_namespace, cross, null, null, null);
         },
-        else => _ = try writeZigTy(writer, gpa, ty, current_namespace, cross, null),
+        else => _ = try writeZigTy(writer, gpa, ty, current_namespace, cross, null, null, null),
     }
 }
 
@@ -1494,6 +1520,8 @@ fn writeZigTy(
     current_namespace: []const u8,
     cross: *CrossNsSet,
     renames: ?*const std.StringHashMapUnmanaged([]const u8),
+    entries: ?*const TypeEntryMap,
+    file: ?*const winmd.File,
 ) !bool {
     switch (ty) {
         .void => try writer.writeAll("void"),
@@ -1537,6 +1565,25 @@ fn writeZigTy(
         // cross-namespace rule as `class_name`, just without the
         // leading `*`.
         .value_name => |tn| {
+            // Sidecar mode: enum refs (any namespace) collapse to their
+            // underlying integer so the sidecar doesn't need to import
+            // the enum's declaring namespace. Tried first so generic-name
+            // / `isProjectableNs` routing below applies only to struct
+            // and union refs.
+            if (entries != null and file != null and
+                std.mem.indexOfScalar(u8, tn.name, '`') == null)
+            {
+                const key = try std.fmt.allocPrint(gpa, "{s}.{s}", .{ tn.namespace, tn.name });
+                if (entries.?.get(key)) |entry| {
+                    if (entry.kind == .enum_type) {
+                        if (enumUnderlyingReprForRow(file.?, gpa, entry.row)) |repr| {
+                            try writer.writeAll(repr);
+                            return true;
+                        }
+                    }
+                }
+            }
+
             if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
                 return false;
             } else if (std.mem.eql(u8, tn.namespace, "System") and std.mem.eql(u8, tn.name, "Guid")) {
@@ -1570,7 +1617,7 @@ fn writeZigTy(
             }
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*");
-            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross, renames);
+            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross, renames, entries, file);
         },
         .ptr_const => |p| {
             if (p.inner.* == .void) {
@@ -1581,14 +1628,14 @@ fn writeZigTy(
             }
             var d: u32 = 0;
             while (d < p.depth) : (d += 1) try writer.writeAll("*const ");
-            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross, renames);
+            return writeZigTy(writer, gpa, p.inner.*, current_namespace, cross, renames, entries, file);
         },
         .array_fixed => |a| {
             // ELEMENT_TYPE_ARRAY with explicit size — projects as a
             // fixed-length Zig array whose element type follows the
             // same representability rules as a standalone field.
             try writer.print("[{d}]", .{a.size});
-            return writeZigTy(writer, gpa, a.inner.*, current_namespace, cross, renames);
+            return writeZigTy(writer, gpa, a.inner.*, current_namespace, cross, renames, entries, file);
         },
         else => return false,
     }
@@ -1776,6 +1823,8 @@ fn emitStructsImpl(
     const VIS_PUBLIC: u32 = 0x1;
 
     const rows = file.rowCount(.type_def);
+    const entries = try buildTypeEntryMap(arena, file);
+    var memo: EmitMemo = .empty;
     var row: u32 = 0;
     while (row < rows) : (row += 1) {
         if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
@@ -1799,7 +1848,7 @@ fn emitStructsImpl(
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
         if (isPreludeAlias(namespace, name)) continue;
 
-        try emitOneStruct(writer, arena, file, namespace, cross, row, name, arch);
+        try emitOneStruct(writer, arena, file, namespace, cross, row, name, arch, &entries, &memo);
     }
 }
 
@@ -1820,16 +1869,159 @@ fn emitStructsImpl(
 /// `NestedClass` table (§II.22.32) is sorted by `EnclosingClass`
 /// (column 1), so `equalRange` on that column cheaply finds every
 /// nested TypeDef row of a given parent.
-fn typeDefRepresentable(file: *const winmd.File, arena: std.mem.Allocator, row: u32, arch: Arch) bool {
+/// Categorizes a TypeDef's extends token into the three kinds
+/// that matter for sidecar emission: struct/union (emittable by
+/// `emitStructs`), enum (skipped — emitted by other machinery),
+/// and everything else (delegate, class, interface — not
+/// representable inside a struct field).
+const TypeKind = enum { struct_or_union, enum_type, other };
+
+const TypeEntry = struct {
+    kind: TypeKind,
+    /// TypeDef row index (0-based) for the canonical occurrence.
+    /// Some names (e.g. `SLIST_HEADER`) have per-arch duplicates;
+    /// last-writer-wins works because the structural checks that
+    /// depend on it tolerate either row.
+    row: u32,
+};
+
+const TypeEntryMap = std.StringHashMapUnmanaged(TypeEntry);
+
+const EmitStatus = enum { unknown, in_progress, yes, no };
+const EmitMemo = std.AutoHashMapUnmanaged(u32, EmitStatus);
+
+/// Walk every TypeDef in `file` once, record its kind keyed by
+/// `"<namespace>.<name>"`. Used during sidecar emission to reject
+/// structs whose fields reference enums, delegates, or classes —
+/// names that would be undefined inside the sidecar.
+fn buildTypeEntryMap(arena: std.mem.Allocator, file: *const winmd.File) !TypeEntryMap {
+    var map: TypeEntryMap = .empty;
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        const ns = file.str(.type_def, row, 2);
+        const name = file.str(.type_def, row, 1);
+        if (ns.len == 0 and std.mem.eql(u8, name, "<Module>")) continue;
+
+        const extends_tok = file.cell(.type_def, row, 3);
+        var kind: TypeKind = .other;
+        if (extends_tok != 0) {
+            const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch {
+                continue;
+            };
+            if (std.mem.eql(u8, base.namespace, "System")) {
+                if (std.mem.eql(u8, base.name, "ValueType")) {
+                    kind = .struct_or_union;
+                } else if (std.mem.eql(u8, base.name, "Enum")) {
+                    kind = .enum_type;
+                }
+            }
+        }
+
+        const key = try std.fmt.allocPrint(arena, "{s}.{s}", .{ ns, name });
+        try map.put(arena, key, .{ .kind = kind, .row = row });
+    }
+    return map;
+}
+
+/// Sidecar-aware representability: same rules as `canRepresent`
+/// plus every `.value_name` / `.class_name` must resolve (via
+/// `entries`) to a struct/union TypeDef whose own fields are
+/// themselves representable. Enum refs are rejected outright;
+/// delegate/class refs likewise. Refs that don't appear in
+/// `entries` (cross-winmd TypeRefs) pass through unchecked — the
+/// sidecar's cross-namespace import mechanism carries them.
+///
+/// Recursion uses `memo` to break cycles (a self-referential
+/// struct would otherwise loop forever); cycles default to `yes`
+/// to avoid false negatives on graphs whose in-progress node
+/// happens to be the one we're asking about.
+fn canRepresentField(
+    ty: winmd.Ty,
+    file: *const winmd.File,
+    entries: *const TypeEntryMap,
+    memo: *EmitMemo,
+    arena: std.mem.Allocator,
+    arch: Arch,
+) bool {
+    return switch (ty) {
+        .void,
+        .bool,
+        .char,
+        .i8,
+        .u8,
+        .i16,
+        .u16,
+        .i32,
+        .u32,
+        .i64,
+        .u64,
+        .f32,
+        .f64,
+        .isize,
+        .usize,
+        .string,
+        => true,
+        .value_name, .class_name => |tn| blk: {
+            const key = std.fmt.allocPrint(arena, "{s}.{s}", .{ tn.namespace, tn.name }) catch
+                break :blk false;
+            const entry = entries.get(key) orelse break :blk true;
+            // Enum refs are representable via underlying-int substitution
+            // (writeZigTy does the rewrite); no need to emit the enum.
+            if (entry.kind == .enum_type) break :blk true;
+            if (entry.kind != .struct_or_union) break :blk false;
+            break :blk isRowEmittable(file, entry.row, arch, entries, memo, arena);
+        },
+        .ref_mut, .ref_const => |inner| canRepresentField(inner.*, file, entries, memo, arena, arch),
+        .ptr_mut => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch),
+        .ptr_const => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch),
+        .array_fixed => |a| canRepresentField(a.inner.*, file, entries, memo, arena, arch),
+        else => false,
+    };
+}
+
+/// Memoized DFS: is this TypeDef row emittable into a sidecar?
+/// Answer is `yes` iff every non-static instance field has a
+/// representable type and every nested TypeDef is itself
+/// emittable. Cycles return `yes` tentatively to support types
+/// that (indirectly) point at themselves.
+fn isRowEmittable(
+    file: *const winmd.File,
+    row: u32,
+    arch: Arch,
+    entries: *const TypeEntryMap,
+    memo: *EmitMemo,
+    arena: std.mem.Allocator,
+) bool {
+    if (memo.get(row)) |s| switch (s) {
+        .yes => return true,
+        .no => return false,
+        .in_progress => return true, // cycle: assume yes to avoid false-negative
+        .unknown => {},
+    };
+    memo.put(arena, row, .in_progress) catch return false;
+
+    if (!supportsArch(file, .type_def, row, arch)) {
+        memo.put(arena, row, .no) catch {};
+        return false;
+    }
+
     const FIELD_ATTR_STATIC: u32 = 0x10;
     const field_list = file.list(.type_def, row, 4, .field);
     var f: u32 = field_list.start;
     while (f < field_list.end) : (f += 1) {
         const field_flags = file.cell(.field, f, 0);
         if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
-        const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch return false;
-        if (!canRepresent(ty)) return false;
+        const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch {
+            memo.put(arena, row, .no) catch {};
+            return false;
+        };
+        if (!canRepresentField(ty, file, entries, memo, arena, arch)) {
+            memo.put(arena, row, .no) catch {};
+            return false;
+        }
     }
+
     const nc_total = file.rowCount(.nested_class);
     var i: u32 = 0;
     while (i < nc_total) : (i += 1) {
@@ -1838,9 +2030,25 @@ fn typeDefRepresentable(file: *const winmd.File, arena: std.mem.Allocator, row: 
         if (nested_typedef == 0) continue;
         const child_row = nested_typedef - 1;
         if (!supportsArch(file, .type_def, child_row, arch)) continue;
-        if (!typeDefRepresentable(file, arena, child_row, arch)) return false;
+        if (!isRowEmittable(file, child_row, arch, entries, memo, arena)) {
+            memo.put(arena, row, .no) catch {};
+            return false;
+        }
     }
+
+    memo.put(arena, row, .yes) catch {};
     return true;
+}
+
+fn typeDefRepresentable(
+    file: *const winmd.File,
+    arena: std.mem.Allocator,
+    row: u32,
+    arch: Arch,
+    entries: *const TypeEntryMap,
+    memo: *EmitMemo,
+) bool {
+    return isRowEmittable(file, row, arch, entries, memo, arena);
 }
 
 fn emitOneStruct(
@@ -1852,6 +2060,8 @@ fn emitOneStruct(
     row: u32,
     name: []const u8,
     arch: Arch,
+    entries: *const TypeEntryMap,
+    memo: *EmitMemo,
 ) !void {
     const LAYOUT_MASK: u32 = 0x18;
     const LAYOUT_EXPLICIT: u32 = 0x10;
@@ -1868,7 +2078,7 @@ fn emitOneStruct(
     // body. A nested type with an out-of-scope field type would leave a
     // dangling identifier in the parent's field list, so drop the whole
     // tree rather than emit half of it.
-    if (!typeDefRepresentable(file, arena, row, arch)) return;
+    if (!typeDefRepresentable(file, arena, row, arch, entries, memo)) return;
 
     try writer.print("pub const {s} = extern {s} {{\n", .{ name, if (is_union) "union" else "struct" });
 
@@ -1907,7 +2117,7 @@ fn emitOneStruct(
             break :blk renamed;
         } else child_name;
 
-        try emitOneStruct(writer, arena, file, namespace, cross, child_row, effective_name, arch);
+        try emitOneStruct(writer, arena, file, namespace, cross, child_row, effective_name, arch, entries, memo);
     }
 
     var f: u32 = field_list.start;
@@ -1917,7 +2127,7 @@ fn emitOneStruct(
         const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
         const field_name = file.str(.field, f, 1);
         try writer.print("    {s}: ", .{field_name});
-        _ = try writeZigTy(writer, arena, ty, namespace, cross, if (renames.count() == 0) null else &renames);
+        _ = try writeZigTy(writer, arena, ty, namespace, cross, if (renames.count() == 0) null else &renames, entries, file);
         try writer.writeAll(",\n");
     }
     try writer.writeAll("};\n");
