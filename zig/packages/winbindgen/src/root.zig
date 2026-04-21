@@ -499,6 +499,52 @@ pub fn emitDef(writer: *std.Io.Writer, d: DllImports) !void {
     }
 }
 
+/// Emit a comptime-ready `StaticStringMap(u32)` that maps every free
+/// function name in `namespace` to its `MethodDef` row number.
+///
+/// Phase 4's comptime `project()` helper needs O(1) name → row lookups
+/// so it can materialize `extern fn`s without scanning the full
+/// `MethodDef` table inside the comptime VM. The 23 MB
+/// `Windows.Win32.winmd` has hundreds of thousands of MethodDef rows,
+/// and a naive linear comptime scan over it does not finish in
+/// reasonable time. By pre-computing this index at `zig build
+/// bindings` time and committing it to the tree, `project()` can
+/// `@import` it and look up rows in constant time.
+///
+/// The emitted fragment is intentionally a standalone `pub const` so
+/// it can be written verbatim into a per-namespace `.zig` file or
+/// combined with other emitters in the same output. Arch-gated and
+/// DLL-less methods are filtered the same way `emitFreeFunctions`
+/// filters them — the index only surfaces functions whose Zig
+/// declaration `project()` would actually be able to materialize.
+pub fn emitMethodIndex(
+    writer: *std.Io.Writer,
+    file: *const winmd.File,
+    namespace: []const u8,
+    arch: Arch,
+) !void {
+    try writer.writeAll(
+        \\pub const method_def_by_name = std.static_string_map.StaticStringMap(u32).initComptime(.{
+        \\
+    );
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+        if (!std.mem.eql(u8, file.str(.type_def, row, 1), "Apis")) continue;
+
+        const methods = file.list(.type_def, row, 5, .method_def);
+        var m: u32 = methods.start;
+        while (m < methods.end) : (m += 1) {
+            if (file.findImplMap(m) == null) continue;
+            if (!supportsArch(file, .method_def, m, arch)) continue;
+            const method_name = file.str(.method_def, m, 3);
+            try writer.print("    .{{ \"{s}\", {d} }},\n", .{ method_name, m });
+        }
+    }
+    try writer.writeAll("});\n");
+}
+
 /// Return true if `(namespace, name)` is already surfaced by the
 /// `emitNamespace` prelude as an alias into `win-core`. Such types
 /// must not be re-emitted from metadata or Zig would see two
@@ -2272,6 +2318,30 @@ test "emitFreeFunctions uses @extern for renamed P/Invoke (RtlGenRandom)" {
     try std.testing.expect(std.mem.indexOf(u8, out, "= @extern(*const fn ") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, ".name = \"SystemFunction036\"") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, ".library_name = \"ADVAPI32\"") != null);
+}
+
+test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitMethodIndex(&buf.writer, &file, "Windows.Win32.Foundation", .x64);
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.startsWith(
+        u8,
+        out,
+        "pub const method_def_by_name = std.static_string_map.StaticStringMap(u32).initComptime(.{\n",
+    ));
+    try std.testing.expect(std.mem.endsWith(u8, out, "});\n"));
+
+    // GetLastError lives in Windows.Win32.Foundation.Apis and is
+    // exported from KERNEL32. The exact row number depends on the
+    // metadata snapshot, so the test only asserts the entry exists in
+    // the emitted "{ name, row }" form.
+    try std.testing.expect(std.mem.indexOf(u8, out, "\"GetLastError\"") != null);
 }
 
 test "emitConstants emits primitive Win32 constants" {
