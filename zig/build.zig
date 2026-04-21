@@ -223,6 +223,7 @@ pub fn build(b: *std.Build) void {
         "Windows.Win32.System.Console",
         "Windows.Win32.UI.WindowsAndMessaging",
         "Windows.Win32.Storage.FileSystem",
+        "Windows.Win32.System.Memory",
     };
     for (index_canaries) |ns| {
         const idx_run = b.addRunArtifact(winbindgen_exe);
@@ -820,6 +821,7 @@ pub fn build(b: *std.Build) void {
             .extra_libs = &.{"user32"},
         },
         .{ .name = "file-write", .root = "samples/file_write/main.zig" },
+        .{ .name = "heap-alloc", .root = "samples/heap_alloc/main.zig" },
     };
 
     for (samples) |s| {

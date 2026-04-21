@@ -50,6 +50,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.UI.WindowsAndMessaging.index.zig");
     pub const @"Windows.Win32.Storage.FileSystem" =
         @import("generated/Windows.Win32.Storage.FileSystem.index.zig");
+    pub const @"Windows.Win32.System.Memory" =
+        @import("generated/Windows.Win32.System.Memory.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -75,6 +77,10 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "FILE_SHARE_MODE")) return u32;
     if (std.mem.eql(u8, name, "FILE_CREATION_DISPOSITION")) return u32;
     if (std.mem.eql(u8, name, "FILE_FLAGS_AND_ATTRIBUTES")) return u32;
+    if (std.mem.eql(u8, name, "HEAP_FLAGS")) return u32;
+    if (std.mem.eql(u8, name, "VIRTUAL_ALLOCATION_TYPE")) return u32;
+    if (std.mem.eql(u8, name, "VIRTUAL_FREE_TYPE")) return u32;
+    if (std.mem.eql(u8, name, "PAGE_PROTECTION_FLAGS")) return u32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
