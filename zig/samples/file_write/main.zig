@@ -20,14 +20,13 @@ const win = win_sys.project(.{
     .@"Windows.Win32.Storage.FileSystem" = .{ "CreateFileW", "WriteFile", "DeleteFileW" },
 });
 
-// Well-known Win32 constants. These live in the generated index
-// files as TypeRef members but project() doesn't surface enum
-// values yet; hard-code them until the alias path pulls values too.
-const GENERIC_WRITE: u32 = 0x40000000;
-const FILE_SHARE_NONE: u32 = 0;
-const CREATE_ALWAYS: u32 = 2;
-const FILE_ATTRIBUTE_NORMAL: u32 = 0x80;
-const INVALID_HANDLE_VALUE: isize = -1;
+// Well-known Win32 constants now live alongside the method records
+// in the generated index files; the full index is exposed at
+// `win_sys.index.@"..."` so samples can reach them without an
+// extra alias step in `project()`. Untyped `comptime_int` values
+// coerce to whatever integer width the call site needs.
+const fs = win_sys.index.@"Windows.Win32.Storage.FileSystem";
+const fnd = win_sys.index.@"Windows.Win32.Foundation";
 
 pub fn main() !void {
     const path_literal = std.unicode.utf8ToUtf16LeStringLiteral("zig-file-write-sample.tmp");
@@ -41,14 +40,14 @@ pub fn main() !void {
     // --- CreateFileW ---------------------------------------------------
     const handle = win.CreateFileW(
         path_w,
-        GENERIC_WRITE,
-        FILE_SHARE_NONE,
+        fnd.GENERIC_WRITE,
+        fs.FILE_SHARE_NONE,
         null,
-        CREATE_ALWAYS,
-        FILE_ATTRIBUTE_NORMAL,
+        fs.CREATE_ALWAYS,
+        fs.FILE_ATTRIBUTE_NORMAL,
         0,
     );
-    if (handle == INVALID_HANDLE_VALUE) {
+    if (handle == fnd.INVALID_HANDLE_VALUE) {
         const err = win.GetLastError();
         std.debug.print("CreateFileW failed: GetLastError = {d}\n", .{err});
         return error.CreateFileFailed;

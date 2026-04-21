@@ -33,7 +33,11 @@
 const std = @import("std");
 const sig_mod = @import("sig.zig");
 
-const index = struct {
+/// Generated per-namespace index modules. Exposed publicly so
+/// samples and downstream code can reference primitive integer
+/// constants emitted alongside the method table — e.g.
+/// `win_sys.index.@"Windows.Win32.Storage.FileSystem".GENERIC_WRITE`.
+pub const index = struct {
     pub const @"Windows.Win32.Foundation" =
         @import("generated/Windows.Win32.Foundation.index.zig");
     pub const @"Windows.Win32.System.LibraryLoader" =

@@ -619,6 +619,102 @@ pub fn emitMethodIndex(
         \\}
         \\
     );
+
+    // Third pass: emit primitive integer LITERAL constants as
+    // untyped `pub const NAME = VALUE;` declarations. Without a type
+    // annotation these are `comptime_int` and coerce implicitly to
+    // whatever integer type a callee expects — so samples can write
+    // `win.CreateFileW(path, idx.GENERIC_WRITE, ...)` without casts.
+    //
+    // Only ET_I1..ET_U8 primitive literals are emitted here; typed
+    // constants (HRESULTs, wrapped enums, strings) stay out of the
+    // index and live in the full namespace module. That keeps the
+    // index file self-contained (no cross-namespace imports needed).
+    const FIELD_ATTR_STATIC: u32 = 0x10;
+    const FIELD_ATTR_LITERAL: u32 = 0x40;
+
+    try writer.writeAll("\n");
+    // Track emitted constant names to avoid duplicate-symbol errors
+    // when an enum member shadows another (e.g. two flag enums both
+    // defining `NONE = 0`). First-wins — the winmd row order is
+    // stable so this is deterministic across runs.
+    var seen: std.StringHashMapUnmanaged(void) = .empty;
+    defer seen.deinit(gpa);
+
+    row = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+
+        // Two flavors of flat integer constants surface here:
+        //  (a) `Apis` static-literal fields — free-standing consts.
+        //  (b) `System.Enum` / `System.ValueType`-extending TypeDefs —
+        //      each static-literal field is also emitted flat, so
+        //      samples can write `idx.GENERIC_WRITE` without needing
+        //      the wrapping type imported. Win32 uses these as C
+        //      macros anyway (`#define GENERIC_WRITE 0x40000000`),
+        //      not as strongly typed enum members.
+        const is_apis = std.mem.eql(u8, file.str(.type_def, row, 1), "Apis");
+        if (!is_apis) {
+            const extends_tok = file.cell(.type_def, row, 3);
+            if (extends_tok == 0) continue;
+            const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+            if (!std.mem.eql(u8, base.namespace, "System")) continue;
+            if (!std.mem.eql(u8, base.name, "Enum") and !std.mem.eql(u8, base.name, "ValueType")) continue;
+        }
+
+        const fields = file.list(.type_def, row, 4, .field);
+        var f: u32 = fields.start;
+        while (f < fields.end) : (f += 1) {
+            const attr = file.cell(.field, f, 0);
+            if ((attr & FIELD_ATTR_STATIC) == 0) continue;
+            if ((attr & FIELD_ATTR_LITERAL) == 0) continue;
+
+            // Use the Constant table's Type column — not the field
+            // signature — to decide whether to emit. Win32 "typed
+            // constant" fields have signatures like
+            // `ValueType FILE_CREATION_DISPOSITION`, but their
+            // Constant row stores a primitive value (U4 = 2 for
+            // CREATE_ALWAYS). Filtering on the signature would
+            // miss them.
+            const parent_tok = (@as(u32, f + 1) << 2) | 0; // HasConstant tag 0 = Field
+            const range = file.equalRange(.constant, 1, parent_tok);
+            if (range.start == range.end) continue;
+
+            const type_code: u8 = @intCast(file.cell(.constant, range.start, 0) & 0xFF);
+            // ECMA-335 §23.1.16 ElementType primitives we accept.
+            const is_primitive_int = switch (type_code) {
+                0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b => true,
+                else => false,
+            };
+            if (!is_primitive_int) continue;
+
+            const value_blob = file.blob(.constant, range.start, 2);
+            const raw = readConstantValue(type_code, value_blob) orelse continue;
+            const name = file.str(.field, f, 1);
+            const gop = try seen.getOrPut(gpa, name);
+            if (gop.found_existing) continue;
+
+            // Sign-extend for the signed primitive widths so the
+            // emitted literal matches what C headers and Rust bindings
+            // produce for, e.g., `STATUS_*` NTSTATUS constants.
+            const is_signed = switch (type_code) {
+                0x04, 0x06, 0x08, 0x0a => true,
+                else => false,
+            };
+            if (is_signed) {
+                const signed: i64 = switch (type_code) {
+                    0x04 => @as(i64, @as(i8, @bitCast(@as(u8, @truncate(raw))))),
+                    0x06 => @as(i64, @as(i16, @bitCast(@as(u16, @truncate(raw))))),
+                    0x08 => @as(i64, @as(i32, @bitCast(@as(u32, @truncate(raw))))),
+                    0x0a => @bitCast(raw),
+                    else => unreachable,
+                };
+                try writer.print("pub const {s} = {d};\n", .{ name, signed });
+            } else {
+                try writer.print("pub const {s} = {d};\n", .{ name, raw });
+            }
+        }
+    }
 }
 
 /// Walk a MethodDef signature blob and record every TypeDefOrRef
@@ -2809,5 +2905,3 @@ test "emitDef writes LIBRARY/EXPORTS with ordinal rewrite" {
     ;
     try std.testing.expectEqualStrings(expected, buf.written());
 }
-
-
