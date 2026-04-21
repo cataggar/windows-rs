@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Check filter files match Rust side
         run: |
-          diff -ruN --include='*.txt' crates/tools/bindings/src/ zig/tools/bindings/src/ \
+          diff -ruN -x '*.rs' crates/tools/bindings/src/ zig/tools/bindings/src/ \
             || { echo '::error::zig/tools/bindings/src/*.txt is out of sync with crates/tools/bindings/src/*.txt'; exit 1; }
 
   test:
