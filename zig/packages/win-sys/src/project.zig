@@ -52,6 +52,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.Storage.FileSystem.index.zig");
     pub const @"Windows.Win32.System.Memory" =
         @import("generated/Windows.Win32.System.Memory.index.zig");
+    pub const @"Windows.Win32.System.SystemInformation" =
+        @import("generated/Windows.Win32.System.SystemInformation.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
