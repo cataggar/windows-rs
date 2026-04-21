@@ -150,17 +150,27 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     return null;
 }
 
+/// Generated struct sidecars. Each `<ns>.structs.zig` is
+/// produced by `winbindgen --structs <ns>` and contains every
+/// `extern struct`/`extern union` in that namespace that the
+/// generator can fully represent (no generics, no SZARRAY, no
+/// unresolved nested types).
+const generated_structs = struct {
+    pub const @"Windows.Win32.Foundation" =
+        @import("generated/Windows.Win32.Foundation.structs.zig");
+};
+
 /// Concrete struct projections. Public so callers can name the
 /// types in their own declarations (e.g. `var fd: win_sys.structs
 /// .WIN32_FIND_DATAW = undefined;`). Field names mirror the Win32
 /// headers verbatim for grep-ability.
+///
+/// Types migrated onto `generated_structs` are re-exported here
+/// so downstream callers keep working against `win_sys.structs.X`
+/// while the source of truth moves into winbindgen output.
 pub const structs = struct {
-    /// §winbase.h. 64-bit FILETIME split as two u32s because the
-    /// struct predates native 64-bit alignment on x86.
-    pub const FILETIME = extern struct {
-        dwLowDateTime: u32,
-        dwHighDateTime: u32,
-    };
+    /// §winbase.h. Projected from `Windows.Win32.Foundation.structs.zig`.
+    pub const FILETIME = generated_structs.@"Windows.Win32.Foundation".FILETIME;
 
     /// §minwinbase.h. Out-param of FindFirstFileW / FindNextFileW.
     /// cFileName has room for MAX_PATH (260) wide chars including
