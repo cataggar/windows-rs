@@ -60,3 +60,21 @@ jobs:
       - name: Build and test
         working-directory: zig
         run: zig build test --summary all
+
+  gen:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - name: Regenerate canary bindings
+        working-directory: zig
+        run: zig build bindings
+      - name: Check diff
+        shell: bash
+        run: |
+          git add -N .
+          git diff --exit-code || { echo '::error::`zig build bindings` produced changes. Run it locally and commit the updated files under zig/packages/win-sys/src/generated/.'; exit 1; }

@@ -124,7 +124,6 @@ pub fn build(b: *std.Build) void {
         "bindings",
         "Regenerate win-sys and win sources from the vendored .winmd files",
     );
-    _ = bindings_step; // will depend on winbindgen artifact once Phase 3 lands
 
     // ------------------------------------------------------------------
     // `winbindgen` CLI executable — drives `emitNamespace` against the
@@ -155,6 +154,27 @@ pub fn build(b: *std.Build) void {
         .root_module = winbindgen_main_mod,
     });
     b.installArtifact(winbindgen_exe);
+
+    // Canary namespaces whose generated output is committed to the tree
+    // so a CI `gen` job can diff-check the generator against its golden.
+    // Kept intentionally tiny — the full bundle would commit hundreds of
+    // megabytes. Grow as generation stabilizes.
+    const gen_canaries = [_][]const u8{
+        "Windows.Wdk.Foundation",
+        "Windows.Wdk.System.Memory",
+    };
+    const gen_update = b.addUpdateSourceFiles();
+    for (gen_canaries) |ns| {
+        const gen_run = b.addRunArtifact(winbindgen_exe);
+        gen_run.addArg("--arch=x64");
+        gen_run.addArg(ns);
+        const gen_source = gen_run.captureStdOut(.{});
+        gen_update.addCopyFileToSource(
+            gen_source,
+            b.fmt("packages/win-sys/src/generated/{s}.zig", .{ns}),
+        );
+    }
+    bindings_step.dependOn(&gen_update.step);
 
     const run_winbindgen = b.addRunArtifact(winbindgen_exe);
     if (b.args) |user_args| run_winbindgen.addArgs(user_args);
