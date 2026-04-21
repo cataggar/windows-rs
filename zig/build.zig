@@ -748,4 +748,52 @@ pub fn build(b: *std.Build) void {
         // Compile only — do not run (foreign binary when ca != host).
         test_step.dependOn(&cross_obj.step);
     }
+
+    // ------------------------------------------------------------------
+    // `samples` step — Phase 6 end-to-end demos that exercise the
+    // comptime `project()` helper. Each sample is a tiny standalone
+    // executable under `samples/<name>/main.zig` importing `win-sys`.
+    //
+    // `zig build samples` installs every sample into `zig-out/bin/`.
+    // `zig build run-<name>` builds and runs one sample (native hosts
+    // only; cross-built samples are installed but not executed).
+    // ------------------------------------------------------------------
+
+    const samples_step = b.step("samples", "Build all Phase 6 sample executables");
+
+    const Sample = struct { name: []const u8, root: []const u8 };
+    const samples = [_]Sample{
+        .{ .name = "last-error", .root = "samples/last_error/main.zig" },
+    };
+
+    for (samples) |s| {
+        const sample_mod = b.createModule(.{
+            .root_source_file = b.path(s.root),
+            .target = target,
+            .optimize = optimize,
+        });
+        sample_mod.addImport("win-sys", win_sys_mod);
+        // Every current sample needs kernel32 (last-error). Keeping the
+        // link here rather than in `win-sys` mirrors what a downstream
+        // consumer would do: pay only for the libs they use. Zig ships
+        // MinGW kernel32 import lib for cross targets.
+        if (target.result.os.tag == .windows) {
+            sample_mod.linkSystemLibrary("kernel32", .{});
+        }
+
+        const sample_exe = b.addExecutable(.{
+            .name = s.name,
+            .root_module = sample_mod,
+        });
+        const install_sample = b.addInstallArtifact(sample_exe, .{});
+        samples_step.dependOn(&install_sample.step);
+
+        const run_sample = b.addRunArtifact(sample_exe);
+        run_sample.step.dependOn(&install_sample.step);
+        const sample_run_step = b.step(
+            b.fmt("run-{s}", .{s.name}),
+            b.fmt("Build and run the `{s}` sample", .{s.name}),
+        );
+        sample_run_step.dependOn(&run_sample.step);
+    }
 }
