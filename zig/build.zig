@@ -767,6 +767,7 @@ pub fn build(b: *std.Build) void {
     const samples = [_]Sample{
         .{ .name = "last-error", .root = "samples/last_error/main.zig" },
         .{ .name = "load-library", .root = "samples/load_library/main.zig" },
+        .{ .name = "threading", .root = "samples/threading/main.zig" },
     };
 
     for (samples) |s| {

@@ -57,6 +57,7 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "DUPLICATE_HANDLE_OPTIONS")) return u32;
     if (std.mem.eql(u8, name, "HANDLE_FLAGS")) return u32;
     if (std.mem.eql(u8, name, "LOAD_LIBRARY_FLAGS")) return u32;
+    if (std.mem.eql(u8, name, "WAIT_EVENT")) return u32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
     if (std.mem.eql(u8, name, "HGLOBAL")) return isize;
