@@ -2230,3 +2230,32 @@ test "comptime: parse Windows.Win32.winmd and locate GetLastError" {
     // try std.testing.expect(found);
     return error.SkipZigTest;
 }
+
+test "comptime: parse Windows.Win32.winmd with O(1) direct row access" {
+    // Phase 4 option (c) viability check. Unlike the skipped test
+    // above, this does NOT iterate — it parses once (header + table
+    // streams only) and reads a single precomputed MethodDef row.
+    //
+    // Finding: even `parse()` without iteration takes ~13 minutes at
+    // comptime on the 23 MB Win32 winmd with
+    // `@setEvalBranchQuota(10_000_000)`. The table-stream decode
+    // itself is the bottleneck (indirections + coded-index arithmetic
+    // across hundreds of thousands of rows).
+    //
+    // Conclusion: option (c) must bake *all* per-method data
+    // (library, import name, signature bytes) directly into the
+    // generated index so `project()` never needs to parse winmd at
+    // comptime. The index is extended in a follow-up slice.
+    //
+    // Kept as SkipZigTest to preserve the measurement without
+    // blocking CI on a 13-minute test.
+    //
+    // @setEvalBranchQuota(10_000_000);
+    // const bytes = @embedFile("Windows.Win32.winmd");
+    // const f = comptime parse(bytes) catch unreachable;
+    // const rows = comptime f.rowCount(.method_def);
+    // try std.testing.expect(rows > 2323);
+    // const name = comptime f.str(.method_def, 2323, 3);
+    // try std.testing.expect(name.len > 0);
+    return error.SkipZigTest;
+}
