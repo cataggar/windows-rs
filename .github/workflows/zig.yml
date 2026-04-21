@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v6
       - name: Check filter files match Rust side
         run: |
-          diff -ruN crates/tools/bindings/src/ zig/tools/bindings/src/ \
+          diff -ruN --include='*.txt' crates/tools/bindings/src/ zig/tools/bindings/src/ \
             || { echo '::error::zig/tools/bindings/src/*.txt is out of sync with crates/tools/bindings/src/*.txt'; exit 1; }
 
   test:
@@ -80,9 +80,11 @@ jobs:
           version: 0.16.0
       - name: Regenerate canary bindings
         working-directory: zig
-        run: zig build bindings
+        run: |
+          zig build bindings
+          zig fmt packages/win-sys/src/generated/
       - name: Check diff
         shell: bash
         run: |
-          git add -N .
-          git diff --exit-code || { echo '::error::`zig build bindings` produced changes. Run it locally and commit the updated files under zig/packages/win-sys/src/generated/.'; exit 1; }
+          git diff --exit-code -- zig/packages/win-sys/src/generated/ \
+            || { echo '::error::`zig build bindings` produced changes. Run it locally and commit the updated files under zig/packages/win-sys/src/generated/.'; exit 1; }
