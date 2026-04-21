@@ -2164,10 +2164,12 @@ test "comptime: parse Windows.winmd and locate Point" {
     // against `@embedFile`'d metadata. This is a prerequisite for
     // `project(.{ .filter = ... })` — without it, no comptime projection.
     //
-    // We use the small `Windows.winmd` (WinRT) already @embedFile'd by the
-    // runtime test above, not the multi-megabyte Win32 metadata, to keep
-    // the eval branch quota bounded. A separate benchmark will explore
-    // the real upper limit; here we only prove the mechanism works.
+    // Uses the 7 MB WinRT `Windows.winmd`, which compiles cleanly in a
+    // few seconds with a generous eval branch quota. The ~23 MB Win32
+    // winmd was tested separately and found to take >20 minutes for a
+    // single naive scan — see the skipped benchmark below. Phase 4
+    // will need chunked / cached / pre-indexed metadata before
+    // `project()` can target the full Win32 surface.
     @setEvalBranchQuota(10_000_000);
     const bytes = @embedFile("Windows.winmd");
     const f = comptime parse(bytes) catch unreachable;
@@ -2198,4 +2200,33 @@ test "comptime: parse Windows.winmd and locate Point" {
     try std.testing.expectEqual(@as(u32, 2), fields.len());
     try std.testing.expectEqualStrings("X", comptime f.str(.field, fields.start, 1));
     try std.testing.expectEqualStrings("Y", comptime f.str(.field, fields.start + 1, 1));
+}
+
+test "comptime: parse Windows.Win32.winmd and locate GetLastError" {
+    // Benchmark the worst-case metadata (23 MB) at comptime. Finding:
+    // a naive linear scan over MethodDef at comptime takes >20 minutes
+    // on a fast dev box and is not viable as-is. Before enabling this
+    // at the default `project()` path Phase 4 needs either:
+    //   a) a cached parsed `File` shared across `project()` calls,
+    //   b) per-namespace chunked @embedFile slices, or
+    //   c) a prebuilt comptime-friendly symbol index baked into the
+    //      winmd package at generate time.
+    //
+    // Kept as SkipZigTest so the regression is visible without blocking
+    // day-to-day builds. Uncomment the body and return branch to run.
+    //
+    // @setEvalBranchQuota(1_000_000_000);
+    // const bytes = @embedFile("Windows.Win32.winmd");
+    // const f = comptime parse(bytes) catch unreachable;
+    // const found: bool = comptime blk: {
+    //     const rows = f.rowCount(.method_def);
+    //     var row: u32 = 0;
+    //     while (row < rows) : (row += 1) {
+    //         const name = f.str(.method_def, row, 3);
+    //         if (std.mem.eql(u8, name, "GetLastError")) break :blk true;
+    //     }
+    //     break :blk false;
+    // };
+    // try std.testing.expect(found);
+    return error.SkipZigTest;
 }
