@@ -88,3 +88,30 @@ jobs:
         run: |
           git diff --exit-code -- zig/packages/win-sys/src/generated/ \
             || { echo '::error::`zig build bindings` produced changes. Run it locally and commit the updated files under zig/packages/win-sys/src/generated/.'; exit 1; }
+
+  samples:
+    runs-on: windows-2025
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install Zig
+        uses: mlugg/setup-zig@v2
+        with:
+          version: 0.16.0
+      - name: Build all samples
+        working-directory: zig
+        run: zig build samples
+      - name: Run every sample
+        working-directory: zig
+        shell: pwsh
+        run: |
+          $samples = @('last-error', 'load-library', 'threading', 'event-roundtrip')
+          foreach ($s in $samples) {
+            Write-Host "::group::run-$s"
+            zig build "run-$s"
+            if ($LASTEXITCODE -ne 0) {
+              Write-Host "::error::sample $s exited with code $LASTEXITCODE"
+              exit $LASTEXITCODE
+            }
+            Write-Host "::endgroup::"
+          }
