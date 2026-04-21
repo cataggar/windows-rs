@@ -184,6 +184,7 @@ pub fn build(b: *std.Build) void {
     const index_canaries = [_][]const u8{
         "Windows.Win32.Foundation",
         "Windows.Win32.System.LibraryLoader",
+        "Windows.Win32.System.Threading",
     };
     for (index_canaries) |ns| {
         const idx_run = b.addRunArtifact(winbindgen_exe);

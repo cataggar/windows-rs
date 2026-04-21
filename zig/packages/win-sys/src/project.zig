@@ -38,6 +38,8 @@ const index = struct {
         @import("generated/Windows.Win32.Foundation.index.zig");
     pub const @"Windows.Win32.System.LibraryLoader" =
         @import("generated/Windows.Win32.System.LibraryLoader.index.zig");
+    pub const @"Windows.Win32.System.Threading" =
+        @import("generated/Windows.Win32.System.Threading.index.zig");
 };
 
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
@@ -282,5 +284,27 @@ test "project: LibraryLoader { GetModuleHandleW, GetProcAddress, LoadLibraryW } 
     try std.testing.expectEqual(
         @as(type, *const fn (?[*:0]u16) callconv(.winapi) isize),
         LoadLibraryWT,
+    );
+}
+
+test "project: Threading { GetCurrentThreadId, Sleep } type-checks" {
+    // Windows.Win32.System.Threading is the third namespace wired
+    // through the comptime projection pipeline. These two APIs
+    // exercise the simplest signature shapes:
+    //   - GetCurrentThreadId(): u32            → 0 params, primitive return
+    //   - Sleep(u32): void                     → 1 u32 param, void return
+    // No TypeRefs involved, so this validates the primitive path
+    // for a fresh namespace without depending on the alias table.
+    const win = project(.{
+        .@"Windows.Win32.System.Threading" = .{ "GetCurrentThreadId", "Sleep" },
+    });
+
+    try std.testing.expectEqual(
+        @as(type, *const fn () callconv(.winapi) u32),
+        @TypeOf(win.GetCurrentThreadId),
+    );
+    try std.testing.expectEqual(
+        @as(type, *const fn (u32) callconv(.winapi) void),
+        @TypeOf(win.Sleep),
     );
 }

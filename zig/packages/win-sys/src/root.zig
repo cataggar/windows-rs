@@ -34,6 +34,8 @@ pub const index = struct {
         @import("generated/Windows.Win32.Foundation.index.zig");
     pub const @"Windows.Win32.System.LibraryLoader" =
         @import("generated/Windows.Win32.System.LibraryLoader.index.zig");
+    pub const @"Windows.Win32.System.Threading" =
+        @import("generated/Windows.Win32.System.Threading.index.zig");
 };
 
 test "prebuilt index: Windows.Win32.Foundation has SysAllocString" {
