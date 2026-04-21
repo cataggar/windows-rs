@@ -64,6 +64,8 @@ fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "WAIT_EVENT")) return u32;
     if (std.mem.eql(u8, name, "STD_HANDLE")) return u32;
     if (std.mem.eql(u8, name, "CONSOLE_MODE")) return u32;
+    if (std.mem.eql(u8, name, "MESSAGEBOX_STYLE")) return u32;
+    if (std.mem.eql(u8, name, "MESSAGEBOX_RESULT")) return i32;
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
@@ -368,5 +370,25 @@ test "project: WindowsAndMessaging { GetDesktopWindow, IsWindow } type-checks" {
     try std.testing.expectEqual(
         @as(type, *const fn (isize) callconv(.winapi) i32),
         @TypeOf(win.IsWindow),
+    );
+}
+
+test "project: WindowsAndMessaging { MessageBoxW } type-checks" {
+    // MessageBoxW(hwnd: HWND, text: PWSTR, caption: PWSTR, style: MESSAGEBOX_STYLE)
+    //   -> MESSAGEBOX_RESULT.
+    // The generator encodes both strings as PWSTR in the signature blob
+    // (winmd collapses PCWSTR/PWSTR through the TypeRef tag); MESSAGEBOX_STYLE
+    // maps to u32 (flag enum) and MESSAGEBOX_RESULT maps to i32 (signed
+    // IDOK/IDCANCEL/... values, matching the windows-rs projection).
+    const win = project(.{
+        .@"Windows.Win32.UI.WindowsAndMessaging" = .{"MessageBoxW"},
+    });
+
+    try std.testing.expectEqual(
+        @as(
+            type,
+            *const fn (isize, ?[*:0]u16, ?[*:0]u16, u32) callconv(.winapi) i32,
+        ),
+        @TypeOf(win.MessageBoxW),
     );
 }

@@ -803,12 +803,21 @@ pub fn build(b: *std.Build) void {
 
     const samples_step = b.step("samples", "Build all Phase 6 sample executables");
 
-    const Sample = struct { name: []const u8, root: []const u8 };
+    const Sample = struct {
+        name: []const u8,
+        root: []const u8,
+        extra_libs: []const []const u8 = &.{},
+    };
     const samples = [_]Sample{
         .{ .name = "last-error", .root = "samples/last_error/main.zig" },
         .{ .name = "load-library", .root = "samples/load_library/main.zig" },
         .{ .name = "threading", .root = "samples/threading/main.zig" },
         .{ .name = "event-roundtrip", .root = "samples/event_roundtrip/main.zig" },
+        .{
+            .name = "desktop-window",
+            .root = "samples/desktop_window/main.zig",
+            .extra_libs = &.{"user32"},
+        },
     };
 
     for (samples) |s| {
@@ -824,6 +833,9 @@ pub fn build(b: *std.Build) void {
         // MinGW kernel32 import lib for cross targets.
         if (target.result.os.tag == .windows) {
             sample_mod.linkSystemLibrary("kernel32", .{});
+            for (s.extra_libs) |lib| {
+                sample_mod.linkSystemLibrary(lib, .{});
+            }
         }
 
         const sample_exe = b.addExecutable(.{
