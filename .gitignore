@@ -5,3 +5,8 @@
 *.winmd
 obj
 bin
+
+# Scratch files used by the agent workflow (e.g. multi-line commit
+# messages fed via `git commit -F`). Never meant to be committed.
+*.tmp
+.commit-msg*
