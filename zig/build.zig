@@ -1071,6 +1071,10 @@ pub fn build(b: *std.Build) void {
         "Windows.Wdk.System.SystemInformation",
         "Windows.Wdk.Storage.FileSystem",
         "Windows.Wdk.Storage.FileSystem.Minifilters",
+        // WinRT — first v0.2 foothold. Adds the `Uri` runtime class and
+        // its supporting interfaces; everything else is still hand-written
+        // in `win-core` until M3/M4 land more namespaces.
+        "Windows.Foundation",
     };
 
     const bundle_wf = b.addWriteFiles();
@@ -1111,6 +1115,9 @@ pub fn build(b: *std.Build) void {
     const win_bundle_proxy_source =
         \\pub const Foundation = @import("Windows.Win32.Foundation.zig");
         \\pub const Com = @import("Windows.Win32.System.Com.zig");
+        \\pub const WinRT = struct {
+        \\    pub const Foundation = @import("Windows.Foundation.zig");
+        \\};
         \\
     ;
     _ = bundle_wf.add("win_bundle.zig", win_bundle_proxy_source);

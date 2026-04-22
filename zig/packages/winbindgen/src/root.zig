@@ -1469,8 +1469,9 @@ pub fn emitInterfaceHandles(
         try writer.print(
             \\pub const {s} = extern struct {{
             \\    vtable: *const {s}_Vtbl,
+            \\    pub const Vtbl = {s}_Vtbl;
             \\
-        , .{ name, name });
+        , .{ name, name, name });
 
         try writeInterfaceIid(writer, arena, file, row);
         try writeIUnknownWrappers(writer, name, is_winrt);
@@ -2607,7 +2608,7 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "pub const IStringable = extern struct {\n    vtable: *const IStringable_Vtbl,\n",
+        "pub const IStringable = extern struct {\n    vtable: *const IStringable_Vtbl,\n    pub const Vtbl = IStringable_Vtbl;\n",
     ) != null);
 
     // The ToString wrapper forwards to `self.vtable.ToString(self, result)`.

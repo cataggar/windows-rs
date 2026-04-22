@@ -29,3 +29,17 @@ pub const Foundation = bundle.Foundation;
 /// transitively analyze `Variant.zig`, so they compile fine. The
 /// emitter fix is tracked as a v0.2 task.
 pub const Com = bundle.Com;
+
+/// WinRT namespaces. Kept under a `WinRT` sub-struct so the classic-Win32
+/// `Foundation` (BSTR / HWND / HANDLE) doesn't collide with the WinRT
+/// `Windows.Foundation` (Uri, IReference<T>, AsyncStatus, ...).
+///
+/// Typical use:
+///
+///     const Uri = win.WinRT.Foundation.Uri;
+///     const uri = try core.activationFactory(
+///         Uri.Factory.Vtbl, &IID, &Uri.NAME_W);
+///
+/// In M4 this is expected to grow a `Uri.activate()` / `Uri.Factory`
+/// round-trip helper that hides the vtable plumbing.
+pub const WinRT = bundle.WinRT;
