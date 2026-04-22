@@ -3,14 +3,16 @@
 //!
 //! Consumes the **emitter-generated** `win.WinRT.Foundation.Uri` surface:
 //! the pre-widened UTF-16 class name (`Uri.NAME_W`), the `Factory` alias
-//! (pointing at `IUriRuntimeClassFactory`), and each interface's
-//! `Vtbl` / `IID` constants. Only the reference-counted vtable dispatch
-//! (`activationFactory`, `cast`) still routes through `win-core`, which
-//! is the correct home for generic COM plumbing.
+//! (pointing at `IUriRuntimeClassFactory`), each interface's `Vtbl` / `IID`
+//! constants, and the M2 `CreateUriFromUtf16` sugar that converts a
+//! `[]const u16` into an HSTRING internally. Only the reference-counted
+//! vtable dispatch (`activationFactory`, `cast`) still routes through
+//! `win-core`, which is the correct home for generic COM plumbing.
 //!
 //! Contrast with the earlier HSTRING canary: this version uses zero
-//! hand-written `IID_*` / `NAME_*` / `_Vtbl` constants — everything
-//! projection-side comes from the winmd.
+//! hand-written `IID_*` / `NAME_*` / `_Vtbl` constants and no explicit
+//! `Hstring.create`/`deinit` for method inputs — everything projection-side
+//! comes from the winmd.
 
 const std = @import("std");
 const win = @import("win");
@@ -39,14 +41,16 @@ pub fn main(init: std.process.Init) !void {
     );
     defer factory.deinit();
 
-    // Construct the Uri instance from a UTF-16 HSTRING.
+    // Construct the Uri instance. `CreateUriFromUtf16` is the M2
+    // sugar the emitter generates for any method with an HSTRING
+    // input — it takes a `[]const u16` slice directly and handles
+    // `Hstring.create`/`.deinit` internally, removing the boilerplate
+    // the earlier canary needed.
     const url = core.utf16Lit("https://learn.microsoft.com/windows/apps/");
-    var url_h = try Hstring.create(url);
-    defer url_h.deinit();
 
     var raw: *Uri = undefined;
     const factory_this: *const Uri.Factory = @ptrCast(@alignCast(factory.ptr));
-    try core.hresult.ok(factory_this.CreateUri(url_h.raw, &raw));
+    try core.hresult.ok(factory_this.CreateUriFromUtf16(url, &raw));
     const uri: IInspectable = .{ .ptr = @ptrCast(@alignCast(raw)) };
     defer uri.deinit();
 

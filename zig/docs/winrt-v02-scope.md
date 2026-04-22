@@ -86,44 +86,65 @@ pattern.
 
 ### M1 — Classic-COM vtable emitter
 
-- Generalise `emitInterfaceVtbls` to walk the `Extends` chain:
-  - If `Extends == Windows.Win32.System.Com.IUnknown` →
-    `base: IUnknown_Vtbl`.
-  - If `Extends == Windows.Foundation.IInspectable` →
-    `base: IInspectable_Vtbl` (unchanged).
-  - Otherwise emit `base: <Parent>_Vtbl` and pull the parent's
-    namespace into the cross-ns set.
-- Add a `sys`-flavoured aggregate (either a new `*.com.zig` sidecar
-  or a block inside the existing `*.structs.zig`) so `win-sys` callers
-  can reach classic-COM vtables without going through `win`.
-- Ship `sample_com_uri` as the canary: `CreateUri(w!("…"))` → IUri
-  handle → `GetDomain` / `GetPort`.
-- BSTR handling: hand-written helpers in `win-core` (not generated)
-  because BSTR allocation pairs with `SysAllocString` /
-  `SysFreeString` and the pattern is uniform.
+**Status: done** (checkpoints 118–125).
+
+- Generalised `emitInterfaceVtbls` to walk the `Extends` chain:
+  - `Extends == Windows.Win32.System.Com.IUnknown` → `base: IUnknown_Vtbl`.
+  - `Extends == Windows.Foundation.IInspectable` → `base: IInspectable_Vtbl`.
+  - Otherwise emit `base: <Parent>_Vtbl` and pull the parent's namespace
+    into the cross-ns set.
+- `win` package hosts classic-COM aggregates; `sample_com_uri` runs on CI
+  and exercises `CreateUri` → `IUri::GetDomain` / `GetPort`.
+- BSTR helpers live in `win-core` (`SysAllocString` / `SysFreeString`
+  pairs are uniform, so they're hand-written, not generated).
 
 ### M2 — WinRT `HSTRING` round-trip
 
-- `HSTRING` helper API in `win-core`: `fromUtf8`, `toSlice`, `deinit`.
-  Needs `WindowsCreateString` / `WindowsGetStringRawBuffer` /
-  `WindowsDeleteString` from `api-ms-win-core-winrt-string`.
-- Method wrapper emitter: when a WinRT method takes `HSTRING`, the
-  generated handle method accepts `[]const u8` and handles the
-  create/delete lifecycle.
-- Sample: `sample_calendar_names` or similar — something that pulls
-  `string` collections off a `Windows.Globalization.Calendar` and
-  prints them.
+**Status: partial — raw HSTRING helpers done, method-wrapper
+auto-conversion next.**
+
+Done:
+- `win-core` has `Hstring.create` / `Hstring.fromRaw` / `Hstring.slice`
+  / `Hstring.deinit` wrapping `WindowsCreateString` /
+  `WindowsGetStringRawBuffer` / `WindowsDeleteString`.
+- `sample_hstring_roundtrip` canary exercises the round-trip.
+- Emitter types WinRT method `HSTRING` params correctly (they compile
+  and link through `winrt_uri`).
+
+Pending — method-wrapper sugar:
+- When a WinRT method takes `HSTRING`, the generated handle method
+  should *also* accept `[]const u8` (or `[]const u16`) and manage the
+  HSTRING lifetime internally. Today `winrt_uri` has to write
+  `var url_h = try Hstring.create(url); defer url_h.deinit();` before
+  every call; the goal is `factory_this.CreateUri("https://...", &raw)`.
+- Symmetric convenience on the return side: when a WinRT method returns
+  `HSTRING` via out-parameter (`IStringable.ToString(result: *HSTRING)`),
+  expose an owned-`Hstring` variant the caller can `defer deinit`.
+- Sample update: once both land, `winrt_uri` drops the explicit HSTRING
+  dance entirely (~8 lines disappear).
 
 ### M3 — Activation factories
 
-- `win-core` helper
-  `getActivationFactory(comptime class_name: []const u8, comptime Iface: type) !*Iface`
-  wrapping `RoGetActivationFactory` + an `HSTRING` for the class name.
-- Emitter: for each `RuntimeClass`, emit a
-  `pub fn activationFactory() !*IClassNameFactory` convenience on the
-  class's handle type, if a factory interface is attributed.
-- Sample: a WinRT `Uri.createUri` round-trip — mirrors `com_uri` but
-  via WinRT.
+**Status: done** (checkpoints 126–128).
+
+- Emitter adds `NAME`, `NAME_W`, `Factory`, and `Statics` aliases on
+  every `RuntimeClass` so callers can write `Uri.NAME_W` / `Uri.Factory`
+  / `Uri.Statics` instead of repeating attribute-derived strings.
+- Emitter adds `pub const Vtbl = <Iface>_Vtbl;` to every interface
+  handle so `Uri.Factory.Vtbl` and `IStringable.Vtbl` resolve without
+  repeating the mangled suffix.
+- `Windows.Foundation` shipped through the build-time bundle as
+  `win.WinRT.Foundation` (split namespace to avoid colliding with the
+  Win32 `Foundation` aliases).
+- `winrt_uri` sample consumes the emitted surface: zero hand-written
+  IID / class-name / vtbl constants on the projection side; only the
+  generic COM plumbing (`activationFactory`, `cast`) routes through
+  `win-core`.
+- Dead-code candidates in `win-core` (`IID_IUriRuntimeClassFactory`,
+  `IUriRuntimeClassFactory_Vtbl`, `IID_IStringable`,
+  `IStringable_Vtbl`, hand-widened `"Windows.Foundation.Uri"`) are now
+  redundant and can be removed once `win-core`'s own tests stop
+  referencing them.
 
 ### M4 — Parameterised generics
 

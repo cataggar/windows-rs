@@ -1609,6 +1609,58 @@ fn writeMethodWrapper(
         try writer.writeAll(", result");
     }
     try writer.writeAll(");\n    }\n");
+
+    // M2 sugar: if any input param is HSTRING, emit a companion
+    // `<Method>FromUtf16` wrapper that accepts `[]const u16` for those
+    // params and internally creates/deinits `win_core.Hstring` handles.
+    // Non-HSTRING params pass through unchanged. Returns `E_OUTOFMEMORY`
+    // if `Hstring.create` fails. Uses `[]const u16` (not `[]const u8`)
+    // to avoid requiring an allocator — callers feed `win_core.utf16Lit`
+    // literals or the slice from an already-created wide string.
+    var has_hstring_in = false;
+    for (sig.params) |p| {
+        if (p == .string) {
+            has_hstring_in = true;
+            break;
+        }
+    }
+    if (has_hstring_in) {
+        try writer.print("    pub fn {s}FromUtf16(self: *const {s}", .{ method_name, this_name });
+        for (sig.params, 0..) |p, i| {
+            try writer.print(", p{d}: ", .{i});
+            if (p == .string) {
+                try writer.writeAll("[]const u16");
+            } else {
+                try writeParam(writer, arena, p, current_namespace, cross);
+            }
+        }
+        if (split_return) {
+            try writer.writeAll(", result: *");
+            _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
+        }
+        try writer.writeAll(") HRESULT {\n");
+        for (sig.params, 0..) |p, i| {
+            if (p == .string) {
+                try writer.print(
+                    "        var h{d} = win_core.Hstring.create(p{d}) catch return @as(HRESULT, @bitCast(@as(u32, 0x8007000E)));\n",
+                    .{ i, i },
+                );
+                try writer.print("        defer h{d}.deinit();\n", .{i});
+            }
+        }
+        try writer.print("        return self.vtable.{s}(self", .{method_name});
+        for (sig.params, 0..) |p, i| {
+            if (p == .string) {
+                try writer.print(", h{d}.raw", .{i});
+            } else {
+                try writer.print(", p{d}", .{i});
+            }
+        }
+        if (split_return) {
+            try writer.writeAll(", result");
+        }
+        try writer.writeAll(");\n    }\n");
+    }
 }
 
 /// Emit a function-pointer type for a single MethodDef row, WinRT-ABI
@@ -2656,6 +2708,28 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
         out,
         "pub fn Close(self: *const IClosable) callconv(.winapi) HRESULT {",
     ) != null);
+
+    // M2 sugar: `IUriRuntimeClassFactory.CreateUri` takes an HSTRING in,
+    // so the emitter should produce a `CreateUriFromUtf16` companion that
+    // accepts a `[]const u16` slice and internally creates/deinits the
+    // HSTRING via `win_core.Hstring.create`. This keeps the raw wrapper
+    // untouched and offers a UTF-16-friendly alternative.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub fn CreateUriFromUtf16(self: *const IUriRuntimeClassFactory, p0: []const u16, result: **Uri) HRESULT {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "var h0 = win_core.Hstring.create(p0) catch return @as(HRESULT, @bitCast(@as(u32, 0x8007000E)));",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "defer h0.deinit();") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.CreateUri(self, h0.raw, result);") != null);
+
+    // Methods with no HSTRING inputs (e.g. IStringable.ToString) should
+    // NOT get a FromUtf16 companion — the sugar is opt-in by signature.
+    try std.testing.expect(std.mem.indexOf(u8, out, "ToStringFromUtf16") == null);
 
     // Many interfaces should have been emitted.
     var count: usize = 0;
