@@ -164,6 +164,18 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.Storage.FileSystem.structs.zig");
     pub const @"Windows.Win32.System.SystemInformation" =
         @import("generated/Windows.Win32.System.SystemInformation.structs.zig");
+    pub const @"Windows.Win32.System.LibraryLoader" =
+        @import("generated/Windows.Win32.System.LibraryLoader.structs.zig");
+    pub const @"Windows.Win32.System.Threading" =
+        @import("generated/Windows.Win32.System.Threading.structs.zig");
+    pub const @"Windows.Win32.System.Console" =
+        @import("generated/Windows.Win32.System.Console.structs.zig");
+    pub const @"Windows.Win32.System.Memory" =
+        @import("generated/Windows.Win32.System.Memory.structs.zig");
+    pub const @"Windows.Win32.System.Diagnostics.Debug" =
+        @import("generated/Windows.Win32.System.Diagnostics.Debug.structs.zig");
+    pub const @"Windows.Win32.UI.WindowsAndMessaging" =
+        @import("generated/Windows.Win32.UI.WindowsAndMessaging.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
