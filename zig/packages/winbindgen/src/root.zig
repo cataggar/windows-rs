@@ -1124,13 +1124,17 @@ pub fn emitEnums(
             const raw = readConstantValue(type_code, value_blob) orelse continue;
 
             const variant_name = file.str(.field, f, 1);
+            const vname_fmt: []const u8 = if (isZigReservedIdent(variant_name))
+                try std.fmt.allocPrint(arena, "@\"{s}\"", .{variant_name})
+            else
+                variant_name;
             // Print as signed when underlying type is signed, unsigned
             // otherwise; match the declared enum tag type.
             if (isSignedRepr(repr_ty)) {
                 const signed: i64 = @bitCast(raw);
-                try writer.print("    {s} = {d},\n", .{ variant_name, signed });
+                try writer.print("    {s} = {d},\n", .{ vname_fmt, signed });
             } else {
-                try writer.print("    {s} = {d},\n", .{ variant_name, raw });
+                try writer.print("    {s} = {d},\n", .{ vname_fmt, raw });
             }
         }
 
@@ -1185,6 +1189,29 @@ fn isSignedRepr(ty: winmd.Ty) bool {
         .i8, .i16, .i32, .i64 => true,
         else => false,
     };
+}
+
+/// True if `name` collides with a Zig keyword or primitive type name and
+/// therefore must be quoted as `@"name"` when used as a field, parameter,
+/// or decl name. Keep in sync with the lexer's keyword list; omitting an
+/// entry here produces "expected type expression, found '<kw>'" errors.
+fn isZigReservedIdent(name: []const u8) bool {
+    const reserved = [_][]const u8{
+        "addrspace",    "align",        "allowzero",   "and",         "anyframe",
+        "anytype",      "asm",          "async",       "await",       "break",
+        "callconv",     "catch",        "comptime",    "const",       "continue",
+        "defer",        "else",         "enum",        "errdefer",    "error",
+        "export",       "extern",       "fn",          "for",         "if",
+        "inline",       "linksection",  "noalias",     "noinline",    "nosuspend",
+        "opaque",       "or",           "orelse",      "packed",      "pub",
+        "resume",       "return",       "struct",      "suspend",     "switch",
+        "test",         "threadlocal",  "try",         "union",       "unreachable",
+        "usingnamespace", "var",        "volatile",    "while",
+    };
+    for (reserved) |kw| {
+        if (std.mem.eql(u8, name, kw)) return true;
+    }
+    return false;
 }
 
 /// Decode a Constant.Value blob as a `u64` bit pattern. Only integer
@@ -2282,7 +2309,11 @@ fn emitOneStruct(
         if ((field_flags & FIELD_ATTR_STATIC) != 0) continue;
         const ty = winmd.readFieldSignature(arena, file, file.blob(.field, f, 2)) catch continue;
         const field_name = file.str(.field, f, 1);
-        try writer.print("    {s}: ", .{field_name});
+        if (isZigReservedIdent(field_name)) {
+            try writer.print("    @\"{s}\": ", .{field_name});
+        } else {
+            try writer.print("    {s}: ", .{field_name});
+        }
         _ = try writeZigTy(writer, arena, ty, namespace, cross, if (renames.count() == 0) null else &renames, entries, file);
         try writer.writeAll(",\n");
     }

@@ -1,0 +1,100 @@
+const std = @import("std");
+
+pub const MethodRecord = struct {
+    library: []const u8,
+    import: []const u8,
+    signature: []const u8,
+};
+
+pub const TypeRefEntry = struct {
+    namespace: []const u8,
+    name: []const u8,
+};
+
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
+
+pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
+    return switch (coded) {
+        else => null,
+    };
+}
+
+pub const D2D1_ALPHA_MODE_UNKNOWN = 0;
+pub const D2D1_ALPHA_MODE_PREMULTIPLIED = 1;
+pub const D2D1_ALPHA_MODE_STRAIGHT = 2;
+pub const D2D1_ALPHA_MODE_IGNORE = 3;
+pub const D2D1_FIGURE_BEGIN_FILLED = 0;
+pub const D2D1_FIGURE_BEGIN_HOLLOW = 1;
+pub const D2D1_FIGURE_END_OPEN = 0;
+pub const D2D1_FIGURE_END_CLOSED = 1;
+pub const D2D1_PATH_SEGMENT_NONE = 0;
+pub const D2D1_PATH_SEGMENT_FORCE_UNSTROKED = 1;
+pub const D2D1_PATH_SEGMENT_FORCE_ROUND_LINE_JOIN = 2;
+pub const D2D1_FILL_MODE_ALTERNATE = 0;
+pub const D2D1_FILL_MODE_WINDING = 1;
+pub const D2D1_BORDER_MODE_SOFT = 0;
+pub const D2D1_BORDER_MODE_HARD = 1;
+pub const D2D1_BLEND_MODE_MULTIPLY = 0;
+pub const D2D1_BLEND_MODE_SCREEN = 1;
+pub const D2D1_BLEND_MODE_DARKEN = 2;
+pub const D2D1_BLEND_MODE_LIGHTEN = 3;
+pub const D2D1_BLEND_MODE_DISSOLVE = 4;
+pub const D2D1_BLEND_MODE_COLOR_BURN = 5;
+pub const D2D1_BLEND_MODE_LINEAR_BURN = 6;
+pub const D2D1_BLEND_MODE_DARKER_COLOR = 7;
+pub const D2D1_BLEND_MODE_LIGHTER_COLOR = 8;
+pub const D2D1_BLEND_MODE_COLOR_DODGE = 9;
+pub const D2D1_BLEND_MODE_LINEAR_DODGE = 10;
+pub const D2D1_BLEND_MODE_OVERLAY = 11;
+pub const D2D1_BLEND_MODE_SOFT_LIGHT = 12;
+pub const D2D1_BLEND_MODE_HARD_LIGHT = 13;
+pub const D2D1_BLEND_MODE_VIVID_LIGHT = 14;
+pub const D2D1_BLEND_MODE_LINEAR_LIGHT = 15;
+pub const D2D1_BLEND_MODE_PIN_LIGHT = 16;
+pub const D2D1_BLEND_MODE_HARD_MIX = 17;
+pub const D2D1_BLEND_MODE_DIFFERENCE = 18;
+pub const D2D1_BLEND_MODE_EXCLUSION = 19;
+pub const D2D1_BLEND_MODE_HUE = 20;
+pub const D2D1_BLEND_MODE_SATURATION = 21;
+pub const D2D1_BLEND_MODE_COLOR = 22;
+pub const D2D1_BLEND_MODE_LUMINOSITY = 23;
+pub const D2D1_BLEND_MODE_SUBTRACT = 24;
+pub const D2D1_BLEND_MODE_DIVISION = 25;
+pub const D2D1_COLORMATRIX_ALPHA_MODE_PREMULTIPLIED = 1;
+pub const D2D1_COLORMATRIX_ALPHA_MODE_STRAIGHT = 2;
+pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_NEAREST_NEIGHBOR = 0;
+pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_LINEAR = 1;
+pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_CUBIC = 2;
+pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_MULTI_SAMPLE_LINEAR = 3;
+pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_ANISOTROPIC = 4;
+pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_HIGH_QUALITY_CUBIC = 5;
+pub const D2D1_TURBULENCE_NOISE_FRACTAL_SUM = 0;
+pub const D2D1_TURBULENCE_NOISE_TURBULENCE = 1;
+pub const D2D1_COMPOSITE_MODE_SOURCE_OVER = 0;
+pub const D2D1_COMPOSITE_MODE_DESTINATION_OVER = 1;
+pub const D2D1_COMPOSITE_MODE_SOURCE_IN = 2;
+pub const D2D1_COMPOSITE_MODE_DESTINATION_IN = 3;
+pub const D2D1_COMPOSITE_MODE_SOURCE_OUT = 4;
+pub const D2D1_COMPOSITE_MODE_DESTINATION_OUT = 5;
+pub const D2D1_COMPOSITE_MODE_SOURCE_ATOP = 6;
+pub const D2D1_COMPOSITE_MODE_DESTINATION_ATOP = 7;
+pub const D2D1_COMPOSITE_MODE_XOR = 8;
+pub const D2D1_COMPOSITE_MODE_PLUS = 9;
+pub const D2D1_COMPOSITE_MODE_SOURCE_COPY = 10;
+pub const D2D1_COMPOSITE_MODE_BOUNDED_SOURCE_COPY = 11;
+pub const D2D1_COMPOSITE_MODE_MASK_INVERT = 12;
+
+pub const aliases = struct {
+    pub const D2D1_ALPHA_MODE = i32;
+    pub const D2D1_FIGURE_BEGIN = i32;
+    pub const D2D1_FIGURE_END = i32;
+    pub const D2D1_PATH_SEGMENT = i32;
+    pub const D2D1_FILL_MODE = i32;
+    pub const D2D1_BORDER_MODE = i32;
+    pub const D2D1_BLEND_MODE = i32;
+    pub const D2D1_COLORMATRIX_ALPHA_MODE = i32;
+    pub const D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE = i32;
+    pub const D2D1_TURBULENCE_NOISE = i32;
+    pub const D2D1_COMPOSITE_MODE = i32;
+};
