@@ -272,6 +272,22 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.Devices.Enumeration.Pnp.structs.zig");
     pub const @"Windows.Win32.Devices.Display" =
         @import("generated/Windows.Win32.Devices.Display.structs.zig");
+    pub const @"Windows.Win32.Devices.Usb" =
+        @import("generated/Windows.Win32.Devices.Usb.structs.zig");
+    pub const @"Windows.Win32.Devices.HumanInterfaceDevice" =
+        @import("generated/Windows.Win32.Devices.HumanInterfaceDevice.structs.zig");
+    pub const @"Windows.Win32.Storage.Compression" =
+        @import("generated/Windows.Win32.Storage.Compression.structs.zig");
+    pub const @"Windows.Win32.Storage.StructuredStorage" =
+        @import("generated/Windows.Win32.Storage.StructuredStorage.structs.zig");
+    pub const @"Windows.Win32.Storage.Jet" =
+        @import("generated/Windows.Win32.Storage.Jet.structs.zig");
+    pub const @"Windows.Win32.Storage.InstallableFileSystems" =
+        @import("generated/Windows.Win32.Storage.InstallableFileSystems.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.Dhcp" =
+        @import("generated/Windows.Win32.NetworkManagement.Dhcp.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.Dns" =
+        @import("generated/Windows.Win32.NetworkManagement.Dns.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
