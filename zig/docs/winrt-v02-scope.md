@@ -194,13 +194,31 @@ Follow-on (not blocking closure):
 
 **Phased bring-up:**
 
-1. **Phase 4a — `IReference<i32>` single-namespace bring-up.** Register
-   instantiation when `Windows.Foundation`'s own
-   `PropertyValue.CreateInt32` signature decodes to
-   `.class_name{IReference, [i32]}`. Emit
-   `IReference__G1__i32` + `IReference__G1__i32_Vtbl` at the end of
-   `emitNamespace`. Unit test: parse `Windows.Foundation`, assert
-   the synthetic names appear in the output exactly once.
+0. **Phase 4a.0 — `.object` representability (landed).** Probing
+   Windows.Foundation sigs revealed the original Phase 4a premise was
+   wrong: `IPropertyValueStatics.CreateInt32` &c. do **not** decode to
+   `.class_name{IReference, [i32]}`. Their return type is
+   `ELEMENT_TYPE_OBJECT` (System.Object / IInspectable*) — the
+   `IReference<T>` shape is a semantic projection, not sig content.
+   The practical unblock was therefore tiny: add `.object` to
+   `canRepresent` and emit it as `?*const anyopaque` in `writeZigTy`.
+   This lit up 20 of the 39 `IPropertyValueStatics.Create*` vtbl
+   slots as typed (`p0: i32`, `p0: HSTRING`, …) with a trailing
+   `result: *?*const anyopaque` out-param. The 19 `*Array`
+   variants still fall back to opaque — they need separate SZARRAY
+   support. Closed-generic instantiation machinery (`GenericInstSet`,
+   mangler helpers, `substituteTy`) landed as dormant infra for M4
+   Phase 4b; today no sig in Windows.Foundation actually triggers it.
+1. **Phase 4a — `IReference<T>` single-namespace bring-up (deferred
+   pending real consumer).** A corpus-wide probe across
+   `Windows.Foundation` sigs found exactly ONE closed-generic method
+   parameter (`TypedEventHandler<IMemoryBufferReference, object>` on
+   `IMemoryBufferReference.add_Closed`) — a two-arg class instantiation,
+   not a primitive `IReference<i32>`. Until a sample demands a
+   closed-generic surface that actually appears in a sig, the mangler
+   sits inert. When a consumer forces the issue, wire `emitNamespace`
+   to drain the `GenericInstSet` and emit `<Mangled>` / `<Mangled>_Vtbl`
+   structs.
 2. **Phase 4b — cross-namespace registry.** Add the shared
    instantiation set. `Windows.Foundation.Uri.QueryParsed` returns
    `IVectorView\`1<WwwFormUrlDecoderEntry>`; `IVectorView\`1` lives in

@@ -28,6 +28,22 @@ const TYPE_ATTR_INTERFACE: u32 = winmd.TYPE_ATTR_INTERFACE;
 /// matches the `winmd.File`'s — no copying needed.
 const CrossNsSet = std.StringArrayHashMapUnmanaged(void);
 
+/// Registry of closed generic instantiations encountered during a
+/// single `emitNamespace` call. Keyed by the mangled name
+/// (e.g. `IReference__G1__i32`), value is the originating `TypeName`
+/// whose `.generics` slice carries the argument `Ty`s.
+///
+/// Populated by `writeZigTy` when it encounters a `GENERICINST` whose
+/// definition lives in the currently-emitting namespace. Drained at
+/// end of `emitNamespace` by `emitGenericInstantiations` which looks
+/// up the open-def TypeDef row and emits substituted `<Mangled>` +
+/// `<Mangled>_Vtbl` structs.
+///
+/// M4 Phase 4a restriction: instantiations whose definition lives in
+/// a DIFFERENT namespace are not registered (they still render as
+/// `*anyopaque`). Cross-namespace routing lands in Phase 4b.
+const GenericInstSet = std.StringArrayHashMapUnmanaged(winmd.TypeName);
+
 /// Is `ns` a namespace we are willing to emit a cross-namespace
 /// import alias for?  Today only `Windows.*` (and the bare root
 /// `Windows`) qualify — `System.Guid`, `System.Object`, etc. are
@@ -1786,6 +1802,7 @@ fn canRepresent(ty: winmd.Ty) bool {
         .isize,
         .usize,
         .string,
+        .object,
         .class_name,
         .value_name,
         => true,
@@ -1794,6 +1811,121 @@ fn canRepresent(ty: winmd.Ty) bool {
         .ptr_const => |p| canRepresent(p.inner.*),
         .array_fixed => |a| canRepresent(a.inner.*),
         else => false,
+    };
+}
+
+/// M4 Phase 4a: returns true iff `arg` is a generic-type argument we
+/// can mangle into a closed instantiation's Zig identifier. Primitives
+/// (including HSTRING as `string`) qualify; class/value-refs and
+/// nested generics are deferred to later phases.
+fn isMangleableArg(arg: winmd.Ty) bool {
+    return switch (arg) {
+        .bool,
+        .char,
+        .i8,
+        .u8,
+        .i16,
+        .u16,
+        .i32,
+        .u32,
+        .i64,
+        .u64,
+        .f32,
+        .f64,
+        .isize,
+        .usize,
+        .string,
+        => true,
+        else => false,
+    };
+}
+
+/// Write the Zig identifier fragment for a single generic-arg `Ty`.
+/// Mirrors the Zig type name emitted by `writeZigTy` for the
+/// primitive cases — so `i32` maps to `i32`, `.string` to `HSTRING`,
+/// etc. Panics (via unreachable) on non-mangleable args; callers must
+/// gate with `isMangleableArg` first.
+fn writeArgMangle(writer: *std.Io.Writer, arg: winmd.Ty) !void {
+    switch (arg) {
+        .bool => try writer.writeAll("BOOL"),
+        .char => try writer.writeAll("u16"),
+        .i8 => try writer.writeAll("i8"),
+        .u8 => try writer.writeAll("u8"),
+        .i16 => try writer.writeAll("i16"),
+        .u16 => try writer.writeAll("u16"),
+        .i32 => try writer.writeAll("i32"),
+        .u32 => try writer.writeAll("u32"),
+        .i64 => try writer.writeAll("i64"),
+        .u64 => try writer.writeAll("u64"),
+        .f32 => try writer.writeAll("f32"),
+        .f64 => try writer.writeAll("f64"),
+        .isize => try writer.writeAll("isize"),
+        .usize => try writer.writeAll("usize"),
+        .string => try writer.writeAll("HSTRING"),
+        else => unreachable,
+    }
+}
+
+/// Write the mangled Zig identifier for a closed generic
+/// instantiation. Example: `IReference\`1` with args `[i32]` yields
+/// `IReference__G1__i32`. The backtick-arity suffix is stripped from
+/// the open-def name; `__G<N>__<arg0>__<arg1>...` is appended where
+/// `<argK>` is produced by `writeArgMangle`.
+fn writeInstMangle(writer: *std.Io.Writer, open_name: []const u8, args: []const winmd.Ty) !void {
+    const tick_idx = std.mem.indexOfScalar(u8, open_name, '`') orelse open_name.len;
+    try writer.writeAll(open_name[0..tick_idx]);
+    try writer.print("__G{d}", .{args.len});
+    for (args) |a| {
+        try writer.writeAll("__");
+        try writeArgMangle(writer, a);
+    }
+}
+
+/// Build the mangled name into an arena-allocated buffer so it can
+/// be used as a HashMap key. Convenience wrapper over
+/// `writeInstMangle`.
+fn mangleInstAlloc(arena: std.mem.Allocator, open_name: []const u8, args: []const winmd.Ty) ![]u8 {
+    var aw: std.Io.Writer.Allocating = .init(arena);
+    errdefer aw.deinit();
+    try writeInstMangle(&aw.writer, open_name, args);
+    return aw.toOwnedSlice();
+}
+
+/// M4 Phase 4a: arena-allocate a deep copy of `ty` with every
+/// `.var_generic = n` replaced by `type_args[n]`. Non-generic nodes
+/// are cloned verbatim so the returned `Ty` can outlive the caller's
+/// frame. Nested pointer/array inner slots are allocated in `arena`.
+/// Returns the input unchanged (by value) when it contains no
+/// `.var_generic` — a harmless over-allocation is acceptable.
+fn substituteTy(arena: std.mem.Allocator, ty: winmd.Ty, type_args: []const winmd.Ty) !winmd.Ty {
+    return switch (ty) {
+        .var_generic => |idx| if (idx < type_args.len) type_args[idx] else ty,
+        .ref_mut => |inner| blk: {
+            const sub = try arena.create(winmd.Ty);
+            sub.* = try substituteTy(arena, inner.*, type_args);
+            break :blk .{ .ref_mut = sub };
+        },
+        .ref_const => |inner| blk: {
+            const sub = try arena.create(winmd.Ty);
+            sub.* = try substituteTy(arena, inner.*, type_args);
+            break :blk .{ .ref_const = sub };
+        },
+        .ptr_mut => |p| blk: {
+            const sub = try arena.create(winmd.Ty);
+            sub.* = try substituteTy(arena, p.inner.*, type_args);
+            break :blk .{ .ptr_mut = .{ .inner = sub, .depth = p.depth } };
+        },
+        .ptr_const => |p| blk: {
+            const sub = try arena.create(winmd.Ty);
+            sub.* = try substituteTy(arena, p.inner.*, type_args);
+            break :blk .{ .ptr_const = .{ .inner = sub, .depth = p.depth } };
+        },
+        .array_fixed => |a| blk: {
+            const sub = try arena.create(winmd.Ty);
+            sub.* = try substituteTy(arena, a.inner.*, type_args);
+            break :blk .{ .array_fixed = .{ .inner = sub, .size = a.size } };
+        },
+        else => ty,
     };
 }
 
@@ -1847,6 +1979,14 @@ fn writeZigTy(
         .isize => try writer.writeAll("isize"),
         .usize => try writer.writeAll("usize"),
         .string => try writer.writeAll("HSTRING"),
+        // ELEMENT_TYPE_OBJECT (System.Object / IInspectable*). WinRT
+        // factory methods commonly declare their logical return as
+        // `object` even when it semantically carries an
+        // `IReference<T>`; the projection happens at the call site
+        // via QueryInterface, not in the sig. We emit an opaque
+        // pointer so callers can pass the handle on to
+        // QueryInterface or wrap it in `IInspectable` themselves.
+        .object => try writer.writeAll("?*const anyopaque"),
         // WinRT / COM interface reference. In metadata this is
         // inherently a pointer — ELEMENT_TYPE_CLASS represents the
         // object by reference — so we emit `*<Name>` pointing at the
@@ -1870,11 +2010,32 @@ fn writeZigTy(
                     }
                 }
             }
-            // Generic WinRT interfaces (`IReference\`1` etc.) cannot
-            // round-trip through a Zig identifier. Treat them as
-            // opaque pointers until parameterized generics land in
-            // a later phase.
+            // Generic WinRT interfaces (`IReference\`1` etc.). If all
+            // type arguments are mangleable primitives AND the open
+            // definition lives in the currently-emitting namespace
+            // (Phase 4a scope), emit the mangled closed-instantiation
+            // reference. The matching `<Mangled>` / `<Mangled>_Vtbl`
+            // structs are emitted after the normal interface pass by
+            // `emitGenericInstantiations`. Cross-namespace generics and
+            // non-primitive args still fall back to `*anyopaque` — they
+            // land in Phase 4b/later.
             if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
+                if (tn.generics.len > 0 and
+                    std.mem.eql(u8, tn.namespace, current_namespace))
+                {
+                    var all_prim = true;
+                    for (tn.generics) |a| {
+                        if (!isMangleableArg(a)) {
+                            all_prim = false;
+                            break;
+                        }
+                    }
+                    if (all_prim) {
+                        try writer.writeAll("*");
+                        try writeInstMangle(writer, tn.name, tn.generics);
+                        return true;
+                    }
+                }
                 try writer.writeAll("*anyopaque");
             } else if (isProjectableNs(tn.namespace) and !std.mem.eql(u8, tn.namespace, current_namespace)) {
                 try cross.put(gpa, tn.namespace, {});
@@ -2022,6 +2183,17 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
         u8,
         out,
         "get_Status: *const fn (this: *const IAsyncInfo, result: *AsyncStatus) callconv(.winapi) HRESULT",
+    ) != null);
+
+    // IPropertyValueStatics.CreateInt32 returns ELEMENT_TYPE_OBJECT
+    // (System.Object / IInspectable*) in its sig — previously this
+    // forced the entire slot to fall back to `*const anyopaque`. With
+    // `.object` representable we now emit a fully typed slot with
+    // `p0: i32` and a trailing `result: *?*const anyopaque` out-param.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "CreateInt32: *const fn (this: *const IPropertyValueStatics, p0: i32, result: *?*const anyopaque) callconv(.winapi) HRESULT",
     ) != null);
 
     // At least one interface in Windows.Foundation uses types we don't
