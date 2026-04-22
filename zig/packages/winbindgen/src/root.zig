@@ -1809,6 +1809,50 @@ pub fn emitStructsFile(
     try writer.writeAll(body.written());
 }
 
+/// BFS the cross-namespace graph starting at `root_ns`: run the
+/// struct emitter once per namespace with a discarding writer,
+/// harvest the `CrossNsSet` it populated, and recurse until every
+/// transitively reachable namespace has been visited.
+///
+/// Used by `--structs-closure <ns>` to answer "what full list of
+/// `*.structs.zig` sidecars does this namespace need?" without the
+/// caller having to hand-trace TypeRefs.
+///
+/// The returned slice is arena-owned, sorted for determinism, and
+/// includes `root_ns` itself.
+pub fn collectStructsClosure(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    root_ns: []const u8,
+    arch: Arch,
+) ![]const []const u8 {
+    var visited: std.StringArrayHashMapUnmanaged(void) = .empty;
+    var queue: std.ArrayList([]const u8) = try .initCapacity(arena, 0);
+    try queue.append(arena, root_ns);
+
+    while (queue.pop()) |ns| {
+        if (visited.contains(ns)) continue;
+        try visited.put(arena, ns, {});
+
+        var cross: CrossNsSet = .empty;
+        var scratch: std.Io.Writer.Allocating = .init(arena);
+        defer scratch.deinit();
+        try emitStructsImpl(&scratch.writer, arena, file, ns, &cross, arch);
+
+        for (cross.keys()) |dep| {
+            if (!visited.contains(dep)) try queue.append(arena, dep);
+        }
+    }
+
+    const result = try arena.dupe([]const u8, visited.keys());
+    std.mem.sort([]const u8, result, {}, struct {
+        fn lt(_: void, a: []const u8, b: []const u8) bool {
+            return std.mem.lessThan(u8, a, b);
+        }
+    }.lt);
+    return result;
+}
+
 fn emitStructsImpl(
     writer: *std.Io.Writer,
     arena: std.mem.Allocator,
@@ -3185,6 +3229,43 @@ test "emitStructs emits WIN32_FIND_DATAW with fixed-size u16 arrays" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "cFileName: [260]u16,") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "cAlternateFileName: [14]u16,") != null);
+}
+
+test "collectStructsClosure walks cross-namespace TypeRef graph" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    // `Windows.Win32.Storage.FileSystem` pulls in `Foundation`
+    // (HANDLE, FILETIME, etc.) and `Security` (SECURITY_ATTRIBUTES)
+    // through TypeRefs in struct bodies. The closure must surface
+    // both without the caller hand-listing them.
+    const closure = try collectStructsClosure(
+        arena.allocator(),
+        &file,
+        "Windows.Win32.Storage.FileSystem",
+        .x64,
+    );
+
+    var saw_self = false;
+    var saw_foundation = false;
+    var saw_security = false;
+    for (closure) |ns| {
+        if (std.mem.eql(u8, ns, "Windows.Win32.Storage.FileSystem")) saw_self = true;
+        if (std.mem.eql(u8, ns, "Windows.Win32.Foundation")) saw_foundation = true;
+        if (std.mem.eql(u8, ns, "Windows.Win32.Security")) saw_security = true;
+    }
+    try std.testing.expect(saw_self);
+    try std.testing.expect(saw_foundation);
+    try std.testing.expect(saw_security);
+
+    // Closure is sorted and de-duplicated.
+    var i: usize = 1;
+    while (i < closure.len) : (i += 1) {
+        try std.testing.expect(std.mem.lessThan(u8, closure[i - 1], closure[i]));
+    }
 }
 
 test "emitStructs renames MIDL anon nested types to <outer>_<index>" {

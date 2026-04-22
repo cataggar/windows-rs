@@ -84,6 +84,7 @@ pub fn main(init: std.process.Init) !void {
     var arch: winbindgen.Arch = .x64;
     var index_only = false;
     var structs_only = false;
+    var closure_only = false;
     var namespace_arg: ?[]const u8 = null;
     {
         var i: usize = 1;
@@ -106,11 +107,13 @@ pub fn main(init: std.process.Init) !void {
                 index_only = true;
             } else if (std.mem.eql(u8, a, "--structs")) {
                 structs_only = true;
+            } else if (std.mem.eql(u8, a, "--structs-closure")) {
+                closure_only = true;
             } else if (namespace_arg == null) {
                 namespace_arg = a;
             } else {
                 try stderr.writeAll(
-                    \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs] <namespace>
+                    \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs|--structs-closure] <namespace>
                     \\       winbindgen --list
                     \\
                 );
@@ -122,7 +125,7 @@ pub fn main(init: std.process.Init) !void {
 
     const namespace = namespace_arg orelse {
         try stderr.writeAll(
-            \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs] <namespace>
+            \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs|--structs-closure] <namespace>
             \\       winbindgen --list
             \\
         );
@@ -152,6 +155,19 @@ pub fn main(init: std.process.Init) !void {
         // pulls in `win-core` aliases and sibling struct sidecars
         // for any cross-namespace TypeRefs encountered.
         try winbindgen.emitStructsFile(&buf.writer, init.arena.allocator(), &file, namespace, arch);
+    } else if (closure_only) {
+        // `--structs-closure` prints (one per line, sorted) every
+        // namespace whose `.structs.zig` sidecar must also exist for
+        // `<namespace>.structs.zig` to compile — i.e. the BFS of the
+        // cross-namespace TypeRef graph rooted at `<namespace>`. Lets
+        // driver scripts skip the manual "target + transitive" dance.
+        const closure = try winbindgen.collectStructsClosure(
+            init.arena.allocator(),
+            &file,
+            namespace,
+            arch,
+        );
+        for (closure) |ns| try buf.writer.print("{s}\n", .{ns});
     } else {
         try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
     }
