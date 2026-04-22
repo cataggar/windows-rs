@@ -135,6 +135,7 @@ pub fn emitNamespace(
         \\const NTSTATUS = win_core.NTSTATUS;
         \\const BOOLEAN = win_core.BOOLEAN;
         \\const IInspectable_Vtbl = win_core.IInspectable_Vtbl;
+        \\const IUnknown_Vtbl = win_core.IUnknown_Vtbl;
         \\
     );
 
@@ -958,6 +959,9 @@ fn isPreludeAlias(namespace: []const u8, name: []const u8) bool {
         if (std.mem.eql(u8, name, "NTSTATUS")) return true;
         if (std.mem.eql(u8, name, "BOOLEAN")) return true;
     }
+    if (std.mem.eql(u8, namespace, "Windows.Win32.System.Com")) {
+        if (std.mem.eql(u8, name, "IUnknown")) return true;
+    }
     if (std.mem.eql(u8, namespace, "Windows.Win32.System.WinRT")) {
         if (std.mem.eql(u8, name, "HSTRING")) return true;
     }
@@ -1351,11 +1355,14 @@ test "emitIidConstants writes IStringable from Windows.Foundation" {
 /// `*const fn(...) callconv(.winapi) HRESULT` function pointers
 /// derived from the MethodDef signature blob.
 ///
-/// Every WinRT interface's first three slots are IUnknown methods
-/// followed by three IInspectable methods — captured here by
-/// `base: IInspectable_Vtbl`. Classic COM interfaces that extend
-/// IUnknown directly are out of scope for this slice (the WinRT
-/// metadata we consume has none).
+/// Emit an `extern struct` for every non-generic interface in
+/// `namespace` that ends in the expected `<Name>_Vtbl` shape.
+///
+/// The base member is chosen by `TypeAttributes.WindowsRuntime`
+/// (0x4000): WinRT interfaces get `base: IInspectable_Vtbl`, classic
+/// COM interfaces get `base: IUnknown_Vtbl`. `IUnknown` itself is the
+/// root of the COM chain and has no base — it's emitted via the
+/// `win-core` prelude alias, not here.
 pub fn emitInterfaceVtbls(
     writer: *std.Io.Writer,
     arena: std.mem.Allocator,
@@ -1385,11 +1392,20 @@ fn emitInterfaceVtblsImpl(
         // handles parameterised vtbls.
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
 
+        // IUnknown itself has no base — it's the root of the COM
+        // chain and is surfaced to generated code through the
+        // `win-core` prelude alias. Re-emitting its vtbl here would
+        // shadow that alias with a different (baseless) type.
+        if (isPreludeAlias(namespace, name)) continue;
+
+        const is_winrt = (flags & winmd.TYPE_ATTR_WINDOWS_RUNTIME) != 0;
+        const base_vtbl = if (is_winrt) "IInspectable_Vtbl" else "IUnknown_Vtbl";
+
         try writer.print(
             \\pub const {s}_Vtbl = extern struct {{
-            \\    base: IInspectable_Vtbl,
+            \\    base: {s},
             \\
-        , .{name});
+        , .{ name, base_vtbl });
 
         const methods = file.list(.type_def, row, 5, .method_def);
         var m = methods.start;
@@ -1437,6 +1453,11 @@ pub fn emitInterfaceHandles(
 
         const name = file.str(.type_def, row, 1);
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+
+        // `IUnknown` already ships as a hand-written handle in
+        // `win-core` (aliased into the prelude). Re-emitting it from
+        // metadata would produce a duplicate top-level decl.
+        if (isPreludeAlias(namespace, name)) continue;
 
         try writer.print(
             \\pub const {s} = extern struct {{
@@ -1897,6 +1918,30 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // yet support (e.g. `IReference`1` methods with classes) — those
     // must degrade to opaque rather than fail the whole emit.
     try std.testing.expect(std.mem.indexOf(u8, out, "*const anyopaque") != null);
+}
+
+test "emitInterfaceVtbls picks IUnknown_Vtbl for classic COM, skips IUnknown itself" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitInterfaceVtbls(&buf.writer, arena.allocator(), &file, "Windows.Win32.System.Com");
+    const out = buf.written();
+
+    // Classic COM interfaces in Windows.Win32 are NOT WindowsRuntime;
+    // the base must be IUnknown_Vtbl, never IInspectable_Vtbl.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStream_Vtbl = extern struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "base: IUnknown_Vtbl") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "base: IInspectable_Vtbl") == null);
+
+    // IUnknown itself must not be re-emitted here — it ships via the
+    // win-core prelude alias with a baseless vtbl definition.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IUnknown_Vtbl = extern struct {") == null);
 }
 
 test "emitEnums writes AsyncStatus from Windows.Foundation" {
@@ -3071,6 +3116,7 @@ test "emitNamespace composes all sub-emitters for Windows.Foundation" {
     try std.testing.expect(std.mem.indexOf(u8, out, "const HRESULT = win_core.HRESULT;") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "const HSTRING = win_core.HSTRING;") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "const IInspectable_Vtbl = win_core.IInspectable_Vtbl;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "const IUnknown_Vtbl = win_core.IUnknown_Vtbl;") != null);
 
     // One representative from each sub-emitter — ordering matters
     // because typed vtbls reference handles declared earlier.

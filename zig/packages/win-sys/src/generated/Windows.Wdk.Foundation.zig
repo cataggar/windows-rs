@@ -7,6 +7,7 @@ const BOOL = win_core.BOOL;
 const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const IInspectable_Vtbl = win_core.IInspectable_Vtbl;
+const IUnknown_Vtbl = win_core.IUnknown_Vtbl;
 const @"Windows.Wdk.Storage.FileSystem" = @import("Windows.Wdk.Storage.FileSystem.zig");
 const @"Windows.Wdk.System.SystemServices" = @import("Windows.Wdk.System.SystemServices.zig");
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.zig");
