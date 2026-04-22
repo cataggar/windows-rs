@@ -176,6 +176,24 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.System.Diagnostics.Debug.structs.zig");
     pub const @"Windows.Win32.UI.WindowsAndMessaging" =
         @import("generated/Windows.Win32.UI.WindowsAndMessaging.structs.zig");
+    pub const @"Windows.Win32.Graphics.Gdi" =
+        @import("generated/Windows.Win32.Graphics.Gdi.structs.zig");
+    pub const @"Windows.Win32.System.Kernel" =
+        @import("generated/Windows.Win32.System.Kernel.structs.zig");
+    pub const @"Windows.Win32.System.Time" =
+        @import("generated/Windows.Win32.System.Time.structs.zig");
+    pub const @"Windows.Win32.System.Registry" =
+        @import("generated/Windows.Win32.System.Registry.structs.zig");
+    pub const @"Windows.Win32.System.Com" =
+        @import("generated/Windows.Win32.System.Com.structs.zig");
+    pub const @"Windows.Win32.System.Ole" =
+        @import("generated/Windows.Win32.System.Ole.structs.zig");
+    pub const @"Windows.Win32.System.ProcessStatus" =
+        @import("generated/Windows.Win32.System.ProcessStatus.structs.zig");
+    pub const @"Windows.Win32.System.IO" =
+        @import("generated/Windows.Win32.System.IO.structs.zig");
+    pub const @"Windows.Win32.System.Environment" =
+        @import("generated/Windows.Win32.System.Environment.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
