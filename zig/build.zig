@@ -223,10 +223,14 @@ pub fn build(b: *std.Build) void {
     // hence the hand-list. The `mod.zig` step downstream still
     // auto-discovers, so consumer `@import("win-sys")` doesn't care.
     const win32_namespaces = [_][]const u8{
+        "Windows.Win32.Data.Xml.XmlLite",
+        "Windows.Win32.Devices.Cdrom",
+        "Windows.Win32.Devices.Communication",
         "Windows.Win32.Devices.DeviceAndDriverInstallation",
         "Windows.Win32.Devices.Display",
         "Windows.Win32.Devices.Enumeration.Pnp",
         "Windows.Win32.Devices.HumanInterfaceDevice",
+        "Windows.Win32.Devices.SerialCommunication",
         "Windows.Win32.Devices.Usb",
         "Windows.Win32.Foundation",
         "Windows.Win32.Globalization",
@@ -328,6 +332,12 @@ pub fn build(b: *std.Build) void {
     mod_run.addArg("--emit-mod");
     mod_run.addArg("packages/win-sys/src/generated");
     mod_run.step.dependOn(&gen_update.step);
+    // `--emit-mod` scans the directory at runtime, so its cache key
+    // (derived from argv) doesn't change when new sidecars arrive.
+    // Force every `zig build bindings` invocation to rescan so adding
+    // a namespace to `win32_namespaces` above reliably reaches
+    // `mod.zig` without a manual rerun.
+    mod_run.has_side_effects = true;
     const mod_source = mod_run.captureStdOut(.{});
     const mod_update = b.addUpdateSourceFiles();
     mod_update.addCopyFileToSource(

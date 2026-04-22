@@ -8,10 +8,14 @@
 //! namespace by hand.
 
 pub const structs = struct {
+    pub const @"Windows.Win32.Data.Xml.XmlLite" = @import("Windows.Win32.Data.Xml.XmlLite.structs.zig");
+    pub const @"Windows.Win32.Devices.Cdrom" = @import("Windows.Win32.Devices.Cdrom.structs.zig");
+    pub const @"Windows.Win32.Devices.Communication" = @import("Windows.Win32.Devices.Communication.structs.zig");
     pub const @"Windows.Win32.Devices.DeviceAndDriverInstallation" = @import("Windows.Win32.Devices.DeviceAndDriverInstallation.structs.zig");
     pub const @"Windows.Win32.Devices.Display" = @import("Windows.Win32.Devices.Display.structs.zig");
     pub const @"Windows.Win32.Devices.Enumeration.Pnp" = @import("Windows.Win32.Devices.Enumeration.Pnp.structs.zig");
     pub const @"Windows.Win32.Devices.HumanInterfaceDevice" = @import("Windows.Win32.Devices.HumanInterfaceDevice.structs.zig");
+    pub const @"Windows.Win32.Devices.SerialCommunication" = @import("Windows.Win32.Devices.SerialCommunication.structs.zig");
     pub const @"Windows.Win32.Devices.Usb" = @import("Windows.Win32.Devices.Usb.structs.zig");
     pub const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
     pub const @"Windows.Win32.Globalization" = @import("Windows.Win32.Globalization.structs.zig");
@@ -84,10 +88,14 @@ pub const structs = struct {
 };
 
 pub const index = struct {
+    pub const @"Windows.Win32.Data.Xml.XmlLite" = @import("Windows.Win32.Data.Xml.XmlLite.index.zig");
+    pub const @"Windows.Win32.Devices.Cdrom" = @import("Windows.Win32.Devices.Cdrom.index.zig");
+    pub const @"Windows.Win32.Devices.Communication" = @import("Windows.Win32.Devices.Communication.index.zig");
     pub const @"Windows.Win32.Devices.DeviceAndDriverInstallation" = @import("Windows.Win32.Devices.DeviceAndDriverInstallation.index.zig");
     pub const @"Windows.Win32.Devices.Display" = @import("Windows.Win32.Devices.Display.index.zig");
     pub const @"Windows.Win32.Devices.Enumeration.Pnp" = @import("Windows.Win32.Devices.Enumeration.Pnp.index.zig");
     pub const @"Windows.Win32.Devices.HumanInterfaceDevice" = @import("Windows.Win32.Devices.HumanInterfaceDevice.index.zig");
+    pub const @"Windows.Win32.Devices.SerialCommunication" = @import("Windows.Win32.Devices.SerialCommunication.index.zig");
     pub const @"Windows.Win32.Devices.Usb" = @import("Windows.Win32.Devices.Usb.index.zig");
     pub const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.index.zig");
     pub const @"Windows.Win32.Globalization" = @import("Windows.Win32.Globalization.index.zig");
