@@ -219,18 +219,26 @@ Follow-on (not blocking closure):
    sits inert. When a consumer forces the issue, wire `emitNamespace`
    to drain the `GenericInstSet` and emit `<Mangled>` / `<Mangled>_Vtbl`
    structs.
-2. **Phase 4b — cross-namespace registry.** Add the shared
-   instantiation set. `Windows.Foundation.Uri.QueryParsed` returns
-   `IVectorView\`1<WwwFormUrlDecoderEntry>`; `IVectorView\`1` lives in
-   `Windows.Foundation.Collections`. The bundle driver collects the
-   key from `Foundation`'s pass and seeds it into
-   `Foundation.Collections`'s pass. Build until fixpoint.
-3. **Phase 4c — `Calendar.Languages` shipped canary.** Add
-   `Windows.Globalization` to the run-time bundle (today it's only
-   compile-checked). Sample iterates
-   `IVectorView__G1__HSTRING` via `Size` + `GetAt(i)`. No
-   `items()`-style adapter yet; callers write the `for (0..size) |i|`
-   loop. Adapter sugar is a follow-on.
+2. **Phase 4b — cross-namespace registry (deferred, premise invalid).**
+   Originally scoped to type `Windows.Foundation.Uri.QueryParsed`'s
+   return as `IVectorView\`1<WwwFormUrlDecoderEntry>`. A second probe
+   invalidated this too: `IUriRuntimeClass.QueryParsed` actually
+   returns `*WwwFormUrlDecoder` — a concrete runtime class, not a
+   closed-generic view. Across all of `Windows.Foundation` and
+   `Windows.Foundation.Collections` the only closed-generic sig
+   occurrence remains the `TypedEventHandler<…, object>` param on
+   `IMemoryBufferReference.add_Closed`. Cross-namespace fixpoint
+   iteration infrastructure is therefore unmotivated: there's nothing
+   in the current bundle's sigs for it to propagate. Revisit when a
+   sample directly consumes a WinRT surface that genuinely returns or
+   accepts a closed generic in its vtbl sig.
+3. **Phase 4c — `Calendar.Languages` shipped canary (deferred, depends
+   on 4b).** Downstream of 4b. `IVectorView\`1<HSTRING>` is reached
+   today via the open-generic `GetAt` on `IVectorView\`1` — which lives
+   in `Windows.Foundation.Collections` where all sig types are `VAR`
+   references (open), not closed instantiations. A consumer sample
+   would still compile today against the opaque-`*anyopaque` fallback,
+   just without the typed-handle ergonomics 4b/4c would provide.
 
 ### M5 — Async contracts (bridge to `std.Io`)
 
