@@ -135,26 +135,34 @@ jobs:
         uses: mlugg/setup-zig@v2
         with:
           version: 0.16.0
-      - name: Build kernel32.lib for ${{ matrix.target }}
-        working-directory: zig
-        run: zig build lib -Dtarget=${{ matrix.target }}
-      - name: Verify COFF machine type
+      - name: Build and verify import libs for ${{ matrix.target }}
         working-directory: zig
         shell: bash
         run: |
-          lib=zig-out/lib/kernel32.lib
-          test -s "$lib" || { echo "::error::$lib missing or empty"; exit 1; }
-          # Short-import header is `00 00 FF FF 00 00 <machine:u16 LE>`;
-          # scan the first short-import object and compare machine bytes.
-          machine_hex=$(python3 -c "
+          # Cover one "ordinary" DLL (kernel32) plus three representative
+          # gap DLLs that Zig's bundled MinGW defs do *not* ship, to
+          # prove `win-targets` closes the gap:
+          #   - amsi            : security subsystem
+          #   - sechost         : service-control forwarder
+          #   - windows.ui.xaml : WinRT UWP
+          for dll in kernel32 amsi sechost windows.ui.xaml; do
+            echo "::group::$dll for ${{ matrix.target }}"
+            zig build lib -Ddll="$dll" -Dtarget=${{ matrix.target }}
+            lib="zig-out/lib/$dll.lib"
+            test -s "$lib" || { echo "::error::$lib missing or empty"; exit 1; }
+            # Short-import header is `00 00 FF FF 00 00 <machine:u16 LE>`;
+            # scan the first short-import object and compare machine bytes.
+            machine_hex=$(python3 -c "
           import sys
           data = open('$lib','rb').read()
           i = data.find(b'\x00\x00\xff\xff\x00\x00')
           if i < 0:
-              sys.exit('no short import found')
+              sys.exit('no short import found in $lib')
           m = data[i+6] | (data[i+7] << 8)
           print(f'0x{m:04x}')
           ")
-          echo "machine = $machine_hex (expected ${{ matrix.expected }})"
-          [ "$machine_hex" = "${{ matrix.expected }}" ] \
-            || { echo "::error::machine type mismatch for ${{ matrix.target }}"; exit 1; }
+            echo "$dll machine = $machine_hex (expected ${{ matrix.expected }})"
+            [ "$machine_hex" = "${{ matrix.expected }}" ] \
+              || { echo "::error::machine type mismatch for $dll on ${{ matrix.target }}"; exit 1; }
+            echo "::endgroup::"
+          done

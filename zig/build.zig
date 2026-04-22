@@ -1170,9 +1170,22 @@ pub fn build(b: *std.Build) void {
         name: []const u8,
         root: []const u8,
         extra_libs: []const []const u8 = &.{},
+        // If set, generate `<gen_lib>.lib` via `win-targets` (winmd →
+        // .def → `zig dlltool`) and link the resulting archive into
+        // this sample *instead* of `linkSystemLibrary("kernel32")`.
+        // This turns the sample into the end-to-end canary for Phase
+        // 5: any regression in windef / emitDef / addImportLibFromWinmd
+        // breaks the sample at link or run time, not just a hidden CI
+        // machine-byte check.
+        gen_lib: ?[]const u8 = null,
     };
     const samples = [_]Sample{
         .{ .name = "last-error", .root = "samples/last_error/main.zig" },
+        .{
+            .name = "gen-lib-smoke",
+            .root = "samples/gen_lib_smoke/main.zig",
+            .gen_lib = "kernel32",
+        },
         .{ .name = "load-library", .root = "samples/load_library/main.zig" },
         .{ .name = "threading", .root = "samples/threading/main.zig" },
         .{ .name = "event-roundtrip", .root = "samples/event_roundtrip/main.zig" },
@@ -1214,7 +1227,20 @@ pub fn build(b: *std.Build) void {
         // consumer would do: pay only for the libs they use. Zig ships
         // MinGW kernel32 import lib for cross targets.
         if (target.result.os.tag == .windows) {
-            sample_mod.linkSystemLibrary("kernel32", .{});
+            if (s.gen_lib) |dll| {
+                // Phase 5 canary: link against a winmd-derived .lib
+                // produced by `win-targets` at configure time, rather
+                // than the MinGW def bundled in Zig. Exported symbols
+                // must be resolvable by name or the link fails.
+                const gen = win_targets.addImportLibFromWinmd(b, .{
+                    .name = dll,
+                    .windef_exe = windef_exe,
+                    .target = target,
+                });
+                sample_mod.addObjectFile(gen);
+            } else {
+                sample_mod.linkSystemLibrary("kernel32", .{});
+            }
             for (s.extra_libs) |lib| {
                 sample_mod.linkSystemLibrary(lib, .{});
             }
