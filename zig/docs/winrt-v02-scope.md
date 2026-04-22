@@ -155,12 +155,64 @@ Follow-on (not blocking closure):
 
 ### M4 — Parameterised generics
 
-- Drop the backtick-skip guard in `emitInterfaceVtbls` and friends.
-- Per use-site instantiation: when a method signature references
-  `IVector`1` with `T = HSTRING`, emit a unique
-  `IVector_HSTRING_Vtbl` + handle at the first site and cache it.
-- Sample: iterating a `Windows.Globalization.Calendar`'s
-  `Languages` (`IVectorView`1<HSTRING>`).
+**Status: planning (design critiqued, ready for phased bring-up).**
+
+**Design:**
+
+- **Location.** Closed instantiations live in the *generic's* home
+  namespace, not the use-site. `IVectorView__G1__HSTRING` is emitted
+  into `Windows.Foundation.Collections`; every caller references it
+  as `@"Windows.Foundation.Collections".IVectorView__G1__HSTRING`.
+  Use-site emission would produce nominally-duplicate types that
+  fail to round-trip across namespaces — a type-identity bug, not
+  just cosmetic duplication.
+- **Mangling.** Structural and collision-free: `<Def>__G<arity>__<arg>__<arg>`,
+  with `arg` = primitive Zig name (`i32`, `HSTRING`) for built-ins or
+  `Ns_Dotted_Name` for class/value refs. Nested generics recurse
+  (`IVector__G1__IReference__G1__i32`). Under-uglification is fine;
+  ambiguity is not.
+- **Open generic defs stay unemitted.** The backtick skip in
+  `emitInterfaceVtbls`/`emitInterfaceHandles` is **not** removed —
+  open generics exist only as *templates*. The emitter walks them at
+  instantiation time, substitutes `ELEMENT_TYPE_VAR`, and produces a
+  fresh closed `_Vtbl` / handle pair.
+- **Substitution.** `writeZigTy` grows a `type_args: ?[]const Ty`
+  parameter. When set, `.var_generic = n` resolves to `type_args[n]`.
+  `.mvar_generic` stays `UnsupportedElement` for M4 — generic methods
+  are not in scope.
+- **Registry.** Per-bundle-run set keyed by `(generic typedef token,
+  serialized args)`. Every namespace-emit call appends its used
+  instantiations; the bundle driver iterates until fixpoint, then
+  re-emits home namespaces with their pending instantiation list.
+- **IID scoped out.** WinRT's parameterized-IID algorithm (runtime
+  SHA-1 over a per-instantiation blob) is **not** in M4. `cast()` /
+  `QueryInterface` against a closed generic stays unsupported.
+  Samples that only need the vtable surface (direct factory return)
+  work; anything requiring QI onto a closed generic does not.
+- **Generic delegates out.** `EventHandler\`1` etc. stay unsupported
+  until a sample demands them.
+
+**Phased bring-up:**
+
+1. **Phase 4a — `IReference<i32>` single-namespace bring-up.** Register
+   instantiation when `Windows.Foundation`'s own
+   `PropertyValue.CreateInt32` signature decodes to
+   `.class_name{IReference, [i32]}`. Emit
+   `IReference__G1__i32` + `IReference__G1__i32_Vtbl` at the end of
+   `emitNamespace`. Unit test: parse `Windows.Foundation`, assert
+   the synthetic names appear in the output exactly once.
+2. **Phase 4b — cross-namespace registry.** Add the shared
+   instantiation set. `Windows.Foundation.Uri.QueryParsed` returns
+   `IVectorView\`1<WwwFormUrlDecoderEntry>`; `IVectorView\`1` lives in
+   `Windows.Foundation.Collections`. The bundle driver collects the
+   key from `Foundation`'s pass and seeds it into
+   `Foundation.Collections`'s pass. Build until fixpoint.
+3. **Phase 4c — `Calendar.Languages` shipped canary.** Add
+   `Windows.Globalization` to the run-time bundle (today it's only
+   compile-checked). Sample iterates
+   `IVectorView__G1__HSTRING` via `Size` + `GetAt(i)`. No
+   `items()`-style adapter yet; callers write the `for (0..size) |i|`
+   loop. Adapter sugar is a follow-on.
 
 ### M5 — Async contracts (bridge to `std.Io`)
 
