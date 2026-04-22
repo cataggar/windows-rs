@@ -1248,4 +1248,35 @@ pub fn build(b: *std.Build) void {
     if (host_is_windows) {
         test_step.dependOn(samples_step);
     }
+
+    // ------------------------------------------------------------------
+    // Phase 4 — comptime-projection benchmark.
+    //
+    // `zig build bench` compiles `benches/project_bench/main.zig`, which
+    // exercises `win_sys.project(...)` at filter sizes 10 / 50 / 100.
+    // Measure wall-clock with:
+    //
+    //     Measure-Command { zig build bench }
+    //     zig build bench --time-report
+    //
+    // to see how comptime cost scales. Windows-host-only for the same
+    // `@extern` reason as samples.
+    // ------------------------------------------------------------------
+    const bench_step = b.step("bench", "Compile the Phase 4 comptime-projection benchmark");
+    if (host_is_windows) {
+        const bench_mod = b.createModule(.{
+            .root_source_file = b.path("benches/project_bench/main.zig"),
+            .target = target,
+            .optimize = optimize,
+        });
+        bench_mod.addImport("win-sys", win_sys_mod);
+        bench_mod.linkSystemLibrary("kernel32", .{});
+
+        const bench_exe = b.addExecutable(.{
+            .name = "project-bench",
+            .root_module = bench_mod,
+        });
+        const install_bench = b.addInstallArtifact(bench_exe, .{});
+        bench_step.dependOn(&install_bench.step);
+    }
 }

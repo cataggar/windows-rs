@@ -253,16 +253,23 @@ fn namespaceIndex(comptime ns: []const u8) type {
     return @field(index, ns);
 }
 
+/// Upper bound on methods per `project()` call. Picked generously so
+/// real applications almost never hit it; exceeding it surfaces a
+/// `@compileError` with guidance to split the filter across two
+/// `project()` calls. Current comptime cost is roughly linear in the
+/// filter size (see `benches/project_bench/main.zig`).
+const MAX_PROJECT_METHODS: usize = 256;
+
 /// Build the container struct type from the filter. One field per
 /// requested method, typed `*const FnType` where FnType is
 /// reconstructed from the method's signature blob.
 fn ProjectType(comptime filter: anytype) type {
     // StaticStringMap.get() on the big namespace indexes
-    // (Storage.FileSystem has 300+ entries, UI.WindowsAndMessaging
+    // (Storage.FileSystem has 400+ entries, UI.WindowsAndMessaging
     // similar) blows the default 1000-branch quota after just a
-    // handful of lookups. Bump generously — comptime eval is still
+    // handful of lookups. Bump generously -- comptime eval is still
     // one-shot per project() call.
-    @setEvalBranchQuota(100_000);
+    @setEvalBranchQuota(1_000_000);
     const Filter = @TypeOf(filter);
     comptime var total: usize = 0;
     inline for (@typeInfo(Filter).@"struct".fields) |nsf| {
@@ -270,10 +277,14 @@ fn ProjectType(comptime filter: anytype) type {
         inline for (@typeInfo(@TypeOf(names)).@"struct".fields) |_| total += 1;
     }
 
-    comptime var names_buf: [64][:0]const u8 = undefined;
-    comptime var types_buf: [64]type = undefined;
-    comptime var attrs_buf: [64]std.builtin.Type.StructField.Attributes = undefined;
-    if (total > names_buf.len) @compileError("project: too many methods in filter (>64)");
+    comptime var names_buf: [MAX_PROJECT_METHODS][:0]const u8 = undefined;
+    comptime var types_buf: [MAX_PROJECT_METHODS]type = undefined;
+    comptime var attrs_buf: [MAX_PROJECT_METHODS]std.builtin.Type.StructField.Attributes = undefined;
+    if (total > MAX_PROJECT_METHODS)
+        @compileError(std.fmt.comptimePrint(
+            "project: filter has {d} methods, cap is {d}. Split the filter across two project() calls.",
+            .{ total, MAX_PROJECT_METHODS },
+        ));
 
     comptime var idx: usize = 0;
     inline for (@typeInfo(Filter).@"struct".fields) |nsf| {
@@ -307,7 +318,7 @@ fn ProjectType(comptime filter: anytype) type {
 /// method names. Returns a populated struct value whose fields
 /// are the projected extern function pointers.
 pub fn project(comptime filter: anytype) ProjectType(filter) {
-    @setEvalBranchQuota(100_000);
+    @setEvalBranchQuota(1_000_000);
     const T = ProjectType(filter);
     var out: T = undefined;
     inline for (@typeInfo(@TypeOf(filter)).@"struct".fields) |nsf| {
