@@ -211,24 +211,103 @@ pub fn build(b: *std.Build) void {
         );
     }
 
-    // Canary method-index files. Phase 4's comptime `project()` helper
-    // will `@import` one of these per namespace it wants to project
-    // from, read the MethodDef row from the `StaticStringMap`, and
-    // materialize the corresponding `extern fn` directly from the
-    // signature blob — without scanning winmd at comptime.
-    const index_canaries = [_][]const u8{
+    // Every Win32 namespace listed below gets refreshed on every
+    // `zig build bindings`: both the `.structs.zig` (type declarations)
+    // and the `.index.zig` (method table used by `win-sys`'s
+    // `tyToZigType` and by Phase 4's comptime `project()` helper) are
+    // regenerated from the vendored `.winmd`. Keep this list sorted;
+    // to add a namespace, just add a line and rerun the bindings step.
+    // Zig 0.16's build script runs before the new `Io` interface is
+    // plumbed into `std.fs.Dir`, so we can't practically scan the
+    // committed `packages/win-sys/src/generated/` directory here —
+    // hence the hand-list. The `mod.zig` step downstream still
+    // auto-discovers, so consumer `@import("win-sys")` doesn't care.
+    const win32_namespaces = [_][]const u8{
+        "Windows.Win32.Devices.DeviceAndDriverInstallation",
+        "Windows.Win32.Devices.Display",
+        "Windows.Win32.Devices.Enumeration.Pnp",
+        "Windows.Win32.Devices.HumanInterfaceDevice",
+        "Windows.Win32.Devices.Usb",
         "Windows.Win32.Foundation",
-        "Windows.Win32.System.LibraryLoader",
-        "Windows.Win32.System.Threading",
-        "Windows.Win32.System.Console",
-        "Windows.Win32.UI.WindowsAndMessaging",
-        "Windows.Win32.Storage.FileSystem",
-        "Windows.Win32.System.Memory",
-        "Windows.Win32.System.SystemInformation",
+        "Windows.Win32.Globalization",
+        "Windows.Win32.Graphics.Direct3D12",
+        "Windows.Win32.Graphics.Dxgi.Common",
+        "Windows.Win32.Graphics.Gdi",
+        "Windows.Win32.Graphics.OpenGL",
+        "Windows.Win32.Graphics.Printing",
+        "Windows.Win32.Networking.WinHttp",
+        "Windows.Win32.Networking.WinInet",
+        "Windows.Win32.Networking.WinSock",
+        "Windows.Win32.NetworkManagement.Dhcp",
+        "Windows.Win32.NetworkManagement.Dns",
+        "Windows.Win32.NetworkManagement.IpHelper",
+        "Windows.Win32.NetworkManagement.Ndis",
+        "Windows.Win32.NetworkManagement.WiFi",
+        "Windows.Win32.NetworkManagement.WNet",
         "Windows.Win32.Security",
+        "Windows.Win32.Security.Authentication.Identity",
+        "Windows.Win32.Security.Authorization",
+        "Windows.Win32.Security.Credentials",
+        "Windows.Win32.Security.Cryptography",
+        "Windows.Win32.Security.ExtensibleAuthenticationProtocol",
+        "Windows.Win32.Storage.Compression",
+        "Windows.Win32.Storage.FileSystem",
+        "Windows.Win32.Storage.InstallableFileSystems",
+        "Windows.Win32.Storage.Jet",
+        "Windows.Win32.Storage.StructuredStorage",
+        "Windows.Win32.System.Com",
+        "Windows.Win32.System.Console",
+        "Windows.Win32.System.DataExchange",
         "Windows.Win32.System.Diagnostics.Debug",
+        "Windows.Win32.System.Diagnostics.Etw",
+        "Windows.Win32.System.Diagnostics.ToolHelp",
+        "Windows.Win32.System.Environment",
+        "Windows.Win32.System.ErrorReporting",
+        "Windows.Win32.System.EventLog",
+        "Windows.Win32.System.IO",
+        "Windows.Win32.System.JobObjects",
+        "Windows.Win32.System.Kernel",
+        "Windows.Win32.System.LibraryLoader",
+        "Windows.Win32.System.Memory",
+        "Windows.Win32.System.Mmc",
+        "Windows.Win32.System.Ole",
+        "Windows.Win32.System.PasswordManagement",
+        "Windows.Win32.System.Performance",
+        "Windows.Win32.System.Power",
+        "Windows.Win32.System.ProcessStatus",
+        "Windows.Win32.System.Registry",
+        "Windows.Win32.System.Rpc",
+        "Windows.Win32.System.Services",
+        "Windows.Win32.System.SystemInformation",
+        "Windows.Win32.System.Threading",
+        "Windows.Win32.System.Time",
+        "Windows.Win32.System.WindowsProgramming",
+        "Windows.Win32.UI.Accessibility",
+        "Windows.Win32.UI.ColorSystem",
+        "Windows.Win32.UI.Controls",
+        "Windows.Win32.UI.Controls.Dialogs",
+        "Windows.Win32.UI.HiDpi",
+        "Windows.Win32.UI.Input",
+        "Windows.Win32.UI.Input.KeyboardAndMouse",
+        "Windows.Win32.UI.Input.Pointer",
+        "Windows.Win32.UI.Input.Touch",
+        "Windows.Win32.UI.Magnification",
+        "Windows.Win32.UI.Shell",
+        "Windows.Win32.UI.Shell.Common",
+        "Windows.Win32.UI.TextServices",
+        "Windows.Win32.UI.WindowsAndMessaging",
     };
-    for (index_canaries) |ns| {
+    for (win32_namespaces) |ns| {
+        const structs_run = b.addRunArtifact(winbindgen_exe);
+        structs_run.addArg("--arch=x64");
+        structs_run.addArg("--structs");
+        structs_run.addArg(ns);
+        const structs_source = structs_run.captureStdOut(.{});
+        gen_update.addCopyFileToSource(
+            structs_source,
+            b.fmt("packages/win-sys/src/generated/{s}.structs.zig", .{ns}),
+        );
+
         const idx_run = b.addRunArtifact(winbindgen_exe);
         idx_run.addArg("--arch=x64");
         idx_run.addArg("--index");
