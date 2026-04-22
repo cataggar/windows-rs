@@ -106,3 +106,20 @@ pub const FLOATING_SAVE_AREA = extern struct {
     RegisterArea: [80]u8,
     Cr0NpxState: u32,
 };
+pub const EXCEPTION_REGISTRATION_RECORD = extern struct {
+    Next: *EXCEPTION_REGISTRATION_RECORD,
+    Handler: ?*const anyopaque,
+};
+pub const NT_TIB = extern struct {
+pub const NT_TIB_0 = extern union {
+    FiberData: *anyopaque,
+    Version: u32,
+};
+    ExceptionList: *EXCEPTION_REGISTRATION_RECORD,
+    StackBase: *anyopaque,
+    StackLimit: *anyopaque,
+    SubSystemTib: *anyopaque,
+    Anonymous: NT_TIB_0,
+    ArbitraryUserPointer: *anyopaque,
+    Self: *NT_TIB,
+};

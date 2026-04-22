@@ -154,6 +154,10 @@ pub const WSMAN_RESPONSE_DATA = extern union {
     connectData: WSMAN_CONNECT_DATA,
     createData: WSMAN_CREATE_SHELL_DATA,
 };
+pub const WSMAN_SHELL_ASYNC = extern struct {
+    operationContext: *anyopaque,
+    completionFunction: ?*const anyopaque,
+};
 pub const WSMAN_COMMAND_ARG_SET = extern struct {
     argsCount: u32,
     args: *@"Windows.Win32.Foundation".PWSTR,

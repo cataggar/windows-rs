@@ -1136,6 +1136,22 @@ pub const DXVA2_VIDEOPROCESSBLT = extern struct {
     pSrcSurfaces: *DXVA2_VIDEOSAMPLE,
     NumSrcSurfaces: u32,
 };
+pub const DXVA2SW_CALLBACKS = extern struct {
+    Size: u32,
+    GetVideoProcessorRenderTargetCount: ?*const anyopaque,
+    GetVideoProcessorRenderTargets: ?*const anyopaque,
+    GetVideoProcessorCaps: ?*const anyopaque,
+    GetVideoProcessorSubStreamFormatCount: ?*const anyopaque,
+    GetVideoProcessorSubStreamFormats: ?*const anyopaque,
+    GetProcAmpRange: ?*const anyopaque,
+    GetFilterPropertyRange: ?*const anyopaque,
+    CreateVideoProcessDevice: ?*const anyopaque,
+    DestroyVideoProcessDevice: ?*const anyopaque,
+    VideoProcessBeginFrame: ?*const anyopaque,
+    VideoProcessEndFrame: ?*const anyopaque,
+    VideoProcessSetRenderTarget: ?*const anyopaque,
+    VideoProcessBlt: ?*const anyopaque,
+};
 pub const DXVA2Trace_DecodeDevCreatedData = extern struct {
     wmiHeader: @"Windows.Win32.System.Diagnostics.Etw".EVENT_TRACE_HEADER,
     pObject: u64,

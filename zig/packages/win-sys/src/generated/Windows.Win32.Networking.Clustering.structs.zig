@@ -228,6 +228,10 @@ pub const REPAIR_CLUSTER_NAME_ACCOUNT_CONFIG = extern struct {
     pszPassword: @"Windows.Win32.Foundation".PWSTR,
     pszDomain: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const CLUSAPI_REASON_HANDLER = extern struct {
+    lpParameter: *anyopaque,
+    pfnHandler: ?*const anyopaque,
+};
 pub const NOTIFY_FILTER_AND_TYPE = extern struct {
     dwObjectType: u32,
     FilterFlags: i64,
@@ -698,6 +702,74 @@ pub const RESOURCE_STATUS_EX = extern struct {
     Flags: u32,
     WaitHint: u32,
 };
+pub const CLRES_V1_FUNCTIONS = extern struct {
+    Open: ?*const anyopaque,
+    Close: ?*const anyopaque,
+    Online: ?*const anyopaque,
+    Offline: ?*const anyopaque,
+    Terminate: ?*const anyopaque,
+    LooksAlive: ?*const anyopaque,
+    IsAlive: ?*const anyopaque,
+    Arbitrate: ?*const anyopaque,
+    Release: ?*const anyopaque,
+    ResourceControl: ?*const anyopaque,
+    ResourceTypeControl: ?*const anyopaque,
+};
+pub const CLRES_V2_FUNCTIONS = extern struct {
+    Open: ?*const anyopaque,
+    Close: ?*const anyopaque,
+    Online: ?*const anyopaque,
+    Offline: ?*const anyopaque,
+    Terminate: ?*const anyopaque,
+    LooksAlive: ?*const anyopaque,
+    IsAlive: ?*const anyopaque,
+    Arbitrate: ?*const anyopaque,
+    Release: ?*const anyopaque,
+    ResourceControl: ?*const anyopaque,
+    ResourceTypeControl: ?*const anyopaque,
+    Cancel: ?*const anyopaque,
+};
+pub const CLRES_V3_FUNCTIONS = extern struct {
+    Open: ?*const anyopaque,
+    Close: ?*const anyopaque,
+    Online: ?*const anyopaque,
+    Offline: ?*const anyopaque,
+    Terminate: ?*const anyopaque,
+    LooksAlive: ?*const anyopaque,
+    IsAlive: ?*const anyopaque,
+    Arbitrate: ?*const anyopaque,
+    Release: ?*const anyopaque,
+    BeginResourceControl: ?*const anyopaque,
+    BeginResourceTypeControl: ?*const anyopaque,
+    Cancel: ?*const anyopaque,
+};
+pub const CLRES_V4_FUNCTIONS = extern struct {
+    Open: ?*const anyopaque,
+    Close: ?*const anyopaque,
+    Online: ?*const anyopaque,
+    Offline: ?*const anyopaque,
+    Terminate: ?*const anyopaque,
+    LooksAlive: ?*const anyopaque,
+    IsAlive: ?*const anyopaque,
+    Arbitrate: ?*const anyopaque,
+    Release: ?*const anyopaque,
+    BeginResourceControl: ?*const anyopaque,
+    BeginResourceTypeControl: ?*const anyopaque,
+    Cancel: ?*const anyopaque,
+    BeginResourceControlAsUser: ?*const anyopaque,
+    BeginResourceTypeControlAsUser: ?*const anyopaque,
+};
+pub const CLRES_FUNCTION_TABLE = extern struct {
+pub const CLRES_FUNCTION_TABLE_0 = extern union {
+    V1Functions: CLRES_V1_FUNCTIONS,
+    V2Functions: CLRES_V2_FUNCTIONS,
+    V3Functions: CLRES_V3_FUNCTIONS,
+    V4Functions: CLRES_V4_FUNCTIONS,
+};
+    TableSize: u32,
+    Version: u32,
+    Anonymous: CLRES_FUNCTION_TABLE_0,
+};
 pub const RESUTIL_LARGEINT_DATA = extern struct {
     Default: i64,
     Minimum: i64,
@@ -730,6 +802,25 @@ pub const RESUTIL_PROPERTY_ITEM_0 = extern union {
     Maximum: u32,
     Flags: u32,
     Offset: u32,
+};
+pub const CLRES_CALLBACK_FUNCTION_TABLE = extern struct {
+    LogEvent: ?*const anyopaque,
+    SetResourceStatusEx: ?*const anyopaque,
+    SetResourceLockedMode: ?*const anyopaque,
+    SignalFailure: ?*const anyopaque,
+    SetResourceInMemoryNodeLocalProperties: ?*const anyopaque,
+    EndControlCall: ?*const anyopaque,
+    EndTypeControlCall: ?*const anyopaque,
+    ExtendControlCall: ?*const anyopaque,
+    ExtendTypeControlCall: ?*const anyopaque,
+    RaiseResTypeNotification: ?*const anyopaque,
+    ChangeResourceProcessForDumps: ?*const anyopaque,
+    ChangeResTypeProcessForDumps: ?*const anyopaque,
+    SetInternalState: ?*const anyopaque,
+    SetResourceLockedModeEx: ?*const anyopaque,
+    RequestDump: ?*const anyopaque,
+    SetResourceWprPolicy: ?*const anyopaque,
+    ArmWprWatchdogForCurrentResourceCall: ?*const anyopaque,
 };
 pub const MONITOR_STATE = extern struct {
     LastUpdate: i64,

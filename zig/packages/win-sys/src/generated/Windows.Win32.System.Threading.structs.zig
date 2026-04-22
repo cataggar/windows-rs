@@ -8,6 +8,14 @@ const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 const @"Windows.Win32.System.Kernel" = @import("Windows.Win32.System.Kernel.structs.zig");
 
+pub const PROCESS_BASIC_INFORMATION = extern struct {
+    ExitStatus: @"Windows.Win32.Foundation".NTSTATUS,
+    PebBaseAddress: *PEB,
+    AffinityMask: usize,
+    BasePriority: i32,
+    UniqueProcessId: usize,
+    InheritedFromUniqueProcessId: usize,
+};
 pub const PTP_POOL = extern struct {
     Value: isize,
 };
@@ -207,6 +215,31 @@ pub const TP_POOL_STACK_INFORMATION = extern struct {
     StackReserve: usize,
     StackCommit: usize,
 };
+pub const TP_CALLBACK_ENVIRON_V3 = extern struct {
+pub const _u_e__Union = extern union {
+pub const _s_e__Struct = extern struct {
+    _bitfield: u32,
+};
+    Flags: u32,
+    s: _s_e__Struct,
+};
+    Version: u32,
+    Pool: PTP_POOL,
+    CleanupGroup: PTP_CLEANUP_GROUP,
+    CleanupGroupCancelCallback: ?*const anyopaque,
+    RaceDll: *anyopaque,
+    ActivationContext: isize,
+    FinalizationCallback: ?*const anyopaque,
+    u: _u_e__Union,
+    CallbackPriority: i32,
+    Size: u32,
+};
+pub const UMS_SCHEDULER_STARTUP_INFO = extern struct {
+    UmsVersion: u32,
+    CompletionList: *anyopaque,
+    SchedulerProc: ?*const anyopaque,
+    SchedulerParam: *anyopaque,
+};
 pub const UMS_SYSTEM_THREAD_INFORMATION = extern struct {
 pub const UMS_SYSTEM_THREAD_INFORMATION_0 = extern union {
 pub const UMS_SYSTEM_THREAD_INFORMATION_0_0 = extern struct {
@@ -236,4 +269,37 @@ pub const RTL_USER_PROCESS_PARAMETERS = extern struct {
     Reserved2: [10]*anyopaque,
     ImagePathName: @"Windows.Win32.Foundation".UNICODE_STRING,
     CommandLine: @"Windows.Win32.Foundation".UNICODE_STRING,
+};
+pub const PEB = extern struct {
+    Reserved1: [2]u8,
+    BeingDebugged: u8,
+    Reserved2: [1]u8,
+    Reserved3: [2]*anyopaque,
+    Ldr: *PEB_LDR_DATA,
+    ProcessParameters: *RTL_USER_PROCESS_PARAMETERS,
+    Reserved4: [3]*anyopaque,
+    AtlThunkSListPtr: *anyopaque,
+    Reserved5: *anyopaque,
+    Reserved6: u32,
+    Reserved7: *anyopaque,
+    Reserved8: u32,
+    AtlThunkSListPtr32: u32,
+    Reserved9: [45]*anyopaque,
+    Reserved10: [96]u8,
+    PostProcessInitRoutine: ?*const anyopaque,
+    Reserved11: [128]u8,
+    Reserved12: [1]*anyopaque,
+    SessionId: u32,
+};
+pub const TEB = extern struct {
+    Reserved1: [12]*anyopaque,
+    ProcessEnvironmentBlock: *PEB,
+    Reserved2: [399]*anyopaque,
+    Reserved3: [1952]u8,
+    TlsSlots: [64]*anyopaque,
+    Reserved4: [8]u8,
+    Reserved5: [26]*anyopaque,
+    ReservedForOle: *anyopaque,
+    Reserved6: [4]*anyopaque,
+    TlsExpansionSlots: *anyopaque,
 };

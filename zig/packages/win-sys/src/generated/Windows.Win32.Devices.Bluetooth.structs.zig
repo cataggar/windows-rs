@@ -118,6 +118,23 @@ pub const BLUETOOTH_COD_PAIRS = extern struct {
     ulCODMask: u32,
     pcszDescription: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const BLUETOOTH_SELECT_DEVICE_PARAMS = extern struct {
+    dwSize: u32,
+    cNumOfClasses: u32,
+    prgClassOfDevices: *BLUETOOTH_COD_PAIRS,
+    pszInfo: @"Windows.Win32.Foundation".PWSTR,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    fForceAuthentication: @"Windows.Win32.Foundation".BOOL,
+    fShowAuthenticated: @"Windows.Win32.Foundation".BOOL,
+    fShowRemembered: @"Windows.Win32.Foundation".BOOL,
+    fShowUnknown: @"Windows.Win32.Foundation".BOOL,
+    fAddNewDeviceWizard: @"Windows.Win32.Foundation".BOOL,
+    fSkipServicesPage: @"Windows.Win32.Foundation".BOOL,
+    pfnDeviceCallback: ?*const anyopaque,
+    pvParam: *anyopaque,
+    cNumDevices: u32,
+    pDevices: *BLUETOOTH_DEVICE_INFO,
+};
 pub const BLUETOOTH_PIN_INFO = extern struct {
     pin: [16]u8,
     pinLength: u8,

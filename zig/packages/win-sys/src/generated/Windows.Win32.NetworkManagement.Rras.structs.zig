@@ -85,6 +85,30 @@ pub const RASIKEV2_PROJECTION_INFO = extern struct {
     numIPv6ServerAddresses: u32,
     ipv6ServerAddresses: *@"Windows.Win32.Networking.WinSock".IN6_ADDR,
 };
+pub const RASPBDLGW = extern struct {
+    dwSize: u32,
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    dwFlags: u32,
+    xDlg: i32,
+    yDlg: i32,
+    dwCallbackId: usize,
+    pCallback: ?*const anyopaque,
+    dwError: u32,
+    reserved: usize,
+    reserved2: usize,
+};
+pub const RASPBDLGA = extern struct {
+    dwSize: u32,
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    dwFlags: u32,
+    xDlg: i32,
+    yDlg: i32,
+    dwCallbackId: usize,
+    pCallback: ?*const anyopaque,
+    dwError: u32,
+    reserved: usize,
+    reserved2: usize,
+};
 pub const RASENTRYDLGW = extern struct {
     dwSize: u32,
     hwndOwner: @"Windows.Win32.Foundation".HWND,
@@ -496,6 +520,10 @@ pub const RASCOMMSETTINGS = extern struct {
     bStop: u8,
     bByteSize: u8,
     bAlign: u8,
+};
+pub const RASCUSTOMSCRIPTEXTENSIONS = extern struct {
+    dwSize: u32,
+    pfnRasSetCommSettings: ?*const anyopaque,
 };
 pub const RAS_STATS = extern struct {
     dwSize: u32,
@@ -1295,6 +1323,21 @@ pub const RAS_UPDATE_CONNECTION = extern struct {
     wszLocalEndpointAddress: [65]u16,
     wszRemoteEndpointAddress: [65]u16,
 };
+pub const MPRAPI_ADMIN_DLL_CALLBACKS = extern struct {
+    revision: u8,
+    lpfnMprAdminGetIpAddressForUser: ?*const anyopaque,
+    lpfnMprAdminReleaseIpAddress: ?*const anyopaque,
+    lpfnMprAdminGetIpv6AddressForUser: ?*const anyopaque,
+    lpfnMprAdminReleaseIpV6AddressForUser: ?*const anyopaque,
+    lpfnRasAdminAcceptNewLink: ?*const anyopaque,
+    lpfnRasAdminLinkHangupNotification: ?*const anyopaque,
+    lpfnRasAdminTerminateDll: ?*const anyopaque,
+    lpfnRasAdminAcceptNewConnectionEx: ?*const anyopaque,
+    lpfnRasAdminAcceptEndpointChangeEx: ?*const anyopaque,
+    lpfnRasAdminAcceptReauthenticationEx: ?*const anyopaque,
+    lpfnRasAdminConnectionHangupNotificationEx: ?*const anyopaque,
+    lpfnRASValidatePreAuthenticatedConnectionEx: ?*const anyopaque,
+};
 pub const SECURITY_MESSAGE = extern struct {
     dwMsgId: u32,
     hPort: isize,
@@ -1312,6 +1355,18 @@ pub const MGM_IF_ENTRY = extern struct {
     dwIfNextHopAddr: u32,
     bIGMP: @"Windows.Win32.Foundation".BOOL,
     bIsEnabled: @"Windows.Win32.Foundation".BOOL,
+};
+pub const ROUTING_PROTOCOL_CONFIG = extern struct {
+    dwCallbackFlags: u32,
+    pfnRpfCallback: ?*const anyopaque,
+    pfnCreationAlertCallback: ?*const anyopaque,
+    pfnPruneAlertCallback: ?*const anyopaque,
+    pfnJoinAlertCallback: ?*const anyopaque,
+    pfnWrongIfCallback: ?*const anyopaque,
+    pfnLocalJoinCallback: ?*const anyopaque,
+    pfnLocalLeaveCallback: ?*const anyopaque,
+    pfnDisableIgmpCallback: ?*const anyopaque,
+    pfnEnableIgmpCallback: ?*const anyopaque,
 };
 pub const SOURCE_GROUP_ENTRY = extern struct {
     dwSourceAddr: u32,
@@ -1401,4 +1456,8 @@ pub const RTM_ENTITY_METHOD_OUTPUT = extern struct {
     MethodStatus: u32,
     OutputSize: u32,
     OutputData: [1]u8,
+};
+pub const RTM_ENTITY_EXPORT_METHODS = extern struct {
+    NumMethods: u32,
+    Methods: [1]?*const anyopaque,
 };

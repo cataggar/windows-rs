@@ -90,6 +90,12 @@ pub const DBCOST = extern struct {
     dwUnits: u32,
     lValue: i32,
 };
+pub const TEXT_SOURCE = extern struct {
+    pfnFillTextBuffer: ?*const anyopaque,
+    awcBuffer: @"Windows.Win32.Foundation".PWSTR,
+    iEnd: u32,
+    iCur: u32,
+};
 pub const FILTERED_DATA_SOURCES = extern struct {
     pwcsExtension: @"Windows.Win32.Foundation".PWSTR,
     pwcsMime: @"Windows.Win32.Foundation".PWSTR,

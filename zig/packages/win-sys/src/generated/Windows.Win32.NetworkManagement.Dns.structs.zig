@@ -389,8 +389,52 @@ pub const DNS_APPLICATION_SETTINGS = extern struct {
     Version: u32,
     Flags: u64,
 };
+pub const DNS_QUERY_REQUEST = extern struct {
+    Version: u32,
+    QueryName: @"Windows.Win32.Foundation".PWSTR,
+    QueryType: u16,
+    QueryOptions: u64,
+    pDnsServerList: *DNS_ADDR_ARRAY,
+    InterfaceIndex: u32,
+    pQueryCompletionCallback: ?*const anyopaque,
+    pQueryContext: *anyopaque,
+};
 pub const DNS_QUERY_CANCEL = extern struct {
     Reserved: [32]@"Windows.Win32.Foundation".CHAR,
+};
+pub const DNS_QUERY_REQUEST3 = extern struct {
+    Version: u32,
+    QueryName: @"Windows.Win32.Foundation".PWSTR,
+    QueryType: u16,
+    QueryOptions: u64,
+    pDnsServerList: *DNS_ADDR_ARRAY,
+    InterfaceIndex: u32,
+    pQueryCompletionCallback: ?*const anyopaque,
+    pQueryContext: *anyopaque,
+    IsNetworkQueryRequired: @"Windows.Win32.Foundation".BOOL,
+    RequiredNetworkIndex: u32,
+    cCustomServers: u32,
+    pCustomServers: *DNS_CUSTOM_SERVER,
+};
+pub const DNS_QUERY_RAW_REQUEST = extern struct {
+pub const DNS_QUERY_RAW_REQUEST_0 = extern union {
+    maxSa: [32]@"Windows.Win32.Foundation".CHAR,
+};
+    version: u32,
+    resultsVersion: u32,
+    dnsQueryRawSize: u32,
+    dnsQueryRaw: *u8,
+    dnsQueryName: @"Windows.Win32.Foundation".PWSTR,
+    dnsQueryType: u16,
+    queryOptions: u64,
+    interfaceIndex: u32,
+    queryCompletionCallback: ?*const anyopaque,
+    queryContext: *anyopaque,
+    queryRawOptions: u64,
+    customServersSize: u32,
+    customServers: *DNS_CUSTOM_SERVER,
+    protocol: u32,
+    Anonymous: DNS_QUERY_RAW_REQUEST_0,
 };
 pub const DNS_QUERY_RAW_CANCEL = extern struct {
     reserved: [32]@"Windows.Win32.Foundation".CHAR,
@@ -465,10 +509,40 @@ pub const DNS_CONNECTION_POLICY_ENTRY_LIST = extern struct {
 pub const DNS_SERVICE_CANCEL = extern struct {
     reserved: *anyopaque,
 };
+pub const DNS_SERVICE_BROWSE_REQUEST = extern struct {
+pub const DNS_SERVICE_BROWSE_REQUEST_0 = extern union {
+    pBrowseCallback: ?*const anyopaque,
+    pBrowseCallbackV2: ?*const anyopaque,
+};
+    Version: u32,
+    InterfaceIndex: u32,
+    QueryName: @"Windows.Win32.Foundation".PWSTR,
+    Anonymous: DNS_SERVICE_BROWSE_REQUEST_0,
+    pQueryContext: *anyopaque,
+};
+pub const DNS_SERVICE_RESOLVE_REQUEST = extern struct {
+    Version: u32,
+    InterfaceIndex: u32,
+    QueryName: @"Windows.Win32.Foundation".PWSTR,
+    pResolveCompletionCallback: ?*const anyopaque,
+    pQueryContext: *anyopaque,
+};
 pub const MDNS_QUERY_HANDLE = extern struct {
     nameBuf: [256]u16,
     wType: u16,
     pSubscription: *anyopaque,
     pWnfCallbackParams: *anyopaque,
     stateNameData: [2]u32,
+};
+pub const MDNS_QUERY_REQUEST = extern struct {
+    Version: u32,
+    ulRefCount: u32,
+    Query: @"Windows.Win32.Foundation".PWSTR,
+    QueryType: u16,
+    QueryOptions: u64,
+    InterfaceIndex: u32,
+    pQueryCallback: ?*const anyopaque,
+    pQueryContext: *anyopaque,
+    fAnswerReceived: @"Windows.Win32.Foundation".BOOL,
+    ulResendCount: u32,
 };

@@ -7,6 +7,18 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
+pub const DVD_COPY_PROTECT_KEY = extern struct {
+pub const _Parameters_e__Union = extern union {
+    FileHandle: @"Windows.Win32.Foundation".HANDLE,
+    TitleOffset: i64,
+};
+    KeyLength: u32,
+    SessionId: u32,
+    KeyType: i32,
+    KeyFlags: u32,
+    Parameters: _Parameters_e__Union,
+    KeyData: [1]u8,
+};
 pub const STORAGE_SET_READ_AHEAD = extern struct {
     TriggerAddress: i64,
     TargetAddress: i64,

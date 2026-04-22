@@ -86,6 +86,21 @@ pub const ENCLAVE_VBS_BASIC_KEY_REQUEST = extern struct {
     SystemKeyID: u32,
     CurrentSystemKeyID: u32,
 };
+pub const VBS_BASIC_ENCLAVE_SYSCALL_PAGE = extern struct {
+    ReturnFromEnclave: ?*const anyopaque,
+    ReturnFromException: ?*const anyopaque,
+    TerminateThread: ?*const anyopaque,
+    InterruptThread: ?*const anyopaque,
+    CommitPages: ?*const anyopaque,
+    DecommitPages: ?*const anyopaque,
+    ProtectPages: ?*const anyopaque,
+    CreateThread: ?*const anyopaque,
+    GetEnclaveInformation: ?*const anyopaque,
+    GenerateKey: ?*const anyopaque,
+    GenerateReport: ?*const anyopaque,
+    VerifyReport: ?*const anyopaque,
+    GenerateRandomData: ?*const anyopaque,
+};
 pub const PS_TRUSTLET_TKSESSION_ID = extern struct {
     SessionId: [4]u64,
 };

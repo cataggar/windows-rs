@@ -377,6 +377,14 @@ pub const FAX_DEV_STATUS = extern struct {
     ErrorCode: u32,
     Reserved: [3]u32,
 };
+pub const FAX_ROUTE_CALLBACKROUTINES = extern struct {
+    SizeOfStruct: u32,
+    FaxRouteAddFile: ?*const anyopaque,
+    FaxRouteDeleteFile: ?*const anyopaque,
+    FaxRouteGetFile: ?*const anyopaque,
+    FaxRouteEnumFiles: ?*const anyopaque,
+    FaxRouteModifyRoutingData: ?*const anyopaque,
+};
 pub const FAX_ROUTE = extern struct {
     SizeOfStruct: u32,
     JobId: u32,

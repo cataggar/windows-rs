@@ -850,6 +850,12 @@ pub const CLFS_MGMT_NOTIFICATION = extern struct {
     Lsn: CLS_LSN,
     LogIsPinned: u16,
 };
+pub const LOG_MANAGEMENT_CALLBACKS = extern struct {
+    CallbackContext: *anyopaque,
+    AdvanceTailCallback: ?*const anyopaque,
+    LogFullHandlerCallback: ?*const anyopaque,
+    LogUnpinnedCallback: ?*const anyopaque,
+};
 pub const DISKQUOTA_USER_INFORMATION = extern struct {
     QuotaUsed: i64,
     QuotaThreshold: i64,
@@ -1268,6 +1274,18 @@ pub const STAT_SERVER_0 = extern struct {
     sts0_reqbufneed: u32,
     sts0_bigbufneed: u32,
 };
+pub const FH_OVERLAPPED = extern struct {
+    Internal: usize,
+    InternalHigh: usize,
+    Offset: u32,
+    OffsetHigh: u32,
+    hEvent: @"Windows.Win32.Foundation".HANDLE,
+    pfnCompletion: ?*const anyopaque,
+    Reserved1: usize,
+    Reserved2: usize,
+    Reserved3: usize,
+    Reserved4: usize,
+};
 pub const FIO_CONTEXT = extern struct {
     m_dwTempHack: u32,
     m_dwSignature: u32,
@@ -1489,9 +1507,29 @@ pub const _Error_e__Struct = extern struct {
     dwPadding: u32,
     Info: _Info_e__Union,
 };
+pub const COPYFILE2_EXTENDED_PARAMETERS = extern struct {
+    dwSize: u32,
+    dwCopyFlags: u32,
+    pfCancel: *@"Windows.Win32.Foundation".BOOL,
+    pProgressRoutine: ?*const anyopaque,
+    pvCallbackContext: *anyopaque,
+};
 pub const COPYFILE2_CREATE_OPLOCK_KEYS = extern struct {
     ParentOplockKey: GUID,
     TargetOplockKey: GUID,
+};
+pub const COPYFILE2_EXTENDED_PARAMETERS_V2 = extern struct {
+    dwSize: u32,
+    dwCopyFlags: u32,
+    pfCancel: *@"Windows.Win32.Foundation".BOOL,
+    pProgressRoutine: ?*const anyopaque,
+    pvCallbackContext: *anyopaque,
+    dwCopyFlagsV2: u32,
+    ioDesiredSize: u32,
+    ioDesiredRate: u32,
+    pProgressRoutineOld: ?*const anyopaque,
+    SourceOplockKeys: *COPYFILE2_CREATE_OPLOCK_KEYS,
+    reserved: [6]*anyopaque,
 };
 pub const FILE_BASIC_INFO = extern struct {
     CreationTime: i64,

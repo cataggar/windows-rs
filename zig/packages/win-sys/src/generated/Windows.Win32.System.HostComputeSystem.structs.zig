@@ -6,6 +6,7 @@ const HRESULT = win_core.HRESULT;
 const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
+const @"Windows.Win32.Security" = @import("Windows.Win32.Security.structs.zig");
 
 pub const HCS_OPERATION = extern struct {
     Value: *anyopaque,
@@ -27,4 +28,12 @@ pub const HCS_PROCESS_INFORMATION = extern struct {
     StdInput: @"Windows.Win32.Foundation".HANDLE,
     StdOutput: @"Windows.Win32.Foundation".HANDLE,
     StdError: @"Windows.Win32.Foundation".HANDLE,
+};
+pub const HCS_CREATE_OPTIONS_1 = extern struct {
+    Version: i32,
+    UserToken: @"Windows.Win32.Foundation".HANDLE,
+    SecurityDescriptor: *@"Windows.Win32.Security".SECURITY_DESCRIPTOR,
+    CallbackOptions: i32,
+    CallbackContext: *anyopaque,
+    Callback: ?*const anyopaque,
 };

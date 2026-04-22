@@ -75,6 +75,14 @@ pub const PERF_COUNTER_IDENTITY = extern struct {
     NameOffset: u32,
     Reserved: u32,
 };
+pub const PERF_PROVIDER_CONTEXT = extern struct {
+    ContextSize: u32,
+    Reserved: u32,
+    ControlCallback: ?*const anyopaque,
+    MemAllocRoutine: ?*const anyopaque,
+    MemFreeRoutine: ?*const anyopaque,
+    pMemContext: *anyopaque,
+};
 pub const PERF_INSTANCE_HEADER = extern struct {
     Size: u32,
     InstanceId: u32,
@@ -376,4 +384,52 @@ pub const PDH_LOG_SERVICE_QUERY_INFO_W_0_1 = extern struct {
     dwFileType: u32,
     dwReserved: u32,
     Anonymous: PDH_LOG_SERVICE_QUERY_INFO_W_0,
+};
+pub const PDH_BROWSE_DLG_CONFIG_HW = extern struct {
+    _bitfield: u32,
+    hWndOwner: @"Windows.Win32.Foundation".HWND,
+    hDataSource: PDH_HLOG,
+    szReturnPathBuffer: @"Windows.Win32.Foundation".PWSTR,
+    cchReturnPathLength: u32,
+    pCallBack: ?*const anyopaque,
+    dwCallBackArg: usize,
+    CallBackStatus: i32,
+    dwDefaultDetailLevel: u32,
+    szDialogBoxCaption: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const PDH_BROWSE_DLG_CONFIG_HA = extern struct {
+    _bitfield: u32,
+    hWndOwner: @"Windows.Win32.Foundation".HWND,
+    hDataSource: PDH_HLOG,
+    szReturnPathBuffer: @"Windows.Win32.Foundation".PSTR,
+    cchReturnPathLength: u32,
+    pCallBack: ?*const anyopaque,
+    dwCallBackArg: usize,
+    CallBackStatus: i32,
+    dwDefaultDetailLevel: u32,
+    szDialogBoxCaption: @"Windows.Win32.Foundation".PSTR,
+};
+pub const PDH_BROWSE_DLG_CONFIG_W = extern struct {
+    _bitfield: u32,
+    hWndOwner: @"Windows.Win32.Foundation".HWND,
+    szDataSource: @"Windows.Win32.Foundation".PWSTR,
+    szReturnPathBuffer: @"Windows.Win32.Foundation".PWSTR,
+    cchReturnPathLength: u32,
+    pCallBack: ?*const anyopaque,
+    dwCallBackArg: usize,
+    CallBackStatus: i32,
+    dwDefaultDetailLevel: u32,
+    szDialogBoxCaption: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const PDH_BROWSE_DLG_CONFIG_A = extern struct {
+    _bitfield: u32,
+    hWndOwner: @"Windows.Win32.Foundation".HWND,
+    szDataSource: @"Windows.Win32.Foundation".PSTR,
+    szReturnPathBuffer: @"Windows.Win32.Foundation".PSTR,
+    cchReturnPathLength: u32,
+    pCallBack: ?*const anyopaque,
+    dwCallBackArg: usize,
+    CallBackStatus: i32,
+    dwDefaultDetailLevel: u32,
+    szDialogBoxCaption: @"Windows.Win32.Foundation".PSTR,
 };

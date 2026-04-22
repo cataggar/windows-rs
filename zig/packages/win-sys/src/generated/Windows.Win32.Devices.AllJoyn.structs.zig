@@ -22,6 +22,41 @@ pub const alljoyn_manifestarray = extern struct {
     count: usize,
     xmls: **i8,
 };
+pub const alljoyn_applicationstatelistener_callbacks = extern struct {
+    state: ?*const anyopaque,
+};
+pub const alljoyn_keystorelistener_callbacks = extern struct {
+    load_request: ?*const anyopaque,
+    store_request: ?*const anyopaque,
+};
+pub const alljoyn_keystorelistener_with_synchronization_callbacks = extern struct {
+    load_request: ?*const anyopaque,
+    store_request: ?*const anyopaque,
+    acquire_exclusive_lock: ?*const anyopaque,
+    release_exclusive_lock: ?*const anyopaque,
+};
+pub const alljoyn_authlistener_callbacks = extern struct {
+    request_credentials: ?*const anyopaque,
+    verify_credentials: ?*const anyopaque,
+    security_violation: ?*const anyopaque,
+    authentication_complete: ?*const anyopaque,
+};
+pub const alljoyn_authlistenerasync_callbacks = extern struct {
+    request_credentials: ?*const anyopaque,
+    verify_credentials: ?*const anyopaque,
+    security_violation: ?*const anyopaque,
+    authentication_complete: ?*const anyopaque,
+};
+pub const alljoyn_buslistener_callbacks = extern struct {
+    listener_registered: ?*const anyopaque,
+    listener_unregistered: ?*const anyopaque,
+    found_advertised_name: ?*const anyopaque,
+    lost_advertised_name: ?*const anyopaque,
+    name_owner_changed: ?*const anyopaque,
+    bus_stopping: ?*const anyopaque,
+    bus_disconnected: ?*const anyopaque,
+    property_changed: ?*const anyopaque,
+};
 pub const alljoyn_interfacedescription_member = extern struct {
     iface: alljoyn_interfacedescription,
     memberType: i32,
@@ -36,6 +71,46 @@ pub const alljoyn_interfacedescription_property = extern struct {
     signature: @"Windows.Win32.Foundation".PSTR,
     access: u8,
     internal_property: *anyopaque,
+};
+pub const alljoyn_busobject_callbacks = extern struct {
+    property_get: ?*const anyopaque,
+    property_set: ?*const anyopaque,
+    object_registered: ?*const anyopaque,
+    object_unregistered: ?*const anyopaque,
+};
+pub const alljoyn_busobject_methodentry = extern struct {
+    member: *alljoyn_interfacedescription_member,
+    method_handler: ?*const anyopaque,
+};
+pub const alljoyn_permissionconfigurationlistener_callbacks = extern struct {
+    factory_reset: ?*const anyopaque,
+    policy_changed: ?*const anyopaque,
+    start_management: ?*const anyopaque,
+    end_management: ?*const anyopaque,
+};
+pub const alljoyn_sessionlistener_callbacks = extern struct {
+    session_lost: ?*const anyopaque,
+    session_member_added: ?*const anyopaque,
+    session_member_removed: ?*const anyopaque,
+};
+pub const alljoyn_sessionportlistener_callbacks = extern struct {
+    accept_session_joiner: ?*const anyopaque,
+    session_joined: ?*const anyopaque,
+};
+pub const alljoyn_aboutlistener_callback = extern struct {
+    about_listener_announced: ?*const anyopaque,
+};
+pub const alljoyn_aboutdatalistener_callbacks = extern struct {
+    about_datalistener_getaboutdata: ?*const anyopaque,
+    about_datalistener_getannouncedaboutdata: ?*const anyopaque,
+};
+pub const alljoyn_pinglistener_callback = extern struct {
+    destination_found: ?*const anyopaque,
+    destination_lost: ?*const anyopaque,
+};
+pub const alljoyn_observerlistener_callback = extern struct {
+    object_discovered: ?*const anyopaque,
+    object_lost: ?*const anyopaque,
 };
 pub const alljoyn_aboutdata = extern struct {
     Value: isize,

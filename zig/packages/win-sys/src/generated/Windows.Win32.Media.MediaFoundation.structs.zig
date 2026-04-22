@@ -1761,6 +1761,24 @@ pub const DXVAHD_STREAM_STATE_PRIVATE_IVTC_DATA = extern struct {
     Frames: u32,
     InputField: u32,
 };
+pub const DXVAHDSW_CALLBACKS = extern struct {
+    CreateDevice: ?*const anyopaque,
+    ProposeVideoPrivateFormat: ?*const anyopaque,
+    GetVideoProcessorDeviceCaps: ?*const anyopaque,
+    GetVideoProcessorOutputFormats: ?*const anyopaque,
+    GetVideoProcessorInputFormats: ?*const anyopaque,
+    GetVideoProcessorCaps: ?*const anyopaque,
+    GetVideoProcessorCustomRates: ?*const anyopaque,
+    GetVideoProcessorFilterRange: ?*const anyopaque,
+    DestroyDevice: ?*const anyopaque,
+    CreateVideoProcessor: ?*const anyopaque,
+    SetVideoProcessBltState: ?*const anyopaque,
+    GetVideoProcessBltStatePrivate: ?*const anyopaque,
+    SetVideoProcessStreamState: ?*const anyopaque,
+    GetVideoProcessStreamStatePrivate: ?*const anyopaque,
+    VideoProcessBltHD: ?*const anyopaque,
+    DestroyVideoProcessor: ?*const anyopaque,
+};
 pub const DXVAHDETW_CREATEVIDEOPROCESSOR = extern struct {
     pObject: u64,
     pD3D9Ex: u64,

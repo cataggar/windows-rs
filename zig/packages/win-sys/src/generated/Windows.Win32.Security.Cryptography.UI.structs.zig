@@ -7,7 +7,95 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 const @"Windows.Win32.Security.Cryptography" = @import("Windows.Win32.Security.Cryptography.structs.zig");
+const @"Windows.Win32.Security.WinTrust" = @import("Windows.Win32.Security.WinTrust.structs.zig");
+const @"Windows.Win32.UI.Controls" = @import("Windows.Win32.UI.Controls.structs.zig");
 
+pub const CERT_SELECT_STRUCT_A = extern struct {
+    dwSize: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    pTemplateName: @"Windows.Win32.Foundation".PSTR,
+    dwFlags: u32,
+    szTitle: @"Windows.Win32.Foundation".PSTR,
+    cCertStore: u32,
+    arrayCertStore: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    szPurposeOid: @"Windows.Win32.Foundation".PSTR,
+    cCertContext: u32,
+    arrayCertContext: **@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    lCustData: @"Windows.Win32.Foundation".LPARAM,
+    pfnHook: ?*const anyopaque,
+    pfnFilter: ?*const anyopaque,
+    szHelpFileName: @"Windows.Win32.Foundation".PSTR,
+    dwHelpId: u32,
+    hprov: usize,
+};
+pub const CERT_SELECT_STRUCT_W = extern struct {
+    dwSize: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    pTemplateName: @"Windows.Win32.Foundation".PWSTR,
+    dwFlags: u32,
+    szTitle: @"Windows.Win32.Foundation".PWSTR,
+    cCertStore: u32,
+    arrayCertStore: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    szPurposeOid: @"Windows.Win32.Foundation".PSTR,
+    cCertContext: u32,
+    arrayCertContext: **@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    lCustData: @"Windows.Win32.Foundation".LPARAM,
+    pfnHook: ?*const anyopaque,
+    pfnFilter: ?*const anyopaque,
+    szHelpFileName: @"Windows.Win32.Foundation".PWSTR,
+    dwHelpId: u32,
+    hprov: usize,
+};
+pub const CERT_VIEWPROPERTIES_STRUCT_A = extern struct {
+    dwSize: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    dwFlags: u32,
+    szTitle: @"Windows.Win32.Foundation".PSTR,
+    pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    arrayPurposes: *@"Windows.Win32.Foundation".PSTR,
+    cArrayPurposes: u32,
+    cRootStores: u32,
+    rghstoreRoots: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cStores: u32,
+    rghstoreCAs: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cTrustStores: u32,
+    rghstoreTrust: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    hprov: usize,
+    lCustData: @"Windows.Win32.Foundation".LPARAM,
+    dwPad: u32,
+    szHelpFileName: @"Windows.Win32.Foundation".PSTR,
+    dwHelpId: u32,
+    nStartPage: u32,
+    cArrayPropSheetPages: u32,
+    arrayPropSheetPages: *@"Windows.Win32.UI.Controls".PROPSHEETPAGEA,
+};
+pub const CERT_VIEWPROPERTIES_STRUCT_W = extern struct {
+    dwSize: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    dwFlags: u32,
+    szTitle: @"Windows.Win32.Foundation".PWSTR,
+    pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    arrayPurposes: *@"Windows.Win32.Foundation".PSTR,
+    cArrayPurposes: u32,
+    cRootStores: u32,
+    rghstoreRoots: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cStores: u32,
+    rghstoreCAs: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cTrustStores: u32,
+    rghstoreTrust: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    hprov: usize,
+    lCustData: @"Windows.Win32.Foundation".LPARAM,
+    dwPad: u32,
+    szHelpFileName: @"Windows.Win32.Foundation".PWSTR,
+    dwHelpId: u32,
+    nStartPage: u32,
+    cArrayPropSheetPages: u32,
+    arrayPropSheetPages: *@"Windows.Win32.UI.Controls".PROPSHEETPAGEA,
+};
 pub const CERT_FILTER_EXTENSION_MATCH = extern struct {
     szExtensionOID: @"Windows.Win32.Foundation".PSTR,
     dwTestOperation: u32,
@@ -19,6 +107,27 @@ pub const CERT_FILTER_DATA = extern struct {
     cExtensionChecks: u32,
     arrayExtensionChecks: *CERT_FILTER_EXTENSION_MATCH,
     dwCheckingFlags: u32,
+};
+pub const CERT_VERIFY_CERTIFICATE_TRUST = extern struct {
+    cbSize: u32,
+    pccert: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    dwFlags: u32,
+    dwIgnoreErr: u32,
+    pdwErrors: *u32,
+    pszUsageOid: @"Windows.Win32.Foundation".PSTR,
+    hprov: usize,
+    cRootStores: u32,
+    rghstoreRoots: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cStores: u32,
+    rghstoreCAs: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cTrustStores: u32,
+    rghstoreTrust: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    lCustData: @"Windows.Win32.Foundation".LPARAM,
+    pfnTrustHelper: ?*const anyopaque,
+    pcChain: *u32,
+    prgChain: ***@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    prgdwErrors: **u32,
+    prgpbTrustInfo: **@"Windows.Win32.Security.Cryptography".CRYPT_INTEGER_BLOB,
 };
 pub const CTL_MODIFY_REQUEST = extern struct {
     pccert: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
@@ -43,6 +152,13 @@ pub const CRYPTUI_WIZ_DIGITAL_SIGN_BLOB_INFO = extern struct {
     cbBlob: u32,
     pbBlob: *u8,
     pwszDisplayName: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const CRYPTUI_WIZ_DIGITAL_SIGN_STORE_INFO = extern struct {
+    dwSize: u32,
+    cCertStore: u32,
+    rghCertStore: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    pFilterCallback: ?*const anyopaque,
+    pvCallbackData: *anyopaque,
 };
 pub const CRYPTUI_WIZ_DIGITAL_SIGN_PVK_FILE_INFO = extern struct {
     dwSize: u32,
@@ -71,6 +187,25 @@ pub const CRYPTUI_WIZ_DIGITAL_SIGN_EXTENDED_INFO = extern struct {
     psAuthenticated: *@"Windows.Win32.Security.Cryptography".CRYPT_ATTRIBUTES,
     psUnauthenticated: *@"Windows.Win32.Security.Cryptography".CRYPT_ATTRIBUTES,
 };
+pub const CRYPTUI_WIZ_DIGITAL_SIGN_INFO = extern struct {
+pub const CRYPTUI_WIZ_DIGITAL_SIGN_INFO_0 = extern union {
+    pwszFileName: @"Windows.Win32.Foundation".PWSTR,
+    pSignBlobInfo: *CRYPTUI_WIZ_DIGITAL_SIGN_BLOB_INFO,
+};
+pub const CRYPTUI_WIZ_DIGITAL_SIGN_INFO_1 = extern union {
+    pSigningCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    pSigningCertStore: *CRYPTUI_WIZ_DIGITAL_SIGN_STORE_INFO,
+    pSigningCertPvkInfo: *CRYPTUI_WIZ_DIGITAL_SIGN_CERT_PVK_INFO,
+};
+    dwSize: u32,
+    dwSubjectChoice: u32,
+    Anonymous1: CRYPTUI_WIZ_DIGITAL_SIGN_INFO_0,
+    dwSigningCertChoice: u32,
+    Anonymous2: CRYPTUI_WIZ_DIGITAL_SIGN_INFO_1,
+    pwszTimestampURL: @"Windows.Win32.Foundation".PWSTR,
+    dwAdditionalCertChoice: u32,
+    pSignExtInfo: *CRYPTUI_WIZ_DIGITAL_SIGN_EXTENDED_INFO,
+};
 pub const CRYPTUI_WIZ_DIGITAL_SIGN_CONTEXT = extern struct {
     dwSize: u32,
     cbBlob: u32,
@@ -79,6 +214,54 @@ pub const CRYPTUI_WIZ_DIGITAL_SIGN_CONTEXT = extern struct {
 pub const CRYPTUI_INITDIALOG_STRUCT = extern struct {
     lParam: @"Windows.Win32.Foundation".LPARAM,
     pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+};
+pub const CRYPTUI_VIEWCERTIFICATE_STRUCTW = extern struct {
+pub const CRYPTUI_VIEWCERTIFICATE_STRUCTW_0 = extern union {
+    pCryptProviderData: *@"Windows.Win32.Security.WinTrust".CRYPT_PROVIDER_DATA,
+    hWVTStateData: @"Windows.Win32.Foundation".HANDLE,
+};
+    dwSize: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    dwFlags: u32,
+    szTitle: @"Windows.Win32.Foundation".PWSTR,
+    pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    rgszPurposes: *@"Windows.Win32.Foundation".PSTR,
+    cPurposes: u32,
+    Anonymous: CRYPTUI_VIEWCERTIFICATE_STRUCTW_0,
+    fpCryptProviderDataTrustedUsage: @"Windows.Win32.Foundation".BOOL,
+    idxSigner: u32,
+    idxCert: u32,
+    fCounterSigner: @"Windows.Win32.Foundation".BOOL,
+    idxCounterSigner: u32,
+    cStores: u32,
+    rghStores: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cPropSheetPages: u32,
+    rgPropSheetPages: *@"Windows.Win32.UI.Controls".PROPSHEETPAGEW,
+    nStartPage: u32,
+};
+pub const CRYPTUI_VIEWCERTIFICATE_STRUCTA = extern struct {
+pub const CRYPTUI_VIEWCERTIFICATE_STRUCTA_0 = extern union {
+    pCryptProviderData: *@"Windows.Win32.Security.WinTrust".CRYPT_PROVIDER_DATA,
+    hWVTStateData: @"Windows.Win32.Foundation".HANDLE,
+};
+    dwSize: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    dwFlags: u32,
+    szTitle: @"Windows.Win32.Foundation".PSTR,
+    pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    rgszPurposes: *@"Windows.Win32.Foundation".PSTR,
+    cPurposes: u32,
+    Anonymous: CRYPTUI_VIEWCERTIFICATE_STRUCTA_0,
+    fpCryptProviderDataTrustedUsage: @"Windows.Win32.Foundation".BOOL,
+    idxSigner: u32,
+    idxCert: u32,
+    fCounterSigner: @"Windows.Win32.Foundation".BOOL,
+    idxCounterSigner: u32,
+    cStores: u32,
+    rghStores: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    cPropSheetPages: u32,
+    rgPropSheetPages: *@"Windows.Win32.UI.Controls".PROPSHEETPAGEA,
+    nStartPage: u32,
 };
 pub const CRYPTUI_WIZ_EXPORT_INFO = extern struct {
 pub const CRYPTUI_WIZ_EXPORT_INFO_0 = extern union {

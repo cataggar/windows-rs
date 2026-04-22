@@ -114,6 +114,17 @@ pub const WSDXML_ELEMENT_LIST = extern struct {
     Next: *WSDXML_ELEMENT_LIST,
     Element: *WSDXML_ELEMENT,
 };
+pub const WSD_OPERATION = extern struct {
+    RequestType: *WSDXML_TYPE,
+    ResponseType: *WSDXML_TYPE,
+    RequestStubFunction: ?*const anyopaque,
+};
+pub const WSD_PORT_TYPE = extern struct {
+    EncodedName: u32,
+    OperationCount: u32,
+    Operations: *WSD_OPERATION,
+    ProtocolType: i32,
+};
 pub const WSD_RELATIONSHIP_METADATA = extern struct {
     Type: @"Windows.Win32.Foundation".PWSTR,
     Data: *WSD_HOST_METADATA,

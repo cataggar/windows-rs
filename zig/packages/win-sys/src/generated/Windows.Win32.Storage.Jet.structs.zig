@@ -840,6 +840,22 @@ pub const JET_THREADSTATS = extern struct {
     cLogRecord: u32,
     cbLogRecord: u32,
 };
+pub const JET_RSTINFO_A = extern struct {
+    cbStruct: u32,
+    rgrstmap: *JET_RSTMAP_A,
+    crstmap: i32,
+    lgposStop: JET_LGPOS,
+    logtimeStop: JET_LOGTIME,
+    pfnStatus: ?*const anyopaque,
+};
+pub const JET_RSTINFO_W = extern struct {
+    cbStruct: u32,
+    rgrstmap: *JET_RSTMAP_W,
+    crstmap: i32,
+    lgposStop: JET_LGPOS,
+    logtimeStop: JET_LOGTIME,
+    pfnStatus: ?*const anyopaque,
+};
 pub const JET_ERRINFOBASIC_W = extern struct {
     cbStruct: u32,
     errValue: i32,

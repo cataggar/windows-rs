@@ -224,6 +224,30 @@ pub const SP_DEVINFO_LIST_DETAIL_DATA_W = extern struct {
     RemoteMachineHandle: @"Windows.Win32.Foundation".HANDLE,
     RemoteMachineName: [263]u16,
 };
+pub const SP_DEVINSTALL_PARAMS_A = extern struct {
+    cbSize: u32,
+    Flags: u32,
+    FlagsEx: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    InstallMsgHandler: ?*const anyopaque,
+    InstallMsgHandlerContext: *anyopaque,
+    FileQueue: *anyopaque,
+    ClassInstallReserved: usize,
+    Reserved: u32,
+    DriverPath: [260]@"Windows.Win32.Foundation".CHAR,
+};
+pub const SP_DEVINSTALL_PARAMS_W = extern struct {
+    cbSize: u32,
+    Flags: u32,
+    FlagsEx: u32,
+    hwndParent: @"Windows.Win32.Foundation".HWND,
+    InstallMsgHandler: ?*const anyopaque,
+    InstallMsgHandlerContext: *anyopaque,
+    FileQueue: *anyopaque,
+    ClassInstallReserved: usize,
+    Reserved: u32,
+    DriverPath: [260]u16,
+};
 pub const SP_CLASSINSTALL_HEADER = extern struct {
     cbSize: u32,
     InstallFunction: u32,

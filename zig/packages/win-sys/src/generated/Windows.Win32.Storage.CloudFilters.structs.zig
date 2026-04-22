@@ -161,6 +161,10 @@ pub const _RenameCompletion_e__Struct = extern struct {
     ParamSize: u32,
     Anonymous: CF_CALLBACK_PARAMETERS_0,
 };
+pub const CF_CALLBACK_REGISTRATION = extern struct {
+    Type: i32,
+    Callback: ?*const anyopaque,
+};
 pub const CF_SYNC_STATUS = extern struct {
     StructSize: u32,
     Code: u32,

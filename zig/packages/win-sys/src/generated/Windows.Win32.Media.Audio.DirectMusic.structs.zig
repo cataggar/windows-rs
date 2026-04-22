@@ -313,6 +313,18 @@ pub const DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_W_DATA = extern struct {
     Interface: @"Windows.Win32.Foundation".PWSTR,
     WaveDeviceId: u32,
 };
+pub const DSPROPERTY_DIRECTSOUNDDEVICE_ENUMERATE_1_DATA = extern struct {
+    Callback: ?*const anyopaque,
+    Context: *anyopaque,
+};
+pub const DSPROPERTY_DIRECTSOUNDDEVICE_ENUMERATE_A_DATA = extern struct {
+    Callback: ?*const anyopaque,
+    Context: *anyopaque,
+};
+pub const DSPROPERTY_DIRECTSOUNDDEVICE_ENUMERATE_W_DATA = extern struct {
+    Callback: ?*const anyopaque,
+    Context: *anyopaque,
+};
 pub const DVAudInfo = extern struct {
     bAudStyle: [2]u8,
     bAudQu: [2]u8,

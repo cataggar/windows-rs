@@ -697,6 +697,15 @@ pub const WHV_EMULATOR_IO_ACCESS_INFO = extern struct {
     AccessSize: u16,
     Data: u32,
 };
+pub const WHV_EMULATOR_CALLBACKS = extern struct {
+    Size: u32,
+    Reserved: u32,
+    WHvEmulatorIoPortCallback: ?*const anyopaque,
+    WHvEmulatorMemoryCallback: ?*const anyopaque,
+    WHvEmulatorGetVirtualProcessorRegisters: ?*const anyopaque,
+    WHvEmulatorSetVirtualProcessorRegisters: ?*const anyopaque,
+    WHvEmulatorTranslateGvaPage: ?*const anyopaque,
+};
 pub const SOCKADDR_HV = extern struct {
     Family: u16,
     Reserved: u16,
@@ -722,6 +731,19 @@ pub const HDV_PCI_PNP_ID = extern struct {
     BaseClass: u8,
     SubVendorID: u16,
     SubSystemID: u16,
+};
+pub const HDV_PCI_DEVICE_INTERFACE = extern struct {
+    Version: i32,
+    Initialize: ?*const anyopaque,
+    Teardown: ?*const anyopaque,
+    SetConfiguration: ?*const anyopaque,
+    GetDetails: ?*const anyopaque,
+    Start: ?*const anyopaque,
+    Stop: ?*const anyopaque,
+    ReadConfigSpace: ?*const anyopaque,
+    WriteConfigSpace: ?*const anyopaque,
+    ReadInterceptedMemory: ?*const anyopaque,
+    WriteInterceptedMemory: ?*const anyopaque,
 };
 pub const GPA_MEMORY_CHUNK = extern struct {
     GuestPhysicalStartPageIndex: u64,

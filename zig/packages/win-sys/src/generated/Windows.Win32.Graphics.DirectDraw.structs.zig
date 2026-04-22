@@ -731,6 +731,114 @@ pub const HEAPALIASINFO = extern struct {
     dwNumHeaps: u32,
     lpAliases: *HEAPALIAS,
 };
+pub const DDHAL_DDCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    DestroyDriver: ?*const anyopaque,
+    CreateSurface: ?*const anyopaque,
+    SetColorKey: ?*const anyopaque,
+    SetMode: ?*const anyopaque,
+    WaitForVerticalBlank: ?*const anyopaque,
+    CanCreateSurface: ?*const anyopaque,
+    CreatePalette: ?*const anyopaque,
+    GetScanLine: ?*const anyopaque,
+    SetExclusiveMode: ?*const anyopaque,
+    FlipToGDISurface: ?*const anyopaque,
+};
+pub const DDHAL_DDPALETTECALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    DestroyPalette: ?*const anyopaque,
+    SetEntries: ?*const anyopaque,
+};
+pub const DDHAL_DDSURFACECALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    DestroySurface: ?*const anyopaque,
+    Flip: ?*const anyopaque,
+    SetClipList: ?*const anyopaque,
+    Lock: ?*const anyopaque,
+    Unlock: ?*const anyopaque,
+    Blt: ?*const anyopaque,
+    SetColorKey: ?*const anyopaque,
+    AddAttachedSurface: ?*const anyopaque,
+    GetBltStatus: ?*const anyopaque,
+    GetFlipStatus: ?*const anyopaque,
+    UpdateOverlay: ?*const anyopaque,
+    SetOverlayPosition: ?*const anyopaque,
+    reserved4: *anyopaque,
+    SetPalette: ?*const anyopaque,
+};
+pub const DDHAL_DDMISCELLANEOUSCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    GetAvailDriverMemory: ?*const anyopaque,
+    UpdateNonLocalHeap: ?*const anyopaque,
+    GetHeapAlignment: ?*const anyopaque,
+    GetSysmemBltStatus: ?*const anyopaque,
+};
+pub const DDHAL_DDMISCELLANEOUS2CALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    Reserved: *anyopaque,
+    CreateSurfaceEx: ?*const anyopaque,
+    GetDriverState: ?*const anyopaque,
+    DestroyDDLocal: ?*const anyopaque,
+};
+pub const DDHAL_DDEXEBUFCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    CanCreateExecuteBuffer: ?*const anyopaque,
+    CreateExecuteBuffer: ?*const anyopaque,
+    DestroyExecuteBuffer: ?*const anyopaque,
+    LockExecuteBuffer: ?*const anyopaque,
+    UnlockExecuteBuffer: ?*const anyopaque,
+};
+pub const DDHAL_DDVIDEOPORTCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    CanCreateVideoPort: ?*const anyopaque,
+    CreateVideoPort: ?*const anyopaque,
+    FlipVideoPort: ?*const anyopaque,
+    GetVideoPortBandwidth: ?*const anyopaque,
+    GetVideoPortInputFormats: ?*const anyopaque,
+    GetVideoPortOutputFormats: ?*const anyopaque,
+    lpReserved1: *anyopaque,
+    GetVideoPortField: ?*const anyopaque,
+    GetVideoPortLine: ?*const anyopaque,
+    GetVideoPortConnectInfo: ?*const anyopaque,
+    DestroyVideoPort: ?*const anyopaque,
+    GetVideoPortFlipStatus: ?*const anyopaque,
+    UpdateVideoPort: ?*const anyopaque,
+    WaitForVideoPortSync: ?*const anyopaque,
+    GetVideoSignalStatus: ?*const anyopaque,
+    ColorControl: ?*const anyopaque,
+};
+pub const DDHAL_DDCOLORCONTROLCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    ColorControl: ?*const anyopaque,
+};
+pub const DDHAL_DDKERNELCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    SyncSurfaceData: ?*const anyopaque,
+    SyncVideoPortData: ?*const anyopaque,
+};
+pub const DDHAL_DDMOTIONCOMPCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    GetMoCompGuids: ?*const anyopaque,
+    GetMoCompFormats: ?*const anyopaque,
+    CreateMoComp: ?*const anyopaque,
+    GetMoCompBuffInfo: ?*const anyopaque,
+    GetInternalMoCompInfo: ?*const anyopaque,
+    BeginMoCompFrame: ?*const anyopaque,
+    EndMoCompFrame: ?*const anyopaque,
+    RenderMoComp: ?*const anyopaque,
+    QueryMoCompStatus: ?*const anyopaque,
+    DestroyMoComp: ?*const anyopaque,
+};
 pub const DDNONLOCALVIDMEMCAPS = extern struct {
     dwSize: u32,
     dwNLVBCaps: u32,
@@ -793,6 +901,30 @@ pub const DDHALMODEINFO = extern struct {
     dwBBitMask: u32,
     dwAlphaBitMask: u32,
 };
+pub const DDHAL_CALLBACKS = extern struct {
+    cbDDCallbacks: DDHAL_DDCALLBACKS,
+    cbDDSurfaceCallbacks: DDHAL_DDSURFACECALLBACKS,
+    cbDDPaletteCallbacks: DDHAL_DDPALETTECALLBACKS,
+    HALDD: DDHAL_DDCALLBACKS,
+    HALDDSurface: DDHAL_DDSURFACECALLBACKS,
+    HALDDPalette: DDHAL_DDPALETTECALLBACKS,
+    HELDD: DDHAL_DDCALLBACKS,
+    HELDDSurface: DDHAL_DDSURFACECALLBACKS,
+    HELDDPalette: DDHAL_DDPALETTECALLBACKS,
+    cbDDExeBufCallbacks: DDHAL_DDEXEBUFCALLBACKS,
+    HALDDExeBuf: DDHAL_DDEXEBUFCALLBACKS,
+    HELDDExeBuf: DDHAL_DDEXEBUFCALLBACKS,
+    cbDDVideoPortCallbacks: DDHAL_DDVIDEOPORTCALLBACKS,
+    HALDDVideoPort: DDHAL_DDVIDEOPORTCALLBACKS,
+    cbDDColorControlCallbacks: DDHAL_DDCOLORCONTROLCALLBACKS,
+    HALDDColorControl: DDHAL_DDCOLORCONTROLCALLBACKS,
+    cbDDMiscellaneousCallbacks: DDHAL_DDMISCELLANEOUSCALLBACKS,
+    HALDDMiscellaneous: DDHAL_DDMISCELLANEOUSCALLBACKS,
+    cbDDKernelCallbacks: DDHAL_DDKERNELCALLBACKS,
+    HALDDKernel: DDHAL_DDKERNELCALLBACKS,
+    cbDDMotionCompCallbacks: DDHAL_DDMOTIONCOMPCALLBACKS,
+    HALDDMotionComp: DDHAL_DDMOTIONCOMPCALLBACKS,
+};
 pub const DDCORECAPS = extern struct {
     dwSize: u32,
     dwCaps: u32,
@@ -846,6 +978,32 @@ pub const DDCORECAPS = extern struct {
     dwCurrVideoPorts: u32,
     dwSVBCaps2: u32,
 };
+pub const DDHALINFO = extern struct {
+    dwSize: u32,
+    lpDDCallbacks: *DDHAL_DDCALLBACKS,
+    lpDDSurfaceCallbacks: *DDHAL_DDSURFACECALLBACKS,
+    lpDDPaletteCallbacks: *DDHAL_DDPALETTECALLBACKS,
+    vmiData: VIDMEMINFO,
+    ddCaps: DDCORECAPS,
+    dwMonitorFrequency: u32,
+    GetDriverInfo: ?*const anyopaque,
+    dwModeIndex: u32,
+    lpdwFourCC: *u32,
+    dwNumModes: u32,
+    lpModeInfo: *DDHALMODEINFO,
+    dwFlags: u32,
+    lpPDevice: *anyopaque,
+    hInstance: u32,
+    lpD3DGlobalDriverData: usize,
+    lpD3DHALCallbacks: usize,
+    lpDDExeBufCallbacks: *DDHAL_DDEXEBUFCALLBACKS,
+};
+pub const DDHALDDRAWFNS = extern struct {
+    dwSize: u32,
+    lpSetInfo: ?*const anyopaque,
+    lpVidMemAlloc: ?*const anyopaque,
+    lpVidMemFree: ?*const anyopaque,
+};
 pub const DDHAL_GETDRIVERINFODATA = extern struct {
     dwSize: u32,
     dwFlags: u32,
@@ -855,6 +1013,13 @@ pub const DDHAL_GETDRIVERINFODATA = extern struct {
     dwActualSize: u32,
     ddRVal: @"Windows.Win32.Foundation".HRESULT,
     dwContext: usize,
+};
+pub const DDHAL_GETHEAPALIGNMENTDATA = extern struct {
+    dwInstance: usize,
+    dwHeap: u32,
+    ddRVal: @"Windows.Win32.Foundation".HRESULT,
+    GetHeapAlignment: ?*const anyopaque,
+    Alignment: HEAPALIGNMENT,
 };
 pub const DDHAL_GETDRIVERSTATEDATA = extern struct {
 pub const DDHAL_GETDRIVERSTATEDATA_0 = extern union {
@@ -904,6 +1069,108 @@ pub const VIDEOMEMORYINFO = extern struct {
     dwZBufferAlign: u32,
     dwAlphaAlign: u32,
     pvPrimary: *anyopaque,
+};
+pub const DD_CALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    DestroyDriver: ?*const anyopaque,
+    CreateSurface: ?*const anyopaque,
+    SetColorKey: ?*const anyopaque,
+    SetMode: ?*const anyopaque,
+    WaitForVerticalBlank: ?*const anyopaque,
+    CanCreateSurface: ?*const anyopaque,
+    CreatePalette: ?*const anyopaque,
+    GetScanLine: ?*const anyopaque,
+    MapMemory: ?*const anyopaque,
+};
+pub const DD_MISCELLANEOUSCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    GetAvailDriverMemory: ?*const anyopaque,
+};
+pub const DD_MISCELLANEOUS2CALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    AlphaBlt: ?*const anyopaque,
+    CreateSurfaceEx: ?*const anyopaque,
+    GetDriverState: ?*const anyopaque,
+    DestroyDDLocal: ?*const anyopaque,
+};
+pub const DD_NTCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    FreeDriverMemory: ?*const anyopaque,
+    SetExclusiveMode: ?*const anyopaque,
+    FlipToGDISurface: ?*const anyopaque,
+};
+pub const DD_PALETTECALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    DestroyPalette: ?*const anyopaque,
+    SetEntries: ?*const anyopaque,
+};
+pub const DD_SURFACECALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    DestroySurface: ?*const anyopaque,
+    Flip: ?*const anyopaque,
+    SetClipList: ?*const anyopaque,
+    Lock: ?*const anyopaque,
+    Unlock: ?*const anyopaque,
+    Blt: ?*const anyopaque,
+    SetColorKey: ?*const anyopaque,
+    AddAttachedSurface: ?*const anyopaque,
+    GetBltStatus: ?*const anyopaque,
+    GetFlipStatus: ?*const anyopaque,
+    UpdateOverlay: ?*const anyopaque,
+    SetOverlayPosition: ?*const anyopaque,
+    reserved4: *anyopaque,
+    SetPalette: ?*const anyopaque,
+};
+pub const DD_VIDEOPORTCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    CanCreateVideoPort: ?*const anyopaque,
+    CreateVideoPort: ?*const anyopaque,
+    FlipVideoPort: ?*const anyopaque,
+    GetVideoPortBandwidth: ?*const anyopaque,
+    GetVideoPortInputFormats: ?*const anyopaque,
+    GetVideoPortOutputFormats: ?*const anyopaque,
+    lpReserved1: *anyopaque,
+    GetVideoPortField: ?*const anyopaque,
+    GetVideoPortLine: ?*const anyopaque,
+    GetVideoPortConnectInfo: ?*const anyopaque,
+    DestroyVideoPort: ?*const anyopaque,
+    GetVideoPortFlipStatus: ?*const anyopaque,
+    UpdateVideoPort: ?*const anyopaque,
+    WaitForVideoPortSync: ?*const anyopaque,
+    GetVideoSignalStatus: ?*const anyopaque,
+    ColorControl: ?*const anyopaque,
+};
+pub const DD_COLORCONTROLCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    ColorControl: ?*const anyopaque,
+};
+pub const DD_KERNELCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    SyncSurfaceData: ?*const anyopaque,
+    SyncVideoPortData: ?*const anyopaque,
+};
+pub const DD_MOTIONCOMPCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    GetMoCompGuids: ?*const anyopaque,
+    GetMoCompFormats: ?*const anyopaque,
+    CreateMoComp: ?*const anyopaque,
+    GetMoCompBuffInfo: ?*const anyopaque,
+    GetInternalMoCompInfo: ?*const anyopaque,
+    BeginMoCompFrame: ?*const anyopaque,
+    EndMoCompFrame: ?*const anyopaque,
+    RenderMoComp: ?*const anyopaque,
+    QueryMoCompStatus: ?*const anyopaque,
+    DestroyMoComp: ?*const anyopaque,
 };
 pub const DD_NONLOCALVIDMEMCAPS = extern struct {
     dwSize: u32,
@@ -1050,6 +1317,32 @@ pub const DDNTCORECAPS = extern struct {
     dwMaxVideoPorts: u32,
     dwCurrVideoPorts: u32,
     dwSVBCaps2: u32,
+};
+pub const DD_D3DBUFCALLBACKS = extern struct {
+    dwSize: u32,
+    dwFlags: u32,
+    CanCreateD3DBuffer: ?*const anyopaque,
+    CreateD3DBuffer: ?*const anyopaque,
+    DestroyD3DBuffer: ?*const anyopaque,
+    LockD3DBuffer: ?*const anyopaque,
+    UnlockD3DBuffer: ?*const anyopaque,
+};
+pub const DD_HALINFO_V4 = extern struct {
+    dwSize: u32,
+    vmiData: VIDEOMEMORYINFO,
+    ddCaps: DDNTCORECAPS,
+    GetDriverInfo: ?*const anyopaque,
+    dwFlags: u32,
+};
+pub const DD_HALINFO = extern struct {
+    dwSize: u32,
+    vmiData: VIDEOMEMORYINFO,
+    ddCaps: DDNTCORECAPS,
+    GetDriverInfo: ?*const anyopaque,
+    dwFlags: u32,
+    lpD3DGlobalDriverData: *anyopaque,
+    lpD3DHALCallbacks: *anyopaque,
+    lpD3DBufCallbacks: *DD_D3DBUFCALLBACKS,
 };
 pub const DD_DIRECTDRAW_GLOBAL = extern struct {
     dhpdev: *anyopaque,
@@ -1630,6 +1923,12 @@ pub const DX_IRQDATA = extern struct {
 pub const DDGETIRQINFO = extern struct {
     dwFlags: u32,
 };
+pub const DDENABLEIRQINFO = extern struct {
+    dwIRQSources: u32,
+    dwLine: u32,
+    IRQCallback: ?*const anyopaque,
+    lpIRQData: *DX_IRQDATA,
+};
 pub const DDSKIPNEXTFIELDINFO = extern struct {
     lpVideoPortData: *DDVIDEOPORTDATA,
     dwSkipFlags: u32,
@@ -1696,4 +1995,24 @@ pub const DDTRANSFEROUTINFO = extern struct {
 };
 pub const DDGETTRANSFERSTATUSOUTINFO = extern struct {
     dwTransferID: usize,
+};
+pub const DXAPI_INTERFACE = extern struct {
+    Size: u16,
+    Version: u16,
+    Context: *anyopaque,
+    InterfaceReference: *anyopaque,
+    InterfaceDereference: *anyopaque,
+    DxGetIrqInfo: ?*const anyopaque,
+    DxEnableIrq: ?*const anyopaque,
+    DxSkipNextField: ?*const anyopaque,
+    DxBobNextField: ?*const anyopaque,
+    DxSetState: ?*const anyopaque,
+    DxLock: ?*const anyopaque,
+    DxFlipOverlay: ?*const anyopaque,
+    DxFlipVideoPort: ?*const anyopaque,
+    DxGetPolarity: ?*const anyopaque,
+    DxGetCurrentAutoflip: ?*const anyopaque,
+    DxGetPreviousAutoflip: ?*const anyopaque,
+    DxTransfer: ?*const anyopaque,
+    DxGetTransferStatus: ?*const anyopaque,
 };

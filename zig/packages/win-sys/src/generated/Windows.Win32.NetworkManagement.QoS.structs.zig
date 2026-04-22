@@ -74,6 +74,12 @@ pub const QOS_DIFFSERV_RULE = extern struct {
 pub const QOS_TCP_TRAFFIC = extern struct {
     ObjectHdr: QOS_OBJECT_HDR,
 };
+pub const TCI_CLIENT_FUNC_LIST = extern struct {
+    ClNotifyHandler: ?*const anyopaque,
+    ClAddFlowCompleteHandler: ?*const anyopaque,
+    ClModifyFlowCompleteHandler: ?*const anyopaque,
+    ClDeleteFlowCompleteHandler: ?*const anyopaque,
+};
 pub const ADDRESS_LIST_DESCRIPTOR = extern struct {
     MediaType: u32,
     AddressList: @"Windows.Win32.NetworkManagement.Ndis".NETWORK_ADDRESS_LIST,

@@ -202,6 +202,17 @@ pub const PATCH_INTERLEAVE_MAP_0 = extern struct {
     CountRanges: u32,
     Range: [1]PATCH_INTERLEAVE_MAP_0,
 };
+pub const PATCH_OPTION_DATA = extern struct {
+    SizeOfThisStruct: u32,
+    SymbolOptionFlags: u32,
+    NewFileSymbolPath: @"Windows.Win32.Foundation".PSTR,
+    OldFileSymbolPathArray: *@"Windows.Win32.Foundation".PSTR,
+    ExtendedOptionFlags: u32,
+    SymLoadCallback: ?*const anyopaque,
+    SymLoadContext: *anyopaque,
+    InterleaveMapArray: **PATCH_INTERLEAVE_MAP,
+    MaxLzxWindowSize: u32,
+};
 pub const DELTA_INPUT = extern struct {
 pub const DELTA_INPUT_0 = extern union {
     lpcStart: *anyopaque,

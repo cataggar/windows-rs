@@ -114,6 +114,28 @@ pub const WINBIO_SECURE_BUFFER_HEADER_V1 = extern struct {
     Flags: u32,
     ValidationTag: u64,
 };
+pub const WINBIO_EVENT = extern struct {
+pub const _Parameters_e__Union = extern union {
+pub const _Unclaimed_e__Struct = extern struct {
+    UnitId: u32,
+    RejectDetail: u32,
+};
+pub const _UnclaimedIdentify_e__Struct = extern struct {
+    UnitId: u32,
+    Identity: WINBIO_IDENTITY,
+    SubFactor: u8,
+    RejectDetail: u32,
+};
+pub const _Error_e__Struct = extern struct {
+    ErrorCode: @"Windows.Win32.Foundation".HRESULT,
+};
+    Unclaimed: _Unclaimed_e__Struct,
+    UnclaimedIdentify: _UnclaimedIdentify_e__Struct,
+    Error: _Error_e__Struct,
+};
+    Type: u32,
+    Parameters: _Parameters_e__Union,
+};
 pub const WINBIO_PRESENCE_PROPERTIES = extern union {
 pub const _FacialFeatures_e__Struct = extern struct {
 pub const _OpaqueEngineData_e__Struct = extern struct {
@@ -369,6 +391,139 @@ pub const WINBIO_CONNECTED_SENSOR = extern struct {
     biometricType: u32,
     isEnhancedSignInSecurityCapable: @"Windows.Win32.Foundation".BOOL,
 };
+pub const WINBIO_ASYNC_RESULT = extern struct {
+pub const _Parameters_e__Union = extern union {
+pub const _Verify_e__Struct = extern struct {
+    Match: @"Windows.Win32.Foundation".BOOLEAN,
+    RejectDetail: u32,
+};
+pub const _Identify_e__Struct = extern struct {
+    Identity: WINBIO_IDENTITY,
+    SubFactor: u8,
+    RejectDetail: u32,
+};
+pub const _EnrollBegin_e__Struct = extern struct {
+    SubFactor: u8,
+};
+pub const _EnrollCapture_e__Struct = extern struct {
+    RejectDetail: u32,
+};
+pub const _EnrollCommit_e__Struct = extern struct {
+    Identity: WINBIO_IDENTITY,
+    IsNewTemplate: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const _EnumEnrollments_e__Struct = extern struct {
+    Identity: WINBIO_IDENTITY,
+    SubFactorCount: usize,
+    SubFactorArray: *u8,
+};
+pub const _CaptureSample_e__Struct = extern struct {
+    Sample: *WINBIO_BIR,
+    SampleSize: usize,
+    RejectDetail: u32,
+};
+pub const _DeleteTemplate_e__Struct = extern struct {
+    Identity: WINBIO_IDENTITY,
+    SubFactor: u8,
+};
+pub const _GetProperty_e__Struct = extern struct {
+    PropertyType: u32,
+    PropertyId: u32,
+    Identity: WINBIO_IDENTITY,
+    SubFactor: u8,
+    PropertyBufferSize: usize,
+    PropertyBuffer: *anyopaque,
+};
+pub const _SetProperty_e__Struct = extern struct {
+    PropertyType: u32,
+    PropertyId: u32,
+    Identity: WINBIO_IDENTITY,
+    SubFactor: u8,
+    PropertyBufferSize: usize,
+    PropertyBuffer: *anyopaque,
+};
+pub const _GetEvent_e__Struct = extern struct {
+    Event: WINBIO_EVENT,
+};
+pub const _ControlUnit_e__Struct = extern struct {
+    Component: u32,
+    ControlCode: u32,
+    OperationStatus: u32,
+    SendBuffer: *u8,
+    SendBufferSize: usize,
+    ReceiveBuffer: *u8,
+    ReceiveBufferSize: usize,
+    ReceiveDataSize: usize,
+};
+pub const _EnumServiceProviders_e__Struct = extern struct {
+    BspCount: usize,
+    BspSchemaArray: *WINBIO_BSP_SCHEMA,
+};
+pub const _EnumBiometricUnits_e__Struct = extern struct {
+    UnitCount: usize,
+    UnitSchemaArray: *WINBIO_UNIT_SCHEMA,
+};
+pub const _EnumDatabases_e__Struct = extern struct {
+    StorageCount: usize,
+    StorageSchemaArray: *WINBIO_STORAGE_SCHEMA,
+};
+pub const _VerifyAndReleaseTicket_e__Struct = extern struct {
+    Match: @"Windows.Win32.Foundation".BOOLEAN,
+    RejectDetail: u32,
+    Ticket: u64,
+};
+pub const _IdentifyAndReleaseTicket_e__Struct = extern struct {
+    Identity: WINBIO_IDENTITY,
+    SubFactor: u8,
+    RejectDetail: u32,
+    Ticket: u64,
+};
+pub const _EnrollSelect_e__Struct = extern struct {
+    SelectorValue: u64,
+};
+pub const _MonitorPresence_e__Struct = extern struct {
+    ChangeType: u32,
+    PresenceCount: usize,
+    PresenceArray: *WINBIO_PRESENCE,
+};
+pub const _GetProtectionPolicy_e__Struct = extern struct {
+    Identity: WINBIO_IDENTITY,
+    Policy: WINBIO_PROTECTION_POLICY,
+};
+pub const _NotifyUnitStatusChange_e__Struct = extern struct {
+    ExtendedStatus: WINBIO_EXTENDED_UNIT_STATUS,
+};
+    Verify: _Verify_e__Struct,
+    Identify: _Identify_e__Struct,
+    EnrollBegin: _EnrollBegin_e__Struct,
+    EnrollCapture: _EnrollCapture_e__Struct,
+    EnrollCommit: _EnrollCommit_e__Struct,
+    EnumEnrollments: _EnumEnrollments_e__Struct,
+    CaptureSample: _CaptureSample_e__Struct,
+    DeleteTemplate: _DeleteTemplate_e__Struct,
+    GetProperty: _GetProperty_e__Struct,
+    SetProperty: _SetProperty_e__Struct,
+    GetEvent: _GetEvent_e__Struct,
+    ControlUnit: _ControlUnit_e__Struct,
+    EnumServiceProviders: _EnumServiceProviders_e__Struct,
+    EnumBiometricUnits: _EnumBiometricUnits_e__Struct,
+    EnumDatabases: _EnumDatabases_e__Struct,
+    VerifyAndReleaseTicket: _VerifyAndReleaseTicket_e__Struct,
+    IdentifyAndReleaseTicket: _IdentifyAndReleaseTicket_e__Struct,
+    EnrollSelect: _EnrollSelect_e__Struct,
+    MonitorPresence: _MonitorPresence_e__Struct,
+    GetProtectionPolicy: _GetProtectionPolicy_e__Struct,
+    NotifyUnitStatusChange: _NotifyUnitStatusChange_e__Struct,
+};
+    SessionHandle: u32,
+    Operation: u32,
+    SequenceNumber: u64,
+    TimeStamp: i64,
+    ApiStatus: @"Windows.Win32.Foundation".HRESULT,
+    UnitId: u32,
+    UserData: *anyopaque,
+    Parameters: _Parameters_e__Union,
+};
 pub const WINBIO_STORAGE_RECORD = extern struct {
     Identity: *WINBIO_IDENTITY,
     SubFactor: u8,
@@ -379,9 +534,191 @@ pub const WINBIO_STORAGE_RECORD = extern struct {
     PayloadBlob: *u8,
     PayloadBlobSize: usize,
 };
+pub const WINBIO_PIPELINE = extern struct {
+    SensorHandle: @"Windows.Win32.Foundation".HANDLE,
+    EngineHandle: @"Windows.Win32.Foundation".HANDLE,
+    StorageHandle: @"Windows.Win32.Foundation".HANDLE,
+    SensorInterface: *WINBIO_SENSOR_INTERFACE,
+    EngineInterface: *WINBIO_ENGINE_INTERFACE,
+    StorageInterface: *WINBIO_STORAGE_INTERFACE,
+    SensorContext: *WINIBIO_SENSOR_CONTEXT,
+    EngineContext: *WINIBIO_ENGINE_CONTEXT,
+    StorageContext: *WINIBIO_STORAGE_CONTEXT,
+    FrameworkInterface: *WINBIO_FRAMEWORK_INTERFACE,
+};
 pub const WINBIO_ADAPTER_INTERFACE_VERSION = extern struct {
     MajorVersion: u16,
     MinorVersion: u16,
+};
+pub const WINBIO_SENSOR_INTERFACE = extern struct {
+    Version: WINBIO_ADAPTER_INTERFACE_VERSION,
+    Type: u32,
+    Size: usize,
+    AdapterId: GUID,
+    Attach: ?*const anyopaque,
+    Detach: ?*const anyopaque,
+    ClearContext: ?*const anyopaque,
+    QueryStatus: ?*const anyopaque,
+    Reset: ?*const anyopaque,
+    SetMode: ?*const anyopaque,
+    SetIndicatorStatus: ?*const anyopaque,
+    GetIndicatorStatus: ?*const anyopaque,
+    StartCapture: ?*const anyopaque,
+    FinishCapture: ?*const anyopaque,
+    ExportSensorData: ?*const anyopaque,
+    Cancel: ?*const anyopaque,
+    PushDataToEngine: ?*const anyopaque,
+    ControlUnit: ?*const anyopaque,
+    ControlUnitPrivileged: ?*const anyopaque,
+    NotifyPowerChange: ?*const anyopaque,
+    PipelineInit: ?*const anyopaque,
+    PipelineCleanup: ?*const anyopaque,
+    Activate: ?*const anyopaque,
+    Deactivate: ?*const anyopaque,
+    QueryExtendedInfo: ?*const anyopaque,
+    QueryCalibrationFormats: ?*const anyopaque,
+    SetCalibrationFormat: ?*const anyopaque,
+    AcceptCalibrationData: ?*const anyopaque,
+    AsyncImportRawBuffer: ?*const anyopaque,
+    AsyncImportSecureBuffer: ?*const anyopaque,
+    QueryPrivateSensorType: ?*const anyopaque,
+    ConnectSecure: ?*const anyopaque,
+    StartCaptureEx: ?*const anyopaque,
+    StartNotifyWake: ?*const anyopaque,
+    FinishNotifyWake: ?*const anyopaque,
+};
+pub const WINBIO_ENGINE_INTERFACE = extern struct {
+    Version: WINBIO_ADAPTER_INTERFACE_VERSION,
+    Type: u32,
+    Size: usize,
+    AdapterId: GUID,
+    Attach: ?*const anyopaque,
+    Detach: ?*const anyopaque,
+    ClearContext: ?*const anyopaque,
+    QueryPreferredFormat: ?*const anyopaque,
+    QueryIndexVectorSize: ?*const anyopaque,
+    QueryHashAlgorithms: ?*const anyopaque,
+    SetHashAlgorithm: ?*const anyopaque,
+    QuerySampleHint: ?*const anyopaque,
+    AcceptSampleData: ?*const anyopaque,
+    ExportEngineData: ?*const anyopaque,
+    VerifyFeatureSet: ?*const anyopaque,
+    IdentifyFeatureSet: ?*const anyopaque,
+    CreateEnrollment: ?*const anyopaque,
+    UpdateEnrollment: ?*const anyopaque,
+    GetEnrollmentStatus: ?*const anyopaque,
+    GetEnrollmentHash: ?*const anyopaque,
+    CheckForDuplicate: ?*const anyopaque,
+    CommitEnrollment: ?*const anyopaque,
+    DiscardEnrollment: ?*const anyopaque,
+    ControlUnit: ?*const anyopaque,
+    ControlUnitPrivileged: ?*const anyopaque,
+    NotifyPowerChange: ?*const anyopaque,
+    Reserved_1: ?*const anyopaque,
+    PipelineInit: ?*const anyopaque,
+    PipelineCleanup: ?*const anyopaque,
+    Activate: ?*const anyopaque,
+    Deactivate: ?*const anyopaque,
+    QueryExtendedInfo: ?*const anyopaque,
+    IdentifyAll: ?*const anyopaque,
+    SetEnrollmentSelector: ?*const anyopaque,
+    SetEnrollmentParameters: ?*const anyopaque,
+    QueryExtendedEnrollmentStatus: ?*const anyopaque,
+    RefreshCache: ?*const anyopaque,
+    SelectCalibrationFormat: ?*const anyopaque,
+    QueryCalibrationData: ?*const anyopaque,
+    SetAccountPolicy: ?*const anyopaque,
+    CreateKey: ?*const anyopaque,
+    IdentifyFeatureSetSecure: ?*const anyopaque,
+    AcceptPrivateSensorTypeInfo: ?*const anyopaque,
+    CreateEnrollmentAuthenticated: ?*const anyopaque,
+    IdentifyFeatureSetAuthenticated: ?*const anyopaque,
+};
+pub const WINBIO_STORAGE_INTERFACE = extern struct {
+    Version: WINBIO_ADAPTER_INTERFACE_VERSION,
+    Type: u32,
+    Size: usize,
+    AdapterId: GUID,
+    Attach: ?*const anyopaque,
+    Detach: ?*const anyopaque,
+    ClearContext: ?*const anyopaque,
+    CreateDatabase: ?*const anyopaque,
+    EraseDatabase: ?*const anyopaque,
+    OpenDatabase: ?*const anyopaque,
+    CloseDatabase: ?*const anyopaque,
+    GetDataFormat: ?*const anyopaque,
+    GetDatabaseSize: ?*const anyopaque,
+    AddRecord: ?*const anyopaque,
+    DeleteRecord: ?*const anyopaque,
+    QueryBySubject: ?*const anyopaque,
+    QueryByContent: ?*const anyopaque,
+    GetRecordCount: ?*const anyopaque,
+    FirstRecord: ?*const anyopaque,
+    NextRecord: ?*const anyopaque,
+    GetCurrentRecord: ?*const anyopaque,
+    ControlUnit: ?*const anyopaque,
+    ControlUnitPrivileged: ?*const anyopaque,
+    NotifyPowerChange: ?*const anyopaque,
+    PipelineInit: ?*const anyopaque,
+    PipelineCleanup: ?*const anyopaque,
+    Activate: ?*const anyopaque,
+    Deactivate: ?*const anyopaque,
+    QueryExtendedInfo: ?*const anyopaque,
+    NotifyDatabaseChange: ?*const anyopaque,
+    Reserved1: ?*const anyopaque,
+    Reserved2: ?*const anyopaque,
+    UpdateRecordBegin: ?*const anyopaque,
+    UpdateRecordCommit: ?*const anyopaque,
+};
+pub const WINBIO_FRAMEWORK_INTERFACE = extern struct {
+    Version: WINBIO_ADAPTER_INTERFACE_VERSION,
+    Type: u32,
+    Size: usize,
+    AdapterId: GUID,
+    SetUnitStatus: ?*const anyopaque,
+    VsmStorageAttach: ?*const anyopaque,
+    VsmStorageDetach: ?*const anyopaque,
+    VsmStorageClearContext: ?*const anyopaque,
+    VsmStorageCreateDatabase: ?*const anyopaque,
+    VsmStorageOpenDatabase: ?*const anyopaque,
+    VsmStorageCloseDatabase: ?*const anyopaque,
+    VsmStorageDeleteRecord: ?*const anyopaque,
+    VsmStorageNotifyPowerChange: ?*const anyopaque,
+    VsmStoragePipelineInit: ?*const anyopaque,
+    VsmStoragePipelineCleanup: ?*const anyopaque,
+    VsmStorageActivate: ?*const anyopaque,
+    VsmStorageDeactivate: ?*const anyopaque,
+    VsmStorageQueryExtendedInfo: ?*const anyopaque,
+    VsmStorageCacheClear: ?*const anyopaque,
+    VsmStorageCacheImportBegin: ?*const anyopaque,
+    VsmStorageCacheImportNext: ?*const anyopaque,
+    VsmStorageCacheImportEnd: ?*const anyopaque,
+    VsmStorageCacheExportBegin: ?*const anyopaque,
+    VsmStorageCacheExportNext: ?*const anyopaque,
+    VsmStorageCacheExportEnd: ?*const anyopaque,
+    VsmSensorAttach: ?*const anyopaque,
+    VsmSensorDetach: ?*const anyopaque,
+    VsmSensorClearContext: ?*const anyopaque,
+    VsmSensorPushDataToEngine: ?*const anyopaque,
+    VsmSensorNotifyPowerChange: ?*const anyopaque,
+    VsmSensorPipelineInit: ?*const anyopaque,
+    VsmSensorPipelineCleanup: ?*const anyopaque,
+    VsmSensorActivate: ?*const anyopaque,
+    VsmSensorDeactivate: ?*const anyopaque,
+    VsmSensorAsyncImportRawBuffer: ?*const anyopaque,
+    VsmSensorAsyncImportSecureBuffer: ?*const anyopaque,
+    Reserved1: ?*const anyopaque,
+    Reserved2: ?*const anyopaque,
+    Reserved3: ?*const anyopaque,
+    Reserved4: ?*const anyopaque,
+    Reserved5: ?*const anyopaque,
+    AllocateMemory: ?*const anyopaque,
+    FreeMemory: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    LockAndValidateSecureBuffer: ?*const anyopaque,
+    ReleaseSecureBuffer: ?*const anyopaque,
+    QueryAuthorizedEnrollments: ?*const anyopaque,
+    DecryptSample: ?*const anyopaque,
 };
 pub const WINBIO_SENSOR_ATTRIBUTES = extern struct {
     PayloadSize: u32,

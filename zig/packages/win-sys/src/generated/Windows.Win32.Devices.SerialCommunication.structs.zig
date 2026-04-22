@@ -104,3 +104,13 @@ pub const SERENUM_PORT_DESC = extern struct {
     PortAddress: i64,
     Reserved: [1]u16,
 };
+pub const SERENUM_PORT_PARAMETERS = extern struct {
+    Size: u32,
+    ReadAccessor: ?*const anyopaque,
+    WriteAccessor: ?*const anyopaque,
+    SerPortAddress: *anyopaque,
+    HardwareHandle: *anyopaque,
+    Portion: i32,
+    NumberAxis: u16,
+    Reserved: [3]u16,
+};

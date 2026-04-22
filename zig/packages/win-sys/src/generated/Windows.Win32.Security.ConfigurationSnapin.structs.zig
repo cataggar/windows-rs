@@ -24,3 +24,10 @@ pub const SCESVC_ANALYSIS_INFO = extern struct {
     Count: u32,
     Lines: *SCESVC_ANALYSIS_LINE,
 };
+pub const SCESVC_CALLBACK_INFO = extern struct {
+    sceHandle: *anyopaque,
+    pfQueryInfo: ?*const anyopaque,
+    pfSetInfo: ?*const anyopaque,
+    pfFreeInfo: ?*const anyopaque,
+    pfLogInfo: ?*const anyopaque,
+};

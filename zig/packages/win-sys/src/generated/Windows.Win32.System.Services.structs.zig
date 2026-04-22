@@ -172,6 +172,39 @@ pub const QUERY_SERVICE_CONFIGW = extern struct {
     lpServiceStartName: @"Windows.Win32.Foundation".PWSTR,
     lpDisplayName: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const SERVICE_TABLE_ENTRYA = extern struct {
+    lpServiceName: @"Windows.Win32.Foundation".PSTR,
+    lpServiceProc: ?*const anyopaque,
+};
+pub const SERVICE_TABLE_ENTRYW = extern struct {
+    lpServiceName: @"Windows.Win32.Foundation".PWSTR,
+    lpServiceProc: ?*const anyopaque,
+};
+pub const SERVICE_NOTIFY_1 = extern struct {
+    dwVersion: u32,
+    pfnNotifyCallback: ?*const anyopaque,
+    pContext: *anyopaque,
+    dwNotificationStatus: u32,
+    ServiceStatus: SERVICE_STATUS_PROCESS,
+};
+pub const SERVICE_NOTIFY_2A = extern struct {
+    dwVersion: u32,
+    pfnNotifyCallback: ?*const anyopaque,
+    pContext: *anyopaque,
+    dwNotificationStatus: u32,
+    ServiceStatus: SERVICE_STATUS_PROCESS,
+    dwNotificationTriggered: u32,
+    pszServiceNames: @"Windows.Win32.Foundation".PSTR,
+};
+pub const SERVICE_NOTIFY_2W = extern struct {
+    dwVersion: u32,
+    pfnNotifyCallback: ?*const anyopaque,
+    pContext: *anyopaque,
+    dwNotificationStatus: u32,
+    ServiceStatus: SERVICE_STATUS_PROCESS,
+    dwNotificationTriggered: u32,
+    pszServiceNames: @"Windows.Win32.Foundation".PWSTR,
+};
 pub const SERVICE_CONTROL_STATUS_REASON_PARAMSA = extern struct {
     dwReason: u32,
     pszComment: @"Windows.Win32.Foundation".PSTR,

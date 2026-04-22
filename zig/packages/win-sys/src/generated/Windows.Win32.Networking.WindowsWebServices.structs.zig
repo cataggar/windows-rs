@@ -212,6 +212,11 @@ pub const WS_XML_READER_BUFFER_INPUT = extern struct {
     encodedData: *anyopaque,
     encodedDataSize: u32,
 };
+pub const WS_XML_READER_STREAM_INPUT = extern struct {
+    input: WS_XML_READER_INPUT,
+    readCallback: ?*const anyopaque,
+    readCallbackState: *anyopaque,
+};
 pub const WS_XML_READER_ENCODING = extern struct {
     encodingType: i32,
 };
@@ -246,6 +251,12 @@ pub const WS_XML_WRITER_TEXT_ENCODING = extern struct {
     encoding: WS_XML_WRITER_ENCODING,
     charSet: i32,
 };
+pub const WS_XML_WRITER_BINARY_ENCODING = extern struct {
+    encoding: WS_XML_WRITER_ENCODING,
+    staticDictionary: *WS_XML_DICTIONARY,
+    dynamicStringCallback: ?*const anyopaque,
+    dynamicStringCallbackState: *anyopaque,
+};
 pub const WS_XML_WRITER_MTOM_ENCODING = extern struct {
     encoding: WS_XML_WRITER_ENCODING,
     textEncoding: *WS_XML_WRITER_ENCODING,
@@ -264,6 +275,11 @@ pub const WS_XML_WRITER_OUTPUT = extern struct {
 pub const WS_XML_WRITER_BUFFER_OUTPUT = extern struct {
     output: WS_XML_WRITER_OUTPUT,
 };
+pub const WS_XML_WRITER_STREAM_OUTPUT = extern struct {
+    output: WS_XML_WRITER_OUTPUT,
+    writeCallback: ?*const anyopaque,
+    writeCallbackState: *anyopaque,
+};
 pub const WS_XML_WRITER_PROPERTIES = extern struct {
     properties: *WS_XML_WRITER_PROPERTY,
     propertyCount: u32,
@@ -272,12 +288,19 @@ pub const WS_XML_READER_PROPERTIES = extern struct {
     properties: *WS_XML_READER_PROPERTY,
     propertyCount: u32,
 };
+pub const WS_ASYNC_CONTEXT = extern struct {
+    callback: ?*const anyopaque,
+    callbackState: *anyopaque,
+};
 pub const WS_ASYNC_STATE = extern struct {
     internal0: *anyopaque,
     internal1: *anyopaque,
     internal2: *anyopaque,
     internal3: *anyopaque,
     internal4: *anyopaque,
+};
+pub const WS_ASYNC_OPERATION = extern struct {
+    function: ?*const anyopaque,
 };
 pub const WS_CHANNEL_PROPERTY = extern struct {
     id: i32,
@@ -291,6 +314,22 @@ pub const WS_CUSTOM_HTTP_PROXY = extern struct {
 pub const WS_CHANNEL_PROPERTIES = extern struct {
     properties: *WS_CHANNEL_PROPERTY,
     propertyCount: u32,
+};
+pub const WS_CUSTOM_CHANNEL_CALLBACKS = extern struct {
+    createChannelCallback: ?*const anyopaque,
+    freeChannelCallback: ?*const anyopaque,
+    resetChannelCallback: ?*const anyopaque,
+    openChannelCallback: ?*const anyopaque,
+    closeChannelCallback: ?*const anyopaque,
+    abortChannelCallback: ?*const anyopaque,
+    getChannelPropertyCallback: ?*const anyopaque,
+    setChannelPropertyCallback: ?*const anyopaque,
+    writeMessageStartCallback: ?*const anyopaque,
+    writeMessageEndCallback: ?*const anyopaque,
+    readMessageStartCallback: ?*const anyopaque,
+    readMessageEndCallback: ?*const anyopaque,
+    abandonMessageCallback: ?*const anyopaque,
+    shutdownSessionChannelCallback: ?*const anyopaque,
 };
 pub const WS_HTTP_HEADER_MAPPING = extern struct {
     headerName: WS_XML_STRING,
@@ -313,6 +352,28 @@ pub const WS_ELEMENT_DESCRIPTION = extern struct {
 pub const WS_MESSAGE_DESCRIPTION = extern struct {
     action: *WS_XML_STRING,
     bodyElementDescription: *WS_ELEMENT_DESCRIPTION,
+};
+pub const WS_CHANNEL_ENCODER = extern struct {
+    createContext: *anyopaque,
+    createEncoderCallback: ?*const anyopaque,
+    encoderGetContentTypeCallback: ?*const anyopaque,
+    encoderStartCallback: ?*const anyopaque,
+    encoderEncodeCallback: ?*const anyopaque,
+    encoderEndCallback: ?*const anyopaque,
+    freeEncoderCallback: ?*const anyopaque,
+};
+pub const WS_CHANNEL_DECODER = extern struct {
+    createContext: *anyopaque,
+    createDecoderCallback: ?*const anyopaque,
+    decoderGetContentTypeCallback: ?*const anyopaque,
+    decoderStartCallback: ?*const anyopaque,
+    decoderDecodeCallback: ?*const anyopaque,
+    decoderEndCallback: ?*const anyopaque,
+    freeDecoderCallback: ?*const anyopaque,
+};
+pub const WS_HTTP_REDIRECT_CALLBACK_CONTEXT = extern struct {
+    callback: ?*const anyopaque,
+    state: *anyopaque,
 };
 pub const WS_ENDPOINT_IDENTITY = extern struct {
     identityType: i32,
@@ -403,6 +464,18 @@ pub const WS_HOST_NAMES = extern struct {
     hostNames: *WS_STRING,
     hostNameCount: u32,
 };
+pub const WS_CUSTOM_LISTENER_CALLBACKS = extern struct {
+    createListenerCallback: ?*const anyopaque,
+    freeListenerCallback: ?*const anyopaque,
+    resetListenerCallback: ?*const anyopaque,
+    openListenerCallback: ?*const anyopaque,
+    closeListenerCallback: ?*const anyopaque,
+    abortListenerCallback: ?*const anyopaque,
+    getListenerPropertyCallback: ?*const anyopaque,
+    setListenerPropertyCallback: ?*const anyopaque,
+    createChannelForListenerCallback: ?*const anyopaque,
+    acceptChannelCallback: ?*const anyopaque,
+};
 pub const WS_MESSAGE_PROPERTY = extern struct {
     id: i32,
     value: *anyopaque,
@@ -455,6 +528,10 @@ pub const WS_SERVICE_SECURITY_IDENTITIES = extern struct {
     serviceIdentities: *WS_STRING,
     serviceIdentityCount: u32,
 };
+pub const WS_CERTIFICATE_VALIDATION_CALLBACK_CONTEXT = extern struct {
+    callback: ?*const anyopaque,
+    state: *anyopaque,
+};
 pub const WS_CERT_CREDENTIAL = extern struct {
     credentialType: i32,
 };
@@ -469,6 +546,13 @@ pub const WS_THUMBPRINT_CERT_CREDENTIAL = extern struct {
     storeLocation: u32,
     storeName: WS_STRING,
     thumbprint: WS_STRING,
+};
+pub const WS_CUSTOM_CERT_CREDENTIAL = extern struct {
+    credential: WS_CERT_CREDENTIAL,
+    getCertCallback: ?*const anyopaque,
+    getCertCallbackState: *anyopaque,
+    certIssuerListNotificationCallback: ?*const anyopaque,
+    certIssuerListNotificationCallbackState: *anyopaque,
 };
 pub const WS_WINDOWS_INTEGRATED_AUTH_CREDENTIAL = extern struct {
     credentialType: i32,
@@ -536,6 +620,13 @@ pub const WS_KERBEROS_APREQ_MESSAGE_SECURITY_BINDING = extern struct {
     bindingUsage: i32,
     clientCredential: *WS_WINDOWS_INTEGRATED_AUTH_CREDENTIAL,
 };
+pub const WS_USERNAME_MESSAGE_SECURITY_BINDING = extern struct {
+    binding: WS_SECURITY_BINDING,
+    bindingUsage: i32,
+    clientCredential: *WS_USERNAME_CREDENTIAL,
+    passwordValidator: ?*const anyopaque,
+    passwordValidatorCallbackState: *anyopaque,
+};
 pub const WS_SECURITY_DESCRIPTION = extern struct {
     securityBindings: **WS_SECURITY_BINDING,
     securityBindingCount: u32,
@@ -564,6 +655,14 @@ pub const WS_XML_TOKEN_MESSAGE_SECURITY_BINDING = extern struct {
 };
 pub const WS_SAML_AUTHENTICATOR = extern struct {
     authenticatorType: i32,
+};
+pub const WS_CERT_SIGNED_SAML_AUTHENTICATOR = extern struct {
+    authenticator: WS_SAML_AUTHENTICATOR,
+    trustedIssuerCerts: **@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    trustedIssuerCertCount: u32,
+    decryptionCert: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    samlValidator: ?*const anyopaque,
+    samlValidatorCallbackState: *anyopaque,
 };
 pub const WS_SAML_MESSAGE_SECURITY_BINDING = extern struct {
     binding: WS_SECURITY_BINDING,
@@ -604,6 +703,11 @@ pub const WS_DURATION = extern struct {
     seconds: u32,
     milliseconds: u32,
     ticks: u32,
+};
+pub const WS_DURATION_DESCRIPTION = extern struct {
+    minValue: WS_DURATION,
+    maxValue: WS_DURATION,
+    comparer: ?*const anyopaque,
 };
 pub const WS_TIMESPAN_DESCRIPTION = extern struct {
     minValue: WS_TIMESPAN,
@@ -757,6 +861,14 @@ pub const WS_FAULT_DESCRIPTION = extern struct {
 pub const WS_VOID_DESCRIPTION = extern struct {
     size: u32,
 };
+pub const WS_CUSTOM_TYPE_DESCRIPTION = extern struct {
+    size: u32,
+    alignment: u32,
+    readCallback: ?*const anyopaque,
+    writeCallback: ?*const anyopaque,
+    descriptionData: *anyopaque,
+    isDefaultValueCallback: ?*const anyopaque,
+};
 pub const WS_ATTRIBUTE_DESCRIPTION = extern struct {
     attributeLocalName: *WS_XML_STRING,
     attributeNs: *WS_XML_STRING,
@@ -768,6 +880,26 @@ pub const WS_PARAMETER_DESCRIPTION = extern struct {
     inputMessageIndex: u16,
     outputMessageIndex: u16,
 };
+pub const WS_OPERATION_DESCRIPTION = extern struct {
+    versionInfo: u32,
+    inputMessageDescription: *WS_MESSAGE_DESCRIPTION,
+    outputMessageDescription: *WS_MESSAGE_DESCRIPTION,
+    inputMessageOptions: u32,
+    outputMessageOptions: u32,
+    parameterCount: u16,
+    parameterDescription: *WS_PARAMETER_DESCRIPTION,
+    stubCallback: ?*const anyopaque,
+    style: i32,
+};
+pub const WS_CONTRACT_DESCRIPTION = extern struct {
+    operationCount: u32,
+    operations: **WS_OPERATION_DESCRIPTION,
+};
+pub const WS_SERVICE_CONTRACT = extern struct {
+    contractDescription: *WS_CONTRACT_DESCRIPTION,
+    defaultMessageHandlerCallback: ?*const anyopaque,
+    methodTable: *anyopaque,
+};
 pub const WS_SERVICE_PROPERTY = extern struct {
     id: i32,
     value: *anyopaque,
@@ -777,6 +909,9 @@ pub const WS_SERVICE_ENDPOINT_PROPERTY = extern struct {
     id: i32,
     value: *anyopaque,
     valueSize: u32,
+};
+pub const WS_SERVICE_PROPERTY_ACCEPT_CALLBACK = extern struct {
+    callback: ?*const anyopaque,
 };
 pub const WS_SERVICE_METADATA_DOCUMENT = extern struct {
     content: *WS_XML_STRING,
@@ -788,15 +923,33 @@ pub const WS_SERVICE_METADATA = extern struct {
     serviceName: *WS_XML_STRING,
     serviceNs: *WS_XML_STRING,
 };
+pub const WS_SERVICE_PROPERTY_CLOSE_CALLBACK = extern struct {
+    callback: ?*const anyopaque,
+};
 pub const WS_SERVICE_ENDPOINT_METADATA = extern struct {
     portName: *WS_XML_STRING,
     bindingName: *WS_XML_STRING,
     bindingNs: *WS_XML_STRING,
 };
+pub const WS_SERVICE_ENDPOINT = extern struct {
+    address: WS_ENDPOINT_ADDRESS,
+    channelBinding: i32,
+    channelType: i32,
+    securityDescription: *WS_SECURITY_DESCRIPTION,
+    contract: *WS_SERVICE_CONTRACT,
+    authorizationCallback: ?*const anyopaque,
+    properties: *WS_SERVICE_ENDPOINT_PROPERTY,
+    propertyCount: u32,
+    channelProperties: WS_CHANNEL_PROPERTIES,
+};
 pub const WS_PROXY_PROPERTY = extern struct {
     id: i32,
     value: *anyopaque,
     valueSize: u32,
+};
+pub const WS_PROXY_MESSAGE_CALLBACK_CONTEXT = extern struct {
+    callback: ?*const anyopaque,
+    state: *anyopaque,
 };
 pub const WS_CALL_PROPERTY = extern struct {
     id: i32,
@@ -1141,6 +1294,18 @@ pub const WS_HTTP_SSL_HEADER_AUTH_BINDING_TEMPLATE = extern struct {
     sslTransportSecurityBinding: WS_SSL_TRANSPORT_SECURITY_BINDING_TEMPLATE,
     httpHeaderAuthSecurityBinding: WS_HTTP_HEADER_AUTH_SECURITY_BINDING_TEMPLATE,
 };
+pub const WS_USERNAME_MESSAGE_SECURITY_BINDING_TEMPLATE = extern struct {
+    securityBindingProperties: WS_SECURITY_BINDING_PROPERTIES,
+    clientCredential: *WS_USERNAME_CREDENTIAL,
+    passwordValidator: ?*const anyopaque,
+    passwordValidatorCallbackState: *anyopaque,
+};
+pub const WS_HTTP_SSL_USERNAME_BINDING_TEMPLATE = extern struct {
+    channelProperties: WS_CHANNEL_PROPERTIES,
+    securityProperties: WS_SECURITY_PROPERTIES,
+    sslTransportSecurityBinding: WS_SSL_TRANSPORT_SECURITY_BINDING_TEMPLATE,
+    usernameMessageSecurityBinding: WS_USERNAME_MESSAGE_SECURITY_BINDING_TEMPLATE,
+};
 pub const WS_KERBEROS_APREQ_MESSAGE_SECURITY_BINDING_TEMPLATE = extern struct {
     securityBindingProperties: WS_SECURITY_BINDING_PROPERTIES,
     clientCredential: *WS_WINDOWS_INTEGRATED_AUTH_CREDENTIAL,
@@ -1150,6 +1315,12 @@ pub const WS_HTTP_SSL_KERBEROS_APREQ_BINDING_TEMPLATE = extern struct {
     securityProperties: WS_SECURITY_PROPERTIES,
     sslTransportSecurityBinding: WS_SSL_TRANSPORT_SECURITY_BINDING_TEMPLATE,
     kerberosApreqMessageSecurityBinding: WS_KERBEROS_APREQ_MESSAGE_SECURITY_BINDING_TEMPLATE,
+};
+pub const WS_TCP_SSPI_USERNAME_BINDING_TEMPLATE = extern struct {
+    channelProperties: WS_CHANNEL_PROPERTIES,
+    securityProperties: WS_SECURITY_PROPERTIES,
+    sspiTransportSecurityBinding: WS_TCP_SSPI_TRANSPORT_SECURITY_BINDING_TEMPLATE,
+    usernameMessageSecurityBinding: WS_USERNAME_MESSAGE_SECURITY_BINDING_TEMPLATE,
 };
 pub const WS_TCP_SSPI_KERBEROS_APREQ_BINDING_TEMPLATE = extern struct {
     channelProperties: WS_CHANNEL_PROPERTIES,
@@ -1164,11 +1335,25 @@ pub const WS_SECURITY_CONTEXT_SECURITY_BINDING_TEMPLATE = extern struct {
     securityContextMessageSecurityBinding: WS_SECURITY_CONTEXT_MESSAGE_SECURITY_BINDING_TEMPLATE,
     securityProperties: WS_SECURITY_PROPERTIES,
 };
+pub const WS_HTTP_SSL_USERNAME_SECURITY_CONTEXT_BINDING_TEMPLATE = extern struct {
+    channelProperties: WS_CHANNEL_PROPERTIES,
+    securityProperties: WS_SECURITY_PROPERTIES,
+    sslTransportSecurityBinding: WS_SSL_TRANSPORT_SECURITY_BINDING_TEMPLATE,
+    usernameMessageSecurityBinding: WS_USERNAME_MESSAGE_SECURITY_BINDING_TEMPLATE,
+    securityContextSecurityBinding: WS_SECURITY_CONTEXT_SECURITY_BINDING_TEMPLATE,
+};
 pub const WS_HTTP_SSL_KERBEROS_APREQ_SECURITY_CONTEXT_BINDING_TEMPLATE = extern struct {
     channelProperties: WS_CHANNEL_PROPERTIES,
     securityProperties: WS_SECURITY_PROPERTIES,
     sslTransportSecurityBinding: WS_SSL_TRANSPORT_SECURITY_BINDING_TEMPLATE,
     kerberosApreqMessageSecurityBinding: WS_KERBEROS_APREQ_MESSAGE_SECURITY_BINDING_TEMPLATE,
+    securityContextSecurityBinding: WS_SECURITY_CONTEXT_SECURITY_BINDING_TEMPLATE,
+};
+pub const WS_TCP_SSPI_USERNAME_SECURITY_CONTEXT_BINDING_TEMPLATE = extern struct {
+    channelProperties: WS_CHANNEL_PROPERTIES,
+    securityProperties: WS_SECURITY_PROPERTIES,
+    sspiTransportSecurityBinding: WS_TCP_SSPI_TRANSPORT_SECURITY_BINDING_TEMPLATE,
+    usernameMessageSecurityBinding: WS_USERNAME_MESSAGE_SECURITY_BINDING_TEMPLATE,
     securityContextSecurityBinding: WS_SECURITY_CONTEXT_SECURITY_BINDING_TEMPLATE,
 };
 pub const WS_TCP_SSPI_KERBEROS_APREQ_SECURITY_CONTEXT_BINDING_TEMPLATE = extern struct {

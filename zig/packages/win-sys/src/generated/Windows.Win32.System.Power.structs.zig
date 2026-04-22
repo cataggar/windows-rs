@@ -94,6 +94,10 @@ pub const POWER_POLICY = extern struct {
     user: USER_POWER_POLICY,
     mach: MACHINE_POWER_POLICY,
 };
+pub const DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS = extern struct {
+    Callback: ?*const anyopaque,
+    Context: *anyopaque,
+};
 pub const THERMAL_EVENT = extern struct {
     Version: u32,
     Size: u32,

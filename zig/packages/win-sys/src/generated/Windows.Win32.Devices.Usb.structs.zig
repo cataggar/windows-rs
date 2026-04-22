@@ -795,6 +795,10 @@ pub const URB_0 = extern union {
 };
     Anonymous: URB_0,
 };
+pub const USB_IDLE_CALLBACK_INFO = extern struct {
+    IdleCallback: ?*const anyopaque,
+    IdleContext: *anyopaque,
+};
 pub const USBUSER_REQUEST_HEADER = extern struct {
     UsbUserRequest: u32,
     UsbUserStatusCode: i32,

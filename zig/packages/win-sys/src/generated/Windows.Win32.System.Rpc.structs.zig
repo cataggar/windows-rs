@@ -6,6 +6,7 @@ const HRESULT = win_core.HRESULT;
 const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
+const @"Windows.Win32.System.IO" = @import("Windows.Win32.System.IO.structs.zig");
 
 pub const PNDR_ASYNC_MESSAGE = extern struct {
     Value: isize,
@@ -306,6 +307,32 @@ pub const RPC_ENDPOINT_TEMPLATEA = extern struct {
     SecurityDescriptor: *anyopaque,
     Backlog: u32,
 };
+pub const RPC_INTERFACE_TEMPLATEA = extern struct {
+    Version: u32,
+    IfSpec: *anyopaque,
+    MgrTypeUuid: *GUID,
+    MgrEpv: *anyopaque,
+    Flags: u32,
+    MaxCalls: u32,
+    MaxRpcSize: u32,
+    IfCallback: ?*const anyopaque,
+    UuidVector: *UUID_VECTOR,
+    Annotation: @"Windows.Win32.Foundation".PSTR,
+    SecurityDescriptor: *anyopaque,
+};
+pub const RPC_INTERFACE_TEMPLATEW = extern struct {
+    Version: u32,
+    IfSpec: *anyopaque,
+    MgrTypeUuid: *GUID,
+    MgrEpv: *anyopaque,
+    Flags: u32,
+    MaxCalls: u32,
+    MaxRpcSize: u32,
+    IfCallback: ?*const anyopaque,
+    UuidVector: *UUID_VECTOR,
+    Annotation: @"Windows.Win32.Foundation".PWSTR,
+    SecurityDescriptor: *anyopaque,
+};
 pub const RPC_VERSION = extern struct {
     MajorVersion: u16,
     MinorVersion: u16,
@@ -327,9 +354,36 @@ pub const RPC_MESSAGE = extern struct {
     ImportContext: *anyopaque,
     RpcFlags: u32,
 };
+pub const RPC_DISPATCH_TABLE = extern struct {
+    DispatchTableCount: u32,
+    DispatchTable: ?*const anyopaque,
+    Reserved: isize,
+};
 pub const RPC_PROTSEQ_ENDPOINT = extern struct {
     RpcProtocolSequence: *u8,
     Endpoint: *u8,
+};
+pub const RPC_SERVER_INTERFACE = extern struct {
+    Length: u32,
+    InterfaceId: RPC_SYNTAX_IDENTIFIER,
+    TransferSyntax: RPC_SYNTAX_IDENTIFIER,
+    DispatchTable: *RPC_DISPATCH_TABLE,
+    RpcProtseqEndpointCount: u32,
+    RpcProtseqEndpoint: *RPC_PROTSEQ_ENDPOINT,
+    DefaultManagerEpv: *anyopaque,
+    InterpreterInfo: *anyopaque,
+    Flags: u32,
+};
+pub const RPC_CLIENT_INTERFACE = extern struct {
+    Length: u32,
+    InterfaceId: RPC_SYNTAX_IDENTIFIER,
+    TransferSyntax: RPC_SYNTAX_IDENTIFIER,
+    DispatchTable: *RPC_DISPATCH_TABLE,
+    RpcProtseqEndpointCount: u32,
+    RpcProtseqEndpoint: *RPC_PROTSEQ_ENDPOINT,
+    Reserved: usize,
+    InterpreterInfo: *anyopaque,
+    Flags: u32,
 };
 pub const RPC_SEC_CONTEXT_KEY_INFO = extern struct {
     EncryptAlgorithm: u32,
@@ -360,6 +414,51 @@ pub const RDR_CALLOUT_STATE = extern struct {
     SessionId: GUID,
     Interface: RPC_SYNTAX_IDENTIFIER,
     CertContext: *anyopaque,
+};
+pub const I_RpcProxyCallbackInterface = extern struct {
+    IsValidMachineFn: ?*const anyopaque,
+    GetClientAddressFn: ?*const anyopaque,
+    GetConnectionTimeoutFn: ?*const anyopaque,
+    PerformCalloutFn: ?*const anyopaque,
+    FreeCalloutStateFn: ?*const anyopaque,
+    GetClientSessionAndResourceUUIDFn: ?*const anyopaque,
+    ProxyFilterIfFn: ?*const anyopaque,
+    RpcProxyUpdatePerfCounterFn: ?*const anyopaque,
+    RpcProxyUpdatePerfCounterBackendServerFn: ?*const anyopaque,
+};
+pub const RPC_ASYNC_NOTIFICATION_INFO = extern union {
+pub const _APC_e__Struct = extern struct {
+    NotificationRoutine: ?*const anyopaque,
+    hThread: @"Windows.Win32.Foundation".HANDLE,
+};
+pub const _IOC_e__Struct = extern struct {
+    hIOPort: @"Windows.Win32.Foundation".HANDLE,
+    dwNumberOfBytesTransferred: u32,
+    dwCompletionKey: usize,
+    lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
+};
+pub const _IntPtr_e__Struct = extern struct {
+    hWnd: @"Windows.Win32.Foundation".HWND,
+    Msg: u32,
+};
+    APC: _APC_e__Struct,
+    IOC: _IOC_e__Struct,
+    IntPtr: _IntPtr_e__Struct,
+    hEvent: @"Windows.Win32.Foundation".HANDLE,
+    NotificationRoutine: ?*const anyopaque,
+};
+pub const RPC_ASYNC_STATE = extern struct {
+    Size: u32,
+    Signature: u32,
+    Lock: i32,
+    Flags: u32,
+    StubInfo: *anyopaque,
+    UserInfo: *anyopaque,
+    RuntimeInfo: *anyopaque,
+    Event: i32,
+    NotificationType: i32,
+    u: RPC_ASYNC_NOTIFICATION_INFO,
+    Reserved: [4]isize,
 };
 pub const BinaryParam = extern struct {
     Buffer: *anyopaque,
@@ -531,6 +630,28 @@ pub const ARRAY_INFO = extern struct {
     OffsetArray: *u32,
     ActualCountArray: *u32,
 };
+pub const GENERIC_BINDING_ROUTINE_PAIR = extern struct {
+    pfnBind: ?*const anyopaque,
+    pfnUnbind: ?*const anyopaque,
+};
+pub const GENERIC_BINDING_INFO = extern struct {
+    pObj: *anyopaque,
+    Size: u32,
+    pfnBind: ?*const anyopaque,
+    pfnUnbind: ?*const anyopaque,
+};
+pub const XMIT_ROUTINE_QUINTUPLE = extern struct {
+    pfnTranslateToXmit: ?*const anyopaque,
+    pfnTranslateFromXmit: ?*const anyopaque,
+    pfnFreeXmit: ?*const anyopaque,
+    pfnFreeInst: ?*const anyopaque,
+};
+pub const USER_MARSHAL_ROUTINE_QUADRUPLE = extern struct {
+    pfnBufferSize: ?*const anyopaque,
+    pfnMarshall: ?*const anyopaque,
+    pfnUnmarshall: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+};
 pub const MALLOC_FREE_STRUCT = extern struct {
     pfnAllocate: isize,
     pfnFree: isize,
@@ -539,9 +660,46 @@ pub const COMM_FAULT_OFFSETS = extern struct {
     CommOffset: i16,
     FaultOffset: i16,
 };
+pub const NDR_CS_SIZE_CONVERT_ROUTINES = extern struct {
+    pfnNetSize: ?*const anyopaque,
+    pfnToNetCs: ?*const anyopaque,
+    pfnLocalSize: ?*const anyopaque,
+    pfnFromNetCs: ?*const anyopaque,
+};
+pub const NDR_CS_ROUTINES = extern struct {
+    pSizeConvertRoutines: *NDR_CS_SIZE_CONVERT_ROUTINES,
+    pTagGettingRoutines: *?*const anyopaque,
+};
 pub const NDR_EXPR_DESC = extern struct {
     pOffset: *u16,
     pFormatExpr: *u8,
+};
+pub const MIDL_STUB_DESC = extern struct {
+pub const _IMPLICIT_HANDLE_INFO_e__Union = extern union {
+    pAutoHandle: **anyopaque,
+    pPrimitiveHandle: **anyopaque,
+    pGenericBindingInfo: *GENERIC_BINDING_INFO,
+};
+    RpcInterfaceInformation: *anyopaque,
+    pfnAllocate: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+    IMPLICIT_HANDLE_INFO: _IMPLICIT_HANDLE_INFO_e__Union,
+    apfnNdrRundownRoutines: *?*const anyopaque,
+    aGenericBindingRoutinePairs: *GENERIC_BINDING_ROUTINE_PAIR,
+    apfnExprEval: *?*const anyopaque,
+    aXmitQuintuple: *XMIT_ROUTINE_QUINTUPLE,
+    pFormatTypes: *u8,
+    fCheckBounds: i32,
+    Version: u32,
+    pMallocFreeStruct: *MALLOC_FREE_STRUCT,
+    MIDLVersion: i32,
+    CommFaultOffsets: *COMM_FAULT_OFFSETS,
+    aUserMarshalQuadruple: *USER_MARSHAL_ROUTINE_QUADRUPLE,
+    NotifyRoutineTable: *?*const anyopaque,
+    mFlags: usize,
+    CsRoutineTables: *NDR_CS_ROUTINES,
+    ProxyServerInfo: *anyopaque,
+    pExprInfo: *NDR_EXPR_DESC,
 };
 pub const MIDL_FORMAT_STRING = extern struct {
     Pad: i16,
@@ -559,6 +717,34 @@ pub const MIDL_INTERFACE_METHOD_PROPERTIES = extern struct {
     MethodCount: u16,
     MethodProperties: **MIDL_METHOD_PROPERTY_MAP,
 };
+pub const MIDL_SERVER_INFO = extern struct {
+    pStubDesc: *MIDL_STUB_DESC,
+    DispatchTable: *?*const anyopaque,
+    ProcString: *u8,
+    FmtStringOffset: *u16,
+    ThunkTable: *?*const anyopaque,
+    pTransferSyntax: *RPC_SYNTAX_IDENTIFIER,
+    nCount: usize,
+    pSyntaxInfo: *MIDL_SYNTAX_INFO,
+};
+pub const MIDL_STUBLESS_PROXY_INFO = extern struct {
+    pStubDesc: *MIDL_STUB_DESC,
+    ProcFormatString: *u8,
+    FormatStringOffset: *u16,
+    pTransferSyntax: *RPC_SYNTAX_IDENTIFIER,
+    nCount: usize,
+    pSyntaxInfo: *MIDL_SYNTAX_INFO,
+};
+pub const MIDL_SYNTAX_INFO = extern struct {
+    TransferSyntax: RPC_SYNTAX_IDENTIFIER,
+    DispatchTable: *RPC_DISPATCH_TABLE,
+    ProcString: *u8,
+    FmtStringOffset: *u16,
+    TypeString: *u8,
+    aUserMarshalQuadruple: *anyopaque,
+    pMethodProperties: *MIDL_INTERFACE_METHOD_PROPERTIES,
+    pReserved2: usize,
+};
 pub const CLIENT_CALL_RETURN = extern union {
     Pointer: *anyopaque,
     Simple: isize,
@@ -575,6 +761,13 @@ pub const MIDL_INTERCEPTION_INFO = extern struct {
     ProcFormatOffsetTable: *u16,
     ProcCount: u32,
     TypeString: *u8,
+};
+pub const MIDL_WINRT_TYPE_SERIALIZATION_INFO = extern struct {
+    Version: u32,
+    TypeFormatString: *u8,
+    FormatStringSize: u16,
+    TypeOffset: u16,
+    StubDesc: *MIDL_STUB_DESC,
 };
 pub const MIDL_TYPE_PICKLING_INFO = extern struct {
     Version: u32,

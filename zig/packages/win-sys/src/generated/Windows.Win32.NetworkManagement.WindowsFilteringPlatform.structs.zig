@@ -1992,3 +1992,10 @@ pub const FWPM_VSWITCH_EVENT_SUBSCRIPTION0 = extern struct {
     flags: u32,
     sessionKey: GUID,
 };
+pub const IPSEC_KEY_MANAGER_CALLBACKS0 = extern struct {
+    reserved: GUID,
+    flags: u32,
+    keyDictationCheck: ?*const anyopaque,
+    keyDictation: ?*const anyopaque,
+    keyNotify: ?*const anyopaque,
+};

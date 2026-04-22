@@ -12,3 +12,8 @@ pub const COMPRESSOR_HANDLE = extern struct {
 pub const DECOMPRESSOR_HANDLE = extern struct {
     Value: *anyopaque,
 };
+pub const COMPRESS_ALLOCATION_ROUTINES = extern struct {
+    Allocate: ?*const anyopaque,
+    Free: ?*const anyopaque,
+    UserContext: *anyopaque,
+};

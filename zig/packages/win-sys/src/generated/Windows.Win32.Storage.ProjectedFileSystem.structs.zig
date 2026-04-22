@@ -99,6 +99,16 @@ pub const _FileDeletedOnHandleClose_e__Struct = extern struct {
     FileRenamed: _FileRenamed_e__Struct,
     FileDeletedOnHandleClose: _FileDeletedOnHandleClose_e__Struct,
 };
+pub const PRJ_CALLBACKS = extern struct {
+    StartDirectoryEnumerationCallback: ?*const anyopaque,
+    EndDirectoryEnumerationCallback: ?*const anyopaque,
+    GetDirectoryEnumerationCallback: ?*const anyopaque,
+    GetPlaceholderInfoCallback: ?*const anyopaque,
+    GetFileDataCallback: ?*const anyopaque,
+    QueryFileNameCallback: ?*const anyopaque,
+    NotificationCallback: ?*const anyopaque,
+    CancelCommandCallback: ?*const anyopaque,
+};
 pub const PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS = extern struct {
 pub const PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS_0 = extern union {
 pub const _Notification_e__Struct = extern struct {

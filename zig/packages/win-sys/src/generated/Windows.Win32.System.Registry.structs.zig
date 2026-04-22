@@ -27,6 +27,14 @@ pub const PVALUEW = extern struct {
     pv_value_context: *anyopaque,
     pv_type: u32,
 };
+pub const REG_PROVIDER = extern struct {
+    pi_R0_1val: ?*const anyopaque,
+    pi_R0_allvals: ?*const anyopaque,
+    pi_R3_1val: ?*const anyopaque,
+    pi_R3_allvals: ?*const anyopaque,
+    pi_flags: u32,
+    pi_key_context: *anyopaque,
+};
 pub const VALENTA = extern struct {
     ve_valuename: @"Windows.Win32.Foundation".PSTR,
     ve_valuelen: u32,

@@ -501,6 +501,61 @@ pub const ETW_BUFFER_CALLBACK_INFORMATION = extern struct {
     LogfileHeader: *TRACE_LOGFILE_HEADER,
     BuffersRead: u32,
 };
+pub const ETW_OPEN_TRACE_OPTIONS = extern struct {
+    ProcessTraceModes: i32,
+    EventCallback: ?*const anyopaque,
+    EventCallbackContext: *anyopaque,
+    BufferCallback: ?*const anyopaque,
+    BufferCallbackContext: *anyopaque,
+};
+pub const EVENT_TRACE_LOGFILEW = extern struct {
+pub const EVENT_TRACE_LOGFILEW_0 = extern union {
+    LogFileMode: u32,
+    ProcessTraceMode: u32,
+};
+pub const EVENT_TRACE_LOGFILEW_1 = extern union {
+    EventCallback: ?*const anyopaque,
+    EventRecordCallback: ?*const anyopaque,
+};
+    LogFileName: @"Windows.Win32.Foundation".PWSTR,
+    LoggerName: @"Windows.Win32.Foundation".PWSTR,
+    CurrentTime: i64,
+    BuffersRead: u32,
+    Anonymous1: EVENT_TRACE_LOGFILEW_0,
+    CurrentEvent: EVENT_TRACE,
+    LogfileHeader: TRACE_LOGFILE_HEADER,
+    BufferCallback: ?*const anyopaque,
+    BufferSize: u32,
+    Filled: u32,
+    EventsLost: u32,
+    Anonymous2: EVENT_TRACE_LOGFILEW_1,
+    IsKernelTrace: u32,
+    Context: *anyopaque,
+};
+pub const EVENT_TRACE_LOGFILEA = extern struct {
+pub const EVENT_TRACE_LOGFILEA_0 = extern union {
+    LogFileMode: u32,
+    ProcessTraceMode: u32,
+};
+pub const EVENT_TRACE_LOGFILEA_1 = extern union {
+    EventCallback: ?*const anyopaque,
+    EventRecordCallback: ?*const anyopaque,
+};
+    LogFileName: @"Windows.Win32.Foundation".PSTR,
+    LoggerName: @"Windows.Win32.Foundation".PSTR,
+    CurrentTime: i64,
+    BuffersRead: u32,
+    Anonymous1: EVENT_TRACE_LOGFILEA_0,
+    CurrentEvent: EVENT_TRACE,
+    LogfileHeader: TRACE_LOGFILE_HEADER,
+    BufferCallback: ?*const anyopaque,
+    BufferSize: u32,
+    Filled: u32,
+    EventsLost: u32,
+    Anonymous2: EVENT_TRACE_LOGFILEA_1,
+    IsKernelTrace: u32,
+    Context: *anyopaque,
+};
 pub const ENABLE_TRACE_PARAMETERS_V1 = extern struct {
     Version: u32,
     EnableProperty: u32,

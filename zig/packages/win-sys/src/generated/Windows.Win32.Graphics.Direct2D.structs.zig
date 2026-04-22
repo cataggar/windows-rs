@@ -145,6 +145,11 @@ pub const D2D1_CREATION_PROPERTIES = extern struct {
     debugLevel: i32,
     options: i32,
 };
+pub const D2D1_PROPERTY_BINDING = extern struct {
+    propertyName: @"Windows.Win32.Foundation".PWSTR,
+    setFunction: ?*const anyopaque,
+    getFunction: ?*const anyopaque,
+};
 pub const D2D1_RESOURCE_TEXTURE_PROPERTIES = extern struct {
     extents: *u32,
     dimensions: u32,

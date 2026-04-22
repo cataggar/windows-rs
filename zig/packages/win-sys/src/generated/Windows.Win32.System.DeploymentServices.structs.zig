@@ -113,3 +113,11 @@ pub const WDS_TRANSPORTCLIENT_REQUEST = extern struct {
     pvProtocolData: *anyopaque,
     ulProtocolDataLength: u32,
 };
+pub const WDS_TRANSPORTCLIENT_CALLBACKS = extern struct {
+    SessionStart: ?*const anyopaque,
+    SessionStartEx: ?*const anyopaque,
+    ReceiveContents: ?*const anyopaque,
+    ReceiveMetadata: ?*const anyopaque,
+    SessionComplete: ?*const anyopaque,
+    SessionNegotiate: ?*const anyopaque,
+};

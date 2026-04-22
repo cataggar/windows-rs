@@ -275,6 +275,17 @@ pub const TYPEATTR = extern struct {
     tdescAlias: TYPEDESC,
     idldescType: IDLDESC,
 };
+pub const EXCEPINFO = extern struct {
+    wCode: u16,
+    wReserved: u16,
+    bstrSource: @"Windows.Win32.Foundation".BSTR,
+    bstrDescription: @"Windows.Win32.Foundation".BSTR,
+    bstrHelpFile: @"Windows.Win32.Foundation".BSTR,
+    dwHelpContext: u32,
+    pvReserved: *anyopaque,
+    pfnDeferredFillIn: ?*const anyopaque,
+    scode: i32,
+};
 pub const TLIBATTR = extern struct {
     guid: GUID,
     lcid: u32,

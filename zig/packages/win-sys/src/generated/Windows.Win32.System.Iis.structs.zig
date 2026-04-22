@@ -117,6 +117,25 @@ pub const HSE_VERSION_INFO = extern struct {
     dwExtensionVersion: u32,
     lpszExtensionDesc: [256]@"Windows.Win32.Foundation".CHAR,
 };
+pub const EXTENSION_CONTROL_BLOCK = extern struct {
+    cbSize: u32,
+    dwVersion: u32,
+    ConnID: HCONN,
+    dwHttpStatusCode: u32,
+    lpszLogData: [80]@"Windows.Win32.Foundation".CHAR,
+    lpszMethod: @"Windows.Win32.Foundation".PSTR,
+    lpszQueryString: @"Windows.Win32.Foundation".PSTR,
+    lpszPathInfo: @"Windows.Win32.Foundation".PSTR,
+    lpszPathTranslated: @"Windows.Win32.Foundation".PSTR,
+    cbTotalBytes: u32,
+    cbAvailable: u32,
+    lpbData: *u8,
+    lpszContentType: @"Windows.Win32.Foundation".PSTR,
+    GetServerVariable: ?*const anyopaque,
+    WriteClient: ?*const anyopaque,
+    ReadClient: ?*const anyopaque,
+    ServerSupportFunction: ?*const anyopaque,
+};
 pub const HSE_URL_MAPEX_INFO = extern struct {
     lpszPath: [260]@"Windows.Win32.Foundation".CHAR,
     dwFlags: u32,
@@ -130,6 +149,19 @@ pub const HSE_UNICODE_URL_MAPEX_INFO = extern struct {
     dwFlags: u32,
     cchMatchingPath: u32,
     cchMatchingURL: u32,
+};
+pub const HSE_TF_INFO = extern struct {
+    pfnHseIO: ?*const anyopaque,
+    pContext: *anyopaque,
+    hFile: @"Windows.Win32.Foundation".HANDLE,
+    pszStatusCode: @"Windows.Win32.Foundation".PSTR,
+    BytesToWrite: u32,
+    Offset: u32,
+    pHead: *anyopaque,
+    HeadLength: u32,
+    pTail: *anyopaque,
+    TailLength: u32,
+    dwFlags: u32,
 };
 pub const HSE_SEND_HEADER_EX_INFO = extern struct {
     pszStatus: @"Windows.Win32.Foundation".PSTR,

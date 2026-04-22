@@ -14,6 +14,23 @@ pub const EXCEPTION_DEBUG_INFO = extern struct {
     ExceptionRecord: EXCEPTION_RECORD,
     dwFirstChance: u32,
 };
+pub const CREATE_THREAD_DEBUG_INFO = extern struct {
+    hThread: @"Windows.Win32.Foundation".HANDLE,
+    lpThreadLocalBase: *anyopaque,
+    lpStartAddress: ?*const anyopaque,
+};
+pub const CREATE_PROCESS_DEBUG_INFO = extern struct {
+    hFile: @"Windows.Win32.Foundation".HANDLE,
+    hProcess: @"Windows.Win32.Foundation".HANDLE,
+    hThread: @"Windows.Win32.Foundation".HANDLE,
+    lpBaseOfImage: *anyopaque,
+    dwDebugInfoFileOffset: u32,
+    nDebugInfoSize: u32,
+    lpThreadLocalBase: *anyopaque,
+    lpStartAddress: ?*const anyopaque,
+    lpImageName: *anyopaque,
+    fUnicode: u16,
+};
 pub const EXIT_THREAD_DEBUG_INFO = extern struct {
     dwExitCode: u32,
 };
@@ -39,6 +56,23 @@ pub const OUTPUT_DEBUG_STRING_INFO = extern struct {
 pub const RIP_INFO = extern struct {
     dwError: u32,
     dwType: u32,
+};
+pub const DEBUG_EVENT = extern struct {
+pub const _u_e__Union = extern union {
+    Exception: EXCEPTION_DEBUG_INFO,
+    CreateThread: CREATE_THREAD_DEBUG_INFO,
+    CreateProcessInfo: CREATE_PROCESS_DEBUG_INFO,
+    ExitThread: EXIT_THREAD_DEBUG_INFO,
+    ExitProcess: EXIT_PROCESS_DEBUG_INFO,
+    LoadDll: LOAD_DLL_DEBUG_INFO,
+    UnloadDll: UNLOAD_DLL_DEBUG_INFO,
+    DebugString: OUTPUT_DEBUG_STRING_INFO,
+    RipInfo: RIP_INFO,
+};
+    dwDebugEventCode: u32,
+    dwProcessId: u32,
+    dwThreadId: u32,
+    u: _u_e__Union,
 };
 pub const XSAVE_FORMAT = extern struct {
     ControlWord: u16,
@@ -124,6 +158,10 @@ pub const MINIDUMP_USER_STREAM = extern struct {
     Type: u32,
     BufferSize: u32,
     Buffer: *anyopaque,
+};
+pub const MINIDUMP_CALLBACK_INFORMATION = extern struct {
+    CallbackRoutine: ?*const anyopaque,
+    CallbackParam: *anyopaque,
 };
 pub const LOADED_IMAGE = extern struct {
     ModuleName: @"Windows.Win32.Foundation".PSTR,
@@ -1855,6 +1893,31 @@ pub const DUMP_HEADER64_0 = extern union {
     BootId: u32,
     _reserved0: [4008]u8,
 };
+pub const WHEA_ERROR_SOURCE_CONFIGURATION_DD = extern struct {
+    Initialize: ?*const anyopaque,
+    Uninitialize: ?*const anyopaque,
+    Correct: ?*const anyopaque,
+};
+pub const WHEA_ERROR_SOURCE_CONFIGURATION_DEVICE_DRIVER_V1 = extern struct {
+    Version: u32,
+    SourceGuid: GUID,
+    LogTag: u16,
+    Reserved: [6]u8,
+    Initialize: ?*const anyopaque,
+    Uninitialize: ?*const anyopaque,
+};
+pub const WHEA_ERROR_SOURCE_CONFIGURATION_DEVICE_DRIVER = extern struct {
+    Version: u32,
+    SourceGuid: GUID,
+    LogTag: u16,
+    Reserved: [6]u8,
+    Initialize: ?*const anyopaque,
+    Uninitialize: ?*const anyopaque,
+    MaxSectionDataLength: u32,
+    MaxSectionsPerReport: u32,
+    CreatorId: GUID,
+    PartitionId: GUID,
+};
 pub const WHEA_DRIVER_BUFFER_SET = extern struct {
     Version: u32,
     Data: *u8,
@@ -2098,6 +2161,24 @@ pub const WHEA_GENERIC_ERROR_DESCRIPTOR_V2 = extern struct {
     ReadAckPreserveMask: u64,
     ReadAckWriteMask: u64,
 };
+pub const WHEA_DEVICE_DRIVER_DESCRIPTOR = extern struct {
+    Type: u16,
+    Enabled: @"Windows.Win32.Foundation".BOOLEAN,
+    Reserved: u8,
+    SourceGuid: GUID,
+    LogTag: u16,
+    Reserved2: u16,
+    PacketLength: u32,
+    PacketCount: u32,
+    PacketBuffer: *u8,
+    Config: WHEA_ERROR_SOURCE_CONFIGURATION_DD,
+    CreatorId: GUID,
+    PartitionId: GUID,
+    MaxSectionDataLength: u32,
+    MaxSectionsPerRecord: u32,
+    PacketStateBuffer: *u8,
+    OpenHandles: i32,
+};
 pub const WHEA_IPF_MCA_DESCRIPTOR = extern struct {
     Type: u16,
     Enabled: u8,
@@ -2112,6 +2193,33 @@ pub const WHEA_IPF_CPE_DESCRIPTOR = extern struct {
     Type: u16,
     Enabled: u8,
     Reserved: u8,
+};
+pub const WHEA_ERROR_SOURCE_DESCRIPTOR = extern struct {
+pub const _Info_e__Union = extern union {
+    XpfMceDescriptor: WHEA_XPF_MCE_DESCRIPTOR,
+    XpfCmcDescriptor: WHEA_XPF_CMC_DESCRIPTOR,
+    XpfNmiDescriptor: WHEA_XPF_NMI_DESCRIPTOR,
+    IpfMcaDescriptor: WHEA_IPF_MCA_DESCRIPTOR,
+    IpfCmcDescriptor: WHEA_IPF_CMC_DESCRIPTOR,
+    IpfCpeDescriptor: WHEA_IPF_CPE_DESCRIPTOR,
+    AerRootportDescriptor: WHEA_AER_ROOTPORT_DESCRIPTOR,
+    AerEndpointDescriptor: WHEA_AER_ENDPOINT_DESCRIPTOR,
+    AerBridgeDescriptor: WHEA_AER_BRIDGE_DESCRIPTOR,
+    GenErrDescriptor: WHEA_GENERIC_ERROR_DESCRIPTOR,
+    GenErrDescriptorV2: WHEA_GENERIC_ERROR_DESCRIPTOR_V2,
+    DeviceDriverDescriptor: WHEA_DEVICE_DRIVER_DESCRIPTOR,
+};
+    Length: u32,
+    Version: u32,
+    Type: i32,
+    State: i32,
+    MaxRawDataLength: u32,
+    NumRecordsToPreallocate: u32,
+    MaxSectionsPerRecord: u32,
+    ErrorSourceId: u32,
+    PlatformErrorSourceId: u32,
+    Flags: u32,
+    Info: _Info_e__Union,
 };
 pub const IPMI_OS_SEL_RECORD = extern struct {
     Signature: u32,

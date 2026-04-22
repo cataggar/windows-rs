@@ -7,6 +7,7 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 const @"Windows.Win32.Security.Cryptography" = @import("Windows.Win32.Security.Cryptography.structs.zig");
+const @"Windows.Win32.Security.Cryptography.Sip" = @import("Windows.Win32.Security.Cryptography.Sip.structs.zig");
 
 pub const WINTRUST_DATA = extern struct {
 pub const WINTRUST_DATA_0 = extern union {
@@ -101,6 +102,44 @@ pub const WINTRUST_CERT_INFO = extern struct {
     dwFlags: u32,
     psftVerifyAsOf: *@"Windows.Win32.Foundation".FILETIME,
 };
+pub const CRYPT_PROVIDER_DATA = extern struct {
+pub const CRYPT_PROVIDER_DATA_0 = extern union {
+    pPDSip: *PROVDATA_SIP,
+};
+    cbStruct: u32,
+    pWintrustData: *WINTRUST_DATA,
+    fOpenedFile: @"Windows.Win32.Foundation".BOOL,
+    hWndParent: @"Windows.Win32.Foundation".HWND,
+    pgActionID: *GUID,
+    hProv: usize,
+    dwError: u32,
+    dwRegSecuritySettings: u32,
+    dwRegPolicySettings: u32,
+    psPfns: *CRYPT_PROVIDER_FUNCTIONS,
+    cdwTrustStepErrors: u32,
+    padwTrustStepErrors: *u32,
+    chStores: u32,
+    pahStores: *@"Windows.Win32.Security.Cryptography".HCERTSTORE,
+    dwEncoding: u32,
+    hMsg: *anyopaque,
+    csSigners: u32,
+    pasSigners: *CRYPT_PROVIDER_SGNR,
+    csProvPrivData: u32,
+    pasProvPrivData: *CRYPT_PROVIDER_PRIVDATA,
+    dwSubjectChoice: u32,
+    Anonymous: CRYPT_PROVIDER_DATA_0,
+    pszUsageOID: @"Windows.Win32.Foundation".PSTR,
+    fRecallWithState: @"Windows.Win32.Foundation".BOOL,
+    sftSystemTime: @"Windows.Win32.Foundation".FILETIME,
+    pszCTLSignerUsageOID: @"Windows.Win32.Foundation".PSTR,
+    dwProvFlags: u32,
+    dwFinalError: u32,
+    pRequestUsage: *@"Windows.Win32.Security.Cryptography".CERT_USAGE_MATCH,
+    dwTrustPubSettings: u32,
+    dwUIStateFlags: u32,
+    pSigState: *CRYPT_PROVIDER_SIGSTATE,
+    pSigSettings: *WINTRUST_SIGNATURE_SETTINGS,
+};
 pub const CRYPT_PROVIDER_SIGSTATE = extern struct {
     cbStruct: u32,
     rhSecondarySigs: **anyopaque,
@@ -114,6 +153,32 @@ pub const CRYPT_PROVIDER_SIGSTATE = extern struct {
     iAttemptCount: u32,
     fCheckedSealing: @"Windows.Win32.Foundation".BOOL,
     pSealingSignature: *SEALING_SIGNATURE_ATTRIBUTE,
+};
+pub const CRYPT_PROVIDER_FUNCTIONS = extern struct {
+    cbStruct: u32,
+    pfnAlloc: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+    pfnAddStore2Chain: ?*const anyopaque,
+    pfnAddSgnr2Chain: ?*const anyopaque,
+    pfnAddCert2Chain: ?*const anyopaque,
+    pfnAddPrivData2Chain: ?*const anyopaque,
+    pfnInitialize: ?*const anyopaque,
+    pfnObjectTrust: ?*const anyopaque,
+    pfnSignatureTrust: ?*const anyopaque,
+    pfnCertificateTrust: ?*const anyopaque,
+    pfnFinalPolicy: ?*const anyopaque,
+    pfnCertCheckPolicy: ?*const anyopaque,
+    pfnTestFinalPolicy: ?*const anyopaque,
+    psUIpfns: *CRYPT_PROVUI_FUNCS,
+    pfnCleanupPolicy: ?*const anyopaque,
+};
+pub const CRYPT_PROVUI_FUNCS = extern struct {
+    cbStruct: u32,
+    psUIData: *CRYPT_PROVUI_DATA,
+    pfnOnMoreInfoClick: ?*const anyopaque,
+    pfnOnMoreInfoClickDefault: ?*const anyopaque,
+    pfnOnAdvancedClick: ?*const anyopaque,
+    pfnOnAdvancedClickDefault: ?*const anyopaque,
 };
 pub const CRYPT_PROVUI_DATA = extern struct {
     cbStruct: u32,
@@ -160,6 +225,15 @@ pub const CRYPT_PROVIDER_PRIVDATA = extern struct {
     gProviderID: GUID,
     cbProvData: u32,
     pvProvData: *anyopaque,
+};
+pub const PROVDATA_SIP = extern struct {
+    cbStruct: u32,
+    gSubject: GUID,
+    pSip: *@"Windows.Win32.Security.Cryptography.Sip".SIP_DISPATCH_INFO,
+    pCATSip: *@"Windows.Win32.Security.Cryptography.Sip".SIP_DISPATCH_INFO,
+    psSipSubjectInfo: *@"Windows.Win32.Security.Cryptography.Sip".SIP_SUBJECTINFO,
+    psSipCATSubjectInfo: *@"Windows.Win32.Security.Cryptography.Sip".SIP_SUBJECTINFO,
+    psIndirectData: *@"Windows.Win32.Security.Cryptography.Sip".SIP_INDIRECT_DATA,
 };
 pub const CRYPT_TRUST_REG_ENTRY = extern struct {
     cbStruct: u32,
@@ -326,6 +400,17 @@ pub const WTD_GENERIC_CHAIN_POLICY_CREATE_INFO_0 = extern union {
     pChainPara: *@"Windows.Win32.Security.Cryptography".CERT_CHAIN_PARA,
     dwFlags: u32,
     pvReserved: *anyopaque,
+};
+pub const WTD_GENERIC_CHAIN_POLICY_DATA = extern struct {
+pub const WTD_GENERIC_CHAIN_POLICY_DATA_0 = extern union {
+    cbStruct: u32,
+    cbSize: u32,
+};
+    Anonymous: WTD_GENERIC_CHAIN_POLICY_DATA_0,
+    pSignerChainInfo: *WTD_GENERIC_CHAIN_POLICY_CREATE_INFO,
+    pCounterSignerChainInfo: *WTD_GENERIC_CHAIN_POLICY_CREATE_INFO,
+    pfnPolicyCallback: ?*const anyopaque,
+    pvPolicyArg: *anyopaque,
 };
 pub const DRIVER_VER_MAJORMINOR = extern struct {
     dwMajor: u32,

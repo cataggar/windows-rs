@@ -116,6 +116,58 @@ pub const HARDWAREHOOKSTRUCT = extern struct {
     wParam: @"Windows.Win32.Foundation".WPARAM,
     lParam: @"Windows.Win32.Foundation".LPARAM,
 };
+pub const WNDCLASSEXA = extern struct {
+    cbSize: u32,
+    style: u32,
+    lpfnWndProc: ?*const anyopaque,
+    cbClsExtra: i32,
+    cbWndExtra: i32,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    hIcon: HICON,
+    hCursor: HCURSOR,
+    hbrBackground: @"Windows.Win32.Graphics.Gdi".HBRUSH,
+    lpszMenuName: @"Windows.Win32.Foundation".PSTR,
+    lpszClassName: @"Windows.Win32.Foundation".PSTR,
+    hIconSm: HICON,
+};
+pub const WNDCLASSEXW = extern struct {
+    cbSize: u32,
+    style: u32,
+    lpfnWndProc: ?*const anyopaque,
+    cbClsExtra: i32,
+    cbWndExtra: i32,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    hIcon: HICON,
+    hCursor: HCURSOR,
+    hbrBackground: @"Windows.Win32.Graphics.Gdi".HBRUSH,
+    lpszMenuName: @"Windows.Win32.Foundation".PWSTR,
+    lpszClassName: @"Windows.Win32.Foundation".PWSTR,
+    hIconSm: HICON,
+};
+pub const WNDCLASSA = extern struct {
+    style: u32,
+    lpfnWndProc: ?*const anyopaque,
+    cbClsExtra: i32,
+    cbWndExtra: i32,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    hIcon: HICON,
+    hCursor: HCURSOR,
+    hbrBackground: @"Windows.Win32.Graphics.Gdi".HBRUSH,
+    lpszMenuName: @"Windows.Win32.Foundation".PSTR,
+    lpszClassName: @"Windows.Win32.Foundation".PSTR,
+};
+pub const WNDCLASSW = extern struct {
+    style: u32,
+    lpfnWndProc: ?*const anyopaque,
+    cbClsExtra: i32,
+    cbWndExtra: i32,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    hIcon: HICON,
+    hCursor: HCURSOR,
+    hbrBackground: @"Windows.Win32.Graphics.Gdi".HBRUSH,
+    lpszMenuName: @"Windows.Win32.Foundation".PWSTR,
+    lpszClassName: @"Windows.Win32.Foundation".PWSTR,
+};
 pub const MSG = extern struct {
     hwnd: @"Windows.Win32.Foundation".HWND,
     message: u32,
@@ -297,6 +349,30 @@ pub const DROPSTRUCT = extern struct {
     dwData: usize,
     ptDrop: @"Windows.Win32.Foundation".POINT,
     dwControlData: u32,
+};
+pub const MSGBOXPARAMSA = extern struct {
+    cbSize: u32,
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    lpszText: @"Windows.Win32.Foundation".PSTR,
+    lpszCaption: @"Windows.Win32.Foundation".PSTR,
+    dwStyle: u32,
+    lpszIcon: @"Windows.Win32.Foundation".PSTR,
+    dwContextHelpId: usize,
+    lpfnMsgBoxCallback: ?*const anyopaque,
+    dwLanguageId: u32,
+};
+pub const MSGBOXPARAMSW = extern struct {
+    cbSize: u32,
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    lpszText: @"Windows.Win32.Foundation".PWSTR,
+    lpszCaption: @"Windows.Win32.Foundation".PWSTR,
+    dwStyle: u32,
+    lpszIcon: @"Windows.Win32.Foundation".PWSTR,
+    dwContextHelpId: usize,
+    lpfnMsgBoxCallback: ?*const anyopaque,
+    dwLanguageId: u32,
 };
 pub const MENUITEMTEMPLATEHEADER = extern struct {
     versionNumber: u16,

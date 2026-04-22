@@ -539,6 +539,24 @@ pub const DUMP_POINTERS = extern struct {
     Spare1: [2]u8,
     DeviceObject: *anyopaque,
 };
+pub const DUMP_POINTERS_EX = extern struct {
+    Header: DUMP_POINTERS_VERSION,
+    DumpData: *anyopaque,
+    CommonBufferVa: *anyopaque,
+    CommonBufferSize: u32,
+    AllocateCommonBuffers: @"Windows.Win32.Foundation".BOOLEAN,
+    DeviceObject: *anyopaque,
+    DriverList: *anyopaque,
+    dwPortFlags: u32,
+    MaxDeviceDumpSectionSize: u32,
+    MaxDeviceDumpLevel: u32,
+    MaxTransferSize: u32,
+    AdapterObject: *anyopaque,
+    MappedRegisterBase: *anyopaque,
+    DeviceReady: *@"Windows.Win32.Foundation".BOOLEAN,
+    DumpDevicePowerOn: ?*const anyopaque,
+    DumpDevicePowerOnContext: *anyopaque,
+};
 pub const DUMP_DRIVER = extern struct {
     DumpDriverList: *anyopaque,
     DriverName: [15]u16,

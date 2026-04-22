@@ -11,6 +11,60 @@ pub const TOKEN_VALUE = extern struct {
     pwszToken: @"Windows.Win32.Foundation".PWSTR,
     dwValue: u32,
 };
+pub const NS_HELPER_ATTRIBUTES = extern struct {
+pub const NS_HELPER_ATTRIBUTES_0 = extern union {
+pub const NS_HELPER_ATTRIBUTES_0_0 = extern struct {
+    dwVersion: u32,
+    dwReserved: u32,
+};
+    Anonymous: NS_HELPER_ATTRIBUTES_0_0,
+    _ullAlign: u64,
+};
+    Anonymous: NS_HELPER_ATTRIBUTES_0,
+    guidHelper: GUID,
+    pfnStart: ?*const anyopaque,
+    pfnStop: ?*const anyopaque,
+};
+pub const CMD_ENTRY = extern struct {
+    pwszCmdToken: @"Windows.Win32.Foundation".PWSTR,
+    pfnCmdHandler: ?*const anyopaque,
+    dwShortCmdHelpToken: u32,
+    dwCmdHlpToken: u32,
+    dwFlags: u32,
+    pOsVersionCheck: ?*const anyopaque,
+};
+pub const CMD_GROUP_ENTRY = extern struct {
+    pwszCmdGroupToken: @"Windows.Win32.Foundation".PWSTR,
+    dwShortCmdHelpToken: u32,
+    ulCmdGroupSize: u32,
+    dwFlags: u32,
+    pCmdGroup: *CMD_ENTRY,
+    pOsVersionCheck: ?*const anyopaque,
+};
+pub const NS_CONTEXT_ATTRIBUTES = extern struct {
+pub const NS_CONTEXT_ATTRIBUTES_0 = extern union {
+pub const NS_CONTEXT_ATTRIBUTES_0_0 = extern struct {
+    dwVersion: u32,
+    dwReserved: u32,
+};
+    Anonymous: NS_CONTEXT_ATTRIBUTES_0_0,
+    _ullAlign: u64,
+};
+    Anonymous: NS_CONTEXT_ATTRIBUTES_0,
+    pwszContext: @"Windows.Win32.Foundation".PWSTR,
+    guidHelper: GUID,
+    dwFlags: u32,
+    ulPriority: u32,
+    ulNumTopCmds: u32,
+    pTopCmds: *CMD_ENTRY,
+    ulNumGroups: u32,
+    pCmdGroups: *CMD_GROUP_ENTRY,
+    pfnCommitFn: ?*const anyopaque,
+    pfnDumpFn: ?*const anyopaque,
+    pfnConnectFn: ?*const anyopaque,
+    pReserved: *anyopaque,
+    pfnOsVersionCheck: ?*const anyopaque,
+};
 pub const TAG_TYPE = extern struct {
     pwszTag: @"Windows.Win32.Foundation".PWSTR,
     dwRequired: u32,

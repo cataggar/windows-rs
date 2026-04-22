@@ -21,6 +21,11 @@ pub const TEXTRANGEW = extern struct {
     chrg: CHARRANGE,
     lpstrText: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const EDITSTREAM = extern struct {
+    dwCookie: usize,
+    dwError: u32,
+    pfnCallback: ?*const anyopaque,
+};
 pub const FINDTEXTA = extern struct {
     chrg: CHARRANGE,
     lpstrText: @"Windows.Win32.Foundation".PSTR,

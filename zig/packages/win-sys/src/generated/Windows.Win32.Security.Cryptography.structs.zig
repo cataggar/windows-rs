@@ -415,6 +415,11 @@ pub const CRYPT_PROVIDER_REFS = extern struct {
     cProviders: u32,
     rgpProviders: **CRYPT_PROVIDER_REF,
 };
+pub const NCRYPT_ALLOC_PARA = extern struct {
+    cbSize: u32,
+    pfnAlloc: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+};
 pub const NCRYPT_CIPHER_PADDING_INFO = extern struct {
     cbSize: u32,
     dwFlags: u32,
@@ -657,6 +662,20 @@ pub const CRYPT_ENCRYPTED_PRIVATE_KEY_INFO = extern struct {
     EncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
     EncryptedPrivateKey: CRYPT_INTEGER_BLOB,
 };
+pub const CRYPT_PKCS8_IMPORT_PARAMS = extern struct {
+    PrivateKey: CRYPT_INTEGER_BLOB,
+    pResolvehCryptProvFunc: ?*const anyopaque,
+    pVoidResolveFunc: *anyopaque,
+    pDecryptPrivateKeyFunc: ?*const anyopaque,
+    pVoidDecryptFunc: *anyopaque,
+};
+pub const CRYPT_PKCS8_EXPORT_PARAMS = extern struct {
+    hCryptProv: usize,
+    dwKeySpec: u32,
+    pszPrivateKeyObjId: @"Windows.Win32.Foundation".PSTR,
+    pEncryptPrivateKeyFunc: ?*const anyopaque,
+    pVoidEncryptFunc: *anyopaque,
+};
 pub const CERT_INFO = extern struct {
     dwVersion: u32,
     SerialNumber: CRYPT_INTEGER_BLOB,
@@ -751,6 +770,16 @@ pub const CRYPT_CSP_PROVIDER = extern struct {
     dwKeySpec: u32,
     pwszProviderName: @"Windows.Win32.Foundation".PWSTR,
     Signature: CRYPT_BIT_BLOB,
+};
+pub const CRYPT_ENCODE_PARA = extern struct {
+    cbSize: u32,
+    pfnAlloc: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+};
+pub const CRYPT_DECODE_PARA = extern struct {
+    cbSize: u32,
+    pfnAlloc: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
 };
 pub const CERT_EXTENSIONS = extern struct {
     cExtension: u32,
@@ -1405,6 +1434,11 @@ pub const CMSG_ENCRYPTED_ENCODE_INFO = extern struct {
     ContentEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
     pvEncryptionAuxInfo: *anyopaque,
 };
+pub const CMSG_STREAM_INFO = extern struct {
+    cbContent: u32,
+    pfnStreamOutput: ?*const anyopaque,
+    pvArg: *anyopaque,
+};
 pub const CMSG_SIGNER_INFO = extern struct {
     dwVersion: u32,
     Issuer: CRYPT_INTEGER_BLOB,
@@ -1529,6 +1563,27 @@ pub const CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA = extern struct {
     dwSignerIndex: u32,
     dwUnauthAttrIndex: u32,
 };
+pub const CMSG_CONTENT_ENCRYPT_INFO = extern struct {
+pub const CMSG_CONTENT_ENCRYPT_INFO_0 = extern union {
+    hContentEncryptKey: usize,
+    hCNGContentEncryptKey: BCRYPT_KEY_HANDLE,
+};
+    cbSize: u32,
+    hCryptProv: HCRYPTPROV_LEGACY,
+    ContentEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
+    pvEncryptionAuxInfo: *anyopaque,
+    cRecipients: u32,
+    rgCmsRecipients: *CMSG_RECIPIENT_ENCODE_INFO,
+    pfnAlloc: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+    dwEncryptFlags: u32,
+    Anonymous: CMSG_CONTENT_ENCRYPT_INFO_0,
+    dwFlags: u32,
+    fCNG: @"Windows.Win32.Foundation".BOOL,
+    pbCNGContentEncryptKeyObject: *u8,
+    pbContentEncryptKey: *u8,
+    cbContentEncryptKey: u32,
+};
 pub const CMSG_KEY_TRANS_ENCRYPT_INFO = extern struct {
     cbSize: u32,
     dwRecipientIndex: u32,
@@ -1561,6 +1616,17 @@ pub const CMSG_MAIL_LIST_ENCRYPT_INFO = extern struct {
     KeyEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
     EncryptedKey: CRYPT_INTEGER_BLOB,
     dwFlags: u32,
+};
+pub const CMSG_CNG_CONTENT_DECRYPT_INFO = extern struct {
+    cbSize: u32,
+    ContentEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
+    pfnAlloc: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+    hNCryptKey: NCRYPT_KEY_HANDLE,
+    pbContentEncryptKey: *u8,
+    cbContentEncryptKey: u32,
+    hCNGContentEncryptKey: BCRYPT_KEY_HANDLE,
+    pbCNGContentEncryptKeyObject: *u8,
 };
 pub const CERT_CONTEXT = extern struct {
     dwCertEncodingType: u32,
@@ -1678,6 +1744,13 @@ pub const CTL_FIND_SUBJECT_PARA = extern struct {
     dwSubjectType: u32,
     pvSubject: *anyopaque,
 };
+pub const CERT_CREATE_CONTEXT_PARA = extern struct {
+    cbSize: u32,
+    pfnFree: ?*const anyopaque,
+    pvFree: *anyopaque,
+    pfnSort: ?*const anyopaque,
+    pvSort: *anyopaque,
+};
 pub const CERT_SYSTEM_STORE_INFO = extern struct {
     cbSize: u32,
 };
@@ -1759,6 +1832,13 @@ pub const CRYPT_SIGN_MESSAGE_PARA = extern struct {
     rgUnauthAttr: *CRYPT_ATTRIBUTE,
     dwFlags: u32,
     dwInnerContentType: u32,
+};
+pub const CRYPT_VERIFY_MESSAGE_PARA = extern struct {
+    cbSize: u32,
+    dwMsgAndCertEncodingType: u32,
+    hCryptProv: HCRYPTPROV_LEGACY,
+    pfnGetSignerCertificate: ?*const anyopaque,
+    pvGetArg: *anyopaque,
 };
 pub const CRYPT_ENCRYPT_MESSAGE_PARA = extern struct {
     cbSize: u32,
@@ -1860,6 +1940,10 @@ pub const CRYPT_RETRIEVE_AUX_INFO = extern struct {
     dwHttpStatusCode: u32,
     ppwszErrorResponseHeaders: *@"Windows.Win32.Foundation".PWSTR,
     ppErrorContentBlob: **CRYPT_INTEGER_BLOB,
+};
+pub const CRYPT_ASYNC_RETRIEVAL_COMPLETION = extern struct {
+    pfnCompletion: ?*const anyopaque,
+    pvCompletion: *anyopaque,
 };
 pub const CRYPT_URL_ARRAY = extern struct {
     cUrl: u32,
@@ -1981,6 +2065,16 @@ pub const CRL_REVOCATION_INFO = extern struct {
     pCrlContext: *CRL_CONTEXT,
     pCrlIssuerChain: *CERT_CHAIN_CONTEXT,
 };
+pub const CERT_CHAIN_FIND_BY_ISSUER_PARA = extern struct {
+    cbSize: u32,
+    pszUsageIdentifier: @"Windows.Win32.Foundation".PSTR,
+    dwKeySpec: u32,
+    dwAcquirePrivateKeyFlags: u32,
+    cIssuer: u32,
+    rgIssuer: *CRYPT_INTEGER_BLOB,
+    pfnFindCallback: ?*const anyopaque,
+    pvFindArg: *anyopaque,
+};
 pub const CERT_CHAIN_POLICY_PARA = extern struct {
     cbSize: u32,
     dwFlags: u32,
@@ -2070,6 +2164,14 @@ pub const CERT_SERVER_OCSP_RESPONSE_CONTEXT = extern struct {
     pbEncodedOcspResponse: *u8,
     cbEncodedOcspResponse: u32,
 };
+pub const CERT_SERVER_OCSP_RESPONSE_OPEN_PARA = extern struct {
+    cbSize: u32,
+    dwFlags: u32,
+    pcbUsedSize: *u32,
+    pwszOcspDirectory: @"Windows.Win32.Foundation".PWSTR,
+    pfnUpdateCallback: ?*const anyopaque,
+    pvUpdateCallbackArg: *anyopaque,
+};
 pub const CERT_SELECT_CHAIN_PARA = extern struct {
     hChainEngine: HCERTCHAINENGINE,
     pTime: *@"Windows.Win32.Foundation".FILETIME,
@@ -2130,11 +2232,27 @@ pub const CRYPT_TIMESTAMP_PARA = extern struct {
     cExtension: u32,
     rgExtension: *CERT_EXTENSION,
 };
+pub const CRYPT_OBJECT_LOCATOR_PROVIDER_TABLE = extern struct {
+    cbSize: u32,
+    pfnGet: ?*const anyopaque,
+    pfnRelease: ?*const anyopaque,
+    pfnFreePassword: ?*const anyopaque,
+    pfnFree: ?*const anyopaque,
+    pfnFreeIdentifier: ?*const anyopaque,
+};
 pub const CRYPTPROTECT_PROMPTSTRUCT = extern struct {
     cbSize: u32,
     dwPromptFlags: u32,
     hwndApp: @"Windows.Win32.Foundation".HWND,
     szPrompt: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const NCRYPT_PROTECT_STREAM_INFO = extern struct {
+    pfnStreamOutput: ?*const anyopaque,
+    pvCallbackCtxt: *anyopaque,
+};
+pub const NCRYPT_PROTECT_STREAM_INFO_EX = extern struct {
+    pfnStreamOutput: ?*const anyopaque,
+    pvCallbackCtxt: *anyopaque,
 };
 pub const SIGNER_ATTR_AUTHCODE = extern struct {
     cbSize: u32,
@@ -2177,6 +2295,32 @@ pub const SIGNER_CONTEXT = extern struct {
     cbSize: u32,
     cbBlob: u32,
     pbBlob: *u8,
+};
+pub const SIGNER_DIGEST_SIGN_INFO = extern struct {
+pub const SIGNER_DIGEST_SIGN_INFO_0 = extern union {
+    pfnAuthenticodeDigestSign: ?*const anyopaque,
+    pfnAuthenticodeDigestSignWithFileHandle: ?*const anyopaque,
+    pfnAuthenticodeDigestSignEx: ?*const anyopaque,
+    pfnAuthenticodeDigestSignExWithFileHandle: ?*const anyopaque,
+};
+    cbSize: u32,
+    dwDigestSignChoice: u32,
+    Anonymous: SIGNER_DIGEST_SIGN_INFO_0,
+    pMetadataBlob: *CRYPT_INTEGER_BLOB,
+    dwReserved: u32,
+    dwReserved2: u32,
+    dwReserved3: u32,
+};
+pub const SIGNER_DIGEST_SIGN_INFO_V1 = extern struct {
+    cbSize: u32,
+    pfnAuthenticodeDigestSign: ?*const anyopaque,
+    pMetadataBlob: *CRYPT_INTEGER_BLOB,
+};
+pub const SIGNER_DIGEST_SIGN_INFO_V2 = extern struct {
+    cbSize: u32,
+    pfnAuthenticodeDigestSign: ?*const anyopaque,
+    pfnAuthenticodeDigestSignEx: ?*const anyopaque,
+    pMetadataBlob: *CRYPT_INTEGER_BLOB,
 };
 pub const SIGNER_FILE_INFO = extern struct {
     cbSize: u32,
@@ -2230,6 +2374,12 @@ pub const CRYPT_XML_PROPERTY = extern struct {
     pvValue: *anyopaque,
     cbValue: u32,
 };
+pub const CRYPT_XML_DATA_PROVIDER = extern struct {
+    pvCallbackState: *anyopaque,
+    cbBufferSize: u32,
+    pfnRead: ?*const anyopaque,
+    pfnClose: ?*const anyopaque,
+};
 pub const CRYPT_XML_STATUS = extern struct {
     cbSize: u32,
     dwErrorStatus: u32,
@@ -2239,6 +2389,18 @@ pub const CRYPT_XML_ALGORITHM = extern struct {
     cbSize: u32,
     wszAlgorithm: @"Windows.Win32.Foundation".PWSTR,
     Encoded: CRYPT_XML_BLOB,
+};
+pub const CRYPT_XML_TRANSFORM_INFO = extern struct {
+    cbSize: u32,
+    wszAlgorithm: @"Windows.Win32.Foundation".PWSTR,
+    cbBufferSize: u32,
+    dwFlags: u32,
+    pfnCreateTransform: ?*const anyopaque,
+};
+pub const CRYPT_XML_TRANSFORM_CHAIN_CONFIG = extern struct {
+    cbSize: u32,
+    cTransformInfo: u32,
+    rgpTransformInfo: **CRYPT_XML_TRANSFORM_INFO,
 };
 pub const CRYPT_XML_KEY_DSA_KEY_VALUE = extern struct {
     P: CRYPT_XML_DATA_BLOB,
@@ -2350,6 +2512,13 @@ pub const CRYPT_XML_SIGNATURE = extern struct {
     cObject: u32,
     rgpObject: **CRYPT_XML_OBJECT,
 };
+pub const CRYPT_XML_DOC_CTXT = extern struct {
+    cbSize: u32,
+    hDocCtxt: *anyopaque,
+    pTransformsConfig: *CRYPT_XML_TRANSFORM_CHAIN_CONFIG,
+    cSignature: u32,
+    rgpSignature: **CRYPT_XML_SIGNATURE,
+};
 pub const CRYPT_XML_KEYINFO_PARAM = extern struct {
     wszId: @"Windows.Win32.Foundation".PWSTR,
     wszKeyName: @"Windows.Win32.Foundation".PWSTR,
@@ -2371,6 +2540,17 @@ pub const CRYPT_XML_ALGORITHM_INFO = extern struct {
     dwVerifyFlags: u32,
     pvPaddingInfo: *anyopaque,
     pvExtraInfo: *anyopaque,
+};
+pub const CRYPT_XML_CRYPTOGRAPHIC_INTERFACE = extern struct {
+    cbSize: u32,
+    fpCryptXmlEncodeAlgorithm: ?*const anyopaque,
+    fpCryptXmlCreateDigest: ?*const anyopaque,
+    fpCryptXmlDigestData: ?*const anyopaque,
+    fpCryptXmlFinalizeDigest: ?*const anyopaque,
+    fpCryptXmlCloseDigest: ?*const anyopaque,
+    fpCryptXmlSignData: ?*const anyopaque,
+    fpCryptXmlVerifySignature: ?*const anyopaque,
+    fpCryptXmlGetAlgorithmInfo: ?*const anyopaque,
 };
 pub const INFORMATIONCARD_ASYMMETRIC_CRYPTO_PARAMETERS = extern struct {
     keySize: i32,
@@ -2458,12 +2638,138 @@ pub const BCRYPT_ECC_PARAMETER_HEADER = extern struct {
     cbCofactor: u32,
     cbSeed: u32,
 };
+pub const BCRYPT_CIPHER_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    GenerateKey: ?*const anyopaque,
+    Encrypt: ?*const anyopaque,
+    Decrypt: ?*const anyopaque,
+    ImportKey: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    DuplicateKey: ?*const anyopaque,
+    DestroyKey: ?*const anyopaque,
+};
+pub const BCRYPT_HASH_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    CreateHash: ?*const anyopaque,
+    HashData: ?*const anyopaque,
+    FinishHash: ?*const anyopaque,
+    DuplicateHash: ?*const anyopaque,
+    DestroyHash: ?*const anyopaque,
+    CreateMultiHash: ?*const anyopaque,
+    ProcessMultiOperations: ?*const anyopaque,
+};
+pub const BCRYPT_ASYMMETRIC_ENCRYPTION_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    GenerateKeyPair: ?*const anyopaque,
+    FinalizeKeyPair: ?*const anyopaque,
+    Encrypt: ?*const anyopaque,
+    Decrypt: ?*const anyopaque,
+    ImportKeyPair: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    DestroyKey: ?*const anyopaque,
+    SignHash: ?*const anyopaque,
+    VerifySignature: ?*const anyopaque,
+};
+pub const BCRYPT_SECRET_AGREEMENT_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    SecretAgreement: ?*const anyopaque,
+    DeriveKey: ?*const anyopaque,
+    DestroySecret: ?*const anyopaque,
+    GenerateKeyPair: ?*const anyopaque,
+    FinalizeKeyPair: ?*const anyopaque,
+    ImportKeyPair: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    DestroyKey: ?*const anyopaque,
+};
+pub const BCRYPT_SIGNATURE_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    GenerateKeyPair: ?*const anyopaque,
+    FinalizeKeyPair: ?*const anyopaque,
+    SignHash: ?*const anyopaque,
+    VerifySignature: ?*const anyopaque,
+    ImportKeyPair: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    DestroyKey: ?*const anyopaque,
+};
+pub const BCRYPT_RNG_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    GenRandom: ?*const anyopaque,
+};
+pub const BCRYPT_KEY_DERIVATION_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenAlgorithmProvider: ?*const anyopaque,
+    GetProperty: ?*const anyopaque,
+    SetProperty: ?*const anyopaque,
+    CloseAlgorithmProvider: ?*const anyopaque,
+    GenerateKey: ?*const anyopaque,
+    DestroyKey: ?*const anyopaque,
+    KeyDerivation: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    ImportKey: ?*const anyopaque,
+    DuplicateKey: ?*const anyopaque,
+};
 pub const NCRYPT_UI_POLICY_BLOB = extern struct {
     dwVersion: u32,
     dwFlags: u32,
     cbCreationTitle: u32,
     cbFriendlyName: u32,
     cbDescription: u32,
+};
+pub const NCRYPT_KEY_STORAGE_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    OpenProvider: ?*const anyopaque,
+    OpenKey: ?*const anyopaque,
+    CreatePersistedKey: ?*const anyopaque,
+    GetProviderProperty: ?*const anyopaque,
+    GetKeyProperty: ?*const anyopaque,
+    SetProviderProperty: ?*const anyopaque,
+    SetKeyProperty: ?*const anyopaque,
+    FinalizeKey: ?*const anyopaque,
+    DeleteKey: ?*const anyopaque,
+    FreeProvider: ?*const anyopaque,
+    FreeKey: ?*const anyopaque,
+    FreeBuffer: ?*const anyopaque,
+    Encrypt: ?*const anyopaque,
+    Decrypt: ?*const anyopaque,
+    IsAlgSupported: ?*const anyopaque,
+    EnumAlgorithms: ?*const anyopaque,
+    EnumKeys: ?*const anyopaque,
+    ImportKey: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    SignHash: ?*const anyopaque,
+    VerifySignature: ?*const anyopaque,
+    PromptUser: ?*const anyopaque,
+    NotifyChangeKey: ?*const anyopaque,
+    SecretAgreement: ?*const anyopaque,
+    DeriveKey: ?*const anyopaque,
+    FreeSecret: ?*const anyopaque,
+    KeyDerivation: ?*const anyopaque,
+    CreateClaim: ?*const anyopaque,
+    VerifyClaim: ?*const anyopaque,
 };
 pub const NCRYPT_SSL_CIPHER_SUITE = extern struct {
     dwProtocol: u32,
@@ -2513,12 +2819,74 @@ pub const NCRYPT_SSL_ECC_CURVE = extern struct {
     dwCurveType: u32,
     dwFlags: u32,
 };
+pub const NCRYPT_SSL_FUNCTION_TABLE = extern struct {
+    Version: BCRYPT_INTERFACE_VERSION,
+    ComputeClientAuthHash: ?*const anyopaque,
+    ComputeEapKeyBlock: ?*const anyopaque,
+    ComputeFinishedHash: ?*const anyopaque,
+    CreateEphemeralKey: ?*const anyopaque,
+    CreateHandshakeHash: ?*const anyopaque,
+    DecryptPacket: ?*const anyopaque,
+    EncryptPacket: ?*const anyopaque,
+    EnumCipherSuites: ?*const anyopaque,
+    ExportKey: ?*const anyopaque,
+    FreeBuffer: ?*const anyopaque,
+    FreeObject: ?*const anyopaque,
+    GenerateMasterKey: ?*const anyopaque,
+    GenerateSessionKeys: ?*const anyopaque,
+    GetKeyProperty: ?*const anyopaque,
+    GetProviderProperty: ?*const anyopaque,
+    HashHandshake: ?*const anyopaque,
+    ImportMasterKey: ?*const anyopaque,
+    ImportKey: ?*const anyopaque,
+    LookupCipherSuiteInfo: ?*const anyopaque,
+    OpenPrivateKey: ?*const anyopaque,
+    OpenProvider: ?*const anyopaque,
+    SignHash: ?*const anyopaque,
+    VerifySignature: ?*const anyopaque,
+    LookupCipherLengths: ?*const anyopaque,
+    CreateClientAuthHash: ?*const anyopaque,
+    GetCipherSuitePRFHashAlgorithm: ?*const anyopaque,
+    ComputeSessionHash: ?*const anyopaque,
+    GeneratePreMasterKey: ?*const anyopaque,
+    EnumEccCurves: ?*const anyopaque,
+    ExportKeyingMaterial: ?*const anyopaque,
+    ExtractEarlyKey: ?*const anyopaque,
+    ExtractHandshakeKey: ?*const anyopaque,
+    ExtractMasterKey: ?*const anyopaque,
+    ExpandTrafficKeys: ?*const anyopaque,
+    ExpandWriteKey: ?*const anyopaque,
+    ExpandExporterMasterKey: ?*const anyopaque,
+    EnumCipherSuitesEx: ?*const anyopaque,
+    ExpandResumptionMasterKey: ?*const anyopaque,
+    DuplicateTranscriptHash: ?*const anyopaque,
+    ExpandBinderKey: ?*const anyopaque,
+    ExpandPreSharedKey: ?*const anyopaque,
+};
 pub const OFFLOAD_PRIVATE_KEY = extern struct {
     dwVersion: u32,
     cbPrime1: u32,
     cbPrime2: u32,
     pbPrime1: *u8,
     pbPrime2: *u8,
+};
+pub const VTableProvStruc = extern struct {
+    Version: u32,
+    FuncVerifyImage: ?*const anyopaque,
+    FuncReturnhWnd: ?*const anyopaque,
+    dwProvType: u32,
+    pbContextInfo: *u8,
+    cbContextInfo: u32,
+    pszProvName: @"Windows.Win32.Foundation".PSTR,
+};
+pub const VTableProvStrucW = extern struct {
+    Version: u32,
+    FuncVerifyImage: ?*const anyopaque,
+    FuncReturnhWnd: ?*const anyopaque,
+    dwProvType: u32,
+    pbContextInfo: *u8,
+    cbContextInfo: u32,
+    pszProvName: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const InFileSignatureResource = extern struct {
     dwVersion: u32,
@@ -2666,6 +3034,71 @@ pub const CARD_AUTHENTICATE_RESPONSE = extern struct {
     cbSessionPin: u32,
     cAttemptsRemaining: u32,
     pbSessionPin: [1]u8,
+};
+pub const CARD_DATA = extern struct {
+    dwVersion: u32,
+    pbAtr: *u8,
+    cbAtr: u32,
+    pwszCardName: @"Windows.Win32.Foundation".PWSTR,
+    pfnCspAlloc: ?*const anyopaque,
+    pfnCspReAlloc: ?*const anyopaque,
+    pfnCspFree: ?*const anyopaque,
+    pfnCspCacheAddFile: ?*const anyopaque,
+    pfnCspCacheLookupFile: ?*const anyopaque,
+    pfnCspCacheDeleteFile: ?*const anyopaque,
+    pvCacheContext: *anyopaque,
+    pfnCspPadData: ?*const anyopaque,
+    hSCardCtx: usize,
+    hScard: usize,
+    pvVendorSpecific: *anyopaque,
+    pfnCardDeleteContext: ?*const anyopaque,
+    pfnCardQueryCapabilities: ?*const anyopaque,
+    pfnCardDeleteContainer: ?*const anyopaque,
+    pfnCardCreateContainer: ?*const anyopaque,
+    pfnCardGetContainerInfo: ?*const anyopaque,
+    pfnCardAuthenticatePin: ?*const anyopaque,
+    pfnCardGetChallenge: ?*const anyopaque,
+    pfnCardAuthenticateChallenge: ?*const anyopaque,
+    pfnCardUnblockPin: ?*const anyopaque,
+    pfnCardChangeAuthenticator: ?*const anyopaque,
+    pfnCardDeauthenticate: ?*const anyopaque,
+    pfnCardCreateDirectory: ?*const anyopaque,
+    pfnCardDeleteDirectory: ?*const anyopaque,
+    pvUnused3: *anyopaque,
+    pvUnused4: *anyopaque,
+    pfnCardCreateFile: ?*const anyopaque,
+    pfnCardReadFile: ?*const anyopaque,
+    pfnCardWriteFile: ?*const anyopaque,
+    pfnCardDeleteFile: ?*const anyopaque,
+    pfnCardEnumFiles: ?*const anyopaque,
+    pfnCardGetFileInfo: ?*const anyopaque,
+    pfnCardQueryFreeSpace: ?*const anyopaque,
+    pfnCardQueryKeySizes: ?*const anyopaque,
+    pfnCardSignData: ?*const anyopaque,
+    pfnCardRSADecrypt: ?*const anyopaque,
+    pfnCardConstructDHAgreement: ?*const anyopaque,
+    pfnCardDeriveKey: ?*const anyopaque,
+    pfnCardDestroyDHAgreement: ?*const anyopaque,
+    pfnCspGetDHAgreement: ?*const anyopaque,
+    pfnCardGetChallengeEx: ?*const anyopaque,
+    pfnCardAuthenticateEx: ?*const anyopaque,
+    pfnCardChangeAuthenticatorEx: ?*const anyopaque,
+    pfnCardDeauthenticateEx: ?*const anyopaque,
+    pfnCardGetContainerProperty: ?*const anyopaque,
+    pfnCardSetContainerProperty: ?*const anyopaque,
+    pfnCardGetProperty: ?*const anyopaque,
+    pfnCardSetProperty: ?*const anyopaque,
+    pfnCspUnpadData: ?*const anyopaque,
+    pfnMDImportSessionKey: ?*const anyopaque,
+    pfnMDEncryptData: ?*const anyopaque,
+    pfnCardImportSessionKey: ?*const anyopaque,
+    pfnCardGetSharedKeyHandle: ?*const anyopaque,
+    pfnCardGetAlgorithmProperty: ?*const anyopaque,
+    pfnCardGetKeyProperty: ?*const anyopaque,
+    pfnCardSetKeyProperty: ?*const anyopaque,
+    pfnCardDestroyKey: ?*const anyopaque,
+    pfnCardProcessEncryptedData: ?*const anyopaque,
+    pfnCardCreateContainerEx: ?*const anyopaque,
 };
 pub const CLMD_PIV_CERT_DATA = extern struct {
     dwVersion: u32,

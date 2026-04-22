@@ -475,6 +475,24 @@ pub const DRVCONFIGINFO = extern struct {
     lpszDCISectionName: @"Windows.Win32.Foundation".PWSTR,
     lpszDCIAliasName: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const MMIOINFO = extern struct {
+    dwFlags: u32,
+    fccIOProc: u32,
+    pIOProc: ?*const anyopaque,
+    wErrorRet: u32,
+    htask: @"Windows.Win32.Foundation".HTASK,
+    cchBuffer: i32,
+    pchBuffer: *i8,
+    pchNext: *i8,
+    pchEndRead: *i8,
+    pchEndWrite: *i8,
+    lBufOffset: i32,
+    lDiskOffset: i32,
+    adwInfo: [3]u32,
+    dwReserved1: u32,
+    dwReserved2: u32,
+    hmmio: HMMIO,
+};
 pub const MMCKINFO = extern struct {
     ckid: u32,
     cksize: u32,
@@ -1184,6 +1202,14 @@ pub const MIXEROPENDESC = extern struct {
     dwCallback: usize,
     dwInstance: usize,
     dnDevNode: usize,
+};
+pub const TIMEREVENT = extern struct {
+    wDelay: u16,
+    wResolution: u16,
+    lpFunction: ?*const anyopaque,
+    dwUser: u32,
+    wFlags: u16,
+    wReserved1: u16,
 };
 pub const MCI_OPEN_DRIVER_PARMS = extern struct {
     wDeviceID: u32,

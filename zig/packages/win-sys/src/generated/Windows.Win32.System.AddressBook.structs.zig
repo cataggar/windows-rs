@@ -312,6 +312,26 @@ pub const FlagList = extern struct {
     cFlags: u32,
     ulFlag: [1]u32,
 };
+pub const ADRPARM = extern struct {
+    cbABContEntryID: u32,
+    lpABContEntryID: *ENTRYID,
+    ulFlags: u32,
+    lpReserved: *anyopaque,
+    ulHelpContext: u32,
+    lpszHelpFileName: *i8,
+    lpfnABSDI: ?*const anyopaque,
+    lpfnDismiss: ?*const anyopaque,
+    lpvDismissContext: *anyopaque,
+    lpszCaption: *i8,
+    lpszNewEntryTitle: *i8,
+    lpszDestWellsTitle: *i8,
+    cDestFields: u32,
+    nDestFieldFocus: u32,
+    lppszDestTitles: **i8,
+    lpulDestComps: *u32,
+    lpContRestriction: *SRestriction,
+    lpHierRestriction: *SRestriction,
+};
 pub const DTBLLABEL = extern struct {
     ulbLpszLabelName: u32,
     ulFlags: u32,

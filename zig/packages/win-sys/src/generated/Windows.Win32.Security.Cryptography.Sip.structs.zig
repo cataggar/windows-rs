@@ -73,6 +73,15 @@ pub const SIP_INDIRECT_DATA = extern struct {
     DigestAlgorithm: @"Windows.Win32.Security.Cryptography".CRYPT_ALGORITHM_IDENTIFIER,
     Digest: @"Windows.Win32.Security.Cryptography".CRYPT_INTEGER_BLOB,
 };
+pub const SIP_DISPATCH_INFO = extern struct {
+    cbSize: u32,
+    hSIP: @"Windows.Win32.Foundation".HANDLE,
+    pfGet: ?*const anyopaque,
+    pfPut: ?*const anyopaque,
+    pfCreate: ?*const anyopaque,
+    pfVerify: ?*const anyopaque,
+    pfRemove: ?*const anyopaque,
+};
 pub const SIP_ADD_NEWPROVIDER = extern struct {
     cbStruct: u32,
     pgSubject: *GUID,

@@ -501,6 +501,26 @@ pub const SHFOLDERCUSTOMSETTINGS = extern struct {
     pszLogo: @"Windows.Win32.Foundation".PWSTR,
     cchLogo: u32,
 };
+pub const BROWSEINFOA = extern struct {
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    pidlRoot: *@"Windows.Win32.UI.Shell.Common".ITEMIDLIST,
+    pszDisplayName: @"Windows.Win32.Foundation".PSTR,
+    lpszTitle: @"Windows.Win32.Foundation".PSTR,
+    ulFlags: u32,
+    lpfn: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
+    iImage: i32,
+};
+pub const BROWSEINFOW = extern struct {
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    pidlRoot: *@"Windows.Win32.UI.Shell.Common".ITEMIDLIST,
+    pszDisplayName: @"Windows.Win32.Foundation".PWSTR,
+    lpszTitle: @"Windows.Win32.Foundation".PWSTR,
+    ulFlags: u32,
+    lpfn: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
+    iImage: i32,
+};
 pub const NRESARRAY = extern struct {
     cItems: u32,
     nr: [1]@"Windows.Win32.NetworkManagement.WNet".NETRESOURCEA,
@@ -626,6 +646,11 @@ pub const DETAILSINFO = extern struct {
     cxChar: i32,
     str: @"Windows.Win32.UI.Shell.Common".STRRET,
     iImage: i32,
+};
+pub const SFVM_PROPPAGE_DATA = extern struct {
+    dwReserved: u32,
+    pfn: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
 };
 pub const SFVM_HELPTOPIC_DATA = extern struct {
     wszHelpFile: [260]u16,

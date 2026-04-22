@@ -94,6 +94,14 @@ pub const MI_StringA = extern struct {
     data: **u16,
     size: u32,
 };
+pub const MI_ReferenceA = extern struct {
+    data: **MI_Instance,
+    size: u32,
+};
+pub const MI_InstanceA = extern struct {
+    data: **MI_Instance,
+    size: u32,
+};
 pub const MI_Array = extern struct {
     data: *anyopaque,
     size: u32,
@@ -153,6 +161,49 @@ pub const MI_ConstDatetimeA = extern struct {
 pub const MI_ConstStringA = extern struct {
     data: **u16,
     size: u32,
+};
+pub const MI_ConstReferenceA = extern struct {
+    data: **MI_Instance,
+    size: u32,
+};
+pub const MI_ConstInstanceA = extern struct {
+    data: **MI_Instance,
+    size: u32,
+};
+pub const MI_Value = extern union {
+    boolean: u8,
+    uint8: u8,
+    sint8: i8,
+    uint16: u16,
+    sint16: i16,
+    uint32: u32,
+    sint32: i32,
+    uint64: u64,
+    sint64: i64,
+    real32: f32,
+    real64: f64,
+    char16: u16,
+    datetime: MI_Datetime,
+    string: *u16,
+    instance: *MI_Instance,
+    reference: *MI_Instance,
+    booleana: MI_BooleanA,
+    uint8a: MI_Uint8A,
+    sint8a: MI_Sint8A,
+    uint16a: MI_Uint16A,
+    sint16a: MI_Sint16A,
+    uint32a: MI_Uint32A,
+    sint32a: MI_Sint32A,
+    uint64a: MI_Uint64A,
+    sint64a: MI_Sint64A,
+    real32a: MI_Real32A,
+    real64a: MI_Real64A,
+    char16a: MI_Char16A,
+    datetimea: MI_DatetimeA,
+    stringa: MI_StringA,
+    referencea: MI_ReferenceA,
+    instancea: MI_InstanceA,
+    array: MI_Array,
 };
 pub const MI_BooleanField = extern struct {
     value: u8,
@@ -224,6 +275,16 @@ pub const MI_StringField = extern struct {
     exists: u8,
     flags: u8,
 };
+pub const MI_ReferenceField = extern struct {
+    value: *MI_Instance,
+    exists: u8,
+    flags: u8,
+};
+pub const MI_InstanceField = extern struct {
+    value: *MI_Instance,
+    exists: u8,
+    flags: u8,
+};
 pub const MI_BooleanAField = extern struct {
     value: MI_BooleanA,
     exists: u8,
@@ -291,6 +352,16 @@ pub const MI_DatetimeAField = extern struct {
 };
 pub const MI_StringAField = extern struct {
     value: MI_StringA,
+    exists: u8,
+    flags: u8,
+};
+pub const MI_ReferenceAField = extern struct {
+    value: MI_ReferenceA,
+    exists: u8,
+    flags: u8,
+};
+pub const MI_InstanceAField = extern struct {
+    value: MI_InstanceA,
     exists: u8,
     flags: u8,
 };
@@ -369,6 +440,16 @@ pub const MI_ConstStringField = extern struct {
     exists: u8,
     flags: u8,
 };
+pub const MI_ConstReferenceField = extern struct {
+    value: *MI_Instance,
+    exists: u8,
+    flags: u8,
+};
+pub const MI_ConstInstanceField = extern struct {
+    value: *MI_Instance,
+    exists: u8,
+    flags: u8,
+};
 pub const MI_ConstBooleanAField = extern struct {
     value: MI_ConstBooleanA,
     exists: u8,
@@ -439,6 +520,16 @@ pub const MI_ConstStringAField = extern struct {
     exists: u8,
     flags: u8,
 };
+pub const MI_ConstReferenceAField = extern struct {
+    value: MI_ConstReferenceA,
+    exists: u8,
+    flags: u8,
+};
+pub const MI_ConstInstanceAField = extern struct {
+    value: MI_ConstInstanceA,
+    exists: u8,
+    flags: u8,
+};
 pub const MI_ServerFT = extern struct {
     GetVersion: isize,
     GetSystemName: isize,
@@ -482,6 +573,23 @@ pub const MI_ObjectDecl = extern struct {
     numProperties: u32,
     size: u32,
 };
+pub const MI_ClassDecl = extern struct {
+    flags: u32,
+    code: u32,
+    name: *u16,
+    qualifiers: **MI_Qualifier,
+    numQualifiers: u32,
+    properties: **MI_PropertyDecl,
+    numProperties: u32,
+    size: u32,
+    superClass: *u16,
+    superClassDecl: *MI_ClassDecl,
+    methods: **MI_MethodDecl,
+    numMethods: u32,
+    schema: *MI_SchemaDecl,
+    providerFT: *MI_ProviderFT,
+    owningClass: *MI_Class,
+};
 pub const MI_FeatureDecl = extern struct {
     flags: u32,
     code: u32,
@@ -514,6 +622,21 @@ pub const MI_PropertyDecl = extern struct {
     propagator: *u16,
     value: *anyopaque,
 };
+pub const MI_MethodDecl = extern struct {
+    flags: u32,
+    code: u32,
+    name: *u16,
+    qualifiers: **MI_Qualifier,
+    numQualifiers: u32,
+    parameters: **MI_ParameterDecl,
+    numParameters: u32,
+    size: u32,
+    returnType: u32,
+    origin: *u16,
+    propagator: *u16,
+    schema: *MI_SchemaDecl,
+    function: ?*const anyopaque,
+};
 pub const MI_QualifierDecl = extern struct {
     name: *u16,
     type: u32,
@@ -527,6 +650,38 @@ pub const MI_Qualifier = extern struct {
     type: u32,
     flavor: u32,
     value: *anyopaque,
+};
+pub const MI_SchemaDecl = extern struct {
+    qualifierDecls: **MI_QualifierDecl,
+    numQualifierDecls: u32,
+    classDecls: **MI_ClassDecl,
+    numClassDecls: u32,
+};
+pub const MI_ProviderFT = extern struct {
+    Load: ?*const anyopaque,
+    Unload: ?*const anyopaque,
+    GetInstance: ?*const anyopaque,
+    EnumerateInstances: ?*const anyopaque,
+    CreateInstance: ?*const anyopaque,
+    ModifyInstance: ?*const anyopaque,
+    DeleteInstance: ?*const anyopaque,
+    AssociatorInstances: ?*const anyopaque,
+    ReferenceInstances: ?*const anyopaque,
+    EnableIndications: ?*const anyopaque,
+    DisableIndications: ?*const anyopaque,
+    Subscribe: ?*const anyopaque,
+    Unsubscribe: ?*const anyopaque,
+    Invoke: ?*const anyopaque,
+};
+pub const MI_Module = extern struct {
+    version: u32,
+    generatorVersion: u32,
+    flags: u32,
+    charSize: u32,
+    schemaDecl: *MI_SchemaDecl,
+    Load: ?*const anyopaque,
+    Unload: ?*const anyopaque,
+    dynamicProviderFT: *MI_ProviderFT,
 };
 pub const MI_InstanceFT = extern struct {
     Clone: isize,
@@ -551,6 +706,13 @@ pub const MI_InstanceFT = extern struct {
 pub const MI_InstanceExFT = extern struct {
     parent: MI_InstanceFT,
     Normalize: isize,
+};
+pub const MI_Instance = extern struct {
+    ft: *MI_InstanceFT,
+    classDecl: *MI_ClassDecl,
+    serverName: *u16,
+    nameSpace: *u16,
+    reserved: [4]isize,
 };
 pub const MI_ContextFT = extern struct {
     PostResult: isize,
@@ -624,6 +786,24 @@ pub const MI_ClassFT = extern struct {
     GetParentClass: isize,
     Delete: isize,
     Clone: isize,
+};
+pub const MI_Class = extern struct {
+    ft: *MI_ClassFT,
+    classDecl: *MI_ClassDecl,
+    namespaceName: *u16,
+    serverName: *u16,
+    reserved: [4]isize,
+};
+pub const MI_OperationCallbacks = extern struct {
+    callbackContext: *anyopaque,
+    promptUser: ?*const anyopaque,
+    writeError: ?*const anyopaque,
+    writeMessage: ?*const anyopaque,
+    writeProgress: ?*const anyopaque,
+    instanceResult: ?*const anyopaque,
+    indicationResult: ?*const anyopaque,
+    classResult: ?*const anyopaque,
+    streamedParameterResult: ?*const anyopaque,
 };
 pub const MI_SessionCallbacks = extern struct {
     callbackContext: *anyopaque,

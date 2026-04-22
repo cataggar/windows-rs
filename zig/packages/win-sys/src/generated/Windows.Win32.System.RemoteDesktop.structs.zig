@@ -448,6 +448,14 @@ pub const CHANNEL_PDU_HEADER = extern struct {
     length: u32,
     flags: u32,
 };
+pub const CHANNEL_ENTRY_POINTS = extern struct {
+    cbSize: u32,
+    protocolVersion: u32,
+    pVirtualChannelInit: ?*const anyopaque,
+    pVirtualChannelOpen: ?*const anyopaque,
+    pVirtualChannelClose: ?*const anyopaque,
+    pVirtualChannelWrite: ?*const anyopaque,
+};
 pub const CLIENT_DISPLAY = extern struct {
     HorizontalResolution: u32,
     VerticalResolution: u32,

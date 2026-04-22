@@ -1724,6 +1724,21 @@ fn writeZigTy(
         // as `*@"Windows.Foo".Name` and record `Windows.Foo` in
         // `cross` so `emitNamespace` adds the matching `@import`.
         .class_name => |tn| {
+            // Delegate refs project as opaque fn-pointer typedef —
+            // class_name already denotes a reference (pointer), so we
+            // do NOT add a leading `*`. Outer `ptr_mut`/`ptr_const`
+            // wrappers still prepend one as usual.
+            if (entries != null and file != null and
+                std.mem.indexOfScalar(u8, tn.name, '`') == null)
+            {
+                const key = try std.fmt.allocPrint(gpa, "{s}.{s}", .{ tn.namespace, tn.name });
+                if (entries.?.get(key)) |entry| {
+                    if (entry.kind == .delegate) {
+                        try writer.writeAll("?*const anyopaque");
+                        return true;
+                    }
+                }
+            }
             // Generic WinRT interfaces (`IReference\`1` etc.) cannot
             // round-trip through a Zig identifier. Treat them as
             // opaque pointers until parameterized generics land in
@@ -1756,6 +1771,11 @@ fn writeZigTy(
                             try writer.writeAll(repr);
                             return true;
                         }
+                    }
+                    if (entry.kind == .delegate) {
+                        // Delegate → opaque fn-pointer typedef projection.
+                        try writer.writeAll("?*const anyopaque");
+                        return true;
                     }
                 }
             }
@@ -1813,6 +1833,12 @@ fn writeZigTy(
             try writer.print("[{d}]", .{a.size});
             return writeZigTy(writer, gpa, a.inner.*, current_namespace, cross, renames, entries, file);
         },
+        // Function-pointer typedef (ELEMENT_TYPE_FNPTR). Same opaque
+        // projection as the aliases-block emits for delegate-shaped
+        // fn-ptr typedefs: the inner MethodDefSig is consumed by the
+        // reader but not reconstructed — callers `@ptrCast` a concrete
+        // fn pointer at the call site.
+        .fn_ptr => try writer.writeAll("?*const anyopaque"),
         else => return false,
     }
     return true;
@@ -2096,7 +2122,7 @@ fn emitStructsImpl(
 /// `emitStructs`), enum (skipped — emitted by other machinery),
 /// and everything else (delegate, class, interface — not
 /// representable inside a struct field).
-const TypeKind = enum { struct_or_union, enum_type, other };
+const TypeKind = enum { struct_or_union, enum_type, delegate, other };
 
 const TypeEntry = struct {
     kind: TypeKind,
@@ -2136,6 +2162,12 @@ fn buildTypeEntryMap(arena: std.mem.Allocator, file: *const winmd.File) !TypeEnt
                     kind = .struct_or_union;
                 } else if (std.mem.eql(u8, base.name, "Enum")) {
                     kind = .enum_type;
+                } else if (std.mem.eql(u8, base.name, "MulticastDelegate")) {
+                    // Function-pointer typedef (C callback). Fields
+                    // of this type project as opaque `?*const anyopaque`
+                    // in both structs and the aliases block — callers
+                    // `@ptrCast` a concrete fn pointer at the call site.
+                    kind = .delegate;
                 }
             }
         }
@@ -2198,6 +2230,9 @@ fn canRepresentField(
             // Enum refs are representable via underlying-int substitution
             // (writeZigTy does the rewrite); no need to emit the enum.
             if (entry.kind == .enum_type) break :blk true;
+            // Delegate refs project as opaque `?*const anyopaque`
+            // (matches the aliases block and writeZigTy).
+            if (entry.kind == .delegate) break :blk true;
             if (entry.kind != .struct_or_union) break :blk false;
             break :blk isRowEmittable(file, entry.row, arch, entries, memo, arena, tainted_out);
         },
@@ -2205,6 +2240,11 @@ fn canRepresentField(
         .ptr_mut => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch, tainted_out),
         .ptr_const => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch, tainted_out),
         .array_fixed => |a| canRepresentField(a.inner.*, file, entries, memo, arena, arch, tainted_out),
+        // Function-pointer typedef: always representable as opaque
+        // `?*const anyopaque` (matches `writeZigTy`). The underlying
+        // callee signature isn't reconstructed, so no recursion into
+        // the inner type graph is needed.
+        .fn_ptr => true,
         else => false,
     };
 }

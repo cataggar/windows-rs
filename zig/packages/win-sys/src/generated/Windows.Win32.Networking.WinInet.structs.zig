@@ -270,6 +270,12 @@ pub const INTERNET_COOKIE2 = extern struct {
     ftExpires: @"Windows.Win32.Foundation".FILETIME,
     fExpiresSet: @"Windows.Win32.Foundation".BOOL,
 };
+pub const INTERNET_AUTH_NOTIFY_DATA = extern struct {
+    cbStruct: u32,
+    dwOptions: u32,
+    pfnNotify: ?*const anyopaque,
+    dwContext: usize,
+};
 pub const INTERNET_CACHE_ENTRY_INFOA = extern struct {
 pub const INTERNET_CACHE_ENTRY_INFOA_0 = extern union {
     dwReserved: u32,

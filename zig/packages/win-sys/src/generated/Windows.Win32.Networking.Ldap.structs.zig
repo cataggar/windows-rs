@@ -140,3 +140,9 @@ pub const LDAPVLVInfo = extern struct {
     ldvlv_context: *LDAP_BERVAL,
     ldvlv_extradata: *anyopaque,
 };
+pub const LDAP_REFERRAL_CALLBACK = extern struct {
+    SizeOfCallbacks: u32,
+    QueryForConnection: ?*const anyopaque,
+    NotifyRoutine: ?*const anyopaque,
+    DereferenceRoutine: ?*const anyopaque,
+};

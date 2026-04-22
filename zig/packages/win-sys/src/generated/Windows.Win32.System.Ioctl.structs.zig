@@ -3457,3 +3457,8 @@ pub const VOLUME_DISK_EXTENTS = extern struct {
 pub const VOLUME_GET_GPT_ATTRIBUTES_INFORMATION = extern struct {
     GptAttributes: u64,
 };
+pub const IO_IRP_EXT_TRACK_OFFSET_HEADER = extern struct {
+    Validation: u16,
+    Flags: u16,
+    TrackedOffsetCallback: ?*const anyopaque,
+};

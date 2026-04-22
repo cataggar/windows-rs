@@ -495,6 +495,15 @@ pub const IFIEXTRA = extern struct {
     dpAxesInfoW: i32,
     aulReserved: [1]u32,
 };
+pub const DRVFN = extern struct {
+    iFunc: u32,
+    pfn: ?*const anyopaque,
+};
+pub const DRVENABLEDATA = extern struct {
+    iDriverVersion: u32,
+    c: u32,
+    pdrvfn: *DRVFN,
+};
 pub const DEVINFO = extern struct {
     flGraphicsCaps: u32,
     lfDefaultFont: @"Windows.Win32.Graphics.Gdi".LOGFONTW,
@@ -596,6 +605,12 @@ pub const CLIPOBJ = extern struct {
     iFComplexity: u8,
     iMode: u8,
     fjOptions: u8,
+};
+pub const DRIVEROBJ = extern struct {
+    pvObj: *anyopaque,
+    pFreeProc: ?*const anyopaque,
+    hdev: HDEV,
+    dhpdev: DHPDEV,
 };
 pub const FONTOBJ = extern struct {
     iUniq: u32,
@@ -800,6 +815,13 @@ pub const VIDEO_WIN32K_CALLBACKS_PARAMS = extern struct {
     IsPostDevice: @"Windows.Win32.Foundation".BOOLEAN,
     SurpriseRemoval: @"Windows.Win32.Foundation".BOOLEAN,
     WaitForQueueReady: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const VIDEO_WIN32K_CALLBACKS = extern struct {
+    PhysDisp: *anyopaque,
+    Callout: ?*const anyopaque,
+    bACPI: u32,
+    pPhysDeviceObject: @"Windows.Win32.Foundation".HANDLE,
+    DualviewFlags: u32,
 };
 pub const VIDEO_DEVICE_SESSION_STATUS = extern struct {
     bEnable: u32,

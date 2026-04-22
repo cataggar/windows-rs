@@ -255,6 +255,15 @@ pub const AUTHZ_RPC_INIT_INFO_CLIENT = extern struct {
     Options: @"Windows.Win32.Foundation".PWSTR,
     ServerSpn: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const AUTHZ_INIT_INFO = extern struct {
+    version: u16,
+    szResourceManagerName: @"Windows.Win32.Foundation".PWSTR,
+    pfnDynamicAccessCheck: ?*const anyopaque,
+    pfnComputeDynamicGroups: ?*const anyopaque,
+    pfnFreeDynamicGroups: ?*const anyopaque,
+    pfnGetCentralAccessPolicy: ?*const anyopaque,
+    pfnFreeCentralAccessPolicy: ?*const anyopaque,
+};
 pub const AUTHZ_REGISTRATION_OBJECT_TYPE_NAME_OFFSET = extern struct {
     szObjectTypeName: @"Windows.Win32.Foundation".PWSTR,
     dwOffset: u32,

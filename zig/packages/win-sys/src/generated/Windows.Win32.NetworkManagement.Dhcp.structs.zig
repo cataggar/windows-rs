@@ -85,6 +85,18 @@ pub const DHCP_SERVER_OPTIONS = extern struct {
     DSDomainNameLen: u32,
     ScopeId: *u32,
 };
+pub const DHCP_CALLOUT_TABLE = extern struct {
+    DhcpControlHook: ?*const anyopaque,
+    DhcpNewPktHook: ?*const anyopaque,
+    DhcpPktDropHook: ?*const anyopaque,
+    DhcpPktSendHook: ?*const anyopaque,
+    DhcpAddressDelHook: ?*const anyopaque,
+    DhcpAddressOfferHook: ?*const anyopaque,
+    DhcpHandleOptionsHook: ?*const anyopaque,
+    DhcpDeleteClientHook: ?*const anyopaque,
+    DhcpExtensionHook: *anyopaque,
+    DhcpReservedHook: *anyopaque,
+};
 pub const DATE_TIME = extern struct {
     dwLowDateTime: u32,
     dwHighDateTime: u32,

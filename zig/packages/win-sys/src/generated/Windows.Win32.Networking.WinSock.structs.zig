@@ -7,6 +7,7 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 const @"Windows.Win32.System.Com" = @import("Windows.Win32.System.Com.structs.zig");
+const @"Windows.Win32.System.IO" = @import("Windows.Win32.System.IO.structs.zig");
 const @"Windows.Win32.System.Kernel" = @import("Windows.Win32.System.Kernel.structs.zig");
 
 pub const WSAEVENT = extern struct {
@@ -414,6 +415,33 @@ pub const WSAPROTOCOL_INFOW = extern struct {
     dwMessageSize: u32,
     dwProviderReserved: u32,
     szProtocol: [256]u16,
+};
+pub const WSACOMPLETION = extern struct {
+pub const _Parameters_e__Union = extern union {
+pub const _WindowMessage_e__Struct = extern struct {
+    hWnd: @"Windows.Win32.Foundation".HWND,
+    uMsg: u32,
+    context: @"Windows.Win32.Foundation".WPARAM,
+};
+pub const _Event_e__Struct = extern struct {
+    lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
+};
+pub const _Apc_e__Struct = extern struct {
+    lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
+    lpfnCompletionProc: ?*const anyopaque,
+};
+pub const _Port_e__Struct = extern struct {
+    lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
+    hPort: @"Windows.Win32.Foundation".HANDLE,
+    Key: usize,
+};
+    WindowMessage: _WindowMessage_e__Struct,
+    Event: _Event_e__Struct,
+    Apc: _Apc_e__Struct,
+    Port: _Port_e__Struct,
+};
+    Type: i32,
+    Parameters: _Parameters_e__Union,
 };
 pub const AFPROTOCOLS = extern struct {
     iAddressFamily: i32,
@@ -1260,6 +1288,13 @@ pub const WSAPOLLDATA = extern struct {
     timeout: i32,
     fdArray: [1]WSAPOLLFD,
 };
+pub const WSASENDMSG = extern struct {
+    lpMsg: *WSAMSG,
+    dwFlags: u32,
+    lpNumberOfBytesSent: *u32,
+    lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
+    lpCompletionRoutine: ?*const anyopaque,
+};
 pub const RIO_NOTIFICATION_COMPLETION = extern struct {
 pub const RIO_NOTIFICATION_COMPLETION_0 = extern union {
 pub const _Event_e__Struct = extern struct {
@@ -1277,6 +1312,22 @@ pub const _Iocp_e__Struct = extern struct {
     Type: i32,
     Anonymous: RIO_NOTIFICATION_COMPLETION_0,
 };
+pub const RIO_EXTENSION_FUNCTION_TABLE = extern struct {
+    cbSize: u32,
+    RIOReceive: ?*const anyopaque,
+    RIOReceiveEx: ?*const anyopaque,
+    RIOSend: ?*const anyopaque,
+    RIOSendEx: ?*const anyopaque,
+    RIOCloseCompletionQueue: ?*const anyopaque,
+    RIOCreateCompletionQueue: ?*const anyopaque,
+    RIOCreateRequestQueue: ?*const anyopaque,
+    RIODequeueCompletion: ?*const anyopaque,
+    RIODeregisterBuffer: ?*const anyopaque,
+    RIONotify: ?*const anyopaque,
+    RIORegisterBuffer: ?*const anyopaque,
+    RIOResizeCompletionQueue: ?*const anyopaque,
+    RIOResizeRequestQueue: ?*const anyopaque,
+};
 pub const WSPDATA = extern struct {
     wVersion: u16,
     wHighVersion: u16,
@@ -1286,9 +1337,84 @@ pub const WSATHREADID = extern struct {
     ThreadHandle: @"Windows.Win32.Foundation".HANDLE,
     Reserved: usize,
 };
+pub const WSPPROC_TABLE = extern struct {
+    lpWSPAccept: ?*const anyopaque,
+    lpWSPAddressToString: ?*const anyopaque,
+    lpWSPAsyncSelect: ?*const anyopaque,
+    lpWSPBind: ?*const anyopaque,
+    lpWSPCancelBlockingCall: ?*const anyopaque,
+    lpWSPCleanup: ?*const anyopaque,
+    lpWSPCloseSocket: ?*const anyopaque,
+    lpWSPConnect: ?*const anyopaque,
+    lpWSPDuplicateSocket: ?*const anyopaque,
+    lpWSPEnumNetworkEvents: ?*const anyopaque,
+    lpWSPEventSelect: ?*const anyopaque,
+    lpWSPGetOverlappedResult: ?*const anyopaque,
+    lpWSPGetPeerName: ?*const anyopaque,
+    lpWSPGetSockName: ?*const anyopaque,
+    lpWSPGetSockOpt: ?*const anyopaque,
+    lpWSPGetQOSByName: ?*const anyopaque,
+    lpWSPIoctl: ?*const anyopaque,
+    lpWSPJoinLeaf: ?*const anyopaque,
+    lpWSPListen: ?*const anyopaque,
+    lpWSPRecv: ?*const anyopaque,
+    lpWSPRecvDisconnect: ?*const anyopaque,
+    lpWSPRecvFrom: ?*const anyopaque,
+    lpWSPSelect: ?*const anyopaque,
+    lpWSPSend: ?*const anyopaque,
+    lpWSPSendDisconnect: ?*const anyopaque,
+    lpWSPSendTo: ?*const anyopaque,
+    lpWSPSetSockOpt: ?*const anyopaque,
+    lpWSPShutdown: ?*const anyopaque,
+    lpWSPSocket: ?*const anyopaque,
+    lpWSPStringToAddress: ?*const anyopaque,
+};
+pub const WSPUPCALLTABLE = extern struct {
+    lpWPUCloseEvent: ?*const anyopaque,
+    lpWPUCloseSocketHandle: ?*const anyopaque,
+    lpWPUCreateEvent: ?*const anyopaque,
+    lpWPUCreateSocketHandle: ?*const anyopaque,
+    lpWPUFDIsSet: ?*const anyopaque,
+    lpWPUGetProviderPath: ?*const anyopaque,
+    lpWPUModifyIFSHandle: ?*const anyopaque,
+    lpWPUPostMessage: ?*const anyopaque,
+    lpWPUQueryBlockingCallback: ?*const anyopaque,
+    lpWPUQuerySocketHandleContext: ?*const anyopaque,
+    lpWPUQueueApc: ?*const anyopaque,
+    lpWPUResetEvent: ?*const anyopaque,
+    lpWPUSetEvent: ?*const anyopaque,
+    lpWPUOpenCurrentThread: ?*const anyopaque,
+    lpWPUCloseThread: ?*const anyopaque,
+};
 pub const WSC_PROVIDER_AUDIT_INFO = extern struct {
     RecordSize: u32,
     Reserved: *anyopaque,
+};
+pub const NSP_ROUTINE = extern struct {
+    cbSize: u32,
+    dwMajorVersion: u32,
+    dwMinorVersion: u32,
+    NSPCleanup: ?*const anyopaque,
+    NSPLookupServiceBegin: ?*const anyopaque,
+    NSPLookupServiceNext: ?*const anyopaque,
+    NSPLookupServiceEnd: ?*const anyopaque,
+    NSPSetService: ?*const anyopaque,
+    NSPInstallServiceClass: ?*const anyopaque,
+    NSPRemoveServiceClass: ?*const anyopaque,
+    NSPGetServiceClassInfo: ?*const anyopaque,
+    NSPIoctl: ?*const anyopaque,
+};
+pub const NSPV2_ROUTINE = extern struct {
+    cbSize: u32,
+    dwMajorVersion: u32,
+    dwMinorVersion: u32,
+    NSPv2Startup: ?*const anyopaque,
+    NSPv2Cleanup: ?*const anyopaque,
+    NSPv2LookupServiceBegin: ?*const anyopaque,
+    NSPv2LookupServiceNextEx: ?*const anyopaque,
+    NSPv2LookupServiceEnd: ?*const anyopaque,
+    NSPv2SetServiceEx: ?*const anyopaque,
+    NSPv2ClientSessionRundown: ?*const anyopaque,
 };
 pub const NS_INFOA = extern struct {
     dwNameSpace: u32,
@@ -1425,6 +1551,11 @@ pub const NETRESOURCE2W = extern struct {
     ServiceType: GUID,
     dwProtocols: u32,
     lpiProtocols: *i32,
+};
+pub const SERVICE_ASYNC_INFO = extern struct {
+    lpServiceCallbackProc: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
+    hAsyncTaskHandle: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const SOCKADDR_UN = extern struct {
     sun_family: u16,

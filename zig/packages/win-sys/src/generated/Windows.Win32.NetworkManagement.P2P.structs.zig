@@ -150,6 +150,18 @@ pub const PEER_GRAPH_EVENT_DATA_0 = extern union {
     eventType: i32,
     Anonymous: PEER_GRAPH_EVENT_DATA_0,
 };
+pub const PEER_SECURITY_INTERFACE = extern struct {
+    dwSize: u32,
+    pwzSspFilename: @"Windows.Win32.Foundation".PWSTR,
+    pwzPackageName: @"Windows.Win32.Foundation".PWSTR,
+    cbSecurityInfo: u32,
+    pbSecurityInfo: *u8,
+    pvContext: *anyopaque,
+    pfnValidateRecord: ?*const anyopaque,
+    pfnSecureRecord: ?*const anyopaque,
+    pfnFreeSecurityData: ?*const anyopaque,
+    pfnAuthFailed: ?*const anyopaque,
+};
 pub const PEER_CREDENTIAL_INFO = extern struct {
     dwSize: u32,
     dwFlags: u32,

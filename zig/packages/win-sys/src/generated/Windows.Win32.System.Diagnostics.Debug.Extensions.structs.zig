@@ -404,6 +404,68 @@ pub const EXTSTACKTRACE64 = extern struct {
     ReturnAddress: u64,
     Args: [4]u64,
 };
+pub const WINDBG_EXTENSION_APIS = extern struct {
+    nSize: u32,
+    lpOutputRoutine: ?*const anyopaque,
+    lpGetExpressionRoutine: ?*const anyopaque,
+    lpGetSymbolRoutine: ?*const anyopaque,
+    lpDisasmRoutine: ?*const anyopaque,
+    lpCheckControlCRoutine: ?*const anyopaque,
+    lpReadProcessMemoryRoutine: ?*const anyopaque,
+    lpWriteProcessMemoryRoutine: ?*const anyopaque,
+    lpGetThreadContextRoutine: ?*const anyopaque,
+    lpSetThreadContextRoutine: ?*const anyopaque,
+    lpIoctlRoutine: ?*const anyopaque,
+    lpStackTraceRoutine: ?*const anyopaque,
+};
+pub const WINDBG_EXTENSION_APIS32 = extern struct {
+    nSize: u32,
+    lpOutputRoutine: ?*const anyopaque,
+    lpGetExpressionRoutine: ?*const anyopaque,
+    lpGetSymbolRoutine: ?*const anyopaque,
+    lpDisasmRoutine: ?*const anyopaque,
+    lpCheckControlCRoutine: ?*const anyopaque,
+    lpReadProcessMemoryRoutine: ?*const anyopaque,
+    lpWriteProcessMemoryRoutine: ?*const anyopaque,
+    lpGetThreadContextRoutine: ?*const anyopaque,
+    lpSetThreadContextRoutine: ?*const anyopaque,
+    lpIoctlRoutine: ?*const anyopaque,
+    lpStackTraceRoutine: ?*const anyopaque,
+};
+pub const WINDBG_EXTENSION_APIS64 = extern struct {
+    nSize: u32,
+    lpOutputRoutine: ?*const anyopaque,
+    lpGetExpressionRoutine: ?*const anyopaque,
+    lpGetSymbolRoutine: ?*const anyopaque,
+    lpDisasmRoutine: ?*const anyopaque,
+    lpCheckControlCRoutine: ?*const anyopaque,
+    lpReadProcessMemoryRoutine: ?*const anyopaque,
+    lpWriteProcessMemoryRoutine: ?*const anyopaque,
+    lpGetThreadContextRoutine: ?*const anyopaque,
+    lpSetThreadContextRoutine: ?*const anyopaque,
+    lpIoctlRoutine: ?*const anyopaque,
+    lpStackTraceRoutine: ?*const anyopaque,
+};
+pub const WINDBG_OLD_EXTENSION_APIS = extern struct {
+    nSize: u32,
+    lpOutputRoutine: ?*const anyopaque,
+    lpGetExpressionRoutine: ?*const anyopaque,
+    lpGetSymbolRoutine: ?*const anyopaque,
+    lpDisasmRoutine: ?*const anyopaque,
+    lpCheckControlCRoutine: ?*const anyopaque,
+};
+pub const WINDBG_OLDKD_EXTENSION_APIS = extern struct {
+    nSize: u32,
+    lpOutputRoutine: ?*const anyopaque,
+    lpGetExpressionRoutine: ?*const anyopaque,
+    lpGetSymbolRoutine: ?*const anyopaque,
+    lpDisasmRoutine: ?*const anyopaque,
+    lpCheckControlCRoutine: ?*const anyopaque,
+    lpReadVirtualMemRoutine: ?*const anyopaque,
+    lpWriteVirtualMemRoutine: ?*const anyopaque,
+    lpReadPhysicalMemRoutine: ?*const anyopaque,
+    lpWritePhysicalMemRoutine: ?*const anyopaque,
+};
 pub const EXT_API_VERSION = extern struct {
     MajorVersion: u16,
     MinorVersion: u16,
@@ -946,6 +1008,26 @@ pub const _BitField = extern struct {
     FieldOffset: u32,
     BufferSize: u32,
     BitField: _BitField,
+    _bitfield: u32,
+};
+pub const SYM_DUMP_PARAM = extern struct {
+pub const SYM_DUMP_PARAM_0 = extern union {
+    Context: *anyopaque,
+    pBuffer: *anyopaque,
+};
+    size: u32,
+    sName: *u8,
+    Options: u32,
+    addr: u64,
+    listLink: *FIELD_INFO,
+    Anonymous: SYM_DUMP_PARAM_0,
+    CallbackRoutine: ?*const anyopaque,
+    nFields: u32,
+    Fields: *FIELD_INFO,
+    ModBase: u64,
+    TypeId: u32,
+    TypeSize: u32,
+    BufferSize: u32,
     _bitfield: u32,
 };
 pub const POOL_HEADER_SIZE_64 = extern union {

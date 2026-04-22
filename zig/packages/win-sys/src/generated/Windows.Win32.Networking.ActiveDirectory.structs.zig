@@ -16,6 +16,16 @@ pub const CQFORM = extern struct {
     hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
     pszTitle: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const CQPAGE = extern struct {
+    cbStruct: u32,
+    dwFlags: u32,
+    pPageProc: ?*const anyopaque,
+    hInstance: @"Windows.Win32.Foundation".HINSTANCE,
+    idPageName: i32,
+    idPageTemplate: i32,
+    pDlgProc: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
+};
 pub const ADS_OCTET_STRING = extern struct {
     dwLength: u32,
     lpValue: *u8,
@@ -229,6 +239,40 @@ pub const DSCLASSCREATIONINFO = extern struct {
     clsidWizardPrimaryPage: GUID,
     cWizardExtensions: u32,
     aWizardExtensions: [1]GUID,
+};
+pub const DSBROWSEINFOW = extern struct {
+    cbStruct: u32,
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    pszCaption: @"Windows.Win32.Foundation".PWSTR,
+    pszTitle: @"Windows.Win32.Foundation".PWSTR,
+    pszRoot: @"Windows.Win32.Foundation".PWSTR,
+    pszPath: @"Windows.Win32.Foundation".PWSTR,
+    cchPath: u32,
+    dwFlags: u32,
+    pfnCallback: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
+    dwReturnFormat: u32,
+    pUserName: @"Windows.Win32.Foundation".PWSTR,
+    pPassword: @"Windows.Win32.Foundation".PWSTR,
+    pszObjectClass: @"Windows.Win32.Foundation".PWSTR,
+    cchObjectClass: u32,
+};
+pub const DSBROWSEINFOA = extern struct {
+    cbStruct: u32,
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    pszCaption: @"Windows.Win32.Foundation".PSTR,
+    pszTitle: @"Windows.Win32.Foundation".PSTR,
+    pszRoot: @"Windows.Win32.Foundation".PWSTR,
+    pszPath: @"Windows.Win32.Foundation".PWSTR,
+    cchPath: u32,
+    dwFlags: u32,
+    pfnCallback: ?*const anyopaque,
+    lParam: @"Windows.Win32.Foundation".LPARAM,
+    dwReturnFormat: u32,
+    pUserName: @"Windows.Win32.Foundation".PWSTR,
+    pPassword: @"Windows.Win32.Foundation".PWSTR,
+    pszObjectClass: @"Windows.Win32.Foundation".PWSTR,
+    cchObjectClass: u32,
 };
 pub const DSBITEMW = extern struct {
     cbStruct: u32,

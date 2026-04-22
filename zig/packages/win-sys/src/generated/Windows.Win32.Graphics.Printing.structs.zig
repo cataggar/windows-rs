@@ -62,6 +62,23 @@ pub const OPTTYPE = extern struct {
     wReserved: [3]u16,
     dwReserved: [3]usize,
 };
+pub const EXTPUSH = extern struct {
+pub const EXTPUSH_0 = extern union {
+    DlgProc: ?*const anyopaque,
+    pfnCallBack: ?*const anyopaque,
+};
+pub const EXTPUSH_1 = extern union {
+    DlgTemplateID: u16,
+    hDlgTemplate: @"Windows.Win32.Foundation".HANDLE,
+};
+    cbSize: u16,
+    Flags: u16,
+    pTitle: *i8,
+    Anonymous1: EXTPUSH_0,
+    IconID: usize,
+    Anonymous2: EXTPUSH_1,
+    dwReserved: [3]usize,
+};
 pub const EXTCHKBOX = extern struct {
     cbSize: u16,
     Flags: u16,
@@ -79,6 +96,77 @@ pub const OIEXT = extern struct {
     pHelpFile: *i8,
     dwReserved: [4]usize,
 };
+pub const OPTITEM = extern struct {
+pub const OPTITEM_0 = extern union {
+    Sel: i32,
+    pSel: *i8,
+};
+pub const OPTITEM_1 = extern union {
+    pExtChkBox: *EXTCHKBOX,
+    pExtPush: *EXTPUSH,
+};
+    cbSize: u16,
+    Level: u8,
+    DlgPageIdx: u8,
+    Flags: u32,
+    UserData: usize,
+    pName: *i8,
+    Anonymous1: OPTITEM_0,
+    Anonymous2: OPTITEM_1,
+    pOptType: *OPTTYPE,
+    HelpIndex: u32,
+    DMPubID: u8,
+    UserItemID: u8,
+    wReserved: u16,
+    pOIExt: *OIEXT,
+    dwReserved: [3]usize,
+};
+pub const CPSUICBPARAM = extern struct {
+pub const CPSUICBPARAM_0 = extern union {
+    OldSel: i32,
+    pOldSel: *i8,
+};
+    cbSize: u16,
+    Reason: u16,
+    hDlg: @"Windows.Win32.Foundation".HWND,
+    pOptItem: *OPTITEM,
+    cOptItem: u16,
+    Flags: u16,
+    pCurItem: *OPTITEM,
+    Anonymous: CPSUICBPARAM_0,
+    UserData: usize,
+    Result: usize,
+};
+pub const DLGPAGE = extern struct {
+pub const DLGPAGE_0 = extern union {
+    DlgTemplateID: u16,
+    hDlgTemplate: @"Windows.Win32.Foundation".HANDLE,
+};
+    cbSize: u16,
+    Flags: u16,
+    DlgProc: ?*const anyopaque,
+    pTabName: *i8,
+    IconID: usize,
+    Anonymous: DLGPAGE_0,
+};
+pub const COMPROPSHEETUI = extern struct {
+    cbSize: u16,
+    Flags: u16,
+    hInstCaller: @"Windows.Win32.Foundation".HINSTANCE,
+    pCallerName: *i8,
+    UserData: usize,
+    pHelpFile: *i8,
+    pfnCallBack: ?*const anyopaque,
+    pOptItem: *OPTITEM,
+    pDlgPage: *DLGPAGE,
+    cOptItem: u16,
+    cDlgPage: u16,
+    IconID: usize,
+    pOptItemName: *i8,
+    CallerVersion: u16,
+    OptItemVersion: u16,
+    dwReserved: [4]usize,
+};
 pub const SETRESULT_INFO = extern struct {
     cbSize: u16,
     wReserved: u16,
@@ -93,9 +181,27 @@ pub const INSERTPSUIPAGE_INFO = extern struct {
     dwData2: usize,
     dwData3: usize,
 };
+pub const PSPINFO = extern struct {
+    cbSize: u16,
+    wReserved: u16,
+    hComPropSheet: @"Windows.Win32.Foundation".HANDLE,
+    hCPSUIPage: @"Windows.Win32.Foundation".HANDLE,
+    pfnComPropSheet: ?*const anyopaque,
+};
 pub const CPSUIDATABLOCK = extern struct {
     cbData: u32,
     pbData: *u8,
+};
+pub const PROPSHEETUI_INFO = extern struct {
+    cbSize: u16,
+    Version: u16,
+    Flags: u16,
+    Reason: u16,
+    hComPropSheet: @"Windows.Win32.Foundation".HANDLE,
+    pfnComPropSheet: ?*const anyopaque,
+    lParamInit: @"Windows.Win32.Foundation".LPARAM,
+    UserData: usize,
+    Result: usize,
 };
 pub const PROPSHEETUI_GETICON_INFO = extern struct {
     cbSize: u16,
@@ -1063,6 +1169,44 @@ pub const SIMULATE_CAPS_1 = extern struct {
     dwCollate: u32,
     dwNupOptions: u32,
 };
+pub const OEMUIPROCS = extern struct {
+    DrvGetDriverSetting: ?*const anyopaque,
+    DrvUpdateUISetting: ?*const anyopaque,
+};
+pub const OEMUIOBJ = extern struct {
+    cbSize: u32,
+    pOemUIProcs: *OEMUIPROCS,
+};
+pub const OEMCUIPPARAM = extern struct {
+    cbSize: u32,
+    poemuiobj: *OEMUIOBJ,
+    hPrinter: @"Windows.Win32.Foundation".HANDLE,
+    pPrinterName: @"Windows.Win32.Foundation".PWSTR,
+    hModule: @"Windows.Win32.Foundation".HANDLE,
+    hOEMHeap: @"Windows.Win32.Foundation".HANDLE,
+    pPublicDM: *@"Windows.Win32.Graphics.Gdi".DEVMODEA,
+    pOEMDM: *anyopaque,
+    dwFlags: u32,
+    pDrvOptItems: *OPTITEM,
+    cDrvOptItems: u32,
+    pOEMOptItems: *OPTITEM,
+    cOEMOptItems: u32,
+    pOEMUserData: *anyopaque,
+    OEMCUIPCallback: ?*const anyopaque,
+};
+pub const OEMUIPSPARAM = extern struct {
+    cbSize: u32,
+    poemuiobj: *OEMUIOBJ,
+    hPrinter: @"Windows.Win32.Foundation".HANDLE,
+    pPrinterName: @"Windows.Win32.Foundation".PWSTR,
+    hModule: @"Windows.Win32.Foundation".HANDLE,
+    hOEMHeap: @"Windows.Win32.Foundation".HANDLE,
+    pPublicDM: *@"Windows.Win32.Graphics.Gdi".DEVMODEA,
+    pOEMDM: *anyopaque,
+    pOEMUserData: *anyopaque,
+    dwFlags: u32,
+    pOemEntry: *anyopaque,
+};
 pub const CUSTOMSIZEPARAM = extern struct {
     dwOrder: i32,
     lMinVal: i32,
@@ -1580,11 +1724,65 @@ pub const MONITORINIT = extern struct {
     bLocal: @"Windows.Win32.Foundation".BOOL,
     pszServerName: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const MONITOR = extern struct {
+    pfnEnumPorts: ?*const anyopaque,
+    pfnOpenPort: ?*const anyopaque,
+    pfnOpenPortEx: ?*const anyopaque,
+    pfnStartDocPort: ?*const anyopaque,
+    pfnWritePort: ?*const anyopaque,
+    pfnReadPort: ?*const anyopaque,
+    pfnEndDocPort: ?*const anyopaque,
+    pfnClosePort: ?*const anyopaque,
+    pfnAddPort: ?*const anyopaque,
+    pfnAddPortEx: ?*const anyopaque,
+    pfnConfigurePort: ?*const anyopaque,
+    pfnDeletePort: ?*const anyopaque,
+    pfnGetPrinterDataFromPort: ?*const anyopaque,
+    pfnSetPortTimeOuts: ?*const anyopaque,
+    pfnXcvOpenPort: ?*const anyopaque,
+    pfnXcvDataPort: ?*const anyopaque,
+    pfnXcvClosePort: ?*const anyopaque,
+};
+pub const MONITOREX = extern struct {
+    dwMonitorSize: u32,
+    Monitor: MONITOR,
+};
+pub const MONITOR2 = extern struct {
+    cbSize: u32,
+    pfnEnumPorts: ?*const anyopaque,
+    pfnOpenPort: ?*const anyopaque,
+    pfnOpenPortEx: ?*const anyopaque,
+    pfnStartDocPort: ?*const anyopaque,
+    pfnWritePort: ?*const anyopaque,
+    pfnReadPort: ?*const anyopaque,
+    pfnEndDocPort: ?*const anyopaque,
+    pfnClosePort: ?*const anyopaque,
+    pfnAddPort: ?*const anyopaque,
+    pfnAddPortEx: ?*const anyopaque,
+    pfnConfigurePort: ?*const anyopaque,
+    pfnDeletePort: ?*const anyopaque,
+    pfnGetPrinterDataFromPort: ?*const anyopaque,
+    pfnSetPortTimeOuts: ?*const anyopaque,
+    pfnXcvOpenPort: ?*const anyopaque,
+    pfnXcvDataPort: ?*const anyopaque,
+    pfnXcvClosePort: ?*const anyopaque,
+    pfnShutdown: ?*const anyopaque,
+    pfnSendRecvBidiDataFromPort: ?*const anyopaque,
+    pfnNotifyUsedPorts: ?*const anyopaque,
+    pfnNotifyUnusedPorts: ?*const anyopaque,
+    pfnPowerEvent: ?*const anyopaque,
+};
 pub const MONITORUI = extern struct {
     dwMonitorUISize: u32,
     pfnAddPortUI: isize,
     pfnConfigurePortUI: isize,
     pfnDeletePortUI: isize,
+};
+pub const NOTIFICATION_CONFIG_1 = extern struct {
+    cbSize: u32,
+    fdwFlags: u32,
+    pfnNotifyCallback: ?*const anyopaque,
+    pContext: *anyopaque,
 };
 pub const MESSAGEBOX_PARAMS = extern struct {
     cbSize: u32,
