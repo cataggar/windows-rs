@@ -105,6 +105,13 @@ pub fn build(b: *std.Build) void {
         .{ .name = "winmd", .mod = winmd_mod },
         .{ .name = "win-core", .mod = win_core_mod },
         .{ .name = "win-sys", .mod = win_sys_mod, .windows_only = true },
+        // NOTE: `win` is intentionally omitted from test_pkgs while the
+        // VARIANT emitter gap is pending. A test-harness rooted at
+        // `win/root.zig` analyzes `Com`'s pub decls, some of which
+        // reference `*VARIANT` and trip the missing-struct error.
+        // Compile-checking of Com.zig is covered by the
+        // `compile-check-bundle` step (via the shared WriteFiles dir)
+        // and by consumer samples like `com_uri`.
         .{ .name = "winbindgen", .mod = winbindgen_mod },
         .{ .name = "win-targets", .mod = win_targets_mod },
     };
@@ -1085,6 +1092,26 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
     });
     bundle_mod.addImport("win-core", win_core_mod);
+
+    // ------------------------------------------------------------------
+    // Ship `Windows.Win32.System.Com` as the first consumer-visible
+    // namespace on `win`. Reuses `bundle_wf` (the same WriteFiles
+    // directory that the bundle compile-check exercises), so every Com
+    // regeneration is both type-checked *and* reachable from
+    // `@import("win").Com` without duplicating generator runs or
+    // committing ~400 KB of generated source per namespace.
+    // ------------------------------------------------------------------
+    const com_root = bundle_wf.getDirectory().path(
+        b,
+        "Windows.Win32.System.Com.zig",
+    );
+    const win_com_mod = b.createModule(.{
+        .root_source_file = com_root,
+        .target = target,
+        .optimize = optimize,
+    });
+    win_com_mod.addImport("win-core", win_core_mod);
+    win_mod.addImport("Windows.Win32.System.Com", win_com_mod);
 
     if (host_is_windows) {
         const bundle_obj = b.addTest(.{
