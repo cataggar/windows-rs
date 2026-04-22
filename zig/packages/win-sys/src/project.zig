@@ -232,6 +232,18 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.System.Diagnostics.ToolHelp.structs.zig");
     pub const @"Windows.Win32.System.Diagnostics.Etw" =
         @import("generated/Windows.Win32.System.Diagnostics.Etw.structs.zig");
+    pub const @"Windows.Win32.System.WindowsProgramming" =
+        @import("generated/Windows.Win32.System.WindowsProgramming.structs.zig");
+    pub const @"Windows.Win32.System.Mmc" =
+        @import("generated/Windows.Win32.System.Mmc.structs.zig");
+    pub const @"Windows.Win32.System.ErrorReporting" =
+        @import("generated/Windows.Win32.System.ErrorReporting.structs.zig");
+    pub const @"Windows.Win32.UI.Controls" =
+        @import("generated/Windows.Win32.UI.Controls.structs.zig");
+    pub const @"Windows.Win32.UI.Controls.Dialogs" =
+        @import("generated/Windows.Win32.UI.Controls.Dialogs.structs.zig");
+    pub const @"Windows.Win32.UI.HiDpi" =
+        @import("generated/Windows.Win32.UI.HiDpi.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
