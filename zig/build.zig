@@ -241,6 +241,22 @@ pub fn build(b: *std.Build) void {
     }
     bindings_step.dependOn(&gen_update.step);
 
+    // Re-scan the generated/ directory and refresh `mod.zig`. This must
+    // run after every per-namespace sidecar has been written so the scan
+    // sees the current set of files; `mod_update` therefore depends on
+    // `gen_update`.
+    const mod_run = b.addRunArtifact(winbindgen_exe);
+    mod_run.addArg("--emit-mod");
+    mod_run.addArg("packages/win-sys/src/generated");
+    mod_run.step.dependOn(&gen_update.step);
+    const mod_source = mod_run.captureStdOut(.{});
+    const mod_update = b.addUpdateSourceFiles();
+    mod_update.addCopyFileToSource(
+        mod_source,
+        "packages/win-sys/src/generated/mod.zig",
+    );
+    bindings_step.dependOn(&mod_update.step);
+
     const run_winbindgen = b.addRunArtifact(winbindgen_exe);
     if (b.args) |user_args| run_winbindgen.addArgs(user_args);
     const run_step = b.step("run", "Run the winbindgen CLI (pass args with `--`)");

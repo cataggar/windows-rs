@@ -1,0 +1,97 @@
+//! @generated — do not edit. Regenerate with
+//! `zig build bindings` or `winbindgen --emit-mod <dir>`.
+//!
+//! Aggregate re-export of every sibling `<ns>.structs.zig`
+//! and `<ns>.index.zig` file, grouped by flavor. Consumers
+//! reach into these via `@field(mod.structs, "<ns>")` so
+//! `win-sys/src/project.zig` no longer has to list every
+//! namespace by hand.
+
+pub const structs = struct {
+    pub const @"Windows.Win32.Devices.DeviceAndDriverInstallation" = @import("Windows.Win32.Devices.DeviceAndDriverInstallation.structs.zig");
+    pub const @"Windows.Win32.Devices.Display" = @import("Windows.Win32.Devices.Display.structs.zig");
+    pub const @"Windows.Win32.Devices.Enumeration.Pnp" = @import("Windows.Win32.Devices.Enumeration.Pnp.structs.zig");
+    pub const @"Windows.Win32.Devices.HumanInterfaceDevice" = @import("Windows.Win32.Devices.HumanInterfaceDevice.structs.zig");
+    pub const @"Windows.Win32.Devices.Usb" = @import("Windows.Win32.Devices.Usb.structs.zig");
+    pub const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
+    pub const @"Windows.Win32.Globalization" = @import("Windows.Win32.Globalization.structs.zig");
+    pub const @"Windows.Win32.Graphics.Direct3D12" = @import("Windows.Win32.Graphics.Direct3D12.structs.zig");
+    pub const @"Windows.Win32.Graphics.Dxgi.Common" = @import("Windows.Win32.Graphics.Dxgi.Common.structs.zig");
+    pub const @"Windows.Win32.Graphics.Gdi" = @import("Windows.Win32.Graphics.Gdi.structs.zig");
+    pub const @"Windows.Win32.Graphics.OpenGL" = @import("Windows.Win32.Graphics.OpenGL.structs.zig");
+    pub const @"Windows.Win32.Graphics.Printing" = @import("Windows.Win32.Graphics.Printing.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.Dhcp" = @import("Windows.Win32.NetworkManagement.Dhcp.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.Dns" = @import("Windows.Win32.NetworkManagement.Dns.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.IpHelper" = @import("Windows.Win32.NetworkManagement.IpHelper.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.Ndis" = @import("Windows.Win32.NetworkManagement.Ndis.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.WNet" = @import("Windows.Win32.NetworkManagement.WNet.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.WiFi" = @import("Windows.Win32.NetworkManagement.WiFi.structs.zig");
+    pub const @"Windows.Win32.Networking.WinHttp" = @import("Windows.Win32.Networking.WinHttp.structs.zig");
+    pub const @"Windows.Win32.Networking.WinInet" = @import("Windows.Win32.Networking.WinInet.structs.zig");
+    pub const @"Windows.Win32.Networking.WinSock" = @import("Windows.Win32.Networking.WinSock.structs.zig");
+    pub const @"Windows.Win32.Security" = @import("Windows.Win32.Security.structs.zig");
+    pub const @"Windows.Win32.Security.Authentication.Identity" = @import("Windows.Win32.Security.Authentication.Identity.structs.zig");
+    pub const @"Windows.Win32.Security.Authorization" = @import("Windows.Win32.Security.Authorization.structs.zig");
+    pub const @"Windows.Win32.Security.Credentials" = @import("Windows.Win32.Security.Credentials.structs.zig");
+    pub const @"Windows.Win32.Security.Cryptography" = @import("Windows.Win32.Security.Cryptography.structs.zig");
+    pub const @"Windows.Win32.Security.ExtensibleAuthenticationProtocol" = @import("Windows.Win32.Security.ExtensibleAuthenticationProtocol.structs.zig");
+    pub const @"Windows.Win32.Storage.Compression" = @import("Windows.Win32.Storage.Compression.structs.zig");
+    pub const @"Windows.Win32.Storage.FileSystem" = @import("Windows.Win32.Storage.FileSystem.structs.zig");
+    pub const @"Windows.Win32.Storage.InstallableFileSystems" = @import("Windows.Win32.Storage.InstallableFileSystems.structs.zig");
+    pub const @"Windows.Win32.Storage.Jet" = @import("Windows.Win32.Storage.Jet.structs.zig");
+    pub const @"Windows.Win32.Storage.StructuredStorage" = @import("Windows.Win32.Storage.StructuredStorage.structs.zig");
+    pub const @"Windows.Win32.System.Com" = @import("Windows.Win32.System.Com.structs.zig");
+    pub const @"Windows.Win32.System.Console" = @import("Windows.Win32.System.Console.structs.zig");
+    pub const @"Windows.Win32.System.DataExchange" = @import("Windows.Win32.System.DataExchange.structs.zig");
+    pub const @"Windows.Win32.System.Diagnostics.Debug" = @import("Windows.Win32.System.Diagnostics.Debug.structs.zig");
+    pub const @"Windows.Win32.System.Diagnostics.Etw" = @import("Windows.Win32.System.Diagnostics.Etw.structs.zig");
+    pub const @"Windows.Win32.System.Diagnostics.ToolHelp" = @import("Windows.Win32.System.Diagnostics.ToolHelp.structs.zig");
+    pub const @"Windows.Win32.System.Environment" = @import("Windows.Win32.System.Environment.structs.zig");
+    pub const @"Windows.Win32.System.ErrorReporting" = @import("Windows.Win32.System.ErrorReporting.structs.zig");
+    pub const @"Windows.Win32.System.EventLog" = @import("Windows.Win32.System.EventLog.structs.zig");
+    pub const @"Windows.Win32.System.IO" = @import("Windows.Win32.System.IO.structs.zig");
+    pub const @"Windows.Win32.System.JobObjects" = @import("Windows.Win32.System.JobObjects.structs.zig");
+    pub const @"Windows.Win32.System.Kernel" = @import("Windows.Win32.System.Kernel.structs.zig");
+    pub const @"Windows.Win32.System.LibraryLoader" = @import("Windows.Win32.System.LibraryLoader.structs.zig");
+    pub const @"Windows.Win32.System.Memory" = @import("Windows.Win32.System.Memory.structs.zig");
+    pub const @"Windows.Win32.System.Mmc" = @import("Windows.Win32.System.Mmc.structs.zig");
+    pub const @"Windows.Win32.System.Ole" = @import("Windows.Win32.System.Ole.structs.zig");
+    pub const @"Windows.Win32.System.PasswordManagement" = @import("Windows.Win32.System.PasswordManagement.structs.zig");
+    pub const @"Windows.Win32.System.Performance" = @import("Windows.Win32.System.Performance.structs.zig");
+    pub const @"Windows.Win32.System.Power" = @import("Windows.Win32.System.Power.structs.zig");
+    pub const @"Windows.Win32.System.ProcessStatus" = @import("Windows.Win32.System.ProcessStatus.structs.zig");
+    pub const @"Windows.Win32.System.Registry" = @import("Windows.Win32.System.Registry.structs.zig");
+    pub const @"Windows.Win32.System.Rpc" = @import("Windows.Win32.System.Rpc.structs.zig");
+    pub const @"Windows.Win32.System.Services" = @import("Windows.Win32.System.Services.structs.zig");
+    pub const @"Windows.Win32.System.SystemInformation" = @import("Windows.Win32.System.SystemInformation.structs.zig");
+    pub const @"Windows.Win32.System.Threading" = @import("Windows.Win32.System.Threading.structs.zig");
+    pub const @"Windows.Win32.System.Time" = @import("Windows.Win32.System.Time.structs.zig");
+    pub const @"Windows.Win32.System.WindowsProgramming" = @import("Windows.Win32.System.WindowsProgramming.structs.zig");
+    pub const @"Windows.Win32.UI.Accessibility" = @import("Windows.Win32.UI.Accessibility.structs.zig");
+    pub const @"Windows.Win32.UI.ColorSystem" = @import("Windows.Win32.UI.ColorSystem.structs.zig");
+    pub const @"Windows.Win32.UI.Controls" = @import("Windows.Win32.UI.Controls.structs.zig");
+    pub const @"Windows.Win32.UI.Controls.Dialogs" = @import("Windows.Win32.UI.Controls.Dialogs.structs.zig");
+    pub const @"Windows.Win32.UI.HiDpi" = @import("Windows.Win32.UI.HiDpi.structs.zig");
+    pub const @"Windows.Win32.UI.Input" = @import("Windows.Win32.UI.Input.structs.zig");
+    pub const @"Windows.Win32.UI.Input.KeyboardAndMouse" = @import("Windows.Win32.UI.Input.KeyboardAndMouse.structs.zig");
+    pub const @"Windows.Win32.UI.Input.Pointer" = @import("Windows.Win32.UI.Input.Pointer.structs.zig");
+    pub const @"Windows.Win32.UI.Input.Touch" = @import("Windows.Win32.UI.Input.Touch.structs.zig");
+    pub const @"Windows.Win32.UI.Magnification" = @import("Windows.Win32.UI.Magnification.structs.zig");
+    pub const @"Windows.Win32.UI.Shell" = @import("Windows.Win32.UI.Shell.structs.zig");
+    pub const @"Windows.Win32.UI.Shell.Common" = @import("Windows.Win32.UI.Shell.Common.structs.zig");
+    pub const @"Windows.Win32.UI.TextServices" = @import("Windows.Win32.UI.TextServices.structs.zig");
+    pub const @"Windows.Win32.UI.WindowsAndMessaging" = @import("Windows.Win32.UI.WindowsAndMessaging.structs.zig");
+};
+
+pub const index = struct {
+    pub const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.index.zig");
+    pub const @"Windows.Win32.Security" = @import("Windows.Win32.Security.index.zig");
+    pub const @"Windows.Win32.Storage.FileSystem" = @import("Windows.Win32.Storage.FileSystem.index.zig");
+    pub const @"Windows.Win32.System.Console" = @import("Windows.Win32.System.Console.index.zig");
+    pub const @"Windows.Win32.System.Diagnostics.Debug" = @import("Windows.Win32.System.Diagnostics.Debug.index.zig");
+    pub const @"Windows.Win32.System.LibraryLoader" = @import("Windows.Win32.System.LibraryLoader.index.zig");
+    pub const @"Windows.Win32.System.Memory" = @import("Windows.Win32.System.Memory.index.zig");
+    pub const @"Windows.Win32.System.SystemInformation" = @import("Windows.Win32.System.SystemInformation.index.zig");
+    pub const @"Windows.Win32.System.Threading" = @import("Windows.Win32.System.Threading.index.zig");
+    pub const @"Windows.Win32.UI.WindowsAndMessaging" = @import("Windows.Win32.UI.WindowsAndMessaging.index.zig");
+};

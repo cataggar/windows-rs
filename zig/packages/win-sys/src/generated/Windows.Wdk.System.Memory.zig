@@ -21,6 +21,8 @@ pub const Apis = extern struct {
     pub const NAME_W: [30]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 87, 100, 107, 46, 83, 121, 115, 116, 101, 109, 46, 77, 101, 109, 111, 114, 121, 46, 65, 112, 105, 115 };
 };
 pub extern "ntdll" fn NtOpenSection(p0: *@"Windows.Win32.Foundation".HANDLE, p1: u32, p2: *@"Windows.Wdk.Foundation".OBJECT_ATTRIBUTES) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
-pub extern "ntdll" fn NtUnmapViewOfSection(p0: @"Windows.Win32.Foundation".HANDLE, p1: *void) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
+pub extern "ntdll" fn NtMapViewOfSection(p0: @"Windows.Win32.Foundation".HANDLE, p1: @"Windows.Win32.Foundation".HANDLE, p2: **anyopaque, p3: usize, p4: usize, p5: *i64, p6: *usize, p7: SECTION_INHERIT, p8: u32, p9: u32) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
+pub extern "ntdll" fn NtUnmapViewOfSection(p0: @"Windows.Win32.Foundation".HANDLE, p1: *anyopaque) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
 pub extern "ntdll" fn ZwOpenSection(p0: *@"Windows.Win32.Foundation".HANDLE, p1: u32, p2: *@"Windows.Wdk.Foundation".OBJECT_ATTRIBUTES) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
-pub extern "ntdll" fn ZwUnmapViewOfSection(p0: @"Windows.Win32.Foundation".HANDLE, p1: *void) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
+pub extern "ntdll" fn ZwMapViewOfSection(p0: @"Windows.Win32.Foundation".HANDLE, p1: @"Windows.Win32.Foundation".HANDLE, p2: **anyopaque, p3: usize, p4: usize, p5: *i64, p6: *usize, p7: SECTION_INHERIT, p8: u32, p9: u32) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
+pub extern "ntdll" fn ZwUnmapViewOfSection(p0: @"Windows.Win32.Foundation".HANDLE, p1: *anyopaque) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;

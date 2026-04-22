@@ -64,6 +64,20 @@ pub fn main(init: std.process.Init) !void {
         return;
     }
 
+    // `--emit-mod <dir>` scans <dir> for sibling `*.structs.zig` and
+    // `*.index.zig` generated files and prints a `mod.zig` to stdout
+    // that re-exports them by namespace. This retires the hand-edited
+    // `generated_structs` block in `win-sys/src/project.zig` — the
+    // aggregate file is the single thing `project.zig` imports.
+    if (args.len == 3 and std.mem.eql(u8, args[1], "--emit-mod")) {
+        var buf: std.Io.Writer.Allocating = .init(gpa);
+        defer buf.deinit();
+        try emitMod(&buf.writer, init.arena.allocator(), io, args[2]);
+        try stdout.writeAll(buf.written());
+        try stdout.flush();
+        return;
+    }
+
     // Parse `--arch=...` optional flag; the remaining positional must
     // be the namespace. Default to x64 so existing callers don't have
     // to change.
@@ -144,4 +158,76 @@ pub fn main(init: std.process.Init) !void {
 
     try stdout.writeAll(buf.written());
     try stdout.flush();
+}
+
+/// Scan `dir` for `*.structs.zig` and `*.index.zig` files and emit a
+/// `mod.zig` re-exporting them grouped by flavor. Each file name is
+/// expected to be `<namespace>.<flavor>.zig` where `<flavor>` is
+/// `structs` or `index`. Output is sorted for determinism.
+fn emitMod(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    io: std.Io,
+    dir_path: []const u8,
+) !void {
+    var dir = try std.Io.Dir.cwd().openDir(io, dir_path, .{ .iterate = true });
+    defer dir.close(io);
+
+    var structs = try std.ArrayList([]const u8).initCapacity(arena, 0);
+    var indexes = try std.ArrayList([]const u8).initCapacity(arena, 0);
+
+    var it = dir.iterate();
+    while (try it.next(io)) |entry| {
+        if (entry.kind != .file) continue;
+        const name = entry.name;
+        if (std.mem.endsWith(u8, name, ".structs.zig")) {
+            const ns = name[0 .. name.len - ".structs.zig".len];
+            if (ns.len == 0) continue;
+            try structs.append(arena, try arena.dupe(u8, ns));
+        } else if (std.mem.endsWith(u8, name, ".index.zig")) {
+            const ns = name[0 .. name.len - ".index.zig".len];
+            if (ns.len == 0) continue;
+            try indexes.append(arena, try arena.dupe(u8, ns));
+        }
+    }
+
+    std.mem.sort([]const u8, structs.items, {}, stringLessThan);
+    std.mem.sort([]const u8, indexes.items, {}, stringLessThan);
+
+    try writer.writeAll(
+        \\//! @generated — do not edit. Regenerate with
+        \\//! `zig build bindings` or `winbindgen --emit-mod <dir>`.
+        \\//!
+        \\//! Aggregate re-export of every sibling `<ns>.structs.zig`
+        \\//! and `<ns>.index.zig` file, grouped by flavor. Consumers
+        \\//! reach into these via `@field(mod.structs, "<ns>")` so
+        \\//! `win-sys/src/project.zig` no longer has to list every
+        \\//! namespace by hand.
+        \\
+        \\pub const structs = struct {
+        \\
+    );
+    for (structs.items) |ns| {
+        try writer.print(
+            "    pub const @\"{s}\" = @import(\"{s}.structs.zig\");\n",
+            .{ ns, ns },
+        );
+    }
+    try writer.writeAll(
+        \\};
+        \\
+        \\pub const index = struct {
+        \\
+    );
+    for (indexes.items) |ns| {
+        try writer.print(
+            "    pub const @\"{s}\" = @import(\"{s}.index.zig\");\n",
+            .{ ns, ns },
+        );
+    }
+    try writer.writeAll("};\n");
+}
+
+fn stringLessThan(_: void, a: []const u8, b: []const u8) bool {
+    return std.mem.lessThan(u8, a, b);
 }

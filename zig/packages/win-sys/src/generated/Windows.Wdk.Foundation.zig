@@ -97,131 +97,201 @@ pub const OBJECT_ATTRIBUTES64 = extern struct {
     SecurityDescriptor: *@"Windows.Win32.Security".SECURITY_DESCRIPTOR,
     SecurityQualityOfService: *@"Windows.Win32.Security".SECURITY_QUALITY_OF_SERVICE,
 };
-pub const POHANDLE = extern struct {
-    Value: *void,
+pub const ECP_LIST = extern struct {
+    Value: isize,
 };
-pub const KQUEUE = extern struct {
-    Header: DISPATCHER_HEADER,
-    EntryListHead: @"Windows.Win32.System.Kernel".LIST_ENTRY,
-    CurrentCount: u32,
-    MaximumCount: u32,
-    ThreadListHead: @"Windows.Win32.System.Kernel".LIST_ENTRY,
+pub const ECP_HEADER = extern struct {
+    Value: isize,
+};
+pub const PEPROCESS = extern struct {
+    Value: isize,
+};
+pub const PETHREAD = extern struct {
+    Value: isize,
+};
+pub const PBUS_HANDLER = extern struct {
+    Value: isize,
+};
+pub const PCALLBACK_OBJECT = extern struct {
+    Value: isize,
+};
+pub const PDEVICE_HANDLER_OBJECT = extern struct {
+    Value: isize,
+};
+pub const PEJOB = extern struct {
+    Value: isize,
+};
+pub const PESILO = extern struct {
+    Value: isize,
+};
+pub const PSILO_MONITOR = extern struct {
+    Value: isize,
+};
+pub const PIO_TIMER = extern struct {
+    Value: isize,
+};
+pub const PKINTERRUPT = extern struct {
+    Value: isize,
+};
+pub const PKTHREAD = extern struct {
+    Value: isize,
+};
+pub const PRKTHREAD = extern struct {
+    Value: isize,
+};
+pub const PKPROCESS = extern struct {
+    Value: isize,
+};
+pub const PRKPROCESS = extern struct {
+    Value: isize,
+};
+pub const POBJECT_TYPE = extern struct {
+    Value: isize,
+};
+pub const POHANDLE = extern struct {
+    Value: *anyopaque,
+};
+pub const KIDT = extern struct {
+    Value: isize,
+};
+pub const KGDT = extern struct {
+    Value: isize,
+};
+pub const KTSS = extern struct {
+    Value: isize,
+};
+pub const KPCR = extern struct {
+    Value: isize,
+};
+pub const KPRCB = extern struct {
+    Value: isize,
+};
+pub const IOMMU_DMA_DEVICE = extern struct {
+    Value: isize,
+};
+pub const IOMMU_DMA_DOMAIN = extern struct {
+    Value: isize,
+};
+pub const PPCW_REGISTRATION = extern struct {
+    Value: isize,
+};
+pub const PPCW_BUFFER = extern struct {
+    Value: isize,
+};
+pub const LOADER_PARAMETER_BLOCK = extern struct {
+    Value: isize,
+};
+pub const DMA_COMMON_BUFFER_VECTOR = extern struct {
+    Value: isize,
+};
+pub const PIO_WORKITEM = extern struct {
+    Value: isize,
+};
+pub const KTRANSACTION = extern struct {
+    Value: isize,
+};
+pub const KENLISTMENT = extern struct {
+    Value: isize,
+};
+pub const KRESOURCEMANAGER = extern struct {
+    Value: isize,
+};
+pub const KTM = extern struct {
+    Value: isize,
+};
+pub const SspiAsyncContext = extern struct {
+    Value: isize,
+};
+pub const PNOTIFY_SYNC = extern struct {
+    Value: isize,
+};
+pub const PEX_RUNDOWN_REF_CACHE_AWARE = extern struct {
+    Value: isize,
+};
+pub const PAFFINITY_TOKEN = extern struct {
+    Value: isize,
+};
+pub const PPCW_INSTANCE = extern struct {
+    Value: isize,
+};
+pub const PEX_TIMER = extern struct {
+    Value: isize,
+};
+pub const _DEVICE_OBJECT_POWER_EXTENSION = extern struct {
+    Value: isize,
+};
+pub const PIO_REMOVE_LOCK_TRACKING_BLOCK = extern struct {
+    Value: isize,
+};
+pub const _IORING_OBJECT = extern struct {
+    Value: isize,
+};
+pub const _SCSI_REQUEST_BLOCK = extern struct {
+    Value: isize,
 };
 pub const OBJECT_NAME_INFORMATION = extern struct {
     Name: @"Windows.Win32.Foundation".UNICODE_STRING,
 };
-pub const DISPATCHER_HEADER = extern struct {
-pub const _Anonymous_e__Union = extern union {
-pub const _Anonymous1_e__Union = extern union {
-    Lock: i32,
-    LockNV: i32,
+pub const MDL = extern struct {
+    Next: *MDL,
+    Size: i16,
+    MdlFlags: i16,
+    Process: *isize,
+    MappedSystemVa: *anyopaque,
+    StartVa: *anyopaque,
+    ByteCount: u32,
+    ByteOffset: u32,
 };
-pub const _Anonymous2_e__Struct = extern struct {
-    Type: u8,
-    Signalling: u8,
-    Size: u8,
-    Reserved1: u8,
+pub const KDEVICE_QUEUE = extern struct {
+    Type: i16,
+    Size: i16,
+    DeviceListHead: @"Windows.Win32.System.Kernel".LIST_ENTRY,
+    Lock: usize,
+    Busy: @"Windows.Win32.Foundation".BOOLEAN,
 };
-pub const _Anonymous3_e__Struct = extern struct {
-pub const _Anonymous1_e__Union = extern union {
-pub const _Anonymous_e__Struct = extern struct {
-    _bitfield: u8,
+pub const OWNER_ENTRY = extern struct {
+pub const OWNER_ENTRY_0 = extern union {
+pub const OWNER_ENTRY_0_0 = extern struct {
+    _bitfield: u32,
 };
-    TimerControlFlags: u8,
-    Anonymous: _Anonymous_e__Struct,
+    Anonymous: OWNER_ENTRY_0_0,
+    TableSize: u32,
 };
-pub const _Anonymous2_e__Union = extern union {
-pub const _Anonymous_e__Struct = extern struct {
-    _bitfield: u8,
+    OwnerThread: usize,
+    Anonymous: OWNER_ENTRY_0,
 };
-    TimerMiscFlags: u8,
-    Anonymous: _Anonymous_e__Struct,
+pub const ERESOURCE = extern struct {
+pub const ERESOURCE_0 = extern union {
+pub const ERESOURCE_0_0 = extern struct {
+    ReservedLowFlags: u8,
+    WaiterPriority: u8,
 };
-    TimerType: u8,
-    Anonymous1: _Anonymous1_e__Union,
-    Hand: u8,
-    Anonymous2: _Anonymous2_e__Union,
+    Flag: u16,
+    Anonymous: ERESOURCE_0_0,
 };
-pub const _Anonymous4_e__Struct = extern struct {
-pub const _Anonymous_e__Union = extern union {
-pub const _Anonymous_e__Struct = extern struct {
-    _bitfield: u8,
+pub const ERESOURCE_1 = extern union {
+    Address: *anyopaque,
+    CreatorBackTraceIndex: usize,
 };
-    Timer2Flags: u8,
-    Anonymous: _Anonymous_e__Struct,
-};
-    Timer2Type: u8,
-    Anonymous: _Anonymous_e__Union,
-    Timer2ComponentId: u8,
-    Timer2RelativeId: u8,
-};
-pub const _Anonymous5_e__Struct = extern struct {
-pub const _Anonymous_e__Union = extern union {
-pub const _Anonymous_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    QueueControlFlags: u8,
-    Anonymous: _Anonymous_e__Struct,
-};
-    QueueType: u8,
-    Anonymous: _Anonymous_e__Union,
-    QueueSize: u8,
-    QueueReserved: u8,
-};
-pub const _Anonymous6_e__Struct = extern struct {
-pub const _Anonymous1_e__Union = extern union {
-pub const _Anonymous_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    ThreadControlFlags: u8,
-    Anonymous: _Anonymous_e__Struct,
-};
-pub const _Anonymous2_e__Union = extern union {
-    DebugActive: u8,
-};
-    ThreadType: u8,
-    ThreadReserved: u8,
-    Anonymous1: _Anonymous1_e__Union,
-    Anonymous2: _Anonymous2_e__Union,
-};
-pub const _Anonymous7_e__Struct = extern struct {
-    MutantType: u8,
-    MutantSize: u8,
-    DpcActive: @"Windows.Win32.Foundation".BOOLEAN,
-    MutantReserved: u8,
-};
-    Anonymous1: _Anonymous1_e__Union,
-    Anonymous2: _Anonymous2_e__Struct,
-    Anonymous3: _Anonymous3_e__Struct,
-    Anonymous4: _Anonymous4_e__Struct,
-    Anonymous5: _Anonymous5_e__Struct,
-    Anonymous6: _Anonymous6_e__Struct,
-    Anonymous7: _Anonymous7_e__Struct,
-};
-    Anonymous: _Anonymous_e__Union,
-    SignalState: i32,
-    WaitListHead: @"Windows.Win32.System.Kernel".LIST_ENTRY,
-};
-pub const KEVENT = extern struct {
-    Header: DISPATCHER_HEADER,
-};
-pub const FAST_MUTEX = extern struct {
-    Count: i32,
-    Owner: *void,
-    Contention: u32,
-    Event: KEVENT,
-    OldIrql: u32,
-};
-pub const WORK_QUEUE_ITEM = extern struct {
-    List: @"Windows.Win32.System.Kernel".LIST_ENTRY,
-    WorkerRoutine: *PWORKER_THREAD_ROUTINE,
-    Parameter: *void,
+    SystemResourcesList: @"Windows.Win32.System.Kernel".LIST_ENTRY,
+    OwnerTable: *OWNER_ENTRY,
+    ActiveCount: i16,
+    Anonymous1: ERESOURCE_0,
+    SharedWaiters: *anyopaque,
+    ExclusiveWaiters: *anyopaque,
+    OwnerEntry: OWNER_ENTRY,
+    ActiveEntries: u32,
+    ContentionCount: u32,
+    NumberOfSharedWaiters: u32,
+    NumberOfExclusiveWaiters: u32,
+    Anonymous2: ERESOURCE_1,
+    SpinLock: usize,
 };
 pub const SECURITY_SUBJECT_CONTEXT = extern struct {
-    ClientToken: *void,
+    ClientToken: *anyopaque,
     ImpersonationLevel: @"Windows.Win32.Security".SECURITY_IMPERSONATION_LEVEL,
-    PrimaryToken: *void,
-    ProcessAuditId: *void,
+    PrimaryToken: *anyopaque,
+    ProcessAuditId: *anyopaque,
 };
 pub const ACCESS_STATE = extern struct {
 pub const _Privileges_e__Union = extern union {
@@ -239,41 +309,11 @@ pub const _Privileges_e__Union = extern union {
     OriginalDesiredAccess: u32,
     SubjectSecurityContext: SECURITY_SUBJECT_CONTEXT,
     SecurityDescriptor: @"Windows.Win32.Security".PSECURITY_DESCRIPTOR,
-    AuxData: *void,
+    AuxData: *anyopaque,
     Privileges: _Privileges_e__Union,
     AuditPrivileges: @"Windows.Win32.Foundation".BOOLEAN,
     ObjectName: @"Windows.Win32.Foundation".UNICODE_STRING,
     ObjectTypeName: @"Windows.Win32.Foundation".UNICODE_STRING,
-};
-pub const FAST_IO_DISPATCH = extern struct {
-    SizeOfFastIoDispatch: u32,
-    FastIoCheckIfPossible: *FAST_IO_CHECK_IF_POSSIBLE,
-    FastIoRead: *FAST_IO_READ,
-    FastIoWrite: *FAST_IO_WRITE,
-    FastIoQueryBasicInfo: *FAST_IO_QUERY_BASIC_INFO,
-    FastIoQueryStandardInfo: *FAST_IO_QUERY_STANDARD_INFO,
-    FastIoLock: *FAST_IO_LOCK,
-    FastIoUnlockSingle: *FAST_IO_UNLOCK_SINGLE,
-    FastIoUnlockAll: *FAST_IO_UNLOCK_ALL,
-    FastIoUnlockAllByKey: *FAST_IO_UNLOCK_ALL_BY_KEY,
-    FastIoDeviceControl: *FAST_IO_DEVICE_CONTROL,
-    AcquireFileForNtCreateSection: *FAST_IO_ACQUIRE_FILE,
-    ReleaseFileForNtCreateSection: *FAST_IO_RELEASE_FILE,
-    FastIoDetachDevice: *FAST_IO_DETACH_DEVICE,
-    FastIoQueryNetworkOpenInfo: *FAST_IO_QUERY_NETWORK_OPEN_INFO,
-    AcquireForModWrite: *FAST_IO_ACQUIRE_FOR_MOD_WRITE,
-    MdlRead: *FAST_IO_MDL_READ,
-    MdlReadComplete: *FAST_IO_MDL_READ_COMPLETE,
-    PrepareMdlWrite: *FAST_IO_PREPARE_MDL_WRITE,
-    MdlWriteComplete: *FAST_IO_MDL_WRITE_COMPLETE,
-    FastIoReadCompressed: *FAST_IO_READ_COMPRESSED,
-    FastIoWriteCompressed: *FAST_IO_WRITE_COMPRESSED,
-    MdlReadCompleteCompressed: *FAST_IO_MDL_READ_COMPLETE_COMPRESSED,
-    MdlWriteCompleteCompressed: *FAST_IO_MDL_WRITE_COMPLETE_COMPRESSED,
-    FastIoQueryOpen: *FAST_IO_QUERY_OPEN,
-    ReleaseForModWrite: *FAST_IO_RELEASE_FOR_MOD_WRITE,
-    AcquireForCcFlush: *FAST_IO_ACQUIRE_FOR_CCFLUSH,
-    ReleaseForCcFlush: *FAST_IO_RELEASE_FOR_CCFLUSH,
 };
 pub const IO_SECURITY_CONTEXT = extern struct {
     SecurityQos: *@"Windows.Win32.Security".SECURITY_QUALITY_OF_SERVICE,
@@ -281,65 +321,15 @@ pub const IO_SECURITY_CONTEXT = extern struct {
     DesiredAccess: u32,
     FullCreateOptions: u32,
 };
-pub const DEVICE_OBJECT = extern struct {
-pub const _Queue_e__Union = extern union {
-    ListEntry: @"Windows.Win32.System.Kernel".LIST_ENTRY,
-    Wcb: @"Windows.Wdk.System.SystemServices".WAIT_CONTEXT_BLOCK,
-};
-    Type: i16,
-    Size: u16,
-    ReferenceCount: i32,
-    DriverObject: *DRIVER_OBJECT,
-    NextDevice: *DEVICE_OBJECT,
-    AttachedDevice: *DEVICE_OBJECT,
-    CurrentIrp: *IRP,
-    Timer: PIO_TIMER,
-    Flags: u32,
-    Characteristics: u32,
-    Vpb: *VPB,
-    DeviceExtension: *void,
-    DeviceType: u32,
-    StackSize: i8,
-    Queue: _Queue_e__Union,
-    AlignmentRequirement: u32,
-    DeviceQueue: KDEVICE_QUEUE,
-    Dpc: KDPC,
-    ActiveThreadCount: u32,
-    SecurityDescriptor: @"Windows.Win32.Security".PSECURITY_DESCRIPTOR,
-    DeviceLock: KEVENT,
-    SectorSize: u16,
-    Spare1: u16,
-    DeviceObjectExtension: *DEVOBJ_EXTENSION,
-    Reserved: *void,
-};
-pub const DEVOBJ_EXTENSION = extern struct {
-    Type: i16,
-    Size: u16,
-    DeviceObject: *DEVICE_OBJECT,
-    PowerFlags: u32,
-    Dope: *_DEVICE_OBJECT_POWER_EXTENSION,
-    ExtensionFlags: u32,
-    DeviceNode: *void,
-    AttachedTo: *DEVICE_OBJECT,
-    StartIoCount: i32,
-    StartIoKey: i32,
-    StartIoFlags: u32,
-    Vpb: *VPB,
-    DependencyNode: *void,
-    InterruptContext: *void,
-    InterruptCount: i32,
-    VerifierContext: *void,
-};
-pub const DRIVER_EXTENSION = extern struct {
-    DriverObject: *DRIVER_OBJECT,
-    AddDevice: *DRIVER_ADD_DEVICE,
-    Count: u32,
-    ServiceKeyName: @"Windows.Win32.Foundation".UNICODE_STRING,
-};
 pub const SECTION_OBJECT_POINTERS = extern struct {
-    DataSectionObject: *void,
-    SharedCacheMap: *void,
-    ImageSectionObject: *void,
+    DataSectionObject: *anyopaque,
+    SharedCacheMap: *anyopaque,
+    ImageSectionObject: *anyopaque,
+};
+pub const IO_COMPLETION_CONTEXT = extern struct {
+    Port: *anyopaque,
+    Key: *anyopaque,
+    UsageCount: isize,
 };
 pub const RTL_SPLAY_LINKS = extern struct {
     Parent: *RTL_SPLAY_LINKS,
@@ -393,7 +383,7 @@ pub const Apis = extern struct {
     pub const NAME: []const u8 = "Windows.Wdk.Foundation.Apis";
     pub const NAME_W: [27]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 87, 100, 107, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 65, 112, 105, 115 };
 };
-pub extern "ntdll" fn NtQueryObject(p0: @"Windows.Win32.Foundation".HANDLE, p1: OBJECT_INFORMATION_CLASS, p2: *void, p3: u32, p4: *u32) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
+pub extern "ntdll" fn NtQueryObject(p0: @"Windows.Win32.Foundation".HANDLE, p1: OBJECT_INFORMATION_CLASS, p2: *anyopaque, p3: u32, p4: *u32) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
 pub extern "ntdll" fn NtClose(p0: @"Windows.Win32.Foundation".HANDLE) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
 pub const NTSTRSAFE_UNICODE_STRING_MAX_CCH: u32 = 32767;
 pub const NTSTRSAFE_USE_SECURE_CRT: u32 = 0;
