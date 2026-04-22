@@ -1581,7 +1581,11 @@ fn writeMethodWrapper(
         try writer.print(", p{d}: ", .{i});
         try writeParam(writer, arena, p, current_namespace, cross);
     }
-    if (sig.return_type != .void) {
+    // Classic-COM methods already return HRESULT directly; only
+    // synthesize the WinRT-style `result: *T` out-param when the
+    // logical return is a non-HRESULT / non-void value.
+    const split_return = sig.return_type != .void and !isHresultTy(sig.return_type);
+    if (split_return) {
         try writer.writeAll(", result: *");
         _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
     }
@@ -1589,7 +1593,7 @@ fn writeMethodWrapper(
     for (sig.params, 0..) |_, i| {
         try writer.print(", p{d}", .{i});
     }
-    if (sig.return_type != .void) {
+    if (split_return) {
         try writer.writeAll(", result");
     }
     try writer.writeAll(");\n    }\n");
@@ -1639,7 +1643,10 @@ fn writeMethodPointer(
         try writer.print(", p{d}: ", .{i});
         try writeParam(writer, arena, p, current_namespace, cross);
     }
-    if (sig.return_type != .void) {
+    // Mirrors the split-return gate in `writeMethodWrapper`. Classic
+    // COM: return HRESULT directly. WinRT: logical return becomes a
+    // trailing `result: *T` out-param and the function returns HRESULT.
+    if (sig.return_type != .void and !isHresultTy(sig.return_type)) {
         try writer.writeAll(", result: *");
         _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
     }
@@ -1697,6 +1704,20 @@ fn canRepresent(ty: winmd.Ty) bool {
         .ptr_mut => |p| canRepresent(p.inner.*),
         .ptr_const => |p| canRepresent(p.inner.*),
         .array_fixed => |a| canRepresent(a.inner.*),
+        else => false,
+    };
+}
+
+/// Returns true iff `ty` is the ECMA-335 type reference for
+/// `Windows.Win32.Foundation.HRESULT`. Used by classic-COM method
+/// emission to suppress the WinRT "out-HRESULT + logical-return
+/// result-param" ABI split — classic COM methods already return
+/// HRESULT directly, so the transformation would add a spurious
+/// trailing `result: *HRESULT` parameter and break callers.
+fn isHresultTy(ty: winmd.Ty) bool {
+    return switch (ty) {
+        .value_name => |tn| std.mem.eql(u8, tn.namespace, "Windows.Win32.Foundation") and
+            std.mem.eql(u8, tn.name, "HRESULT"),
         else => false,
     };
 }
@@ -1942,6 +1963,17 @@ test "emitInterfaceVtbls picks IUnknown_Vtbl for classic COM, skips IUnknown its
     // IUnknown itself must not be re-emitted here — it ships via the
     // win-core prelude alias with a baseless vtbl definition.
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const IUnknown_Vtbl = extern struct {") == null);
+
+    // Classic-COM methods already return HRESULT; the WinRT-style
+    // split that synthesizes a trailing `result: *T` out-param must
+    // NOT fire. `IStream.SetSize([in] ULARGE_INTEGER)` is a minimal
+    // canary — the vtbl slot must be a direct `(this, p0: u64)` with
+    // no phantom `*HRESULT` tail.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "SetSize: *const fn (this: *const IStream, p0: u64) callconv(.winapi) HRESULT",
+    ) != null);
 }
 
 test "emitEnums writes AsyncStatus from Windows.Foundation" {
