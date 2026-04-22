@@ -99,16 +99,21 @@ pub fn build(b: *std.Build) void {
     const TestPkg = struct {
         name: []const u8,
         mod: *std.Build.Module,
+        windows_only: bool = false,
     };
     const test_pkgs = [_]TestPkg{
         .{ .name = "winmd", .mod = winmd_mod },
         .{ .name = "win-core", .mod = win_core_mod },
-        .{ .name = "win-sys", .mod = win_sys_mod },
+        .{ .name = "win-sys", .mod = win_sys_mod, .windows_only = true },
         .{ .name = "winbindgen", .mod = winbindgen_mod },
         .{ .name = "win-targets", .mod = win_targets_mod },
     };
 
     for (test_pkgs) |p| {
+        // win-sys tests call `project()` which emits `@extern(..., library_name="KERNEL32", ...)`
+        // — that cannot link against a native Linux target. Cross coverage
+        // for win-sys already happens via `compile-check-bundle-*` below.
+        if (p.windows_only and target.result.os.tag != .windows) continue;
         const t = b.addTest(.{
             .name = b.fmt("test-{s}", .{p.name}),
             .root_module = p.mod,
