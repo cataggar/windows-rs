@@ -221,7 +221,7 @@ pub const _EnrollmentRequirements_e__Struct = extern struct {
     EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
 };
 pub const _Fingerprint_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct_2 = extern struct {
     GeneralSamples: u32,
     Center: u32,
     TopEdge: u32,
@@ -230,21 +230,21 @@ pub const _EnrollmentRequirements_e__Struct = extern struct {
     RightEdge: u32,
 };
     Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_2,
 };
 pub const _Iris_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct_3 = extern struct {
     Null: u32,
 };
     Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_3,
 };
 pub const _Voice_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct_4 = extern struct {
     Null: u32,
 };
     Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_4,
 };
     Null: u32,
     FacialFeatures: _FacialFeatures_e__Struct,

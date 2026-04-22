@@ -2031,7 +2031,9 @@ fn emitStructsImpl(
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
         if (isPreludeAlias(namespace, name)) continue;
 
-        try emitOneStruct(writer, arena, file, namespace, cross, row, name, arch, &entries, &memo);
+        var all_names: std.StringHashMapUnmanaged(void) = .empty;
+        try all_names.put(arena, name, {});
+        try emitOneStruct(writer, arena, file, namespace, cross, row, name, arch, &entries, &memo, &all_names);
     }
 }
 
@@ -2245,6 +2247,7 @@ fn emitOneStruct(
     arch: Arch,
     entries: *const TypeEntryMap,
     memo: *EmitMemo,
+    all_names: *std.StringHashMapUnmanaged(void),
 ) !void {
     const LAYOUT_MASK: u32 = 0x18;
     const LAYOUT_EXPLICIT: u32 = 0x10;
@@ -2293,14 +2296,36 @@ fn emitOneStruct(
         const child_name = file.str(.type_def, child_row, 1);
         if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
 
-        const effective_name = if (std.mem.startsWith(u8, child_name, "_Anonymous")) blk: {
+        const base_name = if (std.mem.startsWith(u8, child_name, "_Anonymous")) blk: {
             const renamed = try std.fmt.allocPrint(arena, "{s}_{d}", .{ name, anon_index });
             anon_index += 1;
-            try renames.put(arena, child_name, renamed);
             break :blk renamed;
         } else child_name;
 
-        try emitOneStruct(writer, arena, file, namespace, cross, child_row, effective_name, arch, entries, memo);
+        // Ensure unique name across the whole emitted top-level struct
+        // tree. Zig 0.16 treats `pub const X` inside a container as
+        // visible from every descendant, so sibling scopes with the
+        // same name produce an ambiguous-reference error (no shadow).
+        // When a collision exists, suffix with `_2`, `_3`, ... until
+        // free, and record the original name in `renames` so this
+        // scope's field signatures resolve to the new identifier.
+        var effective_name: []const u8 = base_name;
+        if (all_names.contains(effective_name)) {
+            var suffix: u32 = 2;
+            while (true) : (suffix += 1) {
+                const candidate = try std.fmt.allocPrint(arena, "{s}_{d}", .{ base_name, suffix });
+                if (!all_names.contains(candidate)) {
+                    effective_name = candidate;
+                    break;
+                }
+            }
+        }
+        if (!std.mem.eql(u8, effective_name, child_name)) {
+            try renames.put(arena, child_name, effective_name);
+        }
+        try all_names.put(arena, effective_name, {});
+
+        try emitOneStruct(writer, arena, file, namespace, cross, child_row, effective_name, arch, entries, memo, all_names);
     }
 
     var f: u32 = field_list.start;
