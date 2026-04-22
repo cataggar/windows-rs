@@ -597,6 +597,40 @@ pub fn resolveTypeDefOrRefName(file: *const File, token: u32) !TypeName {
     }
 }
 
+/// Decode the `Extends` column of a TypeDef row into a (namespace, name)
+/// pair. Returns `null` for interfaces that carry a nil Extends column —
+/// which, empirically, is the case for **every** interface in both the
+/// Win32 and WinRT winmds we consume (§II.22.37 explicitly allows nil for
+/// interface TypeDefs). The base interface is therefore inferred from
+/// other signals rather than this column:
+///
+///   * TypeAttributes.WindowsRuntime (0x4000) set → inherit `IInspectable`
+///   * otherwise                                  → inherit `IUnknown`
+///     (Win32.winmd interfaces all take this path; `IUnknown` itself is
+///      the only interface that has no base at all, identified by name.)
+///
+/// Kept as a helper in case future metadata versions populate the column,
+/// or for TypeDefs that aren't interfaces (classes extending `Object`,
+/// value types extending `ValueType`, etc.).
+pub fn typeDefExtends(file: *const File, row: u32) !?TypeName {
+    const token = file.cell(.type_def, row, 3);
+    if (token == 0) return null;
+    return try resolveTypeDefOrRefName(file, token);
+}
+
+/// `TypeAttributes.WindowsRuntime` (ECMA-335 §II.23.1.15, value
+/// 0x4000) — set on every WinRT TypeDef. The Win32 winmd omits this
+/// flag; the comptime WinRT winmd sets it on every emitted type. This
+/// is the discriminator the vtbl emitter uses to choose between
+/// `base: IInspectable_Vtbl` (WinRT) and `base: IUnknown_Vtbl`
+/// (classic COM) now that the `Extends` column is empirically nil on
+/// every interface in both metadata flavours.
+pub const TYPE_ATTR_WINDOWS_RUNTIME: u32 = 0x4000;
+
+/// `TypeAttributes.Interface` (ECMA-335 §II.23.1.15, value 0x20) —
+/// set on every TypeDef representing a COM / WinRT interface.
+pub const TYPE_ATTR_INTERFACE: u32 = 0x20;
+
 fn boxTy(arena: std.mem.Allocator, value: Ty) !*const Ty {
     const p = try arena.create(Ty);
     p.* = value;
@@ -2019,6 +2053,41 @@ test "generics: IMap`2.GetView returns GENERICINST IMapView`2<K,V>" {
     try std.testing.expectEqual(@as(u32, 0), ret.generics[0].var_generic);
     try std.testing.expect(ret.generics[1] == .var_generic);
     try std.testing.expectEqual(@as(u32, 1), ret.generics[1].var_generic);
+}
+
+test "typeDefExtends: classic-COM vs WinRT vs IUnknown itself" {
+    // Both Win32 and WinRT winmds carry a **nil** Extends column on every
+    // interface — §II.22.37 permits this. The emitter therefore can't use
+    // Extends alone to pick `base: IUnknown_Vtbl` vs `base: IInspectable_Vtbl`;
+    // it uses the TypeAttributes.WindowsRuntime flag (0x4000) instead.
+    // This test pins both halves of that contract:
+    //   * typeDefExtends returns null across the board
+    //   * TYPE_ATTR_WINDOWS_RUNTIME is the discriminator
+    const bytes_win32 = @embedFile("Windows.Win32.winmd");
+    const f_win32 = try parse(bytes_win32);
+    var idx_win32 = try TypeIndex.init(std.testing.allocator, &f_win32);
+    defer idx_win32.deinit();
+
+    inline for (.{ "IUnknown", "IStream", "IUri" }) |name| {
+        const rows = idx_win32.get("Windows.Win32.System.Com", name);
+        try std.testing.expectEqual(@as(usize, 1), rows.len);
+        try std.testing.expect((try typeDefExtends(&f_win32, rows[0])) == null);
+        const flags = f_win32.cell(.type_def, rows[0], 0);
+        try std.testing.expect((flags & TYPE_ATTR_INTERFACE) != 0);
+        try std.testing.expect((flags & TYPE_ATTR_WINDOWS_RUNTIME) == 0);
+    }
+
+    const bytes_winrt = @embedFile("Windows.winmd");
+    const f_winrt = try parse(bytes_winrt);
+    var idx_winrt = try TypeIndex.init(std.testing.allocator, &f_winrt);
+    defer idx_winrt.deinit();
+
+    const iclosable = idx_winrt.get("Windows.Foundation", "IClosable");
+    try std.testing.expectEqual(@as(usize, 1), iclosable.len);
+    try std.testing.expect((try typeDefExtends(&f_winrt, iclosable[0])) == null);
+    const wrt_flags = f_winrt.cell(.type_def, iclosable[0], 0);
+    try std.testing.expect((wrt_flags & TYPE_ATTR_INTERFACE) != 0);
+    try std.testing.expect((wrt_flags & TYPE_ATTR_WINDOWS_RUNTIME) != 0);
 }
 
 test "parse Windows.Win32.winmd: header, TypeIndex, and method-sig sweep" {

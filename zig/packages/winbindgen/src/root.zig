@@ -15,7 +15,7 @@ const winmd = @import("winmd");
 
 /// `TypeAttributes.Interface` (ECMA-335 §II.23.1.15) — set on every
 /// TypeDef representing a COM / WinRT interface.
-const TYPE_ATTR_INTERFACE: u32 = 0x20;
+const TYPE_ATTR_INTERFACE: u32 = winmd.TYPE_ATTR_INTERFACE;
 
 /// Ordered set of Windows.* namespaces referenced by the types
 /// written during a single `emitNamespace` call. `emitNamespace`
