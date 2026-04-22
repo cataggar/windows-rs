@@ -1,6 +1,6 @@
 # windows-zig samples
 
-Sixteen end-to-end probes that each exercise one shape of the
+Seventeen end-to-end probes that each exercise one shape of the
 winmd→Zig projection. The goal of these samples isn't to demonstrate
 clever Win32 usage — it's to pin down a specific wire shape
 (PWSTR-out, struct field access, opaque buffer cast, etc.) with a
@@ -54,6 +54,12 @@ zig build run-find-files     # build + run one
 | `native-system-info` | **Anonymous union access**: GetNativeSystemInfo writes SYSTEM_INFO; sample reads `info.Anonymous.Anonymous.wProcessorArchitecture`. |
 | `well-known-sid`     | **Opaque buffer + `@ptrCast`**: local `[SECURITY_MAX_SID_SIZE]u8 align(4)` passed to CreateWellKnownSid/IsValidSid/GetLengthSid as PSID (`?*anyopaque`). |
 | `token-elevation`    | **Depth-1 HANDLE-out**: OpenProcessToken takes `*HANDLE` → `*isize`. GetTokenInformation reads `TokenIsElevated` directly into a `u32` (TOKEN_ELEVATION's sole field). |
+
+### UI / callbacks
+
+| Sample           | Shape exercised                                                |
+|------------------|----------------------------------------------------------------|
+| `create-window`  | **Delegate-typed struct field**: `WNDCLASSA.lpfnWndProc` projects as `?*const anyopaque`. Sample registers a class, creates a window, drains the message loop, and lets `WM_DESTROY` fire `PostQuitMessage(0)` for a clean exit. Also shows the alias-form (`?*anyopaque` handles) vs struct-form (`extern struct { Value: *anyopaque }`) bridge at `.{ .Value = ... }` assignments. |
 
 ## The shapes, distilled
 

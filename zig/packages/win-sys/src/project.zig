@@ -139,6 +139,19 @@ pub const structs = struct {
     /// Anonymous struct inside SYSTEM_INFO_0. Re-exported for the
     /// same reason as `SYSTEM_INFO_0`.
     pub const SYSTEM_INFO_0_0 = SYSTEM_INFO_0.SYSTEM_INFO_0_0;
+
+    /// §winuser.h. Projected from
+    /// `Windows.Win32.UI.WindowsAndMessaging.structs.zig`. Passed by
+    /// pointer to `RegisterClassA`. `lpfnWndProc` is a delegate-typed
+    /// field surfaced as `?*const anyopaque`; assign with
+    /// `@ptrCast(&wndproc)` where `wndproc` is an `extern "system" fn`.
+    pub const WNDCLASSA =
+        generated_structs.@"Windows.Win32.UI.WindowsAndMessaging".WNDCLASSA;
+
+    /// §winuser.h. Out-param of `GetMessageA` / `PeekMessageA`. Fed
+    /// (by value) to `TranslateMessage` and `DispatchMessageA`.
+    pub const MSG =
+        generated_structs.@"Windows.Win32.UI.WindowsAndMessaging".MSG;
 };
 
 /// Map a decoded `Ty` to a Zig type. `NamespaceIndex` must expose
