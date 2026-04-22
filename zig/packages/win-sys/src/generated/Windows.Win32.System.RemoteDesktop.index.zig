@@ -704,4 +704,11 @@ pub const aliases = struct {
     pub const SnapshotFormatType = i32;
     pub const KeyCombinationType = i32;
     pub const WTS_CLOUD_AUTH_HANDLE = ?*anyopaque;
+    pub const PCHANNEL_INIT_EVENT_FN = ?*const anyopaque;
+    pub const PCHANNEL_OPEN_EVENT_FN = ?*const anyopaque;
+    pub const PVIRTUALCHANNELINIT = ?*const anyopaque;
+    pub const PVIRTUALCHANNELOPEN = ?*const anyopaque;
+    pub const PVIRTUALCHANNELCLOSE = ?*const anyopaque;
+    pub const PVIRTUALCHANNELWRITE = ?*const anyopaque;
+    pub const PVIRTUALCHANNELENTRY = ?*const anyopaque;
 };

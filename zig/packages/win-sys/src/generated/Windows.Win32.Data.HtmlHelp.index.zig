@@ -301,4 +301,5 @@ pub const aliases = struct {
     pub const HTML_HELP_COMMAND = i32;
     pub const HH_GPROPID = i32;
     pub const PRIORITY = i32;
+    pub const PFNCOLHEAPFREE = ?*const anyopaque;
 };

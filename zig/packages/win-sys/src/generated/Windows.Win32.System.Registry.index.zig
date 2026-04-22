@@ -333,4 +333,5 @@ pub const aliases = struct {
     pub const REG_NOTIFY_FILTER = u32;
     pub const REG_ROUTINE_FLAGS = u32;
     pub const HKEY = ?*anyopaque;
+    pub const PQUERYHANDLER = ?*const anyopaque;
 };

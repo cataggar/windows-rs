@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -37,3 +38,8 @@ pub const ICW_ALREADYRUN = 4;
 pub const ICW_LAUNCHEDFULL = 256;
 pub const ICW_LAUNCHEDMANUAL = 512;
 pub const ICW_USEDEFAULTS = 1;
+
+pub const aliases = struct {
+    pub const PFNCHECKCONNECTIONWIZARD = ?*const anyopaque;
+    pub const PFNSETSHELLNEXT = ?*const anyopaque;
+};

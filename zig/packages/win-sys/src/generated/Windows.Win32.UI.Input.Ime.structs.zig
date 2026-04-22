@@ -97,14 +97,14 @@ pub const IMEDLG = extern struct {
     nTabId: i32,
 };
 pub const WDD = extern struct {
-    pub const WDD_0 = extern union {
-        wReadPos: u16,
-        wCompPos: u16,
-    };
-    pub const WDD_1 = extern union {
-        cchRead: u16,
-        cchComp: u16,
-    };
+pub const WDD_0 = extern union {
+    wReadPos: u16,
+    wCompPos: u16,
+};
+pub const WDD_1 = extern union {
+    cchRead: u16,
+    cchComp: u16,
+};
     wDispPos: u16,
     Anonymous1: WDD_0,
     cchDisp: u16,
@@ -115,18 +115,18 @@ pub const WDD = extern struct {
     pReserved: *anyopaque,
 };
 pub const MORRSLT = extern struct {
-    pub const MORRSLT_0 = extern union {
-        pwchRead: @"Windows.Win32.Foundation".PWSTR,
-        pwchComp: @"Windows.Win32.Foundation".PWSTR,
-    };
-    pub const MORRSLT_1 = extern union {
-        cchRead: u16,
-        cchComp: u16,
-    };
-    pub const MORRSLT_2 = extern union {
-        pchReadIdxWDD: *u16,
-        pchCompIdxWDD: *u16,
-    };
+pub const MORRSLT_0 = extern union {
+    pwchRead: @"Windows.Win32.Foundation".PWSTR,
+    pwchComp: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const MORRSLT_1 = extern union {
+    cchRead: u16,
+    cchComp: u16,
+};
+pub const MORRSLT_2 = extern union {
+    pchReadIdxWDD: *u16,
+    pchCompIdxWDD: *u16,
+};
     dwSize: u32,
     pwchOutput: @"Windows.Win32.Foundation".PWSTR,
     cchOutput: u16,
@@ -142,14 +142,14 @@ pub const MORRSLT = extern struct {
     BLKBuff: [1]u16,
 };
 pub const IMEWRD = extern struct {
-    pub const IMEWRD_0 = extern union {
-        pub const IMEWRD_0_0 = extern struct {
-            nPos1: u16,
-            nPos2: u16,
-        };
-        ulPos: u32,
-        Anonymous: IMEWRD_0_0,
-    };
+pub const IMEWRD_0 = extern union {
+pub const IMEWRD_0_0 = extern struct {
+    nPos1: u16,
+    nPos2: u16,
+};
+    ulPos: u32,
+    Anonymous: IMEWRD_0_0,
+};
     pwchReading: @"Windows.Win32.Foundation".PWSTR,
     pwchDisplay: @"Windows.Win32.Foundation".PWSTR,
     Anonymous: IMEWRD_0,
@@ -179,14 +179,14 @@ pub const IMEKMSINIT = extern struct {
     hWnd: @"Windows.Win32.Foundation".HWND,
 };
 pub const IMEKMSKEY = extern struct {
-    pub const IMEKMSKEY_0 = extern union {
-        dwControl: u32,
-        dwNotUsed: u32,
-    };
-    pub const IMEKMSKEY_1 = extern union {
-        pwszDscr: [31]u16,
-        pwszNoUse: [31]u16,
-    };
+pub const IMEKMSKEY_0 = extern union {
+    dwControl: u32,
+    dwNotUsed: u32,
+};
+pub const IMEKMSKEY_1 = extern union {
+    pwszDscr: [31]u16,
+    pwszNoUse: [31]u16,
+};
     dwStatus: u32,
     dwCompStatus: u32,
     dwVKEY: u32,
@@ -277,10 +277,10 @@ pub const CANDIDATEINFO = extern struct {
     dwPrivateOffset: u32,
 };
 pub const INPUTCONTEXT = extern struct {
-    pub const _lfFont_e__Union = extern union {
-        A: @"Windows.Win32.Graphics.Gdi".LOGFONTA,
-        W: @"Windows.Win32.Graphics.Gdi".LOGFONTW,
-    };
+pub const _lfFont_e__Union = extern union {
+    A: @"Windows.Win32.Graphics.Gdi".LOGFONTA,
+    W: @"Windows.Win32.Graphics.Gdi".LOGFONTW,
+};
     hWnd: @"Windows.Win32.Foundation".HWND,
     fOpen: @"Windows.Win32.Foundation".BOOL,
     ptStatusWndPos: @"Windows.Win32.Foundation".POINT,

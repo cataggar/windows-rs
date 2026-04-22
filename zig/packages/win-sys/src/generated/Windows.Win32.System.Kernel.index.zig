@@ -81,4 +81,5 @@ pub const aliases = struct {
     pub const NT_PRODUCT_TYPE = i32;
     pub const SUITE_TYPE = i32;
     pub const COMPARTMENT_ID = i32;
+    pub const EXCEPTION_ROUTINE = ?*const anyopaque;
 };

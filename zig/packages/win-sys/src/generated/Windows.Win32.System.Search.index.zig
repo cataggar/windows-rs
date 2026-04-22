@@ -4698,4 +4698,6 @@ pub const aliases = struct {
     pub const SQLVARENUM = i32;
     pub const LOCKMODEENUM = i32;
     pub const HACCESSOR = usize;
+    pub const PFNFILLTEXTBUFFER = ?*const anyopaque;
+    pub const SQL_ASYNC_NOTIFICATION_CALLBACK = ?*const anyopaque;
 };

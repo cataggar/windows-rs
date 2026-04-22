@@ -95,4 +95,6 @@ pub const PSAPI_VERSION = 2;
 
 pub const aliases = struct {
     pub const ENUM_PROCESS_MODULES_EX_FLAGS = u32;
+    pub const PENUM_PAGE_FILE_CALLBACKW = ?*const anyopaque;
+    pub const PENUM_PAGE_FILE_CALLBACKA = ?*const anyopaque;
 };

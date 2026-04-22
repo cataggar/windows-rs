@@ -76,3 +76,19 @@ pub const MAPI_E_INVALID_RECIPS = 25;
 pub const MAPI_E_NOT_SUPPORTED = 26;
 pub const MAPI_E_UNICODE_NOT_SUPPORTED = 27;
 pub const MAPI_E_ATTACHMENT_TOO_LARGE = 28;
+
+pub const aliases = struct {
+    pub const LPMAPILOGON = ?*const anyopaque;
+    pub const LPMAPILOGOFF = ?*const anyopaque;
+    pub const LPMAPISENDMAIL = ?*const anyopaque;
+    pub const LPMAPISENDMAILW = ?*const anyopaque;
+    pub const LPMAPISENDDOCUMENTS = ?*const anyopaque;
+    pub const LPMAPIFINDNEXT = ?*const anyopaque;
+    pub const LPMAPIREADMAIL = ?*const anyopaque;
+    pub const LPMAPISAVEMAIL = ?*const anyopaque;
+    pub const LPMAPIDELETEMAIL = ?*const anyopaque;
+    pub const LPMAPIFREEBUFFER = ?*const anyopaque;
+    pub const LPMAPIADDRESS = ?*const anyopaque;
+    pub const LPMAPIDETAILS = ?*const anyopaque;
+    pub const LPMAPIRESOLVENAME = ?*const anyopaque;
+};

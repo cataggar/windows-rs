@@ -4392,4 +4392,14 @@ pub const aliases = struct {
     pub const HPSXA = ?*anyopaque;
     pub const PAPPCONSTRAIN_REGISTRATION = isize;
     pub const PAPPSTATE_REGISTRATION = isize;
+    pub const SUBCLASSPROC = ?*const anyopaque;
+    pub const BFFCALLBACK = ?*const anyopaque;
+    pub const LPFNDFMCALLBACK = ?*const anyopaque;
+    pub const LPFNVIEWCALLBACK = ?*const anyopaque;
+    pub const PFNCANSHAREFOLDERW = ?*const anyopaque;
+    pub const PFNSHOWSHAREFOLDERUIW = ?*const anyopaque;
+    pub const DLLGETVERSIONPROC = ?*const anyopaque;
+    pub const APPLET_PROC = ?*const anyopaque;
+    pub const PAPPSTATE_CHANGE_ROUTINE = ?*const anyopaque;
+    pub const PAPPCONSTRAIN_CHANGE_ROUTINE = ?*const anyopaque;
 };

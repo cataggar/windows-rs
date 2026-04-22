@@ -781,4 +781,12 @@ pub const aliases = struct {
     pub const DHCP_FAILOVER_MODE = i32;
     pub const DHCP_FAILOVER_SERVER = i32;
     pub const FSM_STATE = i32;
+    pub const LPDHCP_CONTROL = ?*const anyopaque;
+    pub const LPDHCP_NEWPKT = ?*const anyopaque;
+    pub const LPDHCP_DROP_SEND = ?*const anyopaque;
+    pub const LPDHCP_PROB = ?*const anyopaque;
+    pub const LPDHCP_GIVE_ADDRESS = ?*const anyopaque;
+    pub const LPDHCP_HANDLE_OPTIONS = ?*const anyopaque;
+    pub const LPDHCP_DELETE_CLIENT = ?*const anyopaque;
+    pub const LPDHCP_ENTRY_POINT_FUNC = ?*const anyopaque;
 };

@@ -171,4 +171,6 @@ pub const aliases = struct {
     pub const TRANSLATION_PARAMETER = i32;
     pub const MANIPULATION_RAILS_STATE = i32;
     pub const HINTERACTIONCONTEXT = ?*anyopaque;
+    pub const INTERACTION_CONTEXT_OUTPUT_CALLBACK = ?*const anyopaque;
+    pub const INTERACTION_CONTEXT_OUTPUT_CALLBACK2 = ?*const anyopaque;
 };

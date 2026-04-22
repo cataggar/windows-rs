@@ -41,30 +41,30 @@ pub const FDICABINETINFO = extern struct {
     hasnext: @"Windows.Win32.Foundation".BOOL,
 };
 pub const FDIDECRYPT = extern struct {
-    pub const FDIDECRYPT_0 = extern union {
-        pub const _cabinet_e__Struct = extern struct {
-            pHeaderReserve: *anyopaque,
-            cbHeaderReserve: u16,
-            setID: u16,
-            iCabinet: i32,
-        };
-        pub const _folder_e__Struct = extern struct {
-            pFolderReserve: *anyopaque,
-            cbFolderReserve: u16,
-            iFolder: u16,
-        };
-        pub const _decrypt_e__Struct = extern struct {
-            pDataReserve: *anyopaque,
-            cbDataReserve: u16,
-            pbData: *anyopaque,
-            cbData: u16,
-            fSplit: @"Windows.Win32.Foundation".BOOL,
-            cbPartial: u16,
-        };
-        cabinet: _cabinet_e__Struct,
-        folder: _folder_e__Struct,
-        decrypt: _decrypt_e__Struct,
-    };
+pub const FDIDECRYPT_0 = extern union {
+pub const _cabinet_e__Struct = extern struct {
+    pHeaderReserve: *anyopaque,
+    cbHeaderReserve: u16,
+    setID: u16,
+    iCabinet: i32,
+};
+pub const _folder_e__Struct = extern struct {
+    pFolderReserve: *anyopaque,
+    cbFolderReserve: u16,
+    iFolder: u16,
+};
+pub const _decrypt_e__Struct = extern struct {
+    pDataReserve: *anyopaque,
+    cbDataReserve: u16,
+    pbData: *anyopaque,
+    cbData: u16,
+    fSplit: @"Windows.Win32.Foundation".BOOL,
+    cbPartial: u16,
+};
+    cabinet: _cabinet_e__Struct,
+    folder: _folder_e__Struct,
+    decrypt: _decrypt_e__Struct,
+};
     fdidt: i32,
     pvUser: *anyopaque,
     Anonymous: FDIDECRYPT_0,

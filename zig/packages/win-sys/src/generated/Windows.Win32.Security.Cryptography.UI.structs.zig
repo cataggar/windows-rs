@@ -51,10 +51,10 @@ pub const CRYPTUI_WIZ_DIGITAL_SIGN_PVK_FILE_INFO = extern struct {
     dwProvType: u32,
 };
 pub const CRYPTUI_WIZ_DIGITAL_SIGN_CERT_PVK_INFO = extern struct {
-    pub const CRYPTUI_WIZ_DIGITAL_SIGN_CERT_PVK_INFO_0 = extern union {
-        pPvkFileInfo: *CRYPTUI_WIZ_DIGITAL_SIGN_PVK_FILE_INFO,
-        pPvkProvInfo: *@"Windows.Win32.Security.Cryptography".CRYPT_KEY_PROV_INFO,
-    };
+pub const CRYPTUI_WIZ_DIGITAL_SIGN_CERT_PVK_INFO_0 = extern union {
+    pPvkFileInfo: *CRYPTUI_WIZ_DIGITAL_SIGN_PVK_FILE_INFO,
+    pPvkProvInfo: *@"Windows.Win32.Security.Cryptography".CRYPT_KEY_PROV_INFO,
+};
     dwSize: u32,
     pwszSigningCertFileName: @"Windows.Win32.Foundation".PWSTR,
     dwPvkChoice: u32,
@@ -81,12 +81,12 @@ pub const CRYPTUI_INITDIALOG_STRUCT = extern struct {
     pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
 };
 pub const CRYPTUI_WIZ_EXPORT_INFO = extern struct {
-    pub const CRYPTUI_WIZ_EXPORT_INFO_0 = extern union {
-        pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
-        pCTLContext: *@"Windows.Win32.Security.Cryptography".CTL_CONTEXT,
-        pCRLContext: *@"Windows.Win32.Security.Cryptography".CRL_CONTEXT,
-        hCertStore: @"Windows.Win32.Security.Cryptography".HCERTSTORE,
-    };
+pub const CRYPTUI_WIZ_EXPORT_INFO_0 = extern union {
+    pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    pCTLContext: *@"Windows.Win32.Security.Cryptography".CTL_CONTEXT,
+    pCRLContext: *@"Windows.Win32.Security.Cryptography".CRL_CONTEXT,
+    hCertStore: @"Windows.Win32.Security.Cryptography".HCERTSTORE,
+};
     dwSize: u32,
     pwszExportFileName: @"Windows.Win32.Foundation".PWSTR,
     dwSubjectChoice: u32,
@@ -103,13 +103,13 @@ pub const CRYPTUI_WIZ_EXPORT_CERTCONTEXT_INFO = extern struct {
     fStrongEncryption: @"Windows.Win32.Foundation".BOOL,
 };
 pub const CRYPTUI_WIZ_IMPORT_SRC_INFO = extern struct {
-    pub const CRYPTUI_WIZ_IMPORT_SRC_INFO_0 = extern union {
-        pwszFileName: @"Windows.Win32.Foundation".PWSTR,
-        pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
-        pCTLContext: *@"Windows.Win32.Security.Cryptography".CTL_CONTEXT,
-        pCRLContext: *@"Windows.Win32.Security.Cryptography".CRL_CONTEXT,
-        hCertStore: @"Windows.Win32.Security.Cryptography".HCERTSTORE,
-    };
+pub const CRYPTUI_WIZ_IMPORT_SRC_INFO_0 = extern union {
+    pwszFileName: @"Windows.Win32.Foundation".PWSTR,
+    pCertContext: *@"Windows.Win32.Security.Cryptography".CERT_CONTEXT,
+    pCTLContext: *@"Windows.Win32.Security.Cryptography".CTL_CONTEXT,
+    pCRLContext: *@"Windows.Win32.Security.Cryptography".CRL_CONTEXT,
+    hCertStore: @"Windows.Win32.Security.Cryptography".HCERTSTORE,
+};
     dwSize: u32,
     dwSubjectChoice: u32,
     Anonymous: CRYPTUI_WIZ_IMPORT_SRC_INFO_0,

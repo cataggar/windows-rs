@@ -122,4 +122,5 @@ pub const aliases = struct {
     pub const DEV_QUERY_STATE = i32;
     pub const DEV_QUERY_RESULT_ACTION = i32;
     pub const HDEVQUERY = ?*anyopaque;
+    pub const PDEV_QUERY_RESULT_CALLBACK = ?*const anyopaque;
 };

@@ -218,4 +218,12 @@ pub const aliases = struct {
     pub const FW_DYNAMIC_KEYWORD_ORIGIN_TYPE = i32;
     pub const FW_DYNAMIC_KEYWORD_ADDRESS_FLAGS = i32;
     pub const FW_DYNAMIC_KEYWORD_ADDRESS_ENUM_FLAGS = i32;
+    pub const PAC_CHANGES_CALLBACK_FN = ?*const anyopaque;
+    pub const PNETISO_EDP_ID_CALLBACK_FN = ?*const anyopaque;
+    pub const PFN_FWADDDYNAMICKEYWORDADDRESS0 = ?*const anyopaque;
+    pub const PFN_FWDELETEDYNAMICKEYWORDADDRESS0 = ?*const anyopaque;
+    pub const PFN_FWENUMDYNAMICKEYWORDADDRESSESBYTYPE0 = ?*const anyopaque;
+    pub const PFN_FWENUMDYNAMICKEYWORDADDRESSBYID0 = ?*const anyopaque;
+    pub const PFN_FWFREEDYNAMICKEYWORDADDRESSDATA0 = ?*const anyopaque;
+    pub const PFN_FWUPDATEDYNAMICKEYWORDADDRESS0 = ?*const anyopaque;
 };

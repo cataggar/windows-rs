@@ -498,4 +498,10 @@ pub const LDAP_REFERRAL_LIMIT_EXCEEDED = 97;
 pub const aliases = struct {
     pub const LDAP_RETCODE = i32;
     pub const PLDAPSearch = isize;
+    pub const DBGPRINT = ?*const anyopaque;
+    pub const QUERYFORCONNECTION = ?*const anyopaque;
+    pub const NOTIFYOFNEWCONNECTION = ?*const anyopaque;
+    pub const DEREFERENCECONNECTION = ?*const anyopaque;
+    pub const QUERYCLIENTCERT = ?*const anyopaque;
+    pub const VERIFYSERVERCERT = ?*const anyopaque;
 };

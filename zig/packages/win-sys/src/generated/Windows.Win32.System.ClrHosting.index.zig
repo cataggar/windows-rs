@@ -259,4 +259,12 @@ pub const aliases = struct {
     pub const METAHOST_POLICY_FLAGS = i32;
     pub const METAHOST_CONFIG_FLAGS = i32;
     pub const CLR_DEBUGGING_PROCESS_FLAGS = i32;
+    pub const FLockClrVersionCallback = ?*const anyopaque;
+    pub const FExecuteInAppDomainCallback = ?*const anyopaque;
+    pub const PTLS_CALLBACK_FUNCTION = ?*const anyopaque;
+    pub const CLRCreateInstanceFnPtr = ?*const anyopaque;
+    pub const CreateInterfaceFnPtr = ?*const anyopaque;
+    pub const CallbackThreadSetFnPtr = ?*const anyopaque;
+    pub const CallbackThreadUnsetFnPtr = ?*const anyopaque;
+    pub const RuntimeLoadedCallbackFnPtr = ?*const anyopaque;
 };

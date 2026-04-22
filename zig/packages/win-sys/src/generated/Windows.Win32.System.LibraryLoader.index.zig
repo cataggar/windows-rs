@@ -115,4 +115,12 @@ pub const LOAD_LIBRARY_OS_INTEGRITY_CONTINUITY = 32768;
 
 pub const aliases = struct {
     pub const LOAD_LIBRARY_FLAGS = u32;
+    pub const ENUMRESLANGPROCA = ?*const anyopaque;
+    pub const ENUMRESLANGPROCW = ?*const anyopaque;
+    pub const ENUMRESNAMEPROCA = ?*const anyopaque;
+    pub const ENUMRESNAMEPROCW = ?*const anyopaque;
+    pub const ENUMRESTYPEPROCA = ?*const anyopaque;
+    pub const ENUMRESTYPEPROCW = ?*const anyopaque;
+    pub const PGET_MODULE_HANDLE_EXA = ?*const anyopaque;
+    pub const PGET_MODULE_HANDLE_EXW = ?*const anyopaque;
 };

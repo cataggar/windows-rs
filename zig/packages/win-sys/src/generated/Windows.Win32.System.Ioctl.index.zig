@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -1803,4 +1804,5 @@ pub const aliases = struct {
     pub const FS_BPIO_OPERATIONS = i32;
     pub const FS_BPIO_INFLAGS = i32;
     pub const FS_BPIO_OUTFLAGS = i32;
+    pub const PIO_IRP_EXT_PROCESS_TRACKED_OFFSET_CALLBACK = ?*const anyopaque;
 };

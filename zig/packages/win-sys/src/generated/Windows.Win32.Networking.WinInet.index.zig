@@ -1454,4 +1454,14 @@ pub const aliases = struct {
     pub const HTTP_POLICY_EXTENSION_VERSION = i32;
     pub const PROOF_OF_POSSESSION_FLAGS = u32;
     pub const HTTP_PUSH_WAIT_HANDLE = ?*anyopaque;
+    pub const LPINTERNET_STATUS_CALLBACK = ?*const anyopaque;
+    pub const GOPHER_ATTRIBUTE_ENUMERATOR = ?*const anyopaque;
+    pub const PFN_AUTH_NOTIFY = ?*const anyopaque;
+    pub const pfnInternetInitializeAutoProxyDll = ?*const anyopaque;
+    pub const pfnInternetDeInitializeAutoProxyDll = ?*const anyopaque;
+    pub const pfnInternetGetProxyInfo = ?*const anyopaque;
+    pub const PFN_DIAL_HANDLER = ?*const anyopaque;
+    pub const CACHE_OPERATOR = ?*const anyopaque;
+    pub const HTTP_POLICY_EXTENSION_INIT = ?*const anyopaque;
+    pub const HTTP_POLICY_EXTENSION_SHUTDOWN = ?*const anyopaque;
 };

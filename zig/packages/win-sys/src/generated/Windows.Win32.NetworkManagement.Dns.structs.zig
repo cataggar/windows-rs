@@ -322,9 +322,9 @@ pub const DNS_RECORD_FLAGS = extern struct {
     _bitfield: u32,
 };
 pub const DNS_ADDR = extern struct {
-    pub const _Data_e__Union = extern union {
-        DnsAddrUserDword: [8]u32,
-    };
+pub const _Data_e__Union = extern union {
+    DnsAddrUserDword: [8]u32,
+};
     MaxSa: [32]@"Windows.Win32.Foundation".CHAR,
     Data: _Data_e__Union,
 };
@@ -354,13 +354,13 @@ pub const DNS_MESSAGE_BUFFER = extern struct {
     MessageBody: [1]@"Windows.Win32.Foundation".CHAR,
 };
 pub const DNS_CUSTOM_SERVER = extern struct {
-    pub const DNS_CUSTOM_SERVER_0 = extern union {
-        pwszTemplate: @"Windows.Win32.Foundation".PWSTR,
-        pwszHostname: @"Windows.Win32.Foundation".PWSTR,
-    };
-    pub const DNS_CUSTOM_SERVER_1 = extern union {
-        MaxSa: [32]@"Windows.Win32.Foundation".CHAR,
-    };
+pub const DNS_CUSTOM_SERVER_0 = extern union {
+    pwszTemplate: @"Windows.Win32.Foundation".PWSTR,
+    pwszHostname: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const DNS_CUSTOM_SERVER_1 = extern union {
+    MaxSa: [32]@"Windows.Win32.Foundation".CHAR,
+};
     dwServerType: u32,
     ullFlags: u64,
     Anonymous1: DNS_CUSTOM_SERVER_0,
@@ -396,23 +396,23 @@ pub const DNS_QUERY_RAW_CANCEL = extern struct {
     reserved: [32]@"Windows.Win32.Foundation".CHAR,
 };
 pub const DNS_CONNECTION_PROXY_INFO = extern struct {
-    pub const DNS_CONNECTION_PROXY_INFO_0 = extern union {
-        pub const _DNS_CONNECTION_PROXY_INFO_CONFIG = extern struct {
-            pwszServer: @"Windows.Win32.Foundation".PWSTR,
-            pwszUsername: @"Windows.Win32.Foundation".PWSTR,
-            pwszPassword: @"Windows.Win32.Foundation".PWSTR,
-            pwszException: @"Windows.Win32.Foundation".PWSTR,
-            pwszExtraInfo: @"Windows.Win32.Foundation".PWSTR,
-            Port: u16,
-        };
-        pub const _DNS_CONNECTION_PROXY_INFO_SCRIPT = extern struct {
-            pwszScript: @"Windows.Win32.Foundation".PWSTR,
-            pwszUsername: @"Windows.Win32.Foundation".PWSTR,
-            pwszPassword: @"Windows.Win32.Foundation".PWSTR,
-        };
-        Config: _DNS_CONNECTION_PROXY_INFO_CONFIG,
-        Script: _DNS_CONNECTION_PROXY_INFO_SCRIPT,
-    };
+pub const DNS_CONNECTION_PROXY_INFO_0 = extern union {
+pub const _DNS_CONNECTION_PROXY_INFO_CONFIG = extern struct {
+    pwszServer: @"Windows.Win32.Foundation".PWSTR,
+    pwszUsername: @"Windows.Win32.Foundation".PWSTR,
+    pwszPassword: @"Windows.Win32.Foundation".PWSTR,
+    pwszException: @"Windows.Win32.Foundation".PWSTR,
+    pwszExtraInfo: @"Windows.Win32.Foundation".PWSTR,
+    Port: u16,
+};
+pub const _DNS_CONNECTION_PROXY_INFO_SCRIPT = extern struct {
+    pwszScript: @"Windows.Win32.Foundation".PWSTR,
+    pwszUsername: @"Windows.Win32.Foundation".PWSTR,
+    pwszPassword: @"Windows.Win32.Foundation".PWSTR,
+};
+    Config: _DNS_CONNECTION_PROXY_INFO_CONFIG,
+    Script: _DNS_CONNECTION_PROXY_INFO_SCRIPT,
+};
     Version: u32,
     pwszFriendlyName: @"Windows.Win32.Foundation".PWSTR,
     Flags: u32,

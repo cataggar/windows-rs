@@ -331,4 +331,12 @@ pub const aliases = struct {
     pub const FINDREPLACE_FLAGS = u32;
     pub const PRINTDLGEX_FLAGS = u32;
     pub const CHOOSEFONT_FONT_TYPE = u16;
+    pub const LPOFNHOOKPROC = ?*const anyopaque;
+    pub const LPCCHOOKPROC = ?*const anyopaque;
+    pub const LPFRHOOKPROC = ?*const anyopaque;
+    pub const LPCFHOOKPROC = ?*const anyopaque;
+    pub const LPPRINTHOOKPROC = ?*const anyopaque;
+    pub const LPSETUPHOOKPROC = ?*const anyopaque;
+    pub const LPPAGEPAINTHOOK = ?*const anyopaque;
+    pub const LPPAGESETUPHOOK = ?*const anyopaque;
 };

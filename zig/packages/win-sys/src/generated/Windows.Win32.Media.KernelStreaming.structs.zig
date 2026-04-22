@@ -33,15 +33,15 @@ pub const KSPRIORITY = extern struct {
     PrioritySubClass: u32,
 };
 pub const KSIDENTIFIER = extern struct {
-    pub const KSIDENTIFIER_0 = extern union {
-        pub const KSIDENTIFIER_0_0 = extern struct {
-            Set: GUID,
-            Id: u32,
-            Flags: u32,
-        };
-        Anonymous: KSIDENTIFIER_0_0,
-        Alignment: i64,
-    };
+pub const KSIDENTIFIER_0 = extern union {
+pub const KSIDENTIFIER_0_0 = extern struct {
+    Set: GUID,
+    Id: u32,
+    Flags: u32,
+};
+    Anonymous: KSIDENTIFIER_0_0,
+    Alignment: i64,
+};
     Anonymous: KSIDENTIFIER_0,
 };
 pub const KSP_NODE = extern struct {
@@ -77,26 +77,26 @@ pub const KSPROPERTY_MEMBERSHEADER = extern struct {
     Flags: u32,
 };
 pub const KSPROPERTY_BOUNDS_LONG = extern union {
-    pub const KSPROPERTY_BOUNDS_LONG_0 = extern struct {
-        SignedMinimum: i32,
-        SignedMaximum: i32,
-    };
-    pub const KSPROPERTY_BOUNDS_LONG_1 = extern struct {
-        UnsignedMinimum: u32,
-        UnsignedMaximum: u32,
-    };
+pub const KSPROPERTY_BOUNDS_LONG_0 = extern struct {
+    SignedMinimum: i32,
+    SignedMaximum: i32,
+};
+pub const KSPROPERTY_BOUNDS_LONG_1 = extern struct {
+    UnsignedMinimum: u32,
+    UnsignedMaximum: u32,
+};
     Anonymous1: KSPROPERTY_BOUNDS_LONG_0,
     Anonymous2: KSPROPERTY_BOUNDS_LONG_1,
 };
 pub const KSPROPERTY_BOUNDS_LONGLONG = extern union {
-    pub const KSPROPERTY_BOUNDS_LONGLONG_0 = extern struct {
-        SignedMinimum: i64,
-        SignedMaximum: i64,
-    };
-    pub const KSPROPERTY_BOUNDS_LONGLONG_1 = extern struct {
-        UnsignedMinimum: u64,
-        UnsignedMaximum: u64,
-    };
+pub const KSPROPERTY_BOUNDS_LONGLONG_0 = extern struct {
+    SignedMinimum: i64,
+    SignedMaximum: i64,
+};
+pub const KSPROPERTY_BOUNDS_LONGLONG_1 = extern struct {
+    UnsignedMinimum: u64,
+    UnsignedMaximum: u64,
+};
     Anonymous1: KSPROPERTY_BOUNDS_LONGLONG_0,
     Anonymous2: KSPROPERTY_BOUNDS_LONGLONG_1,
 };
@@ -110,24 +110,24 @@ pub const KSPROPERTY_STEPPING_LONGLONG = extern struct {
     Bounds: KSPROPERTY_BOUNDS_LONGLONG,
 };
 pub const KSEVENTDATA = extern struct {
-    pub const KSEVENTDATA_0 = extern union {
-        pub const _EventHandle_e__Struct = extern struct {
-            Event: @"Windows.Win32.Foundation".HANDLE,
-            Reserved: [2]usize,
-        };
-        pub const _SemaphoreHandle_e__Struct = extern struct {
-            Semaphore: @"Windows.Win32.Foundation".HANDLE,
-            Reserved: u32,
-            Adjustment: i32,
-        };
-        pub const _Alignment_e__Struct = extern struct {
-            Unused: *anyopaque,
-            Alignment: [2]isize,
-        };
-        EventHandle: _EventHandle_e__Struct,
-        SemaphoreHandle: _SemaphoreHandle_e__Struct,
-        Alignment: _Alignment_e__Struct,
-    };
+pub const KSEVENTDATA_0 = extern union {
+pub const _EventHandle_e__Struct = extern struct {
+    Event: @"Windows.Win32.Foundation".HANDLE,
+    Reserved: [2]usize,
+};
+pub const _SemaphoreHandle_e__Struct = extern struct {
+    Semaphore: @"Windows.Win32.Foundation".HANDLE,
+    Reserved: u32,
+    Adjustment: i32,
+};
+pub const _Alignment_e__Struct = extern struct {
+    Unused: *anyopaque,
+    Alignment: [2]isize,
+};
+    EventHandle: _EventHandle_e__Struct,
+    SemaphoreHandle: _SemaphoreHandle_e__Struct,
+    Alignment: _Alignment_e__Struct,
+};
     NotificationType: u32,
     Anonymous: KSEVENTDATA_0,
 };
@@ -137,10 +137,10 @@ pub const KSQUERYBUFFER = extern struct {
     Reserved: *anyopaque,
 };
 pub const KSRELATIVEEVENT = extern struct {
-    pub const KSRELATIVEEVENT_0 = extern union {
-        ObjectHandle: @"Windows.Win32.Foundation".HANDLE,
-        ObjectPointer: *anyopaque,
-    };
+pub const KSRELATIVEEVENT_0 = extern union {
+    ObjectHandle: @"Windows.Win32.Foundation".HANDLE,
+    ObjectPointer: *anyopaque,
+};
     Size: u32,
     Flags: u32,
     Anonymous: KSRELATIVEEVENT_0,
@@ -206,10 +206,10 @@ pub const KSNODE_CREATE = extern struct {
     Node: u32,
 };
 pub const KSP_PIN = extern struct {
-    pub const KSP_PIN_0 = extern union {
-        Reserved: u32,
-        Flags: u32,
-    };
+pub const KSP_PIN_0 = extern union {
+    Reserved: u32,
+    Flags: u32,
+};
     Property: KSIDENTIFIER,
     PinId: u32,
     Anonymous: KSP_PIN_0,
@@ -224,15 +224,15 @@ pub const KSPIN_CINSTANCES = extern struct {
     CurrentCount: u32,
 };
 pub const KSDATAFORMAT = extern union {
-    pub const KSDATAFORMAT_0 = extern struct {
-        FormatSize: u32,
-        Flags: u32,
-        SampleSize: u32,
-        Reserved: u32,
-        MajorFormat: GUID,
-        SubFormat: GUID,
-        Specifier: GUID,
-    };
+pub const KSDATAFORMAT_0 = extern struct {
+    FormatSize: u32,
+    Flags: u32,
+    SampleSize: u32,
+    Reserved: u32,
+    MajorFormat: GUID,
+    SubFormat: GUID,
+    Specifier: GUID,
+};
     Anonymous: KSDATAFORMAT_0,
     Alignment: i64,
 };
@@ -254,14 +254,14 @@ pub const KSPIN_PHYSICALCONNECTION = extern struct {
     SymbolicLinkName: [1]u16,
 };
 pub const KSALLOCATOR_FRAMING = extern struct {
-    pub const KSALLOCATOR_FRAMING_0 = extern union {
-        OptionsFlags: u32,
-        RequirementsFlags: u32,
-    };
-    pub const KSALLOCATOR_FRAMING_1 = extern union {
-        FileAlignment: u32,
-        FramePitch: i32,
-    };
+pub const KSALLOCATOR_FRAMING_0 = extern union {
+    OptionsFlags: u32,
+    RequirementsFlags: u32,
+};
+pub const KSALLOCATOR_FRAMING_1 = extern union {
+    FileAlignment: u32,
+    FramePitch: i32,
+};
     Anonymous1: KSALLOCATOR_FRAMING_0,
     PoolType: u32,
     Frames: u32,
@@ -285,10 +285,10 @@ pub const KS_COMPRESSION = extern struct {
     RatioConstantMargin: u32,
 };
 pub const KS_FRAMING_ITEM = extern struct {
-    pub const KS_FRAMING_ITEM_0 = extern union {
-        FileAlignment: u32,
-        FramePitch: i32,
-    };
+pub const KS_FRAMING_ITEM_0 = extern union {
+    FileAlignment: u32,
+    FramePitch: i32,
+};
     MemoryType: GUID,
     BusType: GUID,
     MemoryFlags: u32,
@@ -331,13 +331,13 @@ pub const KSSTREAM_METADATA_INFO = extern struct {
     Reserved: u32,
 };
 pub const KSSTREAM_UVC_METADATATYPE_TIMESTAMP = extern struct {
-    pub const KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0 = extern union {
-        pub const KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0_0 = extern struct {
-            _bitfield: u16,
-        };
-        Anonymous: KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0_0,
-        SCRToken: u16,
-    };
+pub const KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0 = extern union {
+pub const KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0_0 = extern struct {
+    _bitfield: u16,
+};
+    Anonymous: KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0_0,
+    SCRToken: u16,
+};
     PresentationTimeStamp: u32,
     SourceClockReference: u32,
     Anonymous: KSSTREAM_UVC_METADATATYPE_TIMESTAMP_0,
@@ -406,11 +406,11 @@ pub const KSPROPERTY_SERIAL = extern struct {
     PropertyLength: u32,
 };
 pub const MF_MDL_SHARED_PAYLOAD_KEY = extern union {
-    pub const _combined_e__Struct = extern struct {
-        pHandle: u32,
-        fHandle: u32,
-        uPayload: u64,
-    };
+pub const _combined_e__Struct = extern struct {
+    pHandle: u32,
+    fHandle: u32,
+    uPayload: u64,
+};
     combined: _combined_e__Struct,
     GMDLHandle: GUID,
 };
@@ -466,18 +466,18 @@ pub const KSAUDIO_MIC_ARRAY_GEOMETRY = extern struct {
     KsMicCoord: [1]KSAUDIO_MICROPHONE_COORDINATES,
 };
 pub const DS3DVECTOR = extern struct {
-    pub const DS3DVECTOR_0 = extern union {
-        x: f32,
-        dvX: f32,
-    };
-    pub const DS3DVECTOR_1 = extern union {
-        y: f32,
-        dvY: f32,
-    };
-    pub const DS3DVECTOR_2 = extern union {
-        z: f32,
-        dvZ: f32,
-    };
+pub const DS3DVECTOR_0 = extern union {
+    x: f32,
+    dvX: f32,
+};
+pub const DS3DVECTOR_1 = extern union {
+    y: f32,
+    dvY: f32,
+};
+pub const DS3DVECTOR_2 = extern union {
+    z: f32,
+    dvZ: f32,
+};
     Anonymous1: DS3DVECTOR_0,
     Anonymous2: DS3DVECTOR_1,
     Anonymous3: DS3DVECTOR_2,
@@ -676,10 +676,10 @@ pub const KSAUDIO_MIXLEVEL = extern struct {
     Level: i32,
 };
 pub const KSAUDIO_MIX_CAPS = extern struct {
-    pub const KSAUDIO_MIX_CAPS_0 = extern union {
-        Reset: i32,
-        Resolution: i32,
-    };
+pub const KSAUDIO_MIX_CAPS_0 = extern union {
+    Reset: i32,
+    Resolution: i32,
+};
     Mute: @"Windows.Win32.Foundation".BOOL,
     Minimum: i32,
     Maximum: i32,
@@ -940,11 +940,11 @@ pub const KS_VIDEOINFOHEADER = extern struct {
     bmiHeader: KS_BITMAPINFOHEADER,
 };
 pub const KS_VIDEOINFO = extern struct {
-    pub const KS_VIDEOINFO_0 = extern union {
-        bmiColors: [256]KS_RGBQUAD,
-        dwBitMasks: [3]u32,
-        TrueColorInfo: KS_TRUECOLORINFO,
-    };
+pub const KS_VIDEOINFO_0 = extern union {
+    bmiColors: [256]KS_RGBQUAD,
+    dwBitMasks: [3]u32,
+    TrueColorInfo: KS_TRUECOLORINFO,
+};
     rcSource: @"Windows.Win32.Foundation".RECT,
     rcTarget: @"Windows.Win32.Foundation".RECT,
     dwBitRate: u32,
@@ -980,10 +980,10 @@ pub const KS_TVTUNER_CHANGE_INFO = extern struct {
     dwChannel: u32,
 };
 pub const KS_VIDEOINFOHEADER2 = extern struct {
-    pub const KS_VIDEOINFOHEADER2_0 = extern union {
-        dwControlFlags: u32,
-        dwReserved1: u32,
-    };
+pub const KS_VIDEOINFOHEADER2_0 = extern union {
+    dwControlFlags: u32,
+    dwReserved1: u32,
+};
     rcSource: @"Windows.Win32.Foundation".RECT,
     rcTarget: @"Windows.Win32.Foundation".RECT,
     dwBitRate: u32,
@@ -1342,18 +1342,18 @@ pub const VIDEOFORMAT_DX12 = extern struct {
     customLayout: GUID,
 };
 pub const KS_FRAME_INFO = extern struct {
-    pub const KS_FRAME_INFO_0 = extern union {
-        lSurfacePitch: i32,
-        Reserved1: u32,
-    };
-    pub const KS_FRAME_INFO_1 = extern union {
-        pub const KS_FRAME_INFO_1_0 = extern struct {
-            Reserved3: u32,
-            Reserved4: u32,
-        };
-        Anonymous: KS_FRAME_INFO_1_0,
-        FrameCompletionNumber: u64,
-    };
+pub const KS_FRAME_INFO_0 = extern union {
+    lSurfacePitch: i32,
+    Reserved1: u32,
+};
+pub const KS_FRAME_INFO_1 = extern union {
+pub const KS_FRAME_INFO_1_0 = extern struct {
+    Reserved3: u32,
+    Reserved4: u32,
+};
+    Anonymous: KS_FRAME_INFO_1_0,
+    FrameCompletionNumber: u64,
+};
     ExtendedHeaderSize: u32,
     dwFrameFlags: u32,
     PictureNumber: i64,
@@ -1592,10 +1592,10 @@ pub const KSPROPERTY_CAMERACONTROL_VIDEOSTABILIZATION_MODE_S = extern struct {
     Capabilities: u32,
 };
 pub const KSPROPERTY_CAMERACONTROL_REGION_OF_INTEREST_S = extern struct {
-    pub const KSPROPERTY_CAMERACONTROL_REGION_OF_INTEREST_S_0 = extern union {
-        Capabilities: u32,
-        Configuration: u32,
-    };
+pub const KSPROPERTY_CAMERACONTROL_REGION_OF_INTEREST_S_0 = extern union {
+    Capabilities: u32,
+    Configuration: u32,
+};
     FocusRect: @"Windows.Win32.Foundation".RECT,
     AutoFocusLock: @"Windows.Win32.Foundation".BOOL,
     AutoExposureLock: @"Windows.Win32.Foundation".BOOL,
@@ -1615,14 +1615,14 @@ pub const KSCAMERA_EXTENDEDPROP_HEADER = extern struct {
     Capability: u64,
 };
 pub const KSCAMERA_EXTENDEDPROP_VALUE = extern struct {
-    pub const _Value_e__Union = extern union {
-        dbl: f64,
-        ull: u64,
-        ul: u32,
-        ratio: u64,
-        l: i32,
-        ll: i64,
-    };
+pub const _Value_e__Union = extern union {
+    dbl: f64,
+    ull: u64,
+    ul: u32,
+    ratio: u64,
+    l: i32,
+    ll: i64,
+};
     Value: _Value_e__Union,
 };
 pub const KSCAMERA_MAXVIDEOFPS_FORPHOTORES = extern struct {
@@ -1807,10 +1807,10 @@ pub const KSCAMERA_EXTENDEDPROP_FIELDOFVIEW2_CONFIGCAPS = extern struct {
     Reserved: u32,
 };
 pub const KSCAMERA_EXTENDEDPROP_BACKGROUNDSEGMENTATION_CONFIGCAPS = extern struct {
-    pub const _MaxFrameRate_e__Struct = extern struct {
-        Numerator: i32,
-        Denominator: i32,
-    };
+pub const _MaxFrameRate_e__Struct = extern struct {
+    Numerator: i32,
+    Denominator: i32,
+};
     Resolution: @"Windows.Win32.Foundation".SIZE,
     MaxFrameRate: _MaxFrameRate_e__Struct,
     MaskResolution: @"Windows.Win32.Foundation".SIZE,
@@ -1829,14 +1829,14 @@ pub const KSCAMERA_EXTENDEDPROP_PROFILE = extern struct {
     Reserved: u32,
 };
 pub const KSCAMERA_PROFILE_MEDIAINFO = extern struct {
-    pub const _Resolution_e__Struct = extern struct {
-        X: u32,
-        Y: u32,
-    };
-    pub const _MaxFrameRate_e__Struct = extern struct {
-        Numerator: u32,
-        Denominator: u32,
-    };
+pub const _Resolution_e__Struct = extern struct {
+    X: u32,
+    Y: u32,
+};
+pub const _MaxFrameRate_e__Struct = extern struct {
+    Numerator: u32,
+    Denominator: u32,
+};
     Resolution: _Resolution_e__Struct,
     MaxFrameRate: _MaxFrameRate_e__Struct,
     Flags: u64,
@@ -1846,14 +1846,14 @@ pub const KSCAMERA_PROFILE_MEDIAINFO = extern struct {
     Data3: u32,
 };
 pub const KSCAMERA_PROFILE_PININFO = extern struct {
-    pub const KSCAMERA_PROFILE_PININFO_0 = extern union {
-        pub const KSCAMERA_PROFILE_PININFO_0_0 = extern struct {
-            PinIndex: u16,
-            ProfileSensorType: u16,
-        };
-        Anonymous: KSCAMERA_PROFILE_PININFO_0_0,
-        Reserved: u32,
-    };
+pub const KSCAMERA_PROFILE_PININFO_0 = extern union {
+pub const KSCAMERA_PROFILE_PININFO_0_0 = extern struct {
+    PinIndex: u16,
+    ProfileSensorType: u16,
+};
+    Anonymous: KSCAMERA_PROFILE_PININFO_0_0,
+    Reserved: u32,
+};
     PinCategory: GUID,
     Anonymous: KSCAMERA_PROFILE_PININFO_0,
     MediaInfoCount: u32,
@@ -1872,15 +1872,15 @@ pub const KSCAMERA_PROFILE_CONCURRENCYINFO = extern struct {
     Profiles: *KSCAMERA_PROFILE_INFO,
 };
 pub const KSDEVICE_PROFILE_INFO = extern struct {
-    pub const KSDEVICE_PROFILE_INFO_0 = extern union {
-        pub const _Camera_e__Struct = extern struct {
-            Info: KSCAMERA_PROFILE_INFO,
-            Reserved: u32,
-            ConcurrencyCount: u32,
-            Concurrency: *KSCAMERA_PROFILE_CONCURRENCYINFO,
-        };
-        Camera: _Camera_e__Struct,
-    };
+pub const KSDEVICE_PROFILE_INFO_0 = extern union {
+pub const _Camera_e__Struct = extern struct {
+    Info: KSCAMERA_PROFILE_INFO,
+    Reserved: u32,
+    ConcurrencyCount: u32,
+    Concurrency: *KSCAMERA_PROFILE_CONCURRENCYINFO,
+};
+    Camera: _Camera_e__Struct,
+};
     Type: u32,
     Size: u32,
     Anonymous: KSDEVICE_PROFILE_INFO_0,
@@ -1933,13 +1933,13 @@ pub const DEVCAPS = extern struct {
     SimulatedHardware: i32,
 };
 pub const KSPROPERTY_EXTDEVICE_S = extern struct {
-    pub const _u_e__Union = extern union {
-        Capabilities: DEVCAPS,
-        DevPort: u32,
-        PowerState: u32,
-        pawchString: [260]u16,
-        NodeUniqueID: [2]u32,
-    };
+pub const _u_e__Union = extern union {
+    Capabilities: DEVCAPS,
+    DevPort: u32,
+    PowerState: u32,
+    pawchString: [260]u16,
+    NodeUniqueID: [2]u32,
+};
     Property: KSIDENTIFIER,
     u: _u_e__Union,
 };
@@ -2011,52 +2011,52 @@ pub const TRANSPORT_STATE = extern struct {
     State: u32,
 };
 pub const KSPROPERTY_EXTXPORT_S = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _Timecode_e__Struct = extern struct {
-            frame: u8,
-            second: u8,
-            minute: u8,
-            hour: u8,
-        };
-        pub const _RawAVC_e__Struct = extern struct {
-            PayloadSize: u32,
-            Payload: [512]u8,
-        };
-        Capabilities: u32,
-        SignalMode: u32,
-        LoadMedium: u32,
-        MediumInfo: MEDIUM_INFO,
-        XPrtState: TRANSPORT_STATE,
-        Timecode: _Timecode_e__Struct,
-        dwTimecode: u32,
-        dwAbsTrackNumber: u32,
-        RawAVC: _RawAVC_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _Timecode_e__Struct = extern struct {
+    frame: u8,
+    second: u8,
+    minute: u8,
+    hour: u8,
+};
+pub const _RawAVC_e__Struct = extern struct {
+    PayloadSize: u32,
+    Payload: [512]u8,
+};
+    Capabilities: u32,
+    SignalMode: u32,
+    LoadMedium: u32,
+    MediumInfo: MEDIUM_INFO,
+    XPrtState: TRANSPORT_STATE,
+    Timecode: _Timecode_e__Struct,
+    dwTimecode: u32,
+    dwAbsTrackNumber: u32,
+    RawAVC: _RawAVC_e__Struct,
+};
     Property: KSIDENTIFIER,
     u: _u_e__Union,
 };
 pub const KSPROPERTY_EXTXPORT_NODE_S = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _Timecode_e__Struct = extern struct {
-            frame: u8,
-            second: u8,
-            minute: u8,
-            hour: u8,
-        };
-        pub const _RawAVC_e__Struct = extern struct {
-            PayloadSize: u32,
-            Payload: [512]u8,
-        };
-        Capabilities: u32,
-        SignalMode: u32,
-        LoadMedium: u32,
-        MediumInfo: MEDIUM_INFO,
-        XPrtState: TRANSPORT_STATE,
-        Timecode: _Timecode_e__Struct,
-        dwTimecode: u32,
-        dwAbsTrackNumber: u32,
-        RawAVC: _RawAVC_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _Timecode_e__Struct = extern struct {
+    frame: u8,
+    second: u8,
+    minute: u8,
+    hour: u8,
+};
+pub const _RawAVC_e__Struct = extern struct {
+    PayloadSize: u32,
+    Payload: [512]u8,
+};
+    Capabilities: u32,
+    SignalMode: u32,
+    LoadMedium: u32,
+    MediumInfo: MEDIUM_INFO,
+    XPrtState: TRANSPORT_STATE,
+    Timecode: _Timecode_e__Struct,
+    dwTimecode: u32,
+    dwAbsTrackNumber: u32,
+    RawAVC: _RawAVC_e__Struct,
+};
     NodeProperty: KSP_NODE,
     u: _u_e__Union,
 };
@@ -2283,16 +2283,16 @@ pub const KSAUDIOMODULE_PROPERTY = extern struct {
     InstanceId: u32,
 };
 pub const KSAUDIOMODULE_NOTIFICATION = extern struct {
-    pub const KSAUDIOMODULE_NOTIFICATION_0 = extern union {
-        pub const _ProviderId_e__Struct = extern struct {
-            DeviceId: GUID,
-            ClassId: GUID,
-            InstanceId: u32,
-            Reserved: u32,
-        };
-        ProviderId: _ProviderId_e__Struct,
-        Alignment: i64,
-    };
+pub const KSAUDIOMODULE_NOTIFICATION_0 = extern union {
+pub const _ProviderId_e__Struct = extern struct {
+    DeviceId: GUID,
+    ClassId: GUID,
+    InstanceId: u32,
+    Reserved: u32,
+};
+    ProviderId: _ProviderId_e__Struct,
+    Alignment: i64,
+};
     Anonymous: KSAUDIOMODULE_NOTIFICATION_0,
 };
 pub const OPTIMAL_WEIGHT_TOTALS = extern struct {

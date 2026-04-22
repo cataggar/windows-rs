@@ -331,4 +331,5 @@ pub const aliases = struct {
     pub const CF_SYNC_ROOT_INFO_CLASS = i32;
     pub const CF_PLACEHOLDER_RANGE_INFO_CLASS = i32;
     pub const CF_CONNECTION_KEY = i64;
+    pub const CF_CALLBACK = ?*const anyopaque;
 };

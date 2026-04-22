@@ -1132,4 +1132,6 @@ pub const aliases = struct {
     pub const D3D10_SHADER_DEBUG_REGTYPE = i32;
     pub const D3D10_SHADER_DEBUG_SCOPETYPE = i32;
     pub const D3D10_SHADER_DEBUG_VARTYPE = i32;
+    pub const PFN_D3D10_CREATE_DEVICE1 = ?*const anyopaque;
+    pub const PFN_D3D10_CREATE_DEVICE_AND_SWAP_CHAIN1 = ?*const anyopaque;
 };

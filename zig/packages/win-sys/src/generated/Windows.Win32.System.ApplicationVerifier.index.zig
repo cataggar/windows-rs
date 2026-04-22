@@ -50,4 +50,7 @@ pub const aliases = struct {
     pub const eHeapEnumerationLevel = i32;
     pub const eHANDLE_TRACE_OPERATIONS = i32;
     pub const eAvrfResourceTypes = i32;
+    pub const AVRF_RESOURCE_ENUMERATE_CALLBACK = ?*const anyopaque;
+    pub const AVRF_HEAPALLOCATION_ENUMERATE_CALLBACK = ?*const anyopaque;
+    pub const AVRF_HANDLEOPERATION_ENUMERATE_CALLBACK = ?*const anyopaque;
 };

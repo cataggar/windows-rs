@@ -24,19 +24,19 @@ pub const RELOGSTREAM_HANDLE = extern struct {
     Value: u64,
 };
 pub const WNODE_HEADER = extern struct {
-    pub const WNODE_HEADER_0 = extern union {
-        pub const WNODE_HEADER_0_0 = extern struct {
-            Version: u32,
-            Linkage: u32,
-        };
-        HistoricalContext: u64,
-        Anonymous: WNODE_HEADER_0_0,
-    };
-    pub const WNODE_HEADER_1 = extern union {
-        CountLost: u32,
-        KernelHandle: @"Windows.Win32.Foundation".HANDLE,
-        TimeStamp: i64,
-    };
+pub const WNODE_HEADER_0 = extern union {
+pub const WNODE_HEADER_0_0 = extern struct {
+    Version: u32,
+    Linkage: u32,
+};
+    HistoricalContext: u64,
+    Anonymous: WNODE_HEADER_0_0,
+};
+pub const WNODE_HEADER_1 = extern union {
+    CountLost: u32,
+    KernelHandle: @"Windows.Win32.Foundation".HANDLE,
+    TimeStamp: i64,
+};
     BufferSize: u32,
     ProviderId: u32,
     Anonymous1: WNODE_HEADER_0,
@@ -50,10 +50,10 @@ pub const OFFSETINSTANCEDATAANDLENGTH = extern struct {
     LengthInstanceData: u32,
 };
 pub const WNODE_ALL_DATA = extern struct {
-    pub const WNODE_ALL_DATA_0 = extern union {
-        FixedInstanceSize: u32,
-        OffsetInstanceDataAndLength: [1]OFFSETINSTANCEDATAANDLENGTH,
-    };
+pub const WNODE_ALL_DATA_0 = extern union {
+    FixedInstanceSize: u32,
+    OffsetInstanceDataAndLength: [1]OFFSETINSTANCEDATAANDLENGTH,
+};
     WnodeHeader: WNODE_HEADER,
     DataBlockOffset: u32,
     InstanceCount: u32,
@@ -90,10 +90,10 @@ pub const WNODE_EVENT_ITEM = extern struct {
     WnodeHeader: WNODE_HEADER,
 };
 pub const WNODE_EVENT_REFERENCE = extern struct {
-    pub const WNODE_EVENT_REFERENCE_0 = extern union {
-        TargetInstanceIndex: u32,
-        TargetInstanceName: [1]u16,
-    };
+pub const WNODE_EVENT_REFERENCE_0 = extern union {
+    TargetInstanceIndex: u32,
+    TargetInstanceName: [1]u16,
+};
     WnodeHeader: WNODE_HEADER,
     TargetGuid: GUID,
     TargetDataBlockSize: u32,
@@ -104,12 +104,12 @@ pub const WNODE_TOO_SMALL = extern struct {
     SizeNeeded: u32,
 };
 pub const WMIREGGUIDW = extern struct {
-    pub const WMIREGGUIDW_0 = extern union {
-        InstanceNameList: u32,
-        BaseNameOffset: u32,
-        Pdo: usize,
-        InstanceInfo: usize,
-    };
+pub const WMIREGGUIDW_0 = extern union {
+    InstanceNameList: u32,
+    BaseNameOffset: u32,
+    Pdo: usize,
+    InstanceInfo: usize,
+};
     Guid: GUID,
     Flags: u32,
     InstanceCount: u32,
@@ -124,40 +124,40 @@ pub const WMIREGINFOW = extern struct {
     WmiRegGuid: [1]WMIREGGUIDW,
 };
 pub const EVENT_TRACE_HEADER = extern struct {
-    pub const EVENT_TRACE_HEADER_0 = extern union {
-        pub const EVENT_TRACE_HEADER_0_0 = extern struct {
-            HeaderType: u8,
-            MarkerFlags: u8,
-        };
-        FieldTypeFlags: u16,
-        Anonymous: EVENT_TRACE_HEADER_0_0,
-    };
-    pub const EVENT_TRACE_HEADER_1 = extern union {
-        pub const _Class_e__Struct = extern struct {
-            Type: u8,
-            Level: u8,
-            Version: u16,
-        };
-        Version: u32,
-        Class: _Class_e__Struct,
-    };
-    pub const EVENT_TRACE_HEADER_2 = extern union {
-        Guid: GUID,
-        GuidPtr: u64,
-    };
-    pub const EVENT_TRACE_HEADER_3 = extern union {
-        pub const EVENT_TRACE_HEADER_3_0 = extern struct {
-            KernelTime: u32,
-            UserTime: u32,
-        };
-        pub const EVENT_TRACE_HEADER_3_1 = extern struct {
-            ClientContext: u32,
-            Flags: u32,
-        };
-        Anonymous1: EVENT_TRACE_HEADER_3_0,
-        ProcessorTime: u64,
-        Anonymous2: EVENT_TRACE_HEADER_3_1,
-    };
+pub const EVENT_TRACE_HEADER_0 = extern union {
+pub const EVENT_TRACE_HEADER_0_0 = extern struct {
+    HeaderType: u8,
+    MarkerFlags: u8,
+};
+    FieldTypeFlags: u16,
+    Anonymous: EVENT_TRACE_HEADER_0_0,
+};
+pub const EVENT_TRACE_HEADER_1 = extern union {
+pub const _Class_e__Struct = extern struct {
+    Type: u8,
+    Level: u8,
+    Version: u16,
+};
+    Version: u32,
+    Class: _Class_e__Struct,
+};
+pub const EVENT_TRACE_HEADER_2 = extern union {
+    Guid: GUID,
+    GuidPtr: u64,
+};
+pub const EVENT_TRACE_HEADER_3 = extern union {
+pub const EVENT_TRACE_HEADER_3_0 = extern struct {
+    KernelTime: u32,
+    UserTime: u32,
+};
+pub const EVENT_TRACE_HEADER_3_1 = extern struct {
+    ClientContext: u32,
+    Flags: u32,
+};
+    Anonymous1: EVENT_TRACE_HEADER_3_0,
+    ProcessorTime: u64,
+    Anonymous2: EVENT_TRACE_HEADER_3_1,
+};
     Size: u16,
     Anonymous1: EVENT_TRACE_HEADER_0,
     Anonymous2: EVENT_TRACE_HEADER_1,
@@ -168,36 +168,36 @@ pub const EVENT_TRACE_HEADER = extern struct {
     Anonymous4: EVENT_TRACE_HEADER_3,
 };
 pub const EVENT_INSTANCE_HEADER = extern struct {
-    pub const EVENT_INSTANCE_HEADER_0 = extern union {
-        pub const EVENT_INSTANCE_HEADER_0_0 = extern struct {
-            HeaderType: u8,
-            MarkerFlags: u8,
-        };
-        FieldTypeFlags: u16,
-        Anonymous: EVENT_INSTANCE_HEADER_0_0,
-    };
-    pub const EVENT_INSTANCE_HEADER_1 = extern union {
-        pub const _Class_e__Struct = extern struct {
-            Type: u8,
-            Level: u8,
-            Version: u16,
-        };
-        Version: u32,
-        Class: _Class_e__Struct,
-    };
-    pub const EVENT_INSTANCE_HEADER_2 = extern union {
-        pub const EVENT_INSTANCE_HEADER_2_0 = extern struct {
-            KernelTime: u32,
-            UserTime: u32,
-        };
-        pub const EVENT_INSTANCE_HEADER_2_1 = extern struct {
-            EventId: u32,
-            Flags: u32,
-        };
-        Anonymous1: EVENT_INSTANCE_HEADER_2_0,
-        ProcessorTime: u64,
-        Anonymous2: EVENT_INSTANCE_HEADER_2_1,
-    };
+pub const EVENT_INSTANCE_HEADER_0 = extern union {
+pub const EVENT_INSTANCE_HEADER_0_0 = extern struct {
+    HeaderType: u8,
+    MarkerFlags: u8,
+};
+    FieldTypeFlags: u16,
+    Anonymous: EVENT_INSTANCE_HEADER_0_0,
+};
+pub const EVENT_INSTANCE_HEADER_1 = extern union {
+pub const _Class_e__Struct = extern struct {
+    Type: u8,
+    Level: u8,
+    Version: u16,
+};
+    Version: u32,
+    Class: _Class_e__Struct,
+};
+pub const EVENT_INSTANCE_HEADER_2 = extern union {
+pub const EVENT_INSTANCE_HEADER_2_0 = extern struct {
+    KernelTime: u32,
+    UserTime: u32,
+};
+pub const EVENT_INSTANCE_HEADER_2_1 = extern struct {
+    EventId: u32,
+    Flags: u32,
+};
+    Anonymous1: EVENT_INSTANCE_HEADER_2_0,
+    ProcessorTime: u64,
+    Anonymous2: EVENT_INSTANCE_HEADER_2_1,
+};
     Size: u16,
     Anonymous1: EVENT_INSTANCE_HEADER_0,
     Anonymous2: EVENT_INSTANCE_HEADER_1,
@@ -216,26 +216,26 @@ pub const MOF_FIELD = extern struct {
     DataType: u32,
 };
 pub const TRACE_LOGFILE_HEADER = extern struct {
-    pub const TRACE_LOGFILE_HEADER_0 = extern union {
-        pub const _VersionDetail_e__Struct = extern struct {
-            MajorVersion: u8,
-            MinorVersion: u8,
-            SubVersion: u8,
-            SubMinorVersion: u8,
-        };
-        Version: u32,
-        VersionDetail: _VersionDetail_e__Struct,
-    };
-    pub const TRACE_LOGFILE_HEADER_1 = extern union {
-        pub const TRACE_LOGFILE_HEADER_1_0 = extern struct {
-            StartBuffers: u32,
-            PointerSize: u32,
-            EventsLost: u32,
-            CpuSpeedInMHz: u32,
-        };
-        LogInstanceGuid: GUID,
-        Anonymous: TRACE_LOGFILE_HEADER_1_0,
-    };
+pub const TRACE_LOGFILE_HEADER_0 = extern union {
+pub const _VersionDetail_e__Struct = extern struct {
+    MajorVersion: u8,
+    MinorVersion: u8,
+    SubVersion: u8,
+    SubMinorVersion: u8,
+};
+    Version: u32,
+    VersionDetail: _VersionDetail_e__Struct,
+};
+pub const TRACE_LOGFILE_HEADER_1 = extern union {
+pub const TRACE_LOGFILE_HEADER_1_0 = extern struct {
+    StartBuffers: u32,
+    PointerSize: u32,
+    EventsLost: u32,
+    CpuSpeedInMHz: u32,
+};
+    LogInstanceGuid: GUID,
+    Anonymous: TRACE_LOGFILE_HEADER_1_0,
+};
     BufferSize: u32,
     Anonymous1: TRACE_LOGFILE_HEADER_0,
     ProviderVersion: u32,
@@ -256,26 +256,26 @@ pub const TRACE_LOGFILE_HEADER = extern struct {
     BuffersLost: u32,
 };
 pub const TRACE_LOGFILE_HEADER32 = extern struct {
-    pub const TRACE_LOGFILE_HEADER32_0 = extern union {
-        pub const _VersionDetail_e__Struct = extern struct {
-            MajorVersion: u8,
-            MinorVersion: u8,
-            SubVersion: u8,
-            SubMinorVersion: u8,
-        };
-        Version: u32,
-        VersionDetail: _VersionDetail_e__Struct,
-    };
-    pub const TRACE_LOGFILE_HEADER32_1 = extern union {
-        pub const TRACE_LOGFILE_HEADER32_1_0 = extern struct {
-            StartBuffers: u32,
-            PointerSize: u32,
-            EventsLost: u32,
-            CpuSpeedInMHz: u32,
-        };
-        LogInstanceGuid: GUID,
-        Anonymous: TRACE_LOGFILE_HEADER32_1_0,
-    };
+pub const TRACE_LOGFILE_HEADER32_0 = extern union {
+pub const _VersionDetail_e__Struct = extern struct {
+    MajorVersion: u8,
+    MinorVersion: u8,
+    SubVersion: u8,
+    SubMinorVersion: u8,
+};
+    Version: u32,
+    VersionDetail: _VersionDetail_e__Struct,
+};
+pub const TRACE_LOGFILE_HEADER32_1 = extern union {
+pub const TRACE_LOGFILE_HEADER32_1_0 = extern struct {
+    StartBuffers: u32,
+    PointerSize: u32,
+    EventsLost: u32,
+    CpuSpeedInMHz: u32,
+};
+    LogInstanceGuid: GUID,
+    Anonymous: TRACE_LOGFILE_HEADER32_1_0,
+};
     BufferSize: u32,
     Anonymous1: TRACE_LOGFILE_HEADER32_0,
     ProviderVersion: u32,
@@ -296,26 +296,26 @@ pub const TRACE_LOGFILE_HEADER32 = extern struct {
     BuffersLost: u32,
 };
 pub const TRACE_LOGFILE_HEADER64 = extern struct {
-    pub const TRACE_LOGFILE_HEADER64_0 = extern union {
-        pub const _VersionDetail_e__Struct = extern struct {
-            MajorVersion: u8,
-            MinorVersion: u8,
-            SubVersion: u8,
-            SubMinorVersion: u8,
-        };
-        Version: u32,
-        VersionDetail: _VersionDetail_e__Struct,
-    };
-    pub const TRACE_LOGFILE_HEADER64_1 = extern union {
-        pub const TRACE_LOGFILE_HEADER64_1_0 = extern struct {
-            StartBuffers: u32,
-            PointerSize: u32,
-            EventsLost: u32,
-            CpuSpeedInMHz: u32,
-        };
-        LogInstanceGuid: GUID,
-        Anonymous: TRACE_LOGFILE_HEADER64_1_0,
-    };
+pub const TRACE_LOGFILE_HEADER64_0 = extern union {
+pub const _VersionDetail_e__Struct = extern struct {
+    MajorVersion: u8,
+    MinorVersion: u8,
+    SubVersion: u8,
+    SubMinorVersion: u8,
+};
+    Version: u32,
+    VersionDetail: _VersionDetail_e__Struct,
+};
+pub const TRACE_LOGFILE_HEADER64_1 = extern union {
+pub const TRACE_LOGFILE_HEADER64_1_0 = extern struct {
+    StartBuffers: u32,
+    PointerSize: u32,
+    EventsLost: u32,
+    CpuSpeedInMHz: u32,
+};
+    LogInstanceGuid: GUID,
+    Anonymous: TRACE_LOGFILE_HEADER64_1_0,
+};
     BufferSize: u32,
     Anonymous1: TRACE_LOGFILE_HEADER64_0,
     ProviderVersion: u32,
@@ -340,10 +340,10 @@ pub const EVENT_INSTANCE_INFO = extern struct {
     InstanceId: u32,
 };
 pub const EVENT_TRACE_PROPERTIES = extern struct {
-    pub const EVENT_TRACE_PROPERTIES_0 = extern union {
-        AgeLimit: i32,
-        FlushThreshold: i32,
-    };
+pub const EVENT_TRACE_PROPERTIES_0 = extern union {
+    AgeLimit: i32,
+    FlushThreshold: i32,
+};
     Wnode: WNODE_HEADER,
     BufferSize: u32,
     MinimumBuffers: u32,
@@ -364,24 +364,24 @@ pub const EVENT_TRACE_PROPERTIES = extern struct {
     LoggerNameOffset: u32,
 };
 pub const EVENT_TRACE_PROPERTIES_V2 = extern struct {
-    pub const EVENT_TRACE_PROPERTIES_V2_0 = extern union {
-        AgeLimit: i32,
-        FlushThreshold: i32,
-    };
-    pub const EVENT_TRACE_PROPERTIES_V2_1 = extern union {
-        pub const EVENT_TRACE_PROPERTIES_V2_1_0 = extern struct {
-            _bitfield: u32,
-        };
-        Anonymous: EVENT_TRACE_PROPERTIES_V2_1_0,
-        V2Control: u32,
-    };
-    pub const EVENT_TRACE_PROPERTIES_V2_2 = extern union {
-        pub const EVENT_TRACE_PROPERTIES_V2_2_0 = extern struct {
-            _bitfield: u32,
-        };
-        Anonymous: EVENT_TRACE_PROPERTIES_V2_2_0,
-        V2Options: u64,
-    };
+pub const EVENT_TRACE_PROPERTIES_V2_0 = extern union {
+    AgeLimit: i32,
+    FlushThreshold: i32,
+};
+pub const EVENT_TRACE_PROPERTIES_V2_1 = extern union {
+pub const EVENT_TRACE_PROPERTIES_V2_1_0 = extern struct {
+    _bitfield: u32,
+};
+    Anonymous: EVENT_TRACE_PROPERTIES_V2_1_0,
+    V2Control: u32,
+};
+pub const EVENT_TRACE_PROPERTIES_V2_2 = extern union {
+pub const EVENT_TRACE_PROPERTIES_V2_2_0 = extern struct {
+    _bitfield: u32,
+};
+    Anonymous: EVENT_TRACE_PROPERTIES_V2_2_0,
+    V2Options: u64,
+};
     Wnode: WNODE_HEADER,
     BufferSize: u32,
     MinimumBuffers: u32,
@@ -418,14 +418,14 @@ pub const TRACE_GUID_PROPERTIES = extern struct {
     IsEnable: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const ETW_BUFFER_CONTEXT = extern struct {
-    pub const ETW_BUFFER_CONTEXT_0 = extern union {
-        pub const ETW_BUFFER_CONTEXT_0_0 = extern struct {
-            ProcessorNumber: u8,
-            Alignment: u8,
-        };
-        Anonymous: ETW_BUFFER_CONTEXT_0_0,
-        ProcessorIndex: u16,
-    };
+pub const ETW_BUFFER_CONTEXT_0 = extern union {
+pub const ETW_BUFFER_CONTEXT_0_0 = extern struct {
+    ProcessorNumber: u8,
+    Alignment: u8,
+};
+    Anonymous: ETW_BUFFER_CONTEXT_0_0,
+    ProcessorIndex: u16,
+};
     Anonymous: ETW_BUFFER_CONTEXT_0,
     LoggerId: u16,
 };
@@ -475,10 +475,10 @@ pub const ETW_PMC_SESSION_INFO = extern struct {
     HookIdCount: u32,
 };
 pub const EVENT_TRACE = extern struct {
-    pub const EVENT_TRACE_0 = extern union {
-        ClientContext: u32,
-        BufferContext: ETW_BUFFER_CONTEXT,
-    };
+pub const EVENT_TRACE_0 = extern union {
+    ClientContext: u32,
+    BufferContext: ETW_BUFFER_CONTEXT,
+};
     Header: EVENT_TRACE_HEADER,
     InstanceId: u32,
     ParentInstanceId: u32,
@@ -556,15 +556,15 @@ pub const ETW_TRACE_PARTITION_INFORMATION_V2 = extern struct {
     ParentId: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const EVENT_DATA_DESCRIPTOR = extern struct {
-    pub const EVENT_DATA_DESCRIPTOR_0 = extern union {
-        pub const EVENT_DATA_DESCRIPTOR_0_0 = extern struct {
-            Type: u8,
-            Reserved1: u8,
-            Reserved2: u16,
-        };
-        Reserved: u32,
-        Anonymous: EVENT_DATA_DESCRIPTOR_0_0,
-    };
+pub const EVENT_DATA_DESCRIPTOR_0 = extern union {
+pub const EVENT_DATA_DESCRIPTOR_0_0 = extern struct {
+    Type: u8,
+    Reserved1: u8,
+    Reserved2: u16,
+};
+    Reserved: u32,
+    Anonymous: EVENT_DATA_DESCRIPTOR_0_0,
+};
     Ptr: u64,
     Size: u32,
     Anonymous: EVENT_DATA_DESCRIPTOR_0,
@@ -612,9 +612,9 @@ pub const EVENT_FILTER_LEVEL_KW = extern struct {
     FilterIn: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const EVENT_HEADER_EXTENDED_DATA_ITEM = extern struct {
-    pub const EVENT_HEADER_EXTENDED_DATA_ITEM_0 = extern struct {
-        _bitfield: u16,
-    };
+pub const EVENT_HEADER_EXTENDED_DATA_ITEM_0 = extern struct {
+    _bitfield: u16,
+};
     Reserved1: u16,
     ExtType: u16,
     Anonymous: EVENT_HEADER_EXTENDED_DATA_ITEM_0,
@@ -662,14 +662,14 @@ pub const EVENT_EXTENDED_ITEM_EVENT_KEY = extern struct {
     Key: u64,
 };
 pub const EVENT_HEADER = extern struct {
-    pub const EVENT_HEADER_0 = extern union {
-        pub const EVENT_HEADER_0_0 = extern struct {
-            KernelTime: u32,
-            UserTime: u32,
-        };
-        Anonymous: EVENT_HEADER_0_0,
-        ProcessorTime: u64,
-    };
+pub const EVENT_HEADER_0 = extern union {
+pub const EVENT_HEADER_0_0 = extern struct {
+    KernelTime: u32,
+    UserTime: u32,
+};
+    Anonymous: EVENT_HEADER_0_0,
+    ProcessorTime: u64,
+};
     Size: u16,
     HeaderType: u16,
     Flags: u16,
@@ -692,18 +692,18 @@ pub const EVENT_RECORD = extern struct {
     UserContext: *anyopaque,
 };
 pub const EVENT_MAP_ENTRY = extern struct {
-    pub const EVENT_MAP_ENTRY_0 = extern union {
-        Value: u32,
-        InputOffset: u32,
-    };
+pub const EVENT_MAP_ENTRY_0 = extern union {
+    Value: u32,
+    InputOffset: u32,
+};
     OutputOffset: u32,
     Anonymous: EVENT_MAP_ENTRY_0,
 };
 pub const EVENT_MAP_INFO = extern struct {
-    pub const EVENT_MAP_INFO_0 = extern union {
-        MapEntryValueType: i32,
-        FormatStringOffset: u32,
-    };
+pub const EVENT_MAP_INFO_0 = extern union {
+    MapEntryValueType: i32,
+    FormatStringOffset: u32,
+};
     NameOffset: u32,
     Flag: i32,
     EntryCount: u32,
@@ -711,41 +711,41 @@ pub const EVENT_MAP_INFO = extern struct {
     MapEntryArray: [1]EVENT_MAP_ENTRY,
 };
 pub const EVENT_PROPERTY_INFO = extern struct {
-    pub const EVENT_PROPERTY_INFO_0 = extern union {
-        pub const _nonStructType = extern struct {
-            InType: u16,
-            OutType: u16,
-            MapNameOffset: u32,
-        };
-        pub const _structType = extern struct {
-            StructStartIndex: u16,
-            NumOfStructMembers: u16,
-            padding: u32,
-        };
-        pub const _customSchemaType = extern struct {
-            InType: u16,
-            OutType: u16,
-            CustomSchemaOffset: u32,
-        };
-        nonStructType: _nonStructType,
-        structType: _structType,
-        customSchemaType: _customSchemaType,
-    };
-    pub const EVENT_PROPERTY_INFO_1 = extern union {
-        count: u16,
-        countPropertyIndex: u16,
-    };
-    pub const EVENT_PROPERTY_INFO_2 = extern union {
-        length: u16,
-        lengthPropertyIndex: u16,
-    };
-    pub const EVENT_PROPERTY_INFO_3 = extern union {
-        pub const EVENT_PROPERTY_INFO_3_0 = extern struct {
-            _bitfield: u32,
-        };
-        Reserved: u32,
-        Anonymous: EVENT_PROPERTY_INFO_3_0,
-    };
+pub const EVENT_PROPERTY_INFO_0 = extern union {
+pub const _nonStructType = extern struct {
+    InType: u16,
+    OutType: u16,
+    MapNameOffset: u32,
+};
+pub const _structType = extern struct {
+    StructStartIndex: u16,
+    NumOfStructMembers: u16,
+    padding: u32,
+};
+pub const _customSchemaType = extern struct {
+    InType: u16,
+    OutType: u16,
+    CustomSchemaOffset: u32,
+};
+    nonStructType: _nonStructType,
+    structType: _structType,
+    customSchemaType: _customSchemaType,
+};
+pub const EVENT_PROPERTY_INFO_1 = extern union {
+    count: u16,
+    countPropertyIndex: u16,
+};
+pub const EVENT_PROPERTY_INFO_2 = extern union {
+    length: u16,
+    lengthPropertyIndex: u16,
+};
+pub const EVENT_PROPERTY_INFO_3 = extern union {
+pub const EVENT_PROPERTY_INFO_3_0 = extern struct {
+    _bitfield: u32,
+};
+    Reserved: u32,
+    Anonymous: EVENT_PROPERTY_INFO_3_0,
+};
     Flags: i32,
     NameOffset: u32,
     Anonymous1: EVENT_PROPERTY_INFO_0,
@@ -754,21 +754,21 @@ pub const EVENT_PROPERTY_INFO = extern struct {
     Anonymous4: EVENT_PROPERTY_INFO_3,
 };
 pub const TRACE_EVENT_INFO = extern struct {
-    pub const TRACE_EVENT_INFO_0 = extern union {
-        EventNameOffset: u32,
-        ActivityIDNameOffset: u32,
-    };
-    pub const TRACE_EVENT_INFO_1 = extern union {
-        EventAttributesOffset: u32,
-        RelatedActivityIDNameOffset: u32,
-    };
-    pub const TRACE_EVENT_INFO_2 = extern union {
-        pub const TRACE_EVENT_INFO_2_0 = extern struct {
-            _bitfield: u32,
-        };
-        Flags: i32,
-        Anonymous: TRACE_EVENT_INFO_2_0,
-    };
+pub const TRACE_EVENT_INFO_0 = extern union {
+    EventNameOffset: u32,
+    ActivityIDNameOffset: u32,
+};
+pub const TRACE_EVENT_INFO_1 = extern union {
+    EventAttributesOffset: u32,
+    RelatedActivityIDNameOffset: u32,
+};
+pub const TRACE_EVENT_INFO_2 = extern union {
+pub const TRACE_EVENT_INFO_2_0 = extern struct {
+    _bitfield: u32,
+};
+    Flags: i32,
+    Anonymous: TRACE_EVENT_INFO_2_0,
+};
     ProviderGuid: GUID,
     EventGuid: GUID,
     EventDescriptor: EVENT_DESCRIPTOR,

@@ -260,23 +260,23 @@ pub const LSA_FOREST_TRUST_BINARY_DATA = extern struct {
     Buffer: *u8,
 };
 pub const LSA_FOREST_TRUST_RECORD = extern struct {
-    pub const _ForestTrustData_e__Union = extern union {
-        TopLevelName: LSA_UNICODE_STRING,
-        DomainInfo: LSA_FOREST_TRUST_DOMAIN_INFO,
-        Data: LSA_FOREST_TRUST_BINARY_DATA,
-    };
+pub const _ForestTrustData_e__Union = extern union {
+    TopLevelName: LSA_UNICODE_STRING,
+    DomainInfo: LSA_FOREST_TRUST_DOMAIN_INFO,
+    Data: LSA_FOREST_TRUST_BINARY_DATA,
+};
     Flags: u32,
     ForestTrustType: i32,
     Time: i64,
     ForestTrustData: _ForestTrustData_e__Union,
 };
 pub const LSA_FOREST_TRUST_RECORD2 = extern struct {
-    pub const _ForestTrustData_e__Union = extern union {
-        TopLevelName: LSA_UNICODE_STRING,
-        DomainInfo: LSA_FOREST_TRUST_DOMAIN_INFO,
-        BinaryData: LSA_FOREST_TRUST_BINARY_DATA,
-        ScannerInfo: LSA_FOREST_TRUST_SCANNER_INFO,
-    };
+pub const _ForestTrustData_e__Union = extern union {
+    TopLevelName: LSA_UNICODE_STRING,
+    DomainInfo: LSA_FOREST_TRUST_DOMAIN_INFO,
+    BinaryData: LSA_FOREST_TRUST_BINARY_DATA,
+    ScannerInfo: LSA_FOREST_TRUST_SCANNER_INFO,
+};
     Flags: u32,
     ForestTrustType: i32,
     Time: i64,
@@ -1599,14 +1599,14 @@ pub const SECPKG_NEGO2_INFO = extern struct {
     PackageFlags: u32,
 };
 pub const SECPKG_EXTENDED_INFORMATION = extern struct {
-    pub const _Info_e__Union = extern union {
-        GssInfo: SECPKG_GSS_INFO,
-        ContextThunks: SECPKG_CONTEXT_THUNKS,
-        MutualAuthLevel: SECPKG_MUTUAL_AUTH_LEVEL,
-        WowClientDll: SECPKG_WOW_CLIENT_DLL,
-        ExtraOids: SECPKG_EXTRA_OIDS,
-        Nego2Info: SECPKG_NEGO2_INFO,
-    };
+pub const _Info_e__Union = extern union {
+    GssInfo: SECPKG_GSS_INFO,
+    ContextThunks: SECPKG_CONTEXT_THUNKS,
+    MutualAuthLevel: SECPKG_MUTUAL_AUTH_LEVEL,
+    WowClientDll: SECPKG_WOW_CLIENT_DLL,
+    ExtraOids: SECPKG_EXTRA_OIDS,
+    Nego2Info: SECPKG_NEGO2_INFO,
+};
     Class: i32,
     Info: _Info_e__Union,
 };

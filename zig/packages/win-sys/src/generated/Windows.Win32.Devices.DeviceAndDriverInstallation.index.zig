@@ -1978,4 +1978,9 @@ pub const aliases = struct {
     pub const CM_NOTIFY_ACTION = i32;
     pub const HDEVINFO = isize;
     pub const HCMNOTIFICATION = ?*anyopaque;
+    pub const PSP_FILE_CALLBACK_A = ?*const anyopaque;
+    pub const PSP_FILE_CALLBACK_W = ?*const anyopaque;
+    pub const PDETECT_PROGRESS_NOTIFY = ?*const anyopaque;
+    pub const PSP_DETSIG_CMPPROC = ?*const anyopaque;
+    pub const PCM_NOTIFY_CALLBACK = ?*const anyopaque;
 };

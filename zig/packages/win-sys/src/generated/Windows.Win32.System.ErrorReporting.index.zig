@@ -237,4 +237,10 @@ pub const aliases = struct {
     pub const EFaultRepRetVal = i32;
     pub const HREPORT = ?*anyopaque;
     pub const HREPORTSTORE = ?*anyopaque;
+    pub const PFN_WER_RUNTIME_EXCEPTION_EVENT = ?*const anyopaque;
+    pub const PFN_WER_RUNTIME_EXCEPTION_EVENT_SIGNATURE = ?*const anyopaque;
+    pub const PFN_WER_RUNTIME_EXCEPTION_DEBUGGER_LAUNCH = ?*const anyopaque;
+    pub const pfn_REPORTFAULT = ?*const anyopaque;
+    pub const pfn_ADDEREXCLUDEDAPPLICATIONA = ?*const anyopaque;
+    pub const pfn_ADDEREXCLUDEDAPPLICATIONW = ?*const anyopaque;
 };

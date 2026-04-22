@@ -429,4 +429,8 @@ pub const aliases = struct {
     pub const GameInputFeedbackEffectState = i32;
     pub const GameInputForceFeedbackEffectKind = i32;
     pub const GameInputRumbleMotors = i32;
+    pub const GameInputReadingCallback = ?*const anyopaque;
+    pub const GameInputDeviceCallback = ?*const anyopaque;
+    pub const GameInputSystemButtonCallback = ?*const anyopaque;
+    pub const GameInputKeyboardLayoutCallback = ?*const anyopaque;
 };

@@ -16,10 +16,10 @@ pub const UI_EVENTPARAMS_COMMAND = extern struct {
     Location: i32,
 };
 pub const UI_EVENTPARAMS = extern struct {
-    pub const UI_EVENTPARAMS_0 = extern union {
-        Modes: i32,
-        Params: UI_EVENTPARAMS_COMMAND,
-    };
+pub const UI_EVENTPARAMS_0 = extern union {
+    Modes: i32,
+    Params: UI_EVENTPARAMS_COMMAND,
+};
     EventType: i32,
     Anonymous: UI_EVENTPARAMS_0,
 };

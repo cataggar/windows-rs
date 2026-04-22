@@ -114,4 +114,6 @@ pub const SerenumWhole = 2;
 pub const aliases = struct {
     pub const SERENUM_PORTION = i32;
     pub const HCOMDB = ?*anyopaque;
+    pub const PSERENUM_READPORT = ?*const anyopaque;
+    pub const PSERENUM_WRITEPORT = ?*const anyopaque;
 };

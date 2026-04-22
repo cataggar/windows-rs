@@ -1506,4 +1506,11 @@ pub const aliases = struct {
     pub const ACTCTX_REQUESTED_RUN_LEVEL = i32;
     pub const ACTCTX_COMPATIBILITY_ELEMENT_TYPE = i32;
     pub const MSIHANDLE = u32;
+    pub const LPDISPLAYVAL = ?*const anyopaque;
+    pub const LPEVALCOMCALLBACK = ?*const anyopaque;
+    pub const INSTALLUI_HANDLERA = ?*const anyopaque;
+    pub const INSTALLUI_HANDLERW = ?*const anyopaque;
+    pub const PINSTALLUI_HANDLER_RECORD = ?*const anyopaque;
+    pub const PPATCH_PROGRESS_CALLBACK = ?*const anyopaque;
+    pub const PPATCH_SYMLOAD_CALLBACK = ?*const anyopaque;
 };

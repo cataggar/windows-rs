@@ -97,4 +97,5 @@ pub const aliases = struct {
     pub const HCN_NOTIFICATIONS = i32;
     pub const HCN_PORT_PROTOCOL = i32;
     pub const HCN_PORT_ACCESS = i32;
+    pub const HCN_NOTIFICATION_CALLBACK = ?*const anyopaque;
 };

@@ -22,10 +22,10 @@ pub const SMALL_RECT = extern struct {
     Bottom: i16,
 };
 pub const KEY_EVENT_RECORD = extern struct {
-    pub const _uChar_e__Union = extern union {
-        UnicodeChar: u16,
-        AsciiChar: @"Windows.Win32.Foundation".CHAR,
-    };
+pub const _uChar_e__Union = extern union {
+    UnicodeChar: u16,
+    AsciiChar: @"Windows.Win32.Foundation".CHAR,
+};
     bKeyDown: @"Windows.Win32.Foundation".BOOL,
     wRepeatCount: u16,
     wVirtualKeyCode: u16,
@@ -49,21 +49,21 @@ pub const FOCUS_EVENT_RECORD = extern struct {
     bSetFocus: @"Windows.Win32.Foundation".BOOL,
 };
 pub const INPUT_RECORD = extern struct {
-    pub const _Event_e__Union = extern union {
-        KeyEvent: KEY_EVENT_RECORD,
-        MouseEvent: MOUSE_EVENT_RECORD,
-        WindowBufferSizeEvent: WINDOW_BUFFER_SIZE_RECORD,
-        MenuEvent: MENU_EVENT_RECORD,
-        FocusEvent: FOCUS_EVENT_RECORD,
-    };
+pub const _Event_e__Union = extern union {
+    KeyEvent: KEY_EVENT_RECORD,
+    MouseEvent: MOUSE_EVENT_RECORD,
+    WindowBufferSizeEvent: WINDOW_BUFFER_SIZE_RECORD,
+    MenuEvent: MENU_EVENT_RECORD,
+    FocusEvent: FOCUS_EVENT_RECORD,
+};
     EventType: u16,
     Event: _Event_e__Union,
 };
 pub const CHAR_INFO = extern struct {
-    pub const _Char_e__Union = extern union {
-        UnicodeChar: u16,
-        AsciiChar: @"Windows.Win32.Foundation".CHAR,
-    };
+pub const _Char_e__Union = extern union {
+    UnicodeChar: u16,
+    AsciiChar: @"Windows.Win32.Foundation".CHAR,
+};
     Char: _Char_e__Union,
     Attributes: u16,
 };

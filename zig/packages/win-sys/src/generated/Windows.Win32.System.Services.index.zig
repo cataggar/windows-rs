@@ -333,4 +333,14 @@ pub const aliases = struct {
     pub const SC_HANDLE = ?*anyopaque;
     pub const SERVICE_STATUS_HANDLE = ?*anyopaque;
     pub const PSC_NOTIFICATION_REGISTRATION = isize;
+    pub const SERVICE_MAIN_FUNCTIONW = ?*const anyopaque;
+    pub const SERVICE_MAIN_FUNCTIONA = ?*const anyopaque;
+    pub const LPSERVICE_MAIN_FUNCTIONW = ?*const anyopaque;
+    pub const LPSERVICE_MAIN_FUNCTIONA = ?*const anyopaque;
+    pub const HANDLER_FUNCTION = ?*const anyopaque;
+    pub const HANDLER_FUNCTION_EX = ?*const anyopaque;
+    pub const LPHANDLER_FUNCTION = ?*const anyopaque;
+    pub const LPHANDLER_FUNCTION_EX = ?*const anyopaque;
+    pub const PFN_SC_NOTIFY_CALLBACK = ?*const anyopaque;
+    pub const PSC_NOTIFICATION_CALLBACK = ?*const anyopaque;
 };

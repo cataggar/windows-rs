@@ -8,19 +8,19 @@ const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
 pub const VDMLDT_ENTRY = extern struct {
-    pub const _HighWord_e__Union = extern union {
-        pub const _Bytes_e__Struct = extern struct {
-            BaseMid: u8,
-            Flags1: u8,
-            Flags2: u8,
-            BaseHi: u8,
-        };
-        pub const _Bits_e__Struct = extern struct {
-            _bitfield: u32,
-        };
-        Bytes: _Bytes_e__Struct,
-        Bits: _Bits_e__Struct,
-    };
+pub const _HighWord_e__Union = extern union {
+pub const _Bytes_e__Struct = extern struct {
+    BaseMid: u8,
+    Flags1: u8,
+    Flags2: u8,
+    BaseHi: u8,
+};
+pub const _Bits_e__Struct = extern struct {
+    _bitfield: u32,
+};
+    Bytes: _Bytes_e__Struct,
+    Bits: _Bits_e__Struct,
+};
     LimitLow: u16,
     BaseLow: u16,
     HighWord: _HighWord_e__Union,

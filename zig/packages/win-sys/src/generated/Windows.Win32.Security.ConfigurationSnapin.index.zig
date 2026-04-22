@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -52,4 +53,10 @@ pub const SceSvcInternalUse = 3;
 pub const aliases = struct {
     pub const SCE_LOG_ERR_LEVEL = i32;
     pub const SCESVC_INFO_TYPE = i32;
+    pub const PFSCE_QUERY_INFO = ?*const anyopaque;
+    pub const PFSCE_SET_INFO = ?*const anyopaque;
+    pub const PFSCE_FREE_INFO = ?*const anyopaque;
+    pub const PFSCE_LOG_INFO = ?*const anyopaque;
+    pub const PF_ConfigAnalyzeService = ?*const anyopaque;
+    pub const PF_UpdateService = ?*const anyopaque;
 };

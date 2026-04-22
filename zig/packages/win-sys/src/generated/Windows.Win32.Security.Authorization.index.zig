@@ -529,4 +529,10 @@ pub const aliases = struct {
     pub const AUTHZ_AUDIT_EVENT_HANDLE = ?*anyopaque;
     pub const AUTHZ_AUDIT_EVENT_TYPE_HANDLE = ?*anyopaque;
     pub const AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE = ?*anyopaque;
+    pub const PFN_AUTHZ_DYNAMIC_ACCESS_CHECK = ?*const anyopaque;
+    pub const PFN_AUTHZ_COMPUTE_DYNAMIC_GROUPS = ?*const anyopaque;
+    pub const PFN_AUTHZ_FREE_DYNAMIC_GROUPS = ?*const anyopaque;
+    pub const PFN_AUTHZ_GET_CENTRAL_ACCESS_POLICY = ?*const anyopaque;
+    pub const PFN_AUTHZ_FREE_CENTRAL_ACCESS_POLICY = ?*const anyopaque;
+    pub const FN_PROGRESS = ?*const anyopaque;
 };

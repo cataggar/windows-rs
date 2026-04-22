@@ -554,4 +554,6 @@ pub const aliases = struct {
     pub const NCRYPT_STREAM_HANDLE = ?*anyopaque;
     pub const SAFER_LEVEL_HANDLE = ?*anyopaque;
     pub const PSECURITY_DESCRIPTOR = ?*anyopaque;
+    pub const PLSA_AP_CALL_PACKAGE_UNTRUSTED = ?*const anyopaque;
+    pub const SEC_THREAD_START = ?*const anyopaque;
 };

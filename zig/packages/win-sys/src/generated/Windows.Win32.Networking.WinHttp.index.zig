@@ -864,4 +864,6 @@ pub const aliases = struct {
     pub const WinHttpRequestAutoLogonPolicy = i32;
     pub const WinHttpRequestSslErrorFlags = i32;
     pub const WinHttpRequestSecureProtocols = i32;
+    pub const WINHTTP_STATUS_CALLBACK = ?*const anyopaque;
+    pub const WINHTTP_PROXY_CHANGE_CALLBACK = ?*const anyopaque;
 };

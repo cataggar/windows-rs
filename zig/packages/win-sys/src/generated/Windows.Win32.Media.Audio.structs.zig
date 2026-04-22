@@ -55,11 +55,11 @@ pub const HACMOBJ = extern struct {
     Value: *anyopaque,
 };
 pub const WAVEFORMATEXTENSIBLE = extern struct {
-    pub const _Samples_e__Union = extern union {
-        wValidBitsPerSample: u16,
-        wSamplesPerBlock: u16,
-        wReserved: u16,
-    };
+pub const _Samples_e__Union = extern union {
+    wValidBitsPerSample: u16,
+    wSamplesPerBlock: u16,
+    wReserved: u16,
+};
     Format: WAVEFORMATEX,
     Samples: _Samples_e__Union,
     dwChannelMask: u32,
@@ -407,14 +407,14 @@ pub const MIXERCAPS2W = extern struct {
     NameGuid: GUID,
 };
 pub const MIXERLINEA = extern struct {
-    pub const _Target_e__Struct = extern struct {
-        dwType: u32,
-        dwDeviceID: u32,
-        wMid: u16,
-        wPid: u16,
-        vDriverVersion: u32,
-        szPname: [32]@"Windows.Win32.Foundation".CHAR,
-    };
+pub const _Target_e__Struct = extern struct {
+    dwType: u32,
+    dwDeviceID: u32,
+    wMid: u16,
+    wPid: u16,
+    vDriverVersion: u32,
+    szPname: [32]@"Windows.Win32.Foundation".CHAR,
+};
     cbStruct: u32,
     dwDestination: u32,
     dwSource: u32,
@@ -430,14 +430,14 @@ pub const MIXERLINEA = extern struct {
     Target: _Target_e__Struct,
 };
 pub const MIXERLINEW = extern struct {
-    pub const _Target_e__Struct = extern struct {
-        dwType: u32,
-        dwDeviceID: u32,
-        wMid: u16,
-        wPid: u16,
-        vDriverVersion: u32,
-        szPname: [32]u16,
-    };
+pub const _Target_e__Struct = extern struct {
+    dwType: u32,
+    dwDeviceID: u32,
+    wMid: u16,
+    wPid: u16,
+    vDriverVersion: u32,
+    szPname: [32]u16,
+};
     cbStruct: u32,
     dwDestination: u32,
     dwSource: u32,
@@ -453,24 +453,24 @@ pub const MIXERLINEW = extern struct {
     Target: _Target_e__Struct,
 };
 pub const MIXERCONTROLA = extern struct {
-    pub const _Bounds_e__Union = extern union {
-        pub const _Bounds_e__Union_0 = extern struct {
-            lMinimum: i32,
-            lMaximum: i32,
-        };
-        pub const _Bounds_e__Union_1 = extern struct {
-            dwMinimum: u32,
-            dwMaximum: u32,
-        };
-        Anonymous1: _Bounds_e__Union_0,
-        Anonymous2: _Bounds_e__Union_1,
-        dwReserved: [6]u32,
-    };
-    pub const _Metrics_e__Union = extern union {
-        cSteps: u32,
-        cbCustomData: u32,
-        dwReserved: [6]u32,
-    };
+pub const _Bounds_e__Union = extern union {
+pub const _Bounds_e__Union_0 = extern struct {
+    lMinimum: i32,
+    lMaximum: i32,
+};
+pub const _Bounds_e__Union_1 = extern struct {
+    dwMinimum: u32,
+    dwMaximum: u32,
+};
+    Anonymous1: _Bounds_e__Union_0,
+    Anonymous2: _Bounds_e__Union_1,
+    dwReserved: [6]u32,
+};
+pub const _Metrics_e__Union = extern union {
+    cSteps: u32,
+    cbCustomData: u32,
+    dwReserved: [6]u32,
+};
     cbStruct: u32,
     dwControlID: u32,
     dwControlType: u32,
@@ -482,24 +482,24 @@ pub const MIXERCONTROLA = extern struct {
     Metrics: _Metrics_e__Union,
 };
 pub const MIXERCONTROLW = extern struct {
-    pub const _Bounds_e__Union = extern union {
-        pub const _Bounds_e__Union_0 = extern struct {
-            lMinimum: i32,
-            lMaximum: i32,
-        };
-        pub const _Bounds_e__Union_1 = extern struct {
-            dwMinimum: u32,
-            dwMaximum: u32,
-        };
-        Anonymous1: _Bounds_e__Union_0,
-        Anonymous2: _Bounds_e__Union_1,
-        dwReserved: [6]u32,
-    };
-    pub const _Metrics_e__Union = extern union {
-        cSteps: u32,
-        cbCustomData: u32,
-        dwReserved: [6]u32,
-    };
+pub const _Bounds_e__Union = extern union {
+pub const _Bounds_e__Union_0 = extern struct {
+    lMinimum: i32,
+    lMaximum: i32,
+};
+pub const _Bounds_e__Union_1 = extern struct {
+    dwMinimum: u32,
+    dwMaximum: u32,
+};
+    Anonymous1: _Bounds_e__Union_0,
+    Anonymous2: _Bounds_e__Union_1,
+    dwReserved: [6]u32,
+};
+pub const _Metrics_e__Union = extern union {
+    cSteps: u32,
+    cbCustomData: u32,
+    dwReserved: [6]u32,
+};
     cbStruct: u32,
     dwControlID: u32,
     dwControlType: u32,
@@ -511,10 +511,10 @@ pub const MIXERCONTROLW = extern struct {
     Metrics: _Metrics_e__Union,
 };
 pub const MIXERLINECONTROLSA = extern struct {
-    pub const MIXERLINECONTROLSA_0 = extern union {
-        dwControlID: u32,
-        dwControlType: u32,
-    };
+pub const MIXERLINECONTROLSA_0 = extern union {
+    dwControlID: u32,
+    dwControlType: u32,
+};
     cbStruct: u32,
     dwLineID: u32,
     Anonymous: MIXERLINECONTROLSA_0,
@@ -523,10 +523,10 @@ pub const MIXERLINECONTROLSA = extern struct {
     pamxctrl: *MIXERCONTROLA,
 };
 pub const MIXERLINECONTROLSW = extern struct {
-    pub const MIXERLINECONTROLSW_0 = extern union {
-        dwControlID: u32,
-        dwControlType: u32,
-    };
+pub const MIXERLINECONTROLSW_0 = extern union {
+    dwControlID: u32,
+    dwControlType: u32,
+};
     cbStruct: u32,
     dwLineID: u32,
     Anonymous: MIXERLINECONTROLSW_0,
@@ -535,10 +535,10 @@ pub const MIXERLINECONTROLSW = extern struct {
     pamxctrl: *MIXERCONTROLW,
 };
 pub const MIXERCONTROLDETAILS = extern struct {
-    pub const MIXERCONTROLDETAILS_0 = extern union {
-        hwndOwner: @"Windows.Win32.Foundation".HWND,
-        cMultipleItems: u32,
-    };
+pub const MIXERCONTROLDETAILS_0 = extern union {
+    hwndOwner: @"Windows.Win32.Foundation".HWND,
+    cMultipleItems: u32,
+};
     cbStruct: u32,
     dwControlID: u32,
     cChannels: u32,
@@ -638,9 +638,9 @@ pub const AUDIOCLIENT_PROCESS_LOOPBACK_PARAMS = extern struct {
     ProcessLoopbackMode: i32,
 };
 pub const AUDIOCLIENT_ACTIVATION_PARAMS = extern struct {
-    pub const AUDIOCLIENT_ACTIVATION_PARAMS_0 = extern union {
-        ProcessLoopbackParams: AUDIOCLIENT_PROCESS_LOOPBACK_PARAMS,
-    };
+pub const AUDIOCLIENT_ACTIVATION_PARAMS_0 = extern union {
+    ProcessLoopbackParams: AUDIOCLIENT_PROCESS_LOOPBACK_PARAMS,
+};
     ActivationType: i32,
     Anonymous: AUDIOCLIENT_ACTIVATION_PARAMS_0,
 };

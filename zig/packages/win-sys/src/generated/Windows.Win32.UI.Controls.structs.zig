@@ -876,19 +876,19 @@ pub const TVITEMEXW = extern struct {
     iReserved: i32,
 };
 pub const TVINSERTSTRUCTA = extern struct {
-    pub const TVINSERTSTRUCTA_0 = extern union {
-        itemex: TVITEMEXA,
-        item: TVITEMA,
-    };
+pub const TVINSERTSTRUCTA_0 = extern union {
+    itemex: TVITEMEXA,
+    item: TVITEMA,
+};
     hParent: HTREEITEM,
     hInsertAfter: HTREEITEM,
     Anonymous: TVINSERTSTRUCTA_0,
 };
 pub const TVINSERTSTRUCTW = extern struct {
-    pub const TVINSERTSTRUCTW_0 = extern union {
-        itemex: TVITEMEXW,
-        item: TVITEMW,
-    };
+pub const TVINSERTSTRUCTW_0 = extern union {
+    itemex: TVITEMEXW,
+    item: TVITEMW,
+};
     hParent: HTREEITEM,
     hInsertAfter: HTREEITEM,
     Anonymous: TVINSERTSTRUCTW_0,

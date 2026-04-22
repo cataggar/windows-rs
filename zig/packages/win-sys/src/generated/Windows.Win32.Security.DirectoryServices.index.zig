@@ -39,3 +39,12 @@ pub const DSSI_NO_EDIT_OWNER = 8;
 pub const DSSI_IS_ROOT = 16;
 pub const DSSI_NO_FILTER = 32;
 pub const DSSI_NO_READONLY_MESSAGE = 64;
+
+pub const aliases = struct {
+    pub const PFNREADOBJECTSECURITY = ?*const anyopaque;
+    pub const PFNWRITEOBJECTSECURITY = ?*const anyopaque;
+    pub const PFNDSCREATEISECINFO = ?*const anyopaque;
+    pub const PFNDSCREATEISECINFOEX = ?*const anyopaque;
+    pub const PFNDSCREATESECPAGE = ?*const anyopaque;
+    pub const PFNDSEDITSECURITY = ?*const anyopaque;
+};

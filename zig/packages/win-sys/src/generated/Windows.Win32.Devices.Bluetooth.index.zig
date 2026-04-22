@@ -983,4 +983,9 @@ pub const aliases = struct {
     pub const HBLUETOOTH_DEVICE_FIND = ?*anyopaque;
     pub const HBLUETOOTH_RADIO_FIND = ?*anyopaque;
     pub const HANDLE_SDP_TYPE = u64;
+    pub const PFN_DEVICE_CALLBACK = ?*const anyopaque;
+    pub const PFN_AUTHENTICATION_CALLBACK = ?*const anyopaque;
+    pub const PFN_AUTHENTICATION_CALLBACK_EX = ?*const anyopaque;
+    pub const PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK = ?*const anyopaque;
+    pub const PFNBLUETOOTH_GATT_EVENT_CALLBACK = ?*const anyopaque;
 };

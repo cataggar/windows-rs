@@ -81,4 +81,5 @@ pub const aliases = struct {
     pub const RM_REBOOT_REASON = i32;
     pub const RM_FILTER_TRIGGER = i32;
     pub const RM_FILTER_ACTION = i32;
+    pub const RM_WRITE_STATUS_CALLBACK = ?*const anyopaque;
 };

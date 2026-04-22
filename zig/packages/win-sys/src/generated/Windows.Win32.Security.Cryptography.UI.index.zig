@@ -219,4 +219,8 @@ pub const aliases = struct {
     pub const CRYPTUI_WIZ_EXPORT_FORMAT = u32;
     pub const CRYPTUI_WIZ_DIGITAL_ADDITIONAL_CERT_CHOICE = u32;
     pub const CTL_MODIFY_REQUEST_OPERATION = u32;
+    pub const PFNCMFILTERPROC = ?*const anyopaque;
+    pub const PFNCMHOOKPROC = ?*const anyopaque;
+    pub const PFNTRUSTHELPER = ?*const anyopaque;
+    pub const PFNCFILTERPROC = ?*const anyopaque;
 };

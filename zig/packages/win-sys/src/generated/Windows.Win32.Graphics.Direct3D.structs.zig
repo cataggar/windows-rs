@@ -39,27 +39,27 @@ pub const D3DVECTOR = extern struct {
     z: f32,
 };
 pub const D3DMATRIX = extern struct {
-    pub const D3DMATRIX_0 = extern union {
-        pub const D3DMATRIX_0_0 = extern struct {
-            _11: f32,
-            _12: f32,
-            _13: f32,
-            _14: f32,
-            _21: f32,
-            _22: f32,
-            _23: f32,
-            _24: f32,
-            _31: f32,
-            _32: f32,
-            _33: f32,
-            _34: f32,
-            _41: f32,
-            _42: f32,
-            _43: f32,
-            _44: f32,
-        };
-        Anonymous: D3DMATRIX_0_0,
-        m: [16]f32,
-    };
+pub const D3DMATRIX_0 = extern union {
+pub const D3DMATRIX_0_0 = extern struct {
+    _11: f32,
+    _12: f32,
+    _13: f32,
+    _14: f32,
+    _21: f32,
+    _22: f32,
+    _23: f32,
+    _24: f32,
+    _31: f32,
+    _32: f32,
+    _33: f32,
+    _34: f32,
+    _41: f32,
+    _42: f32,
+    _43: f32,
+    _44: f32,
+};
+    Anonymous: D3DMATRIX_0_0,
+    m: [16]f32,
+};
     Anonymous: D3DMATRIX_0,
 };

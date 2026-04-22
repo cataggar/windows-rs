@@ -1309,4 +1309,8 @@ pub const aliases = struct {
     pub const JET_SESID = usize;
     pub const JET_OSSNAPID = usize;
     pub const JET_LS = usize;
+    pub const JET_PFNSTATUS = ?*const anyopaque;
+    pub const JET_CALLBACK = ?*const anyopaque;
+    pub const JET_PFNDURABLECOMMITCALLBACK = ?*const anyopaque;
+    pub const JET_PFNREALLOC = ?*const anyopaque;
 };

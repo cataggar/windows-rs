@@ -566,4 +566,8 @@ pub const aliases = struct {
     pub const QOS_NOTIFY_FLOW = i32;
     pub const FilterType = i32;
     pub const RHANDLE = ?*anyopaque;
+    pub const TCI_NOTIFY_HANDLER = ?*const anyopaque;
+    pub const TCI_ADD_FLOW_COMPLETE_HANDLER = ?*const anyopaque;
+    pub const TCI_MOD_FLOW_COMPLETE_HANDLER = ?*const anyopaque;
+    pub const TCI_DEL_FLOW_COMPLETE_HANDLER = ?*const anyopaque;
 };

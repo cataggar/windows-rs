@@ -1656,4 +1656,6 @@ pub const aliases = struct {
     pub const OLECMDID_VIEWPORT_MODE_FLAG = i32;
     pub const OLEUIPASTEFLAG = i32;
     pub const OLE_HANDLE = u32;
+    pub const OLESTREAMQUERYCONVERTOLELINKCALLBACK = ?*const anyopaque;
+    pub const LPFNOLEUIHOOK = ?*const anyopaque;
 };

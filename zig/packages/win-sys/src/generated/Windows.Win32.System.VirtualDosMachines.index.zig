@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -114,3 +115,35 @@ pub const VDMDBG_MAX_SYMBOL_BUFFER = 256;
 pub const VDMADDR_V86 = 2;
 pub const VDMADDR_PM16 = 4;
 pub const VDMADDR_PM32 = 16;
+
+pub const aliases = struct {
+    pub const VDMGETTHREADSELECTORENTRYPROC = ?*const anyopaque;
+    pub const VDMGETCONTEXTPROC = ?*const anyopaque;
+    pub const VDMSETCONTEXTPROC = ?*const anyopaque;
+    pub const DEBUGEVENTPROC = ?*const anyopaque;
+    pub const PROCESSENUMPROC = ?*const anyopaque;
+    pub const TASKENUMPROC = ?*const anyopaque;
+    pub const TASKENUMPROCEX = ?*const anyopaque;
+    pub const VDMPROCESSEXCEPTIONPROC = ?*const anyopaque;
+    pub const VDMGETPOINTERPROC = ?*const anyopaque;
+    pub const VDMKILLWOWPROC = ?*const anyopaque;
+    pub const VDMDETECTWOWPROC = ?*const anyopaque;
+    pub const VDMBREAKTHREADPROC = ?*const anyopaque;
+    pub const VDMGETSELECTORMODULEPROC = ?*const anyopaque;
+    pub const VDMGETMODULESELECTORPROC = ?*const anyopaque;
+    pub const VDMMODULEFIRSTPROC = ?*const anyopaque;
+    pub const VDMMODULENEXTPROC = ?*const anyopaque;
+    pub const VDMGLOBALFIRSTPROC = ?*const anyopaque;
+    pub const VDMGLOBALNEXTPROC = ?*const anyopaque;
+    pub const VDMENUMPROCESSWOWPROC = ?*const anyopaque;
+    pub const VDMENUMTASKWOWPROC = ?*const anyopaque;
+    pub const VDMENUMTASKWOWEXPROC = ?*const anyopaque;
+    pub const VDMTERMINATETASKINWOWPROC = ?*const anyopaque;
+    pub const VDMSTARTTASKINWOWPROC = ?*const anyopaque;
+    pub const VDMGETDBGFLAGSPROC = ?*const anyopaque;
+    pub const VDMSETDBGFLAGSPROC = ?*const anyopaque;
+    pub const VDMISMODULELOADEDPROC = ?*const anyopaque;
+    pub const VDMGETSEGMENTINFOPROC = ?*const anyopaque;
+    pub const VDMGETSYMBOLPROC = ?*const anyopaque;
+    pub const VDMGETADDREXPRESSIONPROC = ?*const anyopaque;
+};

@@ -105,11 +105,11 @@ pub const HHNTRACK = extern struct {
     phhWinType: *HH_WINTYPE,
 };
 pub const CProperty = extern struct {
-    pub const CProperty_0 = extern union {
-        lpszwData: @"Windows.Win32.Foundation".PWSTR,
-        lpvData: *anyopaque,
-        dwValue: u32,
-    };
+pub const CProperty_0 = extern union {
+    lpszwData: @"Windows.Win32.Foundation".PWSTR,
+    lpvData: *anyopaque,
+    dwValue: u32,
+};
     dwPropID: u32,
     cbData: u32,
     dwType: u32,

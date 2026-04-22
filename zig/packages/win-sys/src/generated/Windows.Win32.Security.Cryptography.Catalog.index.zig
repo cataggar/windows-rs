@@ -109,4 +109,5 @@ pub const aliases = struct {
     pub const CRYPTCAT_VERSION = u32;
     pub const CRYPTCAT_OPEN_FLAGS = u32;
     pub const CRYPTCATATTRIBUTE_FLAGS = u32;
+    pub const PFN_CDF_PARSE_ERROR_CALLBACK = ?*const anyopaque;
 };

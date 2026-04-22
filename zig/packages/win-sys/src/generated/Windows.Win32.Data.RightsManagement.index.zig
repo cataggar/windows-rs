@@ -227,4 +227,5 @@ pub const aliases = struct {
     pub const DRM_STATUS_MSG = i32;
     pub const DRM_USAGEPOLICY_TYPE = i32;
     pub const DRM_DISTRIBUTION_POINT_INFO = i32;
+    pub const DRMCALLBACK = ?*const anyopaque;
 };

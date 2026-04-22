@@ -427,4 +427,12 @@ pub const aliases = struct {
     pub const WDSTRANSPORT_SLOW_CLIENT_HANDLING_TYPE = i32;
     pub const WDSTRANSPORT_UDP_PORT_POLICY = i32;
     pub const WDSTRANSPORT_TFTP_CAPABILITY = i32;
+    pub const PFN_WdsCliTraceFunction = ?*const anyopaque;
+    pub const PFN_WdsCliCallback = ?*const anyopaque;
+    pub const PFN_WdsTransportClientSessionStart = ?*const anyopaque;
+    pub const PFN_WdsTransportClientSessionStartEx = ?*const anyopaque;
+    pub const PFN_WdsTransportClientReceiveMetadata = ?*const anyopaque;
+    pub const PFN_WdsTransportClientReceiveContents = ?*const anyopaque;
+    pub const PFN_WdsTransportClientSessionComplete = ?*const anyopaque;
+    pub const PFN_WdsTransportClientSessionNegotiate = ?*const anyopaque;
 };

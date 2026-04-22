@@ -897,4 +897,11 @@ pub const aliases = struct {
     pub const IMEREL = i32;
     pub const HIMC = ?*anyopaque;
     pub const HIMCC = ?*anyopaque;
+    pub const IMCENUMPROC = ?*const anyopaque;
+    pub const REGISTERWORDENUMPROCA = ?*const anyopaque;
+    pub const REGISTERWORDENUMPROCW = ?*const anyopaque;
+    pub const PFNLOG = ?*const anyopaque;
+    pub const fpCreateIFECommonInstanceType = ?*const anyopaque;
+    pub const fpCreateIFELanguageInstanceType = ?*const anyopaque;
+    pub const fpCreateIFEDictionaryInstanceType = ?*const anyopaque;
 };

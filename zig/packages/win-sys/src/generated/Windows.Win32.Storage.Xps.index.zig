@@ -297,4 +297,5 @@ pub const aliases = struct {
     pub const XPS_SIGNATURE_STATUS = i32;
     pub const XPS_SIGN_POLICY = i32;
     pub const XPS_SIGN_FLAGS = i32;
+    pub const ABORTPROC = ?*const anyopaque;
 };

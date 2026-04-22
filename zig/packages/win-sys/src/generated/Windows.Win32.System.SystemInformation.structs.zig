@@ -23,14 +23,14 @@ pub const GROUP_AFFINITY64 = extern struct {
     Reserved: [3]u16,
 };
 pub const SYSTEM_INFO = extern struct {
-    pub const SYSTEM_INFO_0 = extern union {
-        pub const SYSTEM_INFO_0_0 = extern struct {
-            wProcessorArchitecture: u16,
-            wReserved: u16,
-        };
-        dwOemId: u32,
-        Anonymous: SYSTEM_INFO_0_0,
-    };
+pub const SYSTEM_INFO_0 = extern union {
+pub const SYSTEM_INFO_0_0 = extern struct {
+    wProcessorArchitecture: u16,
+    wReserved: u16,
+};
+    dwOemId: u32,
+    Anonymous: SYSTEM_INFO_0_0,
+};
     Anonymous: SYSTEM_INFO_0,
     dwPageSize: u32,
     lpMinimumApplicationAddress: *anyopaque,
@@ -61,18 +61,18 @@ pub const CACHE_DESCRIPTOR = extern struct {
     Type: i32,
 };
 pub const SYSTEM_LOGICAL_PROCESSOR_INFORMATION = extern struct {
-    pub const SYSTEM_LOGICAL_PROCESSOR_INFORMATION_0 = extern union {
-        pub const _ProcessorCore_e__Struct = extern struct {
-            Flags: u8,
-        };
-        pub const _NumaNode_e__Struct = extern struct {
-            NodeNumber: u32,
-        };
-        ProcessorCore: _ProcessorCore_e__Struct,
-        NumaNode: _NumaNode_e__Struct,
-        Cache: CACHE_DESCRIPTOR,
-        Reserved: [2]u64,
-    };
+pub const SYSTEM_LOGICAL_PROCESSOR_INFORMATION_0 = extern union {
+pub const _ProcessorCore_e__Struct = extern struct {
+    Flags: u8,
+};
+pub const _NumaNode_e__Struct = extern struct {
+    NodeNumber: u32,
+};
+    ProcessorCore: _ProcessorCore_e__Struct,
+    NumaNode: _NumaNode_e__Struct,
+    Cache: CACHE_DESCRIPTOR,
+    Reserved: [2]u64,
+};
     ProcessorMask: usize,
     Relationship: i32,
     Anonymous: SYSTEM_LOGICAL_PROCESSOR_INFORMATION_0,
@@ -85,20 +85,20 @@ pub const PROCESSOR_RELATIONSHIP = extern struct {
     GroupMask: [1]GROUP_AFFINITY,
 };
 pub const NUMA_NODE_RELATIONSHIP = extern struct {
-    pub const NUMA_NODE_RELATIONSHIP_0 = extern union {
-        GroupMask: GROUP_AFFINITY,
-        GroupMasks: [1]GROUP_AFFINITY,
-    };
+pub const NUMA_NODE_RELATIONSHIP_0 = extern union {
+    GroupMask: GROUP_AFFINITY,
+    GroupMasks: [1]GROUP_AFFINITY,
+};
     NodeNumber: u32,
     Reserved: [18]u8,
     GroupCount: u16,
     Anonymous: NUMA_NODE_RELATIONSHIP_0,
 };
 pub const CACHE_RELATIONSHIP = extern struct {
-    pub const CACHE_RELATIONSHIP_0 = extern union {
-        GroupMask: GROUP_AFFINITY,
-        GroupMasks: [1]GROUP_AFFINITY,
-    };
+pub const CACHE_RELATIONSHIP_0 = extern union {
+    GroupMask: GROUP_AFFINITY,
+    GroupMasks: [1]GROUP_AFFINITY,
+};
     Level: u8,
     Associativity: u8,
     LineSize: u16,
@@ -121,43 +121,43 @@ pub const GROUP_RELATIONSHIP = extern struct {
     GroupInfo: [1]PROCESSOR_GROUP_INFO,
 };
 pub const SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX = extern struct {
-    pub const SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX_0 = extern union {
-        Processor: PROCESSOR_RELATIONSHIP,
-        NumaNode: NUMA_NODE_RELATIONSHIP,
-        Cache: CACHE_RELATIONSHIP,
-        Group: GROUP_RELATIONSHIP,
-    };
+pub const SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX_0 = extern union {
+    Processor: PROCESSOR_RELATIONSHIP,
+    NumaNode: NUMA_NODE_RELATIONSHIP,
+    Cache: CACHE_RELATIONSHIP,
+    Group: GROUP_RELATIONSHIP,
+};
     Relationship: i32,
     Size: u32,
     Anonymous: SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX_0,
 };
 pub const SYSTEM_CPU_SET_INFORMATION = extern struct {
-    pub const SYSTEM_CPU_SET_INFORMATION_0 = extern union {
-        pub const _CpuSet_e__Struct = extern struct {
-            pub const _CpuSet_e__Struct_0 = extern union {
-                pub const _CpuSet_e__Struct_0_0 = extern struct {
-                    _bitfield: u8,
-                };
-                AllFlags: u8,
-                Anonymous: _CpuSet_e__Struct_0_0,
-            };
-            pub const _CpuSet_e__Struct_1 = extern union {
-                Reserved: u32,
-                SchedulingClass: u8,
-            };
-            Id: u32,
-            Group: u16,
-            LogicalProcessorIndex: u8,
-            CoreIndex: u8,
-            LastLevelCacheIndex: u8,
-            NumaNodeIndex: u8,
-            EfficiencyClass: u8,
-            Anonymous1: _CpuSet_e__Struct_0,
-            Anonymous2: _CpuSet_e__Struct_1,
-            AllocationTag: u64,
-        };
-        CpuSet: _CpuSet_e__Struct,
-    };
+pub const SYSTEM_CPU_SET_INFORMATION_0 = extern union {
+pub const _CpuSet_e__Struct = extern struct {
+pub const _CpuSet_e__Struct_0 = extern union {
+pub const _CpuSet_e__Struct_0_0 = extern struct {
+    _bitfield: u8,
+};
+    AllFlags: u8,
+    Anonymous: _CpuSet_e__Struct_0_0,
+};
+pub const _CpuSet_e__Struct_1 = extern union {
+    Reserved: u32,
+    SchedulingClass: u8,
+};
+    Id: u32,
+    Group: u16,
+    LogicalProcessorIndex: u8,
+    CoreIndex: u8,
+    LastLevelCacheIndex: u8,
+    NumaNodeIndex: u8,
+    EfficiencyClass: u8,
+    Anonymous1: _CpuSet_e__Struct_0,
+    Anonymous2: _CpuSet_e__Struct_1,
+    AllocationTag: u64,
+};
+    CpuSet: _CpuSet_e__Struct,
+};
     Size: u32,
     Type: i32,
     Anonymous: SYSTEM_CPU_SET_INFORMATION_0,

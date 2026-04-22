@@ -114,4 +114,6 @@ pub const aliases = struct {
     pub const GAMING_DEVICE_DEVICE_ID = i32;
     pub const KnownGamingPrivileges = i32;
     pub const XBL_IDP_AUTH_TOKEN_STATUS = i32;
+    pub const GameUICompletionRoutine = ?*const anyopaque;
+    pub const PlayerPickerUICompletionRoutine = ?*const anyopaque;
 };

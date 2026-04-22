@@ -103,20 +103,20 @@ pub const TC_GEN_FLOW = extern struct {
     TcObjects: [1]QOS_OBJECT_HDR,
 };
 pub const IP_PATTERN = extern struct {
-    pub const _S_un_e__Union = extern union {
-        pub const _S_un_ports_e__Struct = extern struct {
-            s_srcport: u16,
-            s_dstport: u16,
-        };
-        pub const _S_un_icmp_e__Struct = extern struct {
-            s_type: u8,
-            s_code: u8,
-            filler: u16,
-        };
-        S_un_ports: _S_un_ports_e__Struct,
-        S_un_icmp: _S_un_icmp_e__Struct,
-        S_Spi: u32,
-    };
+pub const _S_un_e__Union = extern union {
+pub const _S_un_ports_e__Struct = extern struct {
+    s_srcport: u16,
+    s_dstport: u16,
+};
+pub const _S_un_icmp_e__Struct = extern struct {
+    s_type: u8,
+    s_code: u8,
+    filler: u16,
+};
+    S_un_ports: _S_un_ports_e__Struct,
+    S_un_icmp: _S_un_icmp_e__Struct,
+    S_Spi: u32,
+};
     Reserved1: u32,
     Reserved2: u32,
     SrcAddr: u32,
@@ -126,11 +126,11 @@ pub const IP_PATTERN = extern struct {
     Reserved3: [3]u8,
 };
 pub const IPX_PATTERN = extern struct {
-    pub const _Src_e__Struct = extern struct {
-        NetworkAddress: u32,
-        NodeAddress: [6]u8,
-        Socket: u16,
-    };
+pub const _Src_e__Struct = extern struct {
+    NetworkAddress: u32,
+    NodeAddress: [6]u8,
+    Socket: u16,
+};
     Src: _Src_e__Struct,
     Dest: _Src_e__Struct,
 };
@@ -174,13 +174,13 @@ pub const RSVP_FILTERSPEC_V6_GPI = extern struct {
     GeneralPortId: u32,
 };
 pub const RSVP_FILTERSPEC = extern struct {
-    pub const RSVP_FILTERSPEC_0 = extern union {
-        FilterSpecV4: RSVP_FILTERSPEC_V4,
-        FilterSpecV6: RSVP_FILTERSPEC_V6,
-        FilterSpecV6Flow: RSVP_FILTERSPEC_V6_FLOW,
-        FilterSpecV4Gpi: RSVP_FILTERSPEC_V4_GPI,
-        FilterSpecV6Gpi: RSVP_FILTERSPEC_V6_GPI,
-    };
+pub const RSVP_FILTERSPEC_0 = extern union {
+    FilterSpecV4: RSVP_FILTERSPEC_V4,
+    FilterSpecV6: RSVP_FILTERSPEC_V6,
+    FilterSpecV6Flow: RSVP_FILTERSPEC_V6_FLOW,
+    FilterSpecV4Gpi: RSVP_FILTERSPEC_V4_GPI,
+    FilterSpecV6Gpi: RSVP_FILTERSPEC_V6_GPI,
+};
     Type: i32,
     Anonymous: RSVP_FILTERSPEC_0,
 };
@@ -237,10 +237,10 @@ pub const PARAM_BUFFER = extern struct {
     Buffer: [1]u8,
 };
 pub const CONTROL_SERVICE = extern struct {
-    pub const CONTROL_SERVICE_0 = extern union {
-        Guaranteed: AD_GUARANTEED,
-        ParamBuffer: [1]PARAM_BUFFER,
-    };
+pub const CONTROL_SERVICE_0 = extern union {
+    Guaranteed: AD_GUARANTEED,
+    ParamBuffer: [1]PARAM_BUFFER,
+};
     Length: u32,
     Service: u32,
     Overrides: AD_GENERAL_PARAMS,
@@ -305,9 +305,9 @@ pub const SIPAEVENT_VSM_IDK_RSA_INFO = extern struct {
     PublicKeyData: [1]u8,
 };
 pub const SIPAEVENT_VSM_IDK_INFO_PAYLOAD = extern struct {
-    pub const SIPAEVENT_VSM_IDK_INFO_PAYLOAD_0 = extern union {
-        RsaKeyInfo: SIPAEVENT_VSM_IDK_RSA_INFO,
-    };
+pub const SIPAEVENT_VSM_IDK_INFO_PAYLOAD_0 = extern union {
+    RsaKeyInfo: SIPAEVENT_VSM_IDK_RSA_INFO,
+};
     KeyAlgID: u32,
     Anonymous: SIPAEVENT_VSM_IDK_INFO_PAYLOAD_0,
 };

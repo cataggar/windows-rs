@@ -2510,4 +2510,6 @@ pub const aliases = struct {
     pub const D3DX11_FFT_DATA_TYPE = i32;
     pub const D3DX11_FFT_DIM_MASK = i32;
     pub const D3DX11_FFT_CREATE_FLAG = i32;
+    pub const PFN_D3D11_CREATE_DEVICE = ?*const anyopaque;
+    pub const PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN = ?*const anyopaque;
 };

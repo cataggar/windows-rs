@@ -21,47 +21,47 @@ pub const FILTER_FULL_INFORMATION = extern struct {
     FilterNameBuffer: [1]u16,
 };
 pub const FILTER_AGGREGATE_BASIC_INFORMATION = extern struct {
-    pub const _Type_e__Union = extern union {
-        pub const _MiniFilter_e__Struct = extern struct {
-            FrameID: u32,
-            NumberOfInstances: u32,
-            FilterNameLength: u16,
-            FilterNameBufferOffset: u16,
-            FilterAltitudeLength: u16,
-            FilterAltitudeBufferOffset: u16,
-        };
-        pub const _LegacyFilter_e__Struct = extern struct {
-            FilterNameLength: u16,
-            FilterNameBufferOffset: u16,
-        };
-        MiniFilter: _MiniFilter_e__Struct,
-        LegacyFilter: _LegacyFilter_e__Struct,
-    };
+pub const _Type_e__Union = extern union {
+pub const _MiniFilter_e__Struct = extern struct {
+    FrameID: u32,
+    NumberOfInstances: u32,
+    FilterNameLength: u16,
+    FilterNameBufferOffset: u16,
+    FilterAltitudeLength: u16,
+    FilterAltitudeBufferOffset: u16,
+};
+pub const _LegacyFilter_e__Struct = extern struct {
+    FilterNameLength: u16,
+    FilterNameBufferOffset: u16,
+};
+    MiniFilter: _MiniFilter_e__Struct,
+    LegacyFilter: _LegacyFilter_e__Struct,
+};
     NextEntryOffset: u32,
     Flags: u32,
     Type: _Type_e__Union,
 };
 pub const FILTER_AGGREGATE_STANDARD_INFORMATION = extern struct {
-    pub const _Type_e__Union = extern union {
-        pub const _MiniFilter_e__Struct = extern struct {
-            Flags: u32,
-            FrameID: u32,
-            NumberOfInstances: u32,
-            FilterNameLength: u16,
-            FilterNameBufferOffset: u16,
-            FilterAltitudeLength: u16,
-            FilterAltitudeBufferOffset: u16,
-        };
-        pub const _LegacyFilter_e__Struct = extern struct {
-            Flags: u32,
-            FilterNameLength: u16,
-            FilterNameBufferOffset: u16,
-            FilterAltitudeLength: u16,
-            FilterAltitudeBufferOffset: u16,
-        };
-        MiniFilter: _MiniFilter_e__Struct,
-        LegacyFilter: _LegacyFilter_e__Struct,
-    };
+pub const _Type_e__Union = extern union {
+pub const _MiniFilter_e__Struct = extern struct {
+    Flags: u32,
+    FrameID: u32,
+    NumberOfInstances: u32,
+    FilterNameLength: u16,
+    FilterNameBufferOffset: u16,
+    FilterAltitudeLength: u16,
+    FilterAltitudeBufferOffset: u16,
+};
+pub const _LegacyFilter_e__Struct = extern struct {
+    Flags: u32,
+    FilterNameLength: u16,
+    FilterNameBufferOffset: u16,
+    FilterAltitudeLength: u16,
+    FilterAltitudeBufferOffset: u16,
+};
+    MiniFilter: _MiniFilter_e__Struct,
+    LegacyFilter: _LegacyFilter_e__Struct,
+};
     NextEntryOffset: u32,
     Flags: u32,
     Type: _Type_e__Union,
@@ -102,34 +102,34 @@ pub const INSTANCE_FULL_INFORMATION = extern struct {
     FilterNameBufferOffset: u16,
 };
 pub const INSTANCE_AGGREGATE_STANDARD_INFORMATION = extern struct {
-    pub const _Type_e__Union = extern union {
-        pub const _MiniFilter_e__Struct = extern struct {
-            Flags: u32,
-            FrameID: u32,
-            VolumeFileSystemType: i32,
-            InstanceNameLength: u16,
-            InstanceNameBufferOffset: u16,
-            AltitudeLength: u16,
-            AltitudeBufferOffset: u16,
-            VolumeNameLength: u16,
-            VolumeNameBufferOffset: u16,
-            FilterNameLength: u16,
-            FilterNameBufferOffset: u16,
-            SupportedFeatures: u32,
-        };
-        pub const _LegacyFilter_e__Struct = extern struct {
-            Flags: u32,
-            AltitudeLength: u16,
-            AltitudeBufferOffset: u16,
-            VolumeNameLength: u16,
-            VolumeNameBufferOffset: u16,
-            FilterNameLength: u16,
-            FilterNameBufferOffset: u16,
-            SupportedFeatures: u32,
-        };
-        MiniFilter: _MiniFilter_e__Struct,
-        LegacyFilter: _LegacyFilter_e__Struct,
-    };
+pub const _Type_e__Union = extern union {
+pub const _MiniFilter_e__Struct = extern struct {
+    Flags: u32,
+    FrameID: u32,
+    VolumeFileSystemType: i32,
+    InstanceNameLength: u16,
+    InstanceNameBufferOffset: u16,
+    AltitudeLength: u16,
+    AltitudeBufferOffset: u16,
+    VolumeNameLength: u16,
+    VolumeNameBufferOffset: u16,
+    FilterNameLength: u16,
+    FilterNameBufferOffset: u16,
+    SupportedFeatures: u32,
+};
+pub const _LegacyFilter_e__Struct = extern struct {
+    Flags: u32,
+    AltitudeLength: u16,
+    AltitudeBufferOffset: u16,
+    VolumeNameLength: u16,
+    VolumeNameBufferOffset: u16,
+    FilterNameLength: u16,
+    FilterNameBufferOffset: u16,
+    SupportedFeatures: u32,
+};
+    MiniFilter: _MiniFilter_e__Struct,
+    LegacyFilter: _LegacyFilter_e__Struct,
+};
     NextEntryOffset: u32,
     Flags: u32,
     Type: _Type_e__Union,

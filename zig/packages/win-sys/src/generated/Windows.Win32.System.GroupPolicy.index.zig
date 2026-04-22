@@ -269,4 +269,8 @@ pub const aliases = struct {
     pub const APPSTATE = i32;
     pub const GROUP_POLICY_OBJECT_TYPE = i32;
     pub const GROUP_POLICY_HINT_TYPE = i32;
+    pub const PFNSTATUSMESSAGECALLBACK = ?*const anyopaque;
+    pub const PFNPROCESSGROUPPOLICY = ?*const anyopaque;
+    pub const PFNPROCESSGROUPPOLICYEX = ?*const anyopaque;
+    pub const PFNGENERATEGROUPPOLICY = ?*const anyopaque;
 };

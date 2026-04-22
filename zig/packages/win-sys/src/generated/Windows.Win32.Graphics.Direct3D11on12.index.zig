@@ -25,3 +25,8 @@ pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
         else => null,
     };
 }
+
+
+pub const aliases = struct {
+    pub const PFN_D3D11ON12_CREATE_DEVICE = ?*const anyopaque;
+};

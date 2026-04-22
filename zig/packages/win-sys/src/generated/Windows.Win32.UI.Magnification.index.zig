@@ -54,4 +54,5 @@ pub const MS_INVERTCOLORS = 4;
 
 pub const aliases = struct {
     pub const MW_FILTERMODE = u32;
+    pub const MagImageScalingCallback = ?*const anyopaque;
 };

@@ -2441,4 +2441,5 @@ pub const aliases = struct {
     pub const DEFAULT_PAGES = i32;
     pub const BIND_FLAGS1 = i32;
     pub const RASCON_UIINFO_FLAGS = i32;
+    pub const WORKERFUNCTION = ?*const anyopaque;
 };

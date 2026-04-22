@@ -1437,4 +1437,9 @@ pub const aliases = struct {
     pub const D3DTEXTUREMAGFILTER = i32;
     pub const D3DTEXTUREMINFILTER = i32;
     pub const D3DTEXTUREMIPFILTER = i32;
+    pub const LPD3DVALIDATECALLBACK = ?*const anyopaque;
+    pub const LPD3DENUMTEXTUREFORMATSCALLBACK = ?*const anyopaque;
+    pub const LPD3DENUMPIXELFORMATSCALLBACK = ?*const anyopaque;
+    pub const LPD3DENUMDEVICESCALLBACK = ?*const anyopaque;
+    pub const LPD3DENUMDEVICESCALLBACK7 = ?*const anyopaque;
 };

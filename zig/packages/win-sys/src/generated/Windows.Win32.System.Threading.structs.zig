@@ -39,16 +39,16 @@ pub const PTP_CALLBACK_INSTANCE = extern struct {
     Value: isize,
 };
 pub const REASON_CONTEXT = extern struct {
-    pub const _Reason_e__Union = extern union {
-        pub const _Detailed_e__Struct = extern struct {
-            LocalizedReasonModule: @"Windows.Win32.Foundation".HMODULE,
-            LocalizedReasonId: u32,
-            ReasonStringCount: u32,
-            ReasonStrings: *@"Windows.Win32.Foundation".PWSTR,
-        };
-        Detailed: _Detailed_e__Struct,
-        SimpleReasonString: @"Windows.Win32.Foundation".PWSTR,
-    };
+pub const _Reason_e__Union = extern union {
+pub const _Detailed_e__Struct = extern struct {
+    LocalizedReasonModule: @"Windows.Win32.Foundation".HMODULE,
+    LocalizedReasonId: u32,
+    ReasonStringCount: u32,
+    ReasonStrings: *@"Windows.Win32.Foundation".PWSTR,
+};
+    Detailed: _Detailed_e__Struct,
+    SimpleReasonString: @"Windows.Win32.Foundation".PWSTR,
+};
     Version: u32,
     Flags: u32,
     Reason: _Reason_e__Union,
@@ -208,13 +208,13 @@ pub const TP_POOL_STACK_INFORMATION = extern struct {
     StackCommit: usize,
 };
 pub const UMS_SYSTEM_THREAD_INFORMATION = extern struct {
-    pub const UMS_SYSTEM_THREAD_INFORMATION_0 = extern union {
-        pub const UMS_SYSTEM_THREAD_INFORMATION_0_0 = extern struct {
-            _bitfield: u32,
-        };
-        Anonymous: UMS_SYSTEM_THREAD_INFORMATION_0_0,
-        ThreadUmsFlags: u32,
-    };
+pub const UMS_SYSTEM_THREAD_INFORMATION_0 = extern union {
+pub const UMS_SYSTEM_THREAD_INFORMATION_0_0 = extern struct {
+    _bitfield: u32,
+};
+    Anonymous: UMS_SYSTEM_THREAD_INFORMATION_0_0,
+    ThreadUmsFlags: u32,
+};
     UmsVersion: u32,
     Anonymous: UMS_SYSTEM_THREAD_INFORMATION_0,
 };

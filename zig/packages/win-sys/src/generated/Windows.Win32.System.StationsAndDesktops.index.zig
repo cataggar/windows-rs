@@ -117,4 +117,8 @@ pub const aliases = struct {
     pub const DESKTOP_ACCESS_FLAGS = u32;
     pub const HWINSTA = ?*anyopaque;
     pub const HDESK = ?*anyopaque;
+    pub const WINSTAENUMPROCA = ?*const anyopaque;
+    pub const WINSTAENUMPROCW = ?*const anyopaque;
+    pub const DESKTOPENUMPROCA = ?*const anyopaque;
+    pub const DESKTOPENUMPROCW = ?*const anyopaque;
 };

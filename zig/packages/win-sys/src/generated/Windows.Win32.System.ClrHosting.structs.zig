@@ -25,9 +25,9 @@ pub const COR_GC_THREAD_STATS = extern struct {
     Flags: u32,
 };
 pub const CustomDumpItem = extern struct {
-    pub const CustomDumpItem_0 = extern union {
-        pReserved: usize,
-    };
+pub const CustomDumpItem_0 = extern union {
+    pReserved: usize,
+};
     itemKind: i32,
     Anonymous: CustomDumpItem_0,
 };

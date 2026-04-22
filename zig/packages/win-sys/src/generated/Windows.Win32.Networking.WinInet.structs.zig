@@ -28,20 +28,20 @@ pub const INTERNET_PROXY_INFO = extern struct {
     lpszProxyBypass: *i8,
 };
 pub const INTERNET_PER_CONN_OPTIONA = extern struct {
-    pub const _Value_e__Union = extern union {
-        dwValue: u32,
-        pszValue: @"Windows.Win32.Foundation".PSTR,
-        ftValue: @"Windows.Win32.Foundation".FILETIME,
-    };
+pub const _Value_e__Union = extern union {
+    dwValue: u32,
+    pszValue: @"Windows.Win32.Foundation".PSTR,
+    ftValue: @"Windows.Win32.Foundation".FILETIME,
+};
     dwOption: u32,
     Value: _Value_e__Union,
 };
 pub const INTERNET_PER_CONN_OPTIONW = extern struct {
-    pub const _Value_e__Union = extern union {
-        dwValue: u32,
-        pszValue: @"Windows.Win32.Foundation".PWSTR,
-        ftValue: @"Windows.Win32.Foundation".FILETIME,
-    };
+pub const _Value_e__Union = extern union {
+    dwValue: u32,
+    pszValue: @"Windows.Win32.Foundation".PWSTR,
+    ftValue: @"Windows.Win32.Foundation".FILETIME,
+};
     dwOption: u32,
     Value: _Value_e__Union,
 };
@@ -238,25 +238,25 @@ pub const GOPHER_UNKNOWN_ATTRIBUTE_TYPE = extern struct {
     Text: *i8,
 };
 pub const GOPHER_ATTRIBUTE_TYPE = extern struct {
-    pub const _AttributeType_e__Union = extern union {
-        Admin: GOPHER_ADMIN_ATTRIBUTE_TYPE,
-        ModDate: GOPHER_MOD_DATE_ATTRIBUTE_TYPE,
-        Ttl: GOPHER_TTL_ATTRIBUTE_TYPE,
-        Score: GOPHER_SCORE_ATTRIBUTE_TYPE,
-        ScoreRange: GOPHER_SCORE_RANGE_ATTRIBUTE_TYPE,
-        Site: GOPHER_SITE_ATTRIBUTE_TYPE,
-        Organization: GOPHER_ORGANIZATION_ATTRIBUTE_TYPE,
-        Location: GOPHER_LOCATION_ATTRIBUTE_TYPE,
-        GeographicalLocation: GOPHER_GEOGRAPHICAL_LOCATION_ATTRIBUTE_TYPE,
-        TimeZone: GOPHER_TIMEZONE_ATTRIBUTE_TYPE,
-        Provider: GOPHER_PROVIDER_ATTRIBUTE_TYPE,
-        Version: GOPHER_VERSION_ATTRIBUTE_TYPE,
-        Abstract: GOPHER_ABSTRACT_ATTRIBUTE_TYPE,
-        View: GOPHER_VIEW_ATTRIBUTE_TYPE,
-        Veronica: GOPHER_VERONICA_ATTRIBUTE_TYPE,
-        Ask: GOPHER_ASK_ATTRIBUTE_TYPE,
-        Unknown: GOPHER_UNKNOWN_ATTRIBUTE_TYPE,
-    };
+pub const _AttributeType_e__Union = extern union {
+    Admin: GOPHER_ADMIN_ATTRIBUTE_TYPE,
+    ModDate: GOPHER_MOD_DATE_ATTRIBUTE_TYPE,
+    Ttl: GOPHER_TTL_ATTRIBUTE_TYPE,
+    Score: GOPHER_SCORE_ATTRIBUTE_TYPE,
+    ScoreRange: GOPHER_SCORE_RANGE_ATTRIBUTE_TYPE,
+    Site: GOPHER_SITE_ATTRIBUTE_TYPE,
+    Organization: GOPHER_ORGANIZATION_ATTRIBUTE_TYPE,
+    Location: GOPHER_LOCATION_ATTRIBUTE_TYPE,
+    GeographicalLocation: GOPHER_GEOGRAPHICAL_LOCATION_ATTRIBUTE_TYPE,
+    TimeZone: GOPHER_TIMEZONE_ATTRIBUTE_TYPE,
+    Provider: GOPHER_PROVIDER_ATTRIBUTE_TYPE,
+    Version: GOPHER_VERSION_ATTRIBUTE_TYPE,
+    Abstract: GOPHER_ABSTRACT_ATTRIBUTE_TYPE,
+    View: GOPHER_VIEW_ATTRIBUTE_TYPE,
+    Veronica: GOPHER_VERONICA_ATTRIBUTE_TYPE,
+    Ask: GOPHER_ASK_ATTRIBUTE_TYPE,
+    Unknown: GOPHER_UNKNOWN_ATTRIBUTE_TYPE,
+};
     CategoryId: u32,
     AttributeId: u32,
     AttributeType: _AttributeType_e__Union,
@@ -271,10 +271,10 @@ pub const INTERNET_COOKIE2 = extern struct {
     fExpiresSet: @"Windows.Win32.Foundation".BOOL,
 };
 pub const INTERNET_CACHE_ENTRY_INFOA = extern struct {
-    pub const INTERNET_CACHE_ENTRY_INFOA_0 = extern union {
-        dwReserved: u32,
-        dwExemptDelta: u32,
-    };
+pub const INTERNET_CACHE_ENTRY_INFOA_0 = extern union {
+    dwReserved: u32,
+    dwExemptDelta: u32,
+};
     dwStructSize: u32,
     lpszSourceUrlName: @"Windows.Win32.Foundation".PSTR,
     lpszLocalFileName: @"Windows.Win32.Foundation".PSTR,
@@ -293,10 +293,10 @@ pub const INTERNET_CACHE_ENTRY_INFOA = extern struct {
     Anonymous: INTERNET_CACHE_ENTRY_INFOA_0,
 };
 pub const INTERNET_CACHE_ENTRY_INFOW = extern struct {
-    pub const INTERNET_CACHE_ENTRY_INFOW_0 = extern union {
-        dwReserved: u32,
-        dwExemptDelta: u32,
-    };
+pub const INTERNET_CACHE_ENTRY_INFOW_0 = extern union {
+    dwReserved: u32,
+    dwExemptDelta: u32,
+};
     dwStructSize: u32,
     lpszSourceUrlName: @"Windows.Win32.Foundation".PWSTR,
     lpszLocalFileName: @"Windows.Win32.Foundation".PWSTR,
@@ -405,14 +405,14 @@ pub const INTERNET_CALLBACK_COOKIE = extern struct {
     dwFlags: u32,
 };
 pub const INTERNET_CREDENTIALS = extern struct {
-    pub const INTERNET_CREDENTIALS_0 = extern union {
-        pub const INTERNET_CREDENTIALS_0_0 = extern struct {
-            lpcwszUserName: @"Windows.Win32.Foundation".PWSTR,
-            lpcwszPassword: @"Windows.Win32.Foundation".PWSTR,
-        };
-        Anonymous: INTERNET_CREDENTIALS_0_0,
-        pAuthIdentityOpaque: *anyopaque,
-    };
+pub const INTERNET_CREDENTIALS_0 = extern union {
+pub const INTERNET_CREDENTIALS_0_0 = extern struct {
+    lpcwszUserName: @"Windows.Win32.Foundation".PWSTR,
+    lpcwszPassword: @"Windows.Win32.Foundation".PWSTR,
+};
+    Anonymous: INTERNET_CREDENTIALS_0_0,
+    pAuthIdentityOpaque: *anyopaque,
+};
     lpcwszHostName: @"Windows.Win32.Foundation".PWSTR,
     dwPort: u32,
     dwScheme: u32,
@@ -458,14 +458,14 @@ pub const INTERNET_CACHE_CONFIG_PATH_ENTRYW = extern struct {
     dwCacheSize: u32,
 };
 pub const INTERNET_CACHE_CONFIG_INFOA = extern struct {
-    pub const INTERNET_CACHE_CONFIG_INFOA_0 = extern union {
-        pub const INTERNET_CACHE_CONFIG_INFOA_0_0 = extern struct {
-            CachePath: [260]@"Windows.Win32.Foundation".CHAR,
-            dwCacheSize: u32,
-        };
-        Anonymous: INTERNET_CACHE_CONFIG_INFOA_0_0,
-        CachePaths: [1]INTERNET_CACHE_CONFIG_PATH_ENTRYA,
-    };
+pub const INTERNET_CACHE_CONFIG_INFOA_0 = extern union {
+pub const INTERNET_CACHE_CONFIG_INFOA_0_0 = extern struct {
+    CachePath: [260]@"Windows.Win32.Foundation".CHAR,
+    dwCacheSize: u32,
+};
+    Anonymous: INTERNET_CACHE_CONFIG_INFOA_0_0,
+    CachePaths: [1]INTERNET_CACHE_CONFIG_PATH_ENTRYA,
+};
     dwStructSize: u32,
     dwContainer: u32,
     dwQuota: u32,
@@ -478,14 +478,14 @@ pub const INTERNET_CACHE_CONFIG_INFOA = extern struct {
     dwExemptUsage: u32,
 };
 pub const INTERNET_CACHE_CONFIG_INFOW = extern struct {
-    pub const INTERNET_CACHE_CONFIG_INFOW_0 = extern union {
-        pub const INTERNET_CACHE_CONFIG_INFOW_0_0 = extern struct {
-            CachePath: [260]u16,
-            dwCacheSize: u32,
-        };
-        Anonymous: INTERNET_CACHE_CONFIG_INFOW_0_0,
-        CachePaths: [1]INTERNET_CACHE_CONFIG_PATH_ENTRYW,
-    };
+pub const INTERNET_CACHE_CONFIG_INFOW_0 = extern union {
+pub const INTERNET_CACHE_CONFIG_INFOW_0_0 = extern struct {
+    CachePath: [260]u16,
+    dwCacheSize: u32,
+};
+    Anonymous: INTERNET_CACHE_CONFIG_INFOW_0_0,
+    CachePaths: [1]INTERNET_CACHE_CONFIG_PATH_ENTRYW,
+};
     dwStructSize: u32,
     dwContainer: u32,
     dwQuota: u32,

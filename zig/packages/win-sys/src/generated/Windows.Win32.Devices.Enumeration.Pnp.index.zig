@@ -96,4 +96,5 @@ pub const aliases = struct {
     pub const SW_DEVICE_CAPABILITIES = i32;
     pub const SW_DEVICE_LIFETIME = i32;
     pub const HSWDEVICE = ?*anyopaque;
+    pub const SW_DEVICE_CREATE_CALLBACK = ?*const anyopaque;
 };

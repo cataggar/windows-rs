@@ -620,4 +620,6 @@ pub const aliases = struct {
     pub const OS_DEPLOYEMENT_STATE_VALUES = i32;
     pub const RTL_SYSTEM_GLOBAL_DATA_ID = i32;
     pub const DEP_SYSTEM_POLICY_TYPE = i32;
+    pub const PGET_SYSTEM_WOW64_DIRECTORY_A = ?*const anyopaque;
+    pub const PGET_SYSTEM_WOW64_DIRECTORY_W = ?*const anyopaque;
 };

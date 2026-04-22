@@ -366,4 +366,9 @@ pub const aliases = struct {
     pub const WCS_PROFILE_MANAGEMENT_SCOPE = i32;
     pub const WCS_DEVICE_CAPABILITIES_TYPE = i32;
     pub const HCOLORSPACE = ?*anyopaque;
+    pub const ICMENUMPROCA = ?*const anyopaque;
+    pub const ICMENUMPROCW = ?*const anyopaque;
+    pub const LPBMCALLBACKFN = ?*const anyopaque;
+    pub const PCMSCALLBACKW = ?*const anyopaque;
+    pub const PCMSCALLBACKA = ?*const anyopaque;
 };

@@ -169,4 +169,6 @@ pub const aliases = struct {
     pub const DeviceDiscoveryMechanism = i32;
     pub const WSD_PROTOCOL_TYPE = i32;
     pub const WSDEventType = i32;
+    pub const WSD_STUB_FUNCTION = ?*const anyopaque;
+    pub const PWSD_SOAP_MESSAGE_HANDLER = ?*const anyopaque;
 };

@@ -299,4 +299,14 @@ pub const aliases = struct {
     pub const SNMP_OUTPUT_LOG_TYPE = u32;
     pub const SNMP_LOG = i32;
     pub const SNMP_ERROR = u32;
+    pub const PFNSNMPEXTENSIONINIT = ?*const anyopaque;
+    pub const PFNSNMPEXTENSIONINITEX = ?*const anyopaque;
+    pub const PFNSNMPEXTENSIONMONITOR = ?*const anyopaque;
+    pub const PFNSNMPEXTENSIONQUERY = ?*const anyopaque;
+    pub const PFNSNMPEXTENSIONQUERYEX = ?*const anyopaque;
+    pub const PFNSNMPEXTENSIONTRAP = ?*const anyopaque;
+    pub const PFNSNMPEXTENSIONCLOSE = ?*const anyopaque;
+    pub const SNMPAPI_CALLBACK = ?*const anyopaque;
+    pub const PFNSNMPSTARTUPEX = ?*const anyopaque;
+    pub const PFNSNMPCLEANUPEX = ?*const anyopaque;
 };

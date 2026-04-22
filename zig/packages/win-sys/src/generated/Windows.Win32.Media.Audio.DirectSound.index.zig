@@ -240,3 +240,8 @@ pub const DSFX_I3DL2_ENVIRONMENT_PRESET_LARGEROOM = 26;
 pub const DSFX_I3DL2_ENVIRONMENT_PRESET_MEDIUMHALL = 27;
 pub const DSFX_I3DL2_ENVIRONMENT_PRESET_LARGEHALL = 28;
 pub const DSFX_I3DL2_ENVIRONMENT_PRESET_PLATE = 29;
+
+pub const aliases = struct {
+    pub const LPDSENUMCALLBACKA = ?*const anyopaque;
+    pub const LPDSENUMCALLBACKW = ?*const anyopaque;
+};

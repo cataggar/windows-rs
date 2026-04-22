@@ -55,4 +55,6 @@ pub const aliases = struct {
     pub const COMPRESS_INFORMATION_CLASS = i32;
     pub const COMPRESSOR_HANDLE = ?*anyopaque;
     pub const DECOMPRESSOR_HANDLE = ?*anyopaque;
+    pub const PFN_COMPRESS_ALLOCATE = ?*const anyopaque;
+    pub const PFN_COMPRESS_FREE = ?*const anyopaque;
 };

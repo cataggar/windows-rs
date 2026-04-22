@@ -114,10 +114,10 @@ pub const RASIPADDR = extern struct {
     d: u8,
 };
 pub const RASTUNNELENDPOINT = extern struct {
-    pub const RASTUNNELENDPOINT_0 = extern union {
-        ipv4: @"Windows.Win32.Networking.WinSock".IN_ADDR,
-        ipv6: @"Windows.Win32.Networking.WinSock".IN6_ADDR,
-    };
+pub const RASTUNNELENDPOINT_0 = extern union {
+    ipv4: @"Windows.Win32.Networking.WinSock".IN_ADDR,
+    ipv6: @"Windows.Win32.Networking.WinSock".IN6_ADDR,
+};
     dwType: u32,
     Anonymous: RASTUNNELENDPOINT_0,
 };
@@ -996,18 +996,18 @@ pub const IKEV2_PROJECTION_INFO2 = extern struct {
     dwEncryptionMethod: u32,
 };
 pub const PROJECTION_INFO = extern struct {
-    pub const PROJECTION_INFO_0 = extern union {
-        PppProjectionInfo: PPP_PROJECTION_INFO,
-        Ikev2ProjectionInfo: IKEV2_PROJECTION_INFO,
-    };
+pub const PROJECTION_INFO_0 = extern union {
+    PppProjectionInfo: PPP_PROJECTION_INFO,
+    Ikev2ProjectionInfo: IKEV2_PROJECTION_INFO,
+};
     projectionInfoType: u8,
     Anonymous: PROJECTION_INFO_0,
 };
 pub const PROJECTION_INFO2 = extern struct {
-    pub const PROJECTION_INFO2_0 = extern union {
-        PppProjectionInfo: PPP_PROJECTION_INFO2,
-        Ikev2ProjectionInfo: IKEV2_PROJECTION_INFO2,
-    };
+pub const PROJECTION_INFO2_0 = extern union {
+    PppProjectionInfo: PPP_PROJECTION_INFO2,
+    Ikev2ProjectionInfo: IKEV2_PROJECTION_INFO2,
+};
     projectionInfoType: u8,
     Anonymous: PROJECTION_INFO2_0,
 };
@@ -1099,10 +1099,10 @@ pub const MPR_CERT_EKU = extern struct {
     pwszEKU: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const VPN_TS_IP_ADDRESS = extern struct {
-    pub const VPN_TS_IP_ADDRESS_0 = extern union {
-        v4: @"Windows.Win32.Networking.WinSock".IN_ADDR,
-        v6: @"Windows.Win32.Networking.WinSock".IN6_ADDR,
-    };
+pub const VPN_TS_IP_ADDRESS_0 = extern union {
+    v4: @"Windows.Win32.Networking.WinSock".IN_ADDR,
+    v6: @"Windows.Win32.Networking.WinSock".IN6_ADDR,
+};
     Type: u16,
     Anonymous: VPN_TS_IP_ADDRESS_0,
 };
@@ -1339,14 +1339,14 @@ pub const RTM_NEXTHOP_LIST = extern struct {
     NextHops: [1]isize,
 };
 pub const RTM_DEST_INFO = extern struct {
-    pub const RTM_DEST_INFO_0 = extern struct {
-        ViewId: i32,
-        NumRoutes: u32,
-        Route: isize,
-        Owner: isize,
-        DestFlags: u32,
-        HoldRoute: isize,
-    };
+pub const RTM_DEST_INFO_0 = extern struct {
+    ViewId: i32,
+    NumRoutes: u32,
+    Route: isize,
+    Owner: isize,
+    DestFlags: u32,
+    HoldRoute: isize,
+};
     DestHandle: isize,
     DestAddress: RTM_NET_ADDRESS,
     LastChanged: @"Windows.Win32.Foundation".FILETIME,
@@ -1376,14 +1376,14 @@ pub const RTM_NEXTHOP_INFO = extern struct {
     RemoteNextHop: isize,
 };
 pub const RTM_ENTITY_ID = extern struct {
-    pub const RTM_ENTITY_ID_0 = extern union {
-        pub const RTM_ENTITY_ID_0_0 = extern struct {
-            EntityProtocolId: u32,
-            EntityInstanceId: u32,
-        };
-        Anonymous: RTM_ENTITY_ID_0_0,
-        EntityId: u64,
-    };
+pub const RTM_ENTITY_ID_0 = extern union {
+pub const RTM_ENTITY_ID_0_0 = extern struct {
+    EntityProtocolId: u32,
+    EntityInstanceId: u32,
+};
+    Anonymous: RTM_ENTITY_ID_0_0,
+    EntityId: u64,
+};
     Anonymous: RTM_ENTITY_ID_0,
 };
 pub const RTM_ENTITY_INFO = extern struct {

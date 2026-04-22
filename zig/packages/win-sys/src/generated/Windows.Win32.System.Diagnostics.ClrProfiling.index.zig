@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -183,4 +184,21 @@ pub const aliases = struct {
     pub const COR_PRF_GC_REASON = i32;
     pub const COR_PRF_MODULE_FLAGS = i32;
     pub const COR_PRF_CODEGEN_FLAGS = i32;
+    pub const FunctionIDMapper = ?*const anyopaque;
+    pub const FunctionIDMapper2 = ?*const anyopaque;
+    pub const FunctionEnter = ?*const anyopaque;
+    pub const FunctionLeave = ?*const anyopaque;
+    pub const FunctionTailcall = ?*const anyopaque;
+    pub const FunctionEnter2 = ?*const anyopaque;
+    pub const FunctionLeave2 = ?*const anyopaque;
+    pub const FunctionTailcall2 = ?*const anyopaque;
+    pub const FunctionEnter3 = ?*const anyopaque;
+    pub const FunctionLeave3 = ?*const anyopaque;
+    pub const FunctionTailcall3 = ?*const anyopaque;
+    pub const FunctionEnter3WithInfo = ?*const anyopaque;
+    pub const FunctionLeave3WithInfo = ?*const anyopaque;
+    pub const FunctionTailcall3WithInfo = ?*const anyopaque;
+    pub const StackSnapshotCallback = ?*const anyopaque;
+    pub const ObjectReferenceCallback = ?*const anyopaque;
+    pub const EventPipeProviderCallback = ?*const anyopaque;
 };

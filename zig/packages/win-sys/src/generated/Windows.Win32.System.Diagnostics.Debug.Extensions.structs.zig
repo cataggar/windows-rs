@@ -133,11 +133,11 @@ pub const DEBUG_STACK_FRAME_EX = extern struct {
     Reserved1: u32,
 };
 pub const INLINE_FRAME_CONTEXT = extern union {
-    pub const INLINE_FRAME_CONTEXT_0 = extern struct {
-        FrameId: u8,
-        FrameType: u8,
-        FrameSignature: u16,
-    };
+pub const INLINE_FRAME_CONTEXT_0 = extern struct {
+    FrameId: u8,
+    FrameType: u8,
+    FrameSignature: u16,
+};
     ContextValue: u32,
     Anonymous: INLINE_FRAME_CONTEXT_0,
 };
@@ -197,38 +197,38 @@ pub const DEBUG_LAST_EVENT_INFO_SERVICE_EXCEPTION = extern struct {
     Address: u64,
 };
 pub const DEBUG_VALUE = extern struct {
-    pub const DEBUG_VALUE_0 = extern union {
-        pub const DEBUG_VALUE_0_0 = extern struct {
-            I64: u64,
-            Nat: @"Windows.Win32.Foundation".BOOL,
-        };
-        pub const _I64Parts32_e__Struct = extern struct {
-            LowPart: u32,
-            HighPart: u32,
-        };
-        pub const _F128Parts64_e__Struct = extern struct {
-            LowPart: u64,
-            HighPart: i64,
-        };
-        I8: u8,
-        I16: u16,
-        I32: u32,
-        Anonymous: DEBUG_VALUE_0_0,
-        F32: f32,
-        F64: f64,
-        F80Bytes: [10]u8,
-        F82Bytes: [11]u8,
-        F128Bytes: [16]u8,
-        VI8: [16]u8,
-        VI16: [8]u16,
-        VI32: [4]u32,
-        VI64: [2]u64,
-        VF32: [4]f32,
-        VF64: [2]f64,
-        I64Parts32: _I64Parts32_e__Struct,
-        F128Parts64: _F128Parts64_e__Struct,
-        RawBytes: [24]u8,
-    };
+pub const DEBUG_VALUE_0 = extern union {
+pub const DEBUG_VALUE_0_0 = extern struct {
+    I64: u64,
+    Nat: @"Windows.Win32.Foundation".BOOL,
+};
+pub const _I64Parts32_e__Struct = extern struct {
+    LowPart: u32,
+    HighPart: u32,
+};
+pub const _F128Parts64_e__Struct = extern struct {
+    LowPart: u64,
+    HighPart: i64,
+};
+    I8: u8,
+    I16: u16,
+    I32: u32,
+    Anonymous: DEBUG_VALUE_0_0,
+    F32: f32,
+    F64: f64,
+    F80Bytes: [10]u8,
+    F82Bytes: [11]u8,
+    F128Bytes: [16]u8,
+    VI8: [16]u8,
+    VI16: [8]u16,
+    VI32: [4]u32,
+    VI64: [2]u64,
+    VF32: [4]f32,
+    VF64: [2]f64,
+    I64Parts32: _I64Parts32_e__Struct,
+    F128Parts64: _F128Parts64_e__Struct,
+    RawBytes: [24]u8,
+};
     Anonymous: DEBUG_VALUE_0,
     TailOfRawBytes: u32,
     Type: u32,
@@ -371,16 +371,16 @@ pub const ScriptDebugPosition = extern struct {
     Column: u32,
 };
 pub const ScriptDebugEventInformation = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _ExceptionInformation_e__Struct = extern struct {
-            IsUncaught: u8,
-        };
-        pub const _BreakpointInformation_e__Struct = extern struct {
-            BreakpointId: u64,
-        };
-        ExceptionInformation: _ExceptionInformation_e__Struct,
-        BreakpointInformation: _BreakpointInformation_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _ExceptionInformation_e__Struct = extern struct {
+    IsUncaught: u8,
+};
+pub const _BreakpointInformation_e__Struct = extern struct {
+    BreakpointId: u64,
+};
+    ExceptionInformation: _ExceptionInformation_e__Struct,
+    BreakpointInformation: _BreakpointInformation_e__Struct,
+};
     DebugEvent: i32,
     EventPosition: ScriptDebugPosition,
     EventSpanEnd: ScriptDebugPosition,
@@ -928,14 +928,14 @@ pub const KDDEBUGGER_DATA64 = extern struct {
     OffsetPrcbExceptionStack: u16,
 };
 pub const FIELD_INFO = extern struct {
-    pub const FIELD_INFO_0 = extern union {
-        fieldCallBack: *anyopaque,
-        pBuffer: *anyopaque,
-    };
-    pub const _BitField = extern struct {
-        Position: u16,
-        Size: u16,
-    };
+pub const FIELD_INFO_0 = extern union {
+    fieldCallBack: *anyopaque,
+    pBuffer: *anyopaque,
+};
+pub const _BitField = extern struct {
+    Position: u16,
+    Size: u16,
+};
     fName: *u8,
     printName: *u8,
     size: u32,
@@ -949,12 +949,12 @@ pub const FIELD_INFO = extern struct {
     _bitfield: u32,
 };
 pub const POOL_HEADER_SIZE_64 = extern union {
-    pub const POOL_HEADER_SIZE_64_0 = extern struct {
-        UnsafePrevSize: u8,
-        Unused1: u8,
-        UnsafeSize: u8,
-        UnsafePoolType: u8,
-    };
+pub const POOL_HEADER_SIZE_64_0 = extern struct {
+    UnsafePrevSize: u8,
+    Unused1: u8,
+    UnsafeSize: u8,
+    UnsafePoolType: u8,
+};
     Anonymous: POOL_HEADER_SIZE_64_0,
     Ulong1: u32,
 };
@@ -969,11 +969,11 @@ pub const DEBUG_DEVICE_OBJECT_INFO = extern struct {
     DevObjExtension: u64,
 };
 pub const DEBUG_DRIVER_OBJECT_INFO = extern struct {
-    pub const _DriverName_e__Struct = extern struct {
-        Length: u16,
-        MaximumLength: u16,
-        Buffer: u64,
-    };
+pub const _DriverName_e__Struct = extern struct {
+    Length: u16,
+    MaximumLength: u16,
+    Buffer: u64,
+};
     SizeOfStruct: u32,
     DriverSize: u32,
     DriverObjAddress: u64,
@@ -1061,13 +1061,13 @@ pub const DEBUG_PNP_TRIAGE_INFO = extern struct {
     TriagedThread_WaitTime: u64,
 };
 pub const DEBUG_POOL_DATA = extern struct {
-    pub const DEBUG_POOL_DATA_0 = extern union {
-        pub const DEBUG_POOL_DATA_0_0 = extern struct {
-            _bitfield: u32,
-        };
-        Anonymous: DEBUG_POOL_DATA_0_0,
-        AsUlong: u32,
-    };
+pub const DEBUG_POOL_DATA_0 = extern union {
+pub const DEBUG_POOL_DATA_0_0 = extern struct {
+    _bitfield: u32,
+};
+    Anonymous: DEBUG_POOL_DATA_0_0,
+    AsUlong: u32,
+};
     SizeofStruct: u32,
     PoolBlock: u64,
     Pool: u64,
@@ -1157,9 +1157,9 @@ pub const FA_ENTRY = extern struct {
     DataSize: u16,
 };
 pub const OS_INFO = extern struct {
-    pub const _s_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _s_e__Struct = extern struct {
+    _bitfield: u32,
+};
     MajorVer: u32,
     MinorVer: u32,
     Build: u32,
@@ -1215,17 +1215,17 @@ pub const TARGET_DEBUG_INFO_v2 = extern struct {
     DumpFile: [260]@"Windows.Win32.Foundation".CHAR,
 };
 pub const OS_INFO_v1 = extern struct {
-    pub const OS_INFO_v1_0 = extern union {
-        pub const _Version_e__Struct = extern struct {
-            Major: u32,
-            Minor: u32,
-        };
-        Version: _Version_e__Struct,
-        Ver64: u64,
-    };
-    pub const _s_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const OS_INFO_v1_0 = extern union {
+pub const _Version_e__Struct = extern struct {
+    Major: u32,
+    Minor: u32,
+};
+    Version: _Version_e__Struct,
+    Ver64: u64,
+};
+pub const _s_e__Struct = extern struct {
+    _bitfield: u32,
+};
     Type: i32,
     Anonymous: OS_INFO_v1_0,
     ProductType: u32,
@@ -1278,14 +1278,14 @@ pub const DEBUG_TRIAGE_FOLLOWUP_INFO_2 = extern struct {
     FeaturePath: @"Windows.Win32.Foundation".PSTR,
 };
 pub const EXT_CAB_XML_DATA = extern struct {
-    pub const _SUBTAGS = extern struct {
-        SubTag: @"Windows.Win32.Foundation".PWSTR,
-        MatchPattern: @"Windows.Win32.Foundation".PWSTR,
-        ReturnText: @"Windows.Win32.Foundation".PWSTR,
-        ReturnTextSize: u32,
-        _bitfield: u32,
-        Reserved2: u32,
-    };
+pub const _SUBTAGS = extern struct {
+    SubTag: @"Windows.Win32.Foundation".PWSTR,
+    MatchPattern: @"Windows.Win32.Foundation".PWSTR,
+    ReturnText: @"Windows.Win32.Foundation".PWSTR,
+    ReturnTextSize: u32,
+    _bitfield: u32,
+    Reserved2: u32,
+};
     SizeOfStruct: u32,
     XmlObjectTag: @"Windows.Win32.Foundation".PWSTR,
     NumSubTags: u32,

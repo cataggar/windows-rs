@@ -897,4 +897,7 @@ pub const aliases = struct {
     pub const D2D1_COLOR_BITMAP_GLYPH_SNAP_OPTION = i32;
     pub const D2D1_GAMMA1 = i32;
     pub const D2D1_COLOR_CONTEXT_TYPE = i32;
+    pub const PD2D1_EFFECT_FACTORY = ?*const anyopaque;
+    pub const PD2D1_PROPERTY_SET_FUNCTION = ?*const anyopaque;
+    pub const PD2D1_PROPERTY_GET_FUNCTION = ?*const anyopaque;
 };

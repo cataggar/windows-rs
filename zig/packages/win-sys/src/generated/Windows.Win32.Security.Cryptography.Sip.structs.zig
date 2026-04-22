@@ -10,12 +10,12 @@ const @"Windows.Win32.Security.Cryptography" = @import("Windows.Win32.Security.C
 const @"Windows.Win32.Security.Cryptography.Catalog" = @import("Windows.Win32.Security.Cryptography.Catalog.structs.zig");
 
 pub const SIP_SUBJECTINFO = extern struct {
-    pub const SIP_SUBJECTINFO_0 = extern union {
-        psFlat: *MS_ADDINFO_FLAT,
-        psCatMember: *@"Windows.Win32.Security.Cryptography.Catalog".MS_ADDINFO_CATALOGMEMBER,
-        psBlob: *MS_ADDINFO_BLOB,
-        psDetachedSig: *MS_ADDINFO_DETACHEDSIG,
-    };
+pub const SIP_SUBJECTINFO_0 = extern union {
+    psFlat: *MS_ADDINFO_FLAT,
+    psCatMember: *@"Windows.Win32.Security.Cryptography.Catalog".MS_ADDINFO_CATALOGMEMBER,
+    psBlob: *MS_ADDINFO_BLOB,
+    psDetachedSig: *MS_ADDINFO_DETACHEDSIG,
+};
     cbSize: u32,
     pgSubjectType: *GUID,
     hFile: @"Windows.Win32.Foundation".HANDLE,
@@ -59,10 +59,10 @@ pub const SIP_CAP_SET_V2 = extern struct {
     dwReserved: u32,
 };
 pub const SIP_CAP_SET_V3 = extern struct {
-    pub const SIP_CAP_SET_V3_0 = extern union {
-        dwFlags: u32,
-        dwReserved: u32,
-    };
+pub const SIP_CAP_SET_V3_0 = extern union {
+    dwFlags: u32,
+    dwReserved: u32,
+};
     cbSize: u32,
     dwVersion: u32,
     isMultiSign: @"Windows.Win32.Foundation".BOOL,

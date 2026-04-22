@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -240,4 +241,7 @@ pub const aliases = struct {
     pub const DSPROPERTY_DIRECTSOUNDDEVICE = i32;
     pub const DIRECTSOUNDDEVICE_TYPE = i32;
     pub const DIRECTSOUNDDEVICE_DATAFLOW = i32;
+    pub const LPFNDIRECTSOUNDDEVICEENUMERATECALLBACK1 = ?*const anyopaque;
+    pub const LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKA = ?*const anyopaque;
+    pub const LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKW = ?*const anyopaque;
 };

@@ -935,4 +935,17 @@ pub const aliases = struct {
     pub const SF_STATUS_TYPE = i32;
     pub const HTTP_TRACE_TYPE = i32;
     pub const HCONN = ?*anyopaque;
+    pub const PFN_IIS_GETSERVERVARIABLE = ?*const anyopaque;
+    pub const PFN_IIS_WRITECLIENT = ?*const anyopaque;
+    pub const PFN_IIS_READCLIENT = ?*const anyopaque;
+    pub const PFN_IIS_SERVERSUPPORTFUNCTION = ?*const anyopaque;
+    pub const PFN_HSE_IO_COMPLETION = ?*const anyopaque;
+    pub const PFN_HSE_CACHE_INVALIDATION_CALLBACK = ?*const anyopaque;
+    pub const PFN_HSE_GET_PROTOCOL_MANAGER_CUSTOM_INTERFACE_CALLBACK = ?*const anyopaque;
+    pub const PFN_GETEXTENSIONVERSION = ?*const anyopaque;
+    pub const PFN_HTTPEXTENSIONPROC = ?*const anyopaque;
+    pub const PFN_TERMINATEEXTENSION = ?*const anyopaque;
+    pub const PFN_WEB_CORE_SET_METADATA_DLL_ENTRY = ?*const anyopaque;
+    pub const PFN_WEB_CORE_ACTIVATE = ?*const anyopaque;
+    pub const PFN_WEB_CORE_SHUTDOWN = ?*const anyopaque;
 };

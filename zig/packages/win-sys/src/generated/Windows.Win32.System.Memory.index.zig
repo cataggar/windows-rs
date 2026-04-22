@@ -326,4 +326,6 @@ pub const aliases = struct {
     pub const HEAP_INFORMATION_CLASS = i32;
     pub const MEMORY_MAPPED_VIEW_ADDRESS = ?*anyopaque;
     pub const AtlThunkData_t = isize;
+    pub const PBAD_MEMORY_CALLBACK_ROUTINE = ?*const anyopaque;
+    pub const PSECURE_MEMORY_CACHE_CALLBACK = ?*const anyopaque;
 };

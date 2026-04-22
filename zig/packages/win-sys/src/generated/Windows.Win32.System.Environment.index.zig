@@ -97,4 +97,17 @@ pub const ENCLAVE_IDENTITY_POLICY_SEAL_SAME_AUTHOR = 5;
 
 pub const aliases = struct {
     pub const ENCLAVE_SEALING_IDENTITY_POLICY = i32;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_EXCEPTION = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_TERMINATE_THREAD = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_INTERRUPT_THREAD = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_CREATE_THREAD = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_ENCLAVE = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_COMMIT_PAGES = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_DECOMMIT_PAGES = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_PROTECT_PAGES = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_GET_ENCLAVE_INFORMATION = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_KEY = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_REPORT = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_VERIFY_REPORT = ?*const anyopaque;
+    pub const VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_RANDOM_DATA = ?*const anyopaque;
 };

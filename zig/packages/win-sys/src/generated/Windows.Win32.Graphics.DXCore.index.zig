@@ -86,4 +86,5 @@ pub const aliases = struct {
     pub const DXCoreRuntimeFilterFlags = u32;
     pub const DXCoreHardwareTypeFilterFlags = u32;
     pub const DXCoreMemoryType = u32;
+    pub const PFN_DXCORE_NOTIFICATION_CALLBACK = ?*const anyopaque;
 };

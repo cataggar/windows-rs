@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -2411,4 +2412,9 @@ pub const aliases = struct {
     pub const RESOURCEMANAGER_INFORMATION_CLASS = i32;
     pub const ENLISTMENT_INFORMATION_CLASS = i32;
     pub const KTMOBJECT_TYPE = i32;
+    pub const PUMS_SCHEDULER_ENTRY_POINT = ?*const anyopaque;
+    pub const PTERMINATION_HANDLER = ?*const anyopaque;
+    pub const POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = ?*const anyopaque;
+    pub const PEXCEPTION_FILTER = ?*const anyopaque;
+    pub const PIMAGE_TLS_CALLBACK = ?*const anyopaque;
 };

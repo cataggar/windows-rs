@@ -553,4 +553,5 @@ pub const aliases = struct {
     pub const EapPeerMethodResponseAction = i32;
     pub const EapPeerMethodResultReason = i32;
     pub const EAP_AUTHENTICATOR_SEND_TIMEOUT = i32;
+    pub const NotificationHandler = ?*const anyopaque;
 };

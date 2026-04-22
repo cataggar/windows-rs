@@ -8580,4 +8580,9 @@ pub const aliases = struct {
     pub const DOCHOSTUIDBLCLK = i32;
     pub const DOCHOSTUIFLAG = i32;
     pub const HostDialogHelper = isize;
+    pub const SHOWHTMLDIALOGFN = ?*const anyopaque;
+    pub const SHOWHTMLDIALOGEXFN = ?*const anyopaque;
+    pub const SHOWMODELESSHTMLDIALOGFN = ?*const anyopaque;
+    pub const IEREGISTERXMLNSFN = ?*const anyopaque;
+    pub const IEISXMLNSREGISTEREDFN = ?*const anyopaque;
 };

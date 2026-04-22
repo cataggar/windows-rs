@@ -26,10 +26,10 @@ pub const SP_INF_INFORMATION = extern struct {
     VersionData: [1]u8,
 };
 pub const SP_ALTPLATFORM_INFO_V3 = extern struct {
-    pub const SP_ALTPLATFORM_INFO_V3_0 = extern union {
-        Reserved: u16,
-        Flags: u16,
-    };
+pub const SP_ALTPLATFORM_INFO_V3_0 = extern union {
+    Reserved: u16,
+    Flags: u16,
+};
     cbSize: u32,
     Platform: u32,
     MajorVersion: u32,
@@ -43,10 +43,10 @@ pub const SP_ALTPLATFORM_INFO_V3 = extern struct {
     BuildNumber: u32,
 };
 pub const SP_ALTPLATFORM_INFO_V2 = extern struct {
-    pub const SP_ALTPLATFORM_INFO_V2_0 = extern union {
-        Reserved: u16,
-        Flags: u16,
-    };
+pub const SP_ALTPLATFORM_INFO_V2_0 = extern union {
+    Reserved: u16,
+    Flags: u16,
+};
     cbSize: u32,
     Platform: u32,
     MajorVersion: u32,
@@ -563,20 +563,20 @@ pub const HWPROFILEINFO_W = extern struct {
     HWPI_dwFlags: u32,
 };
 pub const CM_NOTIFY_FILTER = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _DeviceInterface_e__Struct = extern struct {
-            ClassGuid: GUID,
-        };
-        pub const _DeviceHandle_e__Struct = extern struct {
-            hTarget: @"Windows.Win32.Foundation".HANDLE,
-        };
-        pub const _DeviceInstance_e__Struct = extern struct {
-            InstanceId: [200]u16,
-        };
-        DeviceInterface: _DeviceInterface_e__Struct,
-        DeviceHandle: _DeviceHandle_e__Struct,
-        DeviceInstance: _DeviceInstance_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _DeviceInterface_e__Struct = extern struct {
+    ClassGuid: GUID,
+};
+pub const _DeviceHandle_e__Struct = extern struct {
+    hTarget: @"Windows.Win32.Foundation".HANDLE,
+};
+pub const _DeviceInstance_e__Struct = extern struct {
+    InstanceId: [200]u16,
+};
+    DeviceInterface: _DeviceInterface_e__Struct,
+    DeviceHandle: _DeviceHandle_e__Struct,
+    DeviceInstance: _DeviceInstance_e__Struct,
+};
     cbSize: u32,
     Flags: u32,
     FilterType: i32,
@@ -584,24 +584,24 @@ pub const CM_NOTIFY_FILTER = extern struct {
     u: _u_e__Union,
 };
 pub const CM_NOTIFY_EVENT_DATA = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _DeviceInterface_e__Struct = extern struct {
-            ClassGuid: GUID,
-            SymbolicLink: [1]u16,
-        };
-        pub const _DeviceHandle_e__Struct = extern struct {
-            EventGuid: GUID,
-            NameOffset: i32,
-            DataSize: u32,
-            Data: [1]u8,
-        };
-        pub const _DeviceInstance_e__Struct = extern struct {
-            InstanceId: [1]u16,
-        };
-        DeviceInterface: _DeviceInterface_e__Struct,
-        DeviceHandle: _DeviceHandle_e__Struct,
-        DeviceInstance: _DeviceInstance_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _DeviceInterface_e__Struct = extern struct {
+    ClassGuid: GUID,
+    SymbolicLink: [1]u16,
+};
+pub const _DeviceHandle_e__Struct = extern struct {
+    EventGuid: GUID,
+    NameOffset: i32,
+    DataSize: u32,
+    Data: [1]u8,
+};
+pub const _DeviceInstance_e__Struct = extern struct {
+    InstanceId: [1]u16,
+};
+    DeviceInterface: _DeviceInterface_e__Struct,
+    DeviceHandle: _DeviceHandle_e__Struct,
+    DeviceInstance: _DeviceInstance_e__Struct,
+};
     FilterType: i32,
     Reserved: u32,
     u: _u_e__Union,

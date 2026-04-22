@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -92,4 +93,5 @@ pub const aliases = struct {
     pub const APO_LOG_LEVEL = i32;
     pub const APO_NOTIFICATION_TYPE = i32;
     pub const DEVICE_ORIENTATION_TYPE = i32;
+    pub const FNAPONOTIFICATIONCALLBACK = ?*const anyopaque;
 };

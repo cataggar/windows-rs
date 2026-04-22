@@ -129,4 +129,7 @@ pub const D3D_BLOB_TEST_COMPILE_REPORT = 32771;
 pub const aliases = struct {
     pub const D3DCOMPILER_STRIP_FLAGS = i32;
     pub const D3D_BLOB_PART = i32;
+    pub const pD3DCompile = ?*const anyopaque;
+    pub const pD3DPreprocess = ?*const anyopaque;
+    pub const pD3DDisassemble = ?*const anyopaque;
 };

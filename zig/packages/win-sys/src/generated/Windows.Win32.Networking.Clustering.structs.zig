@@ -300,10 +300,10 @@ pub const NodeSriovInfo = extern struct {
     QPUsed: u32,
 };
 pub const CLUSPROP_SYNTAX = extern union {
-    pub const CLUSPROP_SYNTAX_0 = extern struct {
-        wFormat: u16,
-        wType: u16,
-    };
+pub const CLUSPROP_SYNTAX_0 = extern struct {
+    wFormat: u16,
+    wType: u16,
+};
     dw: u32,
     Anonymous: CLUSPROP_SYNTAX_0,
 };
@@ -340,10 +340,10 @@ pub const CLUSPROP_LARGE_INTEGER = extern struct {
     li: i64,
 };
 pub const CLUSPROP_SECURITY_DESCRIPTOR = extern struct {
-    pub const CLUSPROP_SECURITY_DESCRIPTOR_0 = extern union {
-        sd: @"Windows.Win32.Security".SECURITY_DESCRIPTOR_RELATIVE,
-        rgbSecurityDescriptor: [1]u8,
-    };
+pub const CLUSPROP_SECURITY_DESCRIPTOR_0 = extern union {
+    sd: @"Windows.Win32.Security".SECURITY_DESCRIPTOR_RELATIVE,
+    rgbSecurityDescriptor: [1]u8,
+};
     Base: CLUSPROP_VALUE,
     Anonymous: CLUSPROP_SECURITY_DESCRIPTOR_0,
 };
@@ -352,18 +352,18 @@ pub const CLUSPROP_FILETIME = extern struct {
     ft: @"Windows.Win32.Foundation".FILETIME,
 };
 pub const CLUS_RESOURCE_CLASS_INFO = extern struct {
-    pub const CLUS_RESOURCE_CLASS_INFO_0 = extern union {
-        pub const CLUS_RESOURCE_CLASS_INFO_0_0 = extern struct {
-            pub const CLUS_RESOURCE_CLASS_INFO_0_0_0 = extern union {
-                dw: u32,
-                rc: i32,
-            };
-            Anonymous: CLUS_RESOURCE_CLASS_INFO_0_0_0,
-            SubClass: u32,
-        };
-        Anonymous: CLUS_RESOURCE_CLASS_INFO_0_0,
-        li: u64,
-    };
+pub const CLUS_RESOURCE_CLASS_INFO_0 = extern union {
+pub const CLUS_RESOURCE_CLASS_INFO_0_0 = extern struct {
+pub const CLUS_RESOURCE_CLASS_INFO_0_0_0 = extern union {
+    dw: u32,
+    rc: i32,
+};
+    Anonymous: CLUS_RESOURCE_CLASS_INFO_0_0_0,
+    SubClass: u32,
+};
+    Anonymous: CLUS_RESOURCE_CLASS_INFO_0_0,
+    li: u64,
+};
     Anonymous: CLUS_RESOURCE_CLASS_INFO_0,
 };
 pub const CLUSPROP_RESOURCE_CLASS = extern struct {
@@ -436,12 +436,12 @@ pub const CLUSTER_SHARED_VOLUME_STATE_INFO_EX = extern struct {
     VolumeRedirectedIOReason: u64,
 };
 pub const CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME = extern struct {
-    pub const CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME_0 = extern union {
-        VolumeOffset: u64,
-        VolumeId: [260]u16,
-        VolumeName: [260]u16,
-        VolumeGuid: [50]u16,
-    };
+pub const CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME_0 = extern union {
+    VolumeOffset: u64,
+    VolumeId: [260]u16,
+    VolumeName: [260]u16,
+    VolumeGuid: [50]u16,
+};
     InputType: i32,
     Anonymous: CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME_0,
 };
@@ -472,16 +472,16 @@ pub const CLUS_FTSET_INFO = extern struct {
     dwFtType: u32,
 };
 pub const CLUS_SCSI_ADDRESS = extern struct {
-    pub const CLUS_SCSI_ADDRESS_0 = extern union {
-        pub const CLUS_SCSI_ADDRESS_0_0 = extern struct {
-            PortNumber: u8,
-            PathId: u8,
-            TargetId: u8,
-            Lun: u8,
-        };
-        Anonymous: CLUS_SCSI_ADDRESS_0_0,
-        dw: u32,
-    };
+pub const CLUS_SCSI_ADDRESS_0 = extern union {
+pub const CLUS_SCSI_ADDRESS_0_0 = extern struct {
+    PortNumber: u8,
+    PathId: u8,
+    TargetId: u8,
+    Lun: u8,
+};
+    Anonymous: CLUS_SCSI_ADDRESS_0_0,
+    dw: u32,
+};
     Anonymous: CLUS_SCSI_ADDRESS_0,
 };
 pub const CLUS_NETNAME_VS_TOKEN_INFO = extern struct {
@@ -714,14 +714,14 @@ pub const RESUTIL_FILETIME_DATA = extern struct {
     Maximum: @"Windows.Win32.Foundation".FILETIME,
 };
 pub const RESUTIL_PROPERTY_ITEM = extern struct {
-    pub const RESUTIL_PROPERTY_ITEM_0 = extern union {
-        DefaultPtr: usize,
-        Default: u32,
-        lpDefault: *anyopaque,
-        LargeIntData: *RESUTIL_LARGEINT_DATA,
-        ULargeIntData: *RESUTIL_ULARGEINT_DATA,
-        FileTimeData: *RESUTIL_FILETIME_DATA,
-    };
+pub const RESUTIL_PROPERTY_ITEM_0 = extern union {
+    DefaultPtr: usize,
+    Default: u32,
+    lpDefault: *anyopaque,
+    LargeIntData: *RESUTIL_LARGEINT_DATA,
+    ULargeIntData: *RESUTIL_ULARGEINT_DATA,
+    FileTimeData: *RESUTIL_FILETIME_DATA,
+};
     Name: @"Windows.Win32.Foundation".PWSTR,
     KeyName: @"Windows.Win32.Foundation".PWSTR,
     Format: u32,

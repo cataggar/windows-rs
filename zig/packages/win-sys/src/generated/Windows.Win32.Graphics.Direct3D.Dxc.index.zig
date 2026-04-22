@@ -59,4 +59,6 @@ pub const DXC_OUT_NUM_ENUMS = 14;
 pub const aliases = struct {
     pub const DXC_CP = u32;
     pub const DXC_OUT_KIND = i32;
+    pub const DxcCreateInstanceProc = ?*const anyopaque;
+    pub const DxcCreateInstance2Proc = ?*const anyopaque;
 };

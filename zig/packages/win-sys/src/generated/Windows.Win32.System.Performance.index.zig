@@ -554,4 +554,12 @@ pub const aliases = struct {
     pub const PDH_HLOG = ?*anyopaque;
     pub const PDH_HQUERY = ?*anyopaque;
     pub const PDH_HCOUNTER = ?*anyopaque;
+    pub const PLA_CABEXTRACT_CALLBACK = ?*const anyopaque;
+    pub const PERFLIBREQUEST = ?*const anyopaque;
+    pub const PERF_MEM_ALLOC = ?*const anyopaque;
+    pub const PERF_MEM_FREE = ?*const anyopaque;
+    pub const PM_OPEN_PROC = ?*const anyopaque;
+    pub const PM_COLLECT_PROC = ?*const anyopaque;
+    pub const PM_CLOSE_PROC = ?*const anyopaque;
+    pub const CounterPathCallBack = ?*const anyopaque;
 };

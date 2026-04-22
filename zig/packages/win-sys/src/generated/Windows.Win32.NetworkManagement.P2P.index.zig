@@ -550,4 +550,9 @@ pub const aliases = struct {
     pub const DRT_ADDRESS_FLAGS = i32;
     pub const PEERDIST_STATUS = i32;
     pub const PEERDIST_CLIENT_INFO_BY_HANDLE_CLASS = i32;
+    pub const PFNPEER_VALIDATE_RECORD = ?*const anyopaque;
+    pub const PFNPEER_SECURE_RECORD = ?*const anyopaque;
+    pub const PFNPEER_FREE_SECURITY_DATA = ?*const anyopaque;
+    pub const PFNPEER_ON_PASSWORD_AUTH_FAILED = ?*const anyopaque;
+    pub const DRT_BOOTSTRAP_RESOLVE_CALLBACK = ?*const anyopaque;
 };

@@ -268,4 +268,5 @@ pub const aliases = struct {
     pub const HCONV = ?*anyopaque;
     pub const HCONVLIST = ?*anyopaque;
     pub const HDDEDATA = ?*anyopaque;
+    pub const PFNCALLBACK = ?*const anyopaque;
 };

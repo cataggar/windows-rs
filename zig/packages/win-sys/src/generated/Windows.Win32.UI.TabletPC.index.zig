@@ -1262,4 +1262,5 @@ pub const aliases = struct {
     pub const HRECOGNIZER = ?*anyopaque;
     pub const HRECOLATTICE = ?*anyopaque;
     pub const HRECOWORDLIST = ?*anyopaque;
+    pub const PfnRecoCallback = ?*const anyopaque;
 };

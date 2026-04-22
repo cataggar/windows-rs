@@ -50,23 +50,23 @@ pub const TID_EXTENSION = extern struct {
     wCount: u16,
 };
 pub const SECTION = extern struct {
-    pub const _Header_e__Union = extern union {
-        S: MPEG_HEADER_BITS_MIDL,
-        W: u16,
-    };
+pub const _Header_e__Union = extern union {
+    S: MPEG_HEADER_BITS_MIDL,
+    W: u16,
+};
     TableId: u8,
     Header: _Header_e__Union,
     SectionData: [1]u8,
 };
 pub const LONG_SECTION = extern struct {
-    pub const _Header_e__Union = extern union {
-        S: MPEG_HEADER_BITS_MIDL,
-        W: u16,
-    };
-    pub const _Version_e__Union = extern union {
-        S: MPEG_HEADER_VERSION_BITS_MIDL,
-        B: u8,
-    };
+pub const _Header_e__Union = extern union {
+    S: MPEG_HEADER_BITS_MIDL,
+    W: u16,
+};
+pub const _Version_e__Union = extern union {
+    S: MPEG_HEADER_VERSION_BITS_MIDL,
+    B: u8,
+};
     TableId: u8,
     Header: _Header_e__Union,
     TableIdExtension: u16,
@@ -76,14 +76,14 @@ pub const LONG_SECTION = extern struct {
     RemainingData: [1]u8,
 };
 pub const DSMCC_SECTION = extern struct {
-    pub const _Header_e__Union = extern union {
-        S: MPEG_HEADER_BITS_MIDL,
-        W: u16,
-    };
-    pub const _Version_e__Union = extern union {
-        S: MPEG_HEADER_VERSION_BITS_MIDL,
-        B: u8,
-    };
+pub const _Header_e__Union = extern union {
+    S: MPEG_HEADER_BITS_MIDL,
+    W: u16,
+};
+pub const _Version_e__Union = extern union {
+    S: MPEG_HEADER_VERSION_BITS_MIDL,
+    B: u8,
+};
     TableId: u8,
     Header: _Header_e__Union,
     TableIdExtension: u16,
@@ -152,29 +152,29 @@ pub const MPEG2_FILTER = extern struct {
     Atsc: ATSC_FILTER_OPTIONS,
 };
 pub const MPEG2_FILTER2 = extern struct {
-    pub const MPEG2_FILTER2_0 = extern union {
-        pub const MPEG2_FILTER2_0_0 = extern struct {
-            bVersionNumber: u8,
-            wFilterSize: u16,
-            fUseRawFilteringBits: @"Windows.Win32.Foundation".BOOL,
-            Filter: [16]u8,
-            Mask: [16]u8,
-            fSpecifyTableIdExtension: @"Windows.Win32.Foundation".BOOL,
-            TableIdExtension: u16,
-            fSpecifyVersion: @"Windows.Win32.Foundation".BOOL,
-            Version: u8,
-            fSpecifySectionNumber: @"Windows.Win32.Foundation".BOOL,
-            SectionNumber: u8,
-            fSpecifyCurrentNext: @"Windows.Win32.Foundation".BOOL,
-            fNext: @"Windows.Win32.Foundation".BOOL,
-            fSpecifyDsmccOptions: @"Windows.Win32.Foundation".BOOL,
-            Dsmcc: DSMCC_FILTER_OPTIONS,
-            fSpecifyAtscOptions: @"Windows.Win32.Foundation".BOOL,
-            Atsc: ATSC_FILTER_OPTIONS,
-        };
-        Anonymous: MPEG2_FILTER2_0_0,
-        bVersion1Bytes: [124]u8,
-    };
+pub const MPEG2_FILTER2_0 = extern union {
+pub const MPEG2_FILTER2_0_0 = extern struct {
+    bVersionNumber: u8,
+    wFilterSize: u16,
+    fUseRawFilteringBits: @"Windows.Win32.Foundation".BOOL,
+    Filter: [16]u8,
+    Mask: [16]u8,
+    fSpecifyTableIdExtension: @"Windows.Win32.Foundation".BOOL,
+    TableIdExtension: u16,
+    fSpecifyVersion: @"Windows.Win32.Foundation".BOOL,
+    Version: u8,
+    fSpecifySectionNumber: @"Windows.Win32.Foundation".BOOL,
+    SectionNumber: u8,
+    fSpecifyCurrentNext: @"Windows.Win32.Foundation".BOOL,
+    fNext: @"Windows.Win32.Foundation".BOOL,
+    fSpecifyDsmccOptions: @"Windows.Win32.Foundation".BOOL,
+    Dsmcc: DSMCC_FILTER_OPTIONS,
+    fSpecifyAtscOptions: @"Windows.Win32.Foundation".BOOL,
+    Atsc: ATSC_FILTER_OPTIONS,
+};
+    Anonymous: MPEG2_FILTER2_0_0,
+    bVersion1Bytes: [124]u8,
+};
     Anonymous: MPEG2_FILTER2_0,
     fSpecifyDvbEitOptions: @"Windows.Win32.Foundation".BOOL,
     DvbEit: DVB_EIT_FILTER_OPTIONS,
@@ -206,10 +206,10 @@ pub const MPEG_WINSOCK = extern struct {
     AVMGraphId: u32,
 };
 pub const MPEG_CONTEXT = extern struct {
-    pub const _U_e__Union = extern union {
-        Demux: MPEG_BCS_DEMUX,
-        Winsock: MPEG_WINSOCK,
-    };
+pub const _U_e__Union = extern union {
+    Demux: MPEG_BCS_DEMUX,
+    Winsock: MPEG_WINSOCK,
+};
     Type: i32,
     U: _U_e__Union,
 };
@@ -280,13 +280,13 @@ pub const VA_OPTIONAL_VIDEO_PROPERTIES = extern struct {
     VAMatrixCoefficients: i32,
 };
 pub const TRANSPORT_PROPERTIES = extern struct {
-    pub const _Fields_e__Union = extern union {
-        pub const _Others = extern struct {
-            _bitfield: i64,
-        };
-        Others: _Others,
-        Value: i64,
-    };
+pub const _Fields_e__Union = extern union {
+pub const _Others = extern struct {
+    _bitfield: i64,
+};
+    Others: _Others,
+    Value: i64,
+};
     PID: u32,
     PCR: i64,
     Fields: _Fields_e__Union,
@@ -319,23 +319,23 @@ pub const KSP_BDA_NODE_PIN = extern struct {
     ulOutputPinId: u32,
 };
 pub const KSM_BDA_PIN = extern struct {
-    pub const KSM_BDA_PIN_0 = extern union {
-        PinId: u32,
-        PinType: u32,
-    };
+pub const KSM_BDA_PIN_0 = extern union {
+    PinId: u32,
+    PinType: u32,
+};
     Method: @"Windows.Win32.Media.KernelStreaming".KSIDENTIFIER,
     Anonymous: KSM_BDA_PIN_0,
     Reserved: u32,
 };
 pub const KSM_BDA_PIN_PAIR = extern struct {
-    pub const KSM_BDA_PIN_PAIR_0 = extern union {
-        InputPinId: u32,
-        InputPinType: u32,
-    };
-    pub const KSM_BDA_PIN_PAIR_1 = extern union {
-        OutputPinId: u32,
-        OutputPinType: u32,
-    };
+pub const KSM_BDA_PIN_PAIR_0 = extern union {
+    InputPinId: u32,
+    InputPinType: u32,
+};
+pub const KSM_BDA_PIN_PAIR_1 = extern union {
+    OutputPinId: u32,
+    OutputPinType: u32,
+};
     Method: @"Windows.Win32.Media.KernelStreaming".KSIDENTIFIER,
     Anonymous1: KSM_BDA_PIN_PAIR_0,
     Anonymous2: KSM_BDA_PIN_PAIR_1,
@@ -516,22 +516,22 @@ pub const ChannelTypeInfo = extern struct {
     timeStamp: u64,
 };
 pub const ChannelInfo = extern struct {
-    pub const ChannelInfo_0 = extern union {
-        pub const _DVB_e__Struct = extern struct {
-            lONID: i32,
-            lTSID: i32,
-            lSID: i32,
-        };
-        pub const _DC_e__Struct = extern struct {
-            lProgNumber: i32,
-        };
-        pub const _ATSC_e__Struct = extern struct {
-            lProgNumber: i32,
-        };
-        DVB: _DVB_e__Struct,
-        DC: _DC_e__Struct,
-        ATSC: _ATSC_e__Struct,
-    };
+pub const ChannelInfo_0 = extern union {
+pub const _DVB_e__Struct = extern struct {
+    lONID: i32,
+    lTSID: i32,
+    lSID: i32,
+};
+pub const _DC_e__Struct = extern struct {
+    lProgNumber: i32,
+};
+pub const _ATSC_e__Struct = extern struct {
+    lProgNumber: i32,
+};
+    DVB: _DVB_e__Struct,
+    DC: _DC_e__Struct,
+    ATSC: _ATSC_e__Struct,
+};
     lFrequency: i32,
     Anonymous: ChannelInfo_0,
 };

@@ -321,4 +321,5 @@ pub const aliases = struct {
     pub const TARGETPROTOCOLTYPE = i32;
     pub const TARGET_INFORMATION_CLASS = i32;
     pub const _ADAPTER_OBJECT = isize;
+    pub const PDUMP_DEVICE_POWERON_ROUTINE = ?*const anyopaque;
 };

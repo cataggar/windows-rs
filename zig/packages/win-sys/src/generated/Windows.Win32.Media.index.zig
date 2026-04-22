@@ -137,4 +137,6 @@ pub const TIME_KILL_SYNCHRONOUS = 256;
 
 pub const aliases = struct {
     pub const TIMECODE_SAMPLE_FLAGS = u32;
+    pub const LPDRVCALLBACK = ?*const anyopaque;
+    pub const LPTIMECALLBACK = ?*const anyopaque;
 };

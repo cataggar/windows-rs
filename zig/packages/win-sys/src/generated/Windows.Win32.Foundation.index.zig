@@ -10587,4 +10587,8 @@ pub const aliases = struct {
     pub const HSTR = ?*anyopaque;
     pub const HUMPD = ?*anyopaque;
     pub const HLSURF = ?*anyopaque;
+    pub const FARPROC = ?*const anyopaque;
+    pub const NEARPROC = ?*const anyopaque;
+    pub const PROC = ?*const anyopaque;
+    pub const PAPCFUNC = ?*const anyopaque;
 };

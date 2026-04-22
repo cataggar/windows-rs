@@ -91,4 +91,14 @@ pub const aliases = struct {
     pub const NS_REQS = i32;
     pub const NS_EVENTS = i32;
     pub const NS_MODE_CHANGE = i32;
+    pub const PGET_RESOURCE_STRING_FN = ?*const anyopaque;
+    pub const PNS_CONTEXT_COMMIT_FN = ?*const anyopaque;
+    pub const PNS_CONTEXT_CONNECT_FN = ?*const anyopaque;
+    pub const PNS_CONTEXT_DUMP_FN = ?*const anyopaque;
+    pub const PNS_DLL_STOP_FN = ?*const anyopaque;
+    pub const PNS_HELPER_START_FN = ?*const anyopaque;
+    pub const PNS_HELPER_STOP_FN = ?*const anyopaque;
+    pub const PFN_HANDLE_CMD = ?*const anyopaque;
+    pub const PNS_OSVERSIONCHECK = ?*const anyopaque;
+    pub const PNS_DLL_INIT_FN = ?*const anyopaque;
 };

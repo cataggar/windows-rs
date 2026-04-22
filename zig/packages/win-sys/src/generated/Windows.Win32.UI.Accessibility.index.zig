@@ -1109,4 +1109,13 @@ pub const aliases = struct {
     pub const HUIAPATTERNOBJECT = ?*anyopaque;
     pub const HUIATEXTRANGE = ?*anyopaque;
     pub const HUIAEVENT = ?*anyopaque;
+    pub const LPFNLRESULTFROMOBJECT = ?*const anyopaque;
+    pub const LPFNOBJECTFROMLRESULT = ?*const anyopaque;
+    pub const LPFNACCESSIBLEOBJECTFROMWINDOW = ?*const anyopaque;
+    pub const LPFNACCESSIBLEOBJECTFROMPOINT = ?*const anyopaque;
+    pub const LPFNCREATESTDACCESSIBLEOBJECT = ?*const anyopaque;
+    pub const LPFNACCESSIBLECHILDREN = ?*const anyopaque;
+    pub const UiaProviderCallback = ?*const anyopaque;
+    pub const UiaEventCallback = ?*const anyopaque;
+    pub const WINEVENTPROC = ?*const anyopaque;
 };

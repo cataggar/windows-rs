@@ -111,24 +111,24 @@ pub const VDS_PORTAL_GROUP_NOTIFICATION = extern struct {
     portalGroupId: GUID,
 };
 pub const VDS_NOTIFICATION = extern struct {
-    pub const VDS_NOTIFICATION_0 = extern union {
-        Pack: VDS_PACK_NOTIFICATION,
-        Disk: VDS_DISK_NOTIFICATION,
-        Volume: VDS_VOLUME_NOTIFICATION,
-        Partition: VDS_PARTITION_NOTIFICATION,
-        Letter: VDS_DRIVE_LETTER_NOTIFICATION,
-        FileSystem: VDS_FILE_SYSTEM_NOTIFICATION,
-        MountPoint: VDS_MOUNT_POINT_NOTIFICATION,
-        SubSystem: VDS_SUB_SYSTEM_NOTIFICATION,
-        Controller: VDS_CONTROLLER_NOTIFICATION,
-        Drive: VDS_DRIVE_NOTIFICATION,
-        Lun: VDS_LUN_NOTIFICATION,
-        Port: VDS_PORT_NOTIFICATION,
-        Portal: VDS_PORTAL_NOTIFICATION,
-        Target: VDS_TARGET_NOTIFICATION,
-        PortalGroup: VDS_PORTAL_GROUP_NOTIFICATION,
-        Service: VDS_SERVICE_NOTIFICATION,
-    };
+pub const VDS_NOTIFICATION_0 = extern union {
+    Pack: VDS_PACK_NOTIFICATION,
+    Disk: VDS_DISK_NOTIFICATION,
+    Volume: VDS_VOLUME_NOTIFICATION,
+    Partition: VDS_PARTITION_NOTIFICATION,
+    Letter: VDS_DRIVE_LETTER_NOTIFICATION,
+    FileSystem: VDS_FILE_SYSTEM_NOTIFICATION,
+    MountPoint: VDS_MOUNT_POINT_NOTIFICATION,
+    SubSystem: VDS_SUB_SYSTEM_NOTIFICATION,
+    Controller: VDS_CONTROLLER_NOTIFICATION,
+    Drive: VDS_DRIVE_NOTIFICATION,
+    Lun: VDS_LUN_NOTIFICATION,
+    Port: VDS_PORT_NOTIFICATION,
+    Portal: VDS_PORTAL_NOTIFICATION,
+    Target: VDS_TARGET_NOTIFICATION,
+    PortalGroup: VDS_PORTAL_GROUP_NOTIFICATION,
+    Service: VDS_SERVICE_NOTIFICATION,
+};
     objectType: i32,
     Anonymous: VDS_NOTIFICATION_0,
 };
@@ -185,18 +185,18 @@ pub const VDS_PROVIDER_PROP = extern struct {
     sRebuildPriority: i16,
 };
 pub const VDS_PATH_INFO = extern struct {
-    pub const VDS_PATH_INFO_0 = extern union {
-        controllerPortId: GUID,
-        targetPortalId: GUID,
-    };
-    pub const VDS_PATH_INFO_1 = extern union {
-        hbaPortId: GUID,
-        initiatorAdapterId: GUID,
-    };
-    pub const VDS_PATH_INFO_2 = extern union {
-        pHbaPortProp: *VDS_HBAPORT_PROP,
-        pInitiatorPortalIpAddr: *VDS_IPADDRESS,
-    };
+pub const VDS_PATH_INFO_0 = extern union {
+    controllerPortId: GUID,
+    targetPortalId: GUID,
+};
+pub const VDS_PATH_INFO_1 = extern union {
+    hbaPortId: GUID,
+    initiatorAdapterId: GUID,
+};
+pub const VDS_PATH_INFO_2 = extern union {
+    pHbaPortProp: *VDS_HBAPORT_PROP,
+    pInitiatorPortalIpAddr: *VDS_IPADDRESS,
+};
     pathId: VDS_PATH_ID,
     type: i32,
     status: i32,
@@ -216,10 +216,10 @@ pub const VDS_PACK_PROP = extern struct {
     ulFlags: u32,
 };
 pub const VDS_DISK_PROP = extern struct {
-    pub const VDS_DISK_PROP_0 = extern union {
-        dwSignature: u32,
-        DiskGuid: GUID,
-    };
+pub const VDS_DISK_PROP_0 = extern union {
+    dwSignature: u32,
+    DiskGuid: GUID,
+};
     id: GUID,
     status: i32,
     ReserveMode: i32,
@@ -241,10 +241,10 @@ pub const VDS_DISK_PROP = extern struct {
     pwszDevicePath: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const VDS_DISK_PROP2 = extern struct {
-    pub const VDS_DISK_PROP2_0 = extern union {
-        dwSignature: u32,
-        DiskGuid: GUID,
-    };
+pub const VDS_DISK_PROP2_0 = extern union {
+    dwSignature: u32,
+    DiskGuid: GUID,
+};
     id: GUID,
     status: i32,
     OfflineReason: i32,
@@ -268,10 +268,10 @@ pub const VDS_DISK_PROP2 = extern struct {
     pwszLocationPath: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const VDS_ADVANCEDDISK_PROP = extern struct {
-    pub const VDS_ADVANCEDDISK_PROP_0 = extern union {
-        dwSignature: u32,
-        DiskGuid: GUID,
-    };
+pub const VDS_ADVANCEDDISK_PROP_0 = extern union {
+    dwSignature: u32,
+    DiskGuid: GUID,
+};
     pwszId: @"Windows.Win32.Foundation".PWSTR,
     pwszPathname: @"Windows.Win32.Foundation".PWSTR,
     pwszLocation: @"Windows.Win32.Foundation".PWSTR,
@@ -363,10 +363,10 @@ pub const VDS_PARTITION_INFO_MBR = extern struct {
     hiddenSectors: u32,
 };
 pub const VDS_PARTITION_PROP = extern struct {
-    pub const VDS_PARTITION_PROP_0 = extern union {
-        Mbr: VDS_PARTITION_INFO_MBR,
-        Gpt: VDS_PARTITION_INFO_GPT,
-    };
+pub const VDS_PARTITION_PROP_0 = extern union {
+    Mbr: VDS_PARTITION_INFO_MBR,
+    Gpt: VDS_PARTITION_INFO_GPT,
+};
     PartitionStyle: i32,
     ulFlags: u32,
     ulPartitionNumber: u32,
@@ -375,10 +375,10 @@ pub const VDS_PARTITION_PROP = extern struct {
     Anonymous: VDS_PARTITION_PROP_0,
 };
 pub const VDS_PARTITION_INFORMATION_EX = extern struct {
-    pub const VDS_PARTITION_INFORMATION_EX_0 = extern union {
-        Mbr: VDS_PARTITION_INFO_MBR,
-        Gpt: VDS_PARTITION_INFO_GPT,
-    };
+pub const VDS_PARTITION_INFORMATION_EX_0 = extern union {
+    Mbr: VDS_PARTITION_INFO_MBR,
+    Gpt: VDS_PARTITION_INFO_GPT,
+};
     dwPartitionStyle: i32,
     ullStartingOffset: u64,
     ullPartitionLength: u64,
@@ -387,48 +387,48 @@ pub const VDS_PARTITION_INFORMATION_EX = extern struct {
     Anonymous: VDS_PARTITION_INFORMATION_EX_0,
 };
 pub const CREATE_PARTITION_PARAMETERS = extern struct {
-    pub const CREATE_PARTITION_PARAMETERS_0 = extern union {
-        pub const _MbrPartInfo_e__Struct = extern struct {
-            partitionType: u8,
-            bootIndicator: @"Windows.Win32.Foundation".BOOLEAN,
-        };
-        pub const _GptPartInfo_e__Struct = extern struct {
-            partitionType: GUID,
-            partitionId: GUID,
-            attributes: u64,
-            name: [36]u16,
-        };
-        MbrPartInfo: _MbrPartInfo_e__Struct,
-        GptPartInfo: _GptPartInfo_e__Struct,
-    };
+pub const CREATE_PARTITION_PARAMETERS_0 = extern union {
+pub const _MbrPartInfo_e__Struct = extern struct {
+    partitionType: u8,
+    bootIndicator: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const _GptPartInfo_e__Struct = extern struct {
+    partitionType: GUID,
+    partitionId: GUID,
+    attributes: u64,
+    name: [36]u16,
+};
+    MbrPartInfo: _MbrPartInfo_e__Struct,
+    GptPartInfo: _GptPartInfo_e__Struct,
+};
     style: i32,
     Anonymous: CREATE_PARTITION_PARAMETERS_0,
 };
 pub const CHANGE_ATTRIBUTES_PARAMETERS = extern struct {
-    pub const CHANGE_ATTRIBUTES_PARAMETERS_0 = extern union {
-        pub const _MbrPartInfo_e__Struct = extern struct {
-            bootIndicator: @"Windows.Win32.Foundation".BOOLEAN,
-        };
-        pub const _GptPartInfo_e__Struct = extern struct {
-            attributes: u64,
-        };
-        MbrPartInfo: _MbrPartInfo_e__Struct,
-        GptPartInfo: _GptPartInfo_e__Struct,
-    };
+pub const CHANGE_ATTRIBUTES_PARAMETERS_0 = extern union {
+pub const _MbrPartInfo_e__Struct = extern struct {
+    bootIndicator: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const _GptPartInfo_e__Struct = extern struct {
+    attributes: u64,
+};
+    MbrPartInfo: _MbrPartInfo_e__Struct,
+    GptPartInfo: _GptPartInfo_e__Struct,
+};
     style: i32,
     Anonymous: CHANGE_ATTRIBUTES_PARAMETERS_0,
 };
 pub const CHANGE_PARTITION_TYPE_PARAMETERS = extern struct {
-    pub const CHANGE_PARTITION_TYPE_PARAMETERS_0 = extern union {
-        pub const _MbrPartInfo_e__Struct = extern struct {
-            partitionType: u8,
-        };
-        pub const _GptPartInfo_e__Struct = extern struct {
-            partitionType: GUID,
-        };
-        MbrPartInfo: _MbrPartInfo_e__Struct,
-        GptPartInfo: _GptPartInfo_e__Struct,
-    };
+pub const CHANGE_PARTITION_TYPE_PARAMETERS_0 = extern union {
+pub const _MbrPartInfo_e__Struct = extern struct {
+    partitionType: u8,
+};
+pub const _GptPartInfo_e__Struct = extern struct {
+    partitionType: GUID,
+};
+    MbrPartInfo: _MbrPartInfo_e__Struct,
+    GptPartInfo: _GptPartInfo_e__Struct,
+};
     style: i32,
     Anonymous: CHANGE_PARTITION_TYPE_PARAMETERS_0,
 };

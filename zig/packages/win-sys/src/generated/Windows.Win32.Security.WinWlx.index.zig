@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -84,4 +85,32 @@ pub const WLX_OPTION_DISPATCH_TABLE_SIZE = 65539;
 
 pub const aliases = struct {
     pub const WLX_SHUTDOWN_TYPE = u32;
+    pub const PWLX_USE_CTRL_ALT_DEL = ?*const anyopaque;
+    pub const PWLX_SET_CONTEXT_POINTER = ?*const anyopaque;
+    pub const PWLX_SAS_NOTIFY = ?*const anyopaque;
+    pub const PWLX_SET_TIMEOUT = ?*const anyopaque;
+    pub const PWLX_ASSIGN_SHELL_PROTECTION = ?*const anyopaque;
+    pub const PWLX_MESSAGE_BOX = ?*const anyopaque;
+    pub const PWLX_DIALOG_BOX = ?*const anyopaque;
+    pub const PWLX_DIALOG_BOX_INDIRECT = ?*const anyopaque;
+    pub const PWLX_DIALOG_BOX_PARAM = ?*const anyopaque;
+    pub const PWLX_DIALOG_BOX_INDIRECT_PARAM = ?*const anyopaque;
+    pub const PWLX_SWITCH_DESKTOP_TO_USER = ?*const anyopaque;
+    pub const PWLX_SWITCH_DESKTOP_TO_WINLOGON = ?*const anyopaque;
+    pub const PWLX_CHANGE_PASSWORD_NOTIFY = ?*const anyopaque;
+    pub const PWLX_GET_SOURCE_DESKTOP = ?*const anyopaque;
+    pub const PWLX_SET_RETURN_DESKTOP = ?*const anyopaque;
+    pub const PWLX_CREATE_USER_DESKTOP = ?*const anyopaque;
+    pub const PWLX_CHANGE_PASSWORD_NOTIFY_EX = ?*const anyopaque;
+    pub const PWLX_CLOSE_USER_DESKTOP = ?*const anyopaque;
+    pub const PWLX_SET_OPTION = ?*const anyopaque;
+    pub const PWLX_GET_OPTION = ?*const anyopaque;
+    pub const PWLX_WIN31_MIGRATE = ?*const anyopaque;
+    pub const PWLX_QUERY_CLIENT_CREDENTIALS = ?*const anyopaque;
+    pub const PWLX_QUERY_IC_CREDENTIALS = ?*const anyopaque;
+    pub const PWLX_QUERY_TS_LOGON_CREDENTIALS = ?*const anyopaque;
+    pub const PWLX_DISCONNECT = ?*const anyopaque;
+    pub const PWLX_QUERY_TERMINAL_SERVICES_DATA = ?*const anyopaque;
+    pub const PWLX_QUERY_CONSOLESWITCH_CREDENTIALS = ?*const anyopaque;
+    pub const PFNMSGECALLBACK = ?*const anyopaque;
 };

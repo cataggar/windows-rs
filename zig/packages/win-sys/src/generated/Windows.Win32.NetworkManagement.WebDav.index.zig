@@ -48,4 +48,6 @@ pub const CancelRequest = 2;
 
 pub const aliases = struct {
     pub const AUTHNEXTSTEP = i32;
+    pub const PFNDAVAUTHCALLBACK_FREECRED = ?*const anyopaque;
+    pub const PFNDAVAUTHCALLBACK = ?*const anyopaque;
 };

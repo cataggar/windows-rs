@@ -397,4 +397,5 @@ pub const aliases = struct {
     pub const WICDdsAlphaMode = i32;
     pub const WICMetadataCreationOptions = i32;
     pub const WICPersistOptions = i32;
+    pub const PFNProgressNotification = ?*const anyopaque;
 };

@@ -698,4 +698,8 @@ pub const aliases = struct {
     pub const CO_MTA_USAGE_COOKIE = ?*anyopaque;
     pub const CO_DEVICE_CATALOG_COOKIE = ?*anyopaque;
     pub const MachineGlobalObjectTableRegistrationToken = ?*anyopaque;
+    pub const LPEXCEPFINO_DEFERRED_FILLIN = ?*const anyopaque;
+    pub const LPFNGETCLASSOBJECT = ?*const anyopaque;
+    pub const LPFNCANUNLOADNOW = ?*const anyopaque;
+    pub const PFNCONTEXTCALL = ?*const anyopaque;
 };

@@ -988,4 +988,11 @@ pub const aliases = struct {
     pub const PFADDRESSTYPE = i32;
     pub const PFFRAMETYPE = i32;
     pub const HIFTIMESTAMPCHANGE = ?*anyopaque;
+    pub const PINTERFACE_TIMESTAMP_CONFIG_CHANGE_CALLBACK = ?*const anyopaque;
+    pub const PIPINTERFACE_CHANGE_CALLBACK = ?*const anyopaque;
+    pub const PUNICAST_IPADDRESS_CHANGE_CALLBACK = ?*const anyopaque;
+    pub const PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK = ?*const anyopaque;
+    pub const PIPFORWARD_CHANGE_CALLBACK = ?*const anyopaque;
+    pub const PTEREDO_PORT_CHANGE_CALLBACK = ?*const anyopaque;
+    pub const PNETWORK_CONNECTIVITY_HINT_CHANGE_CALLBACK = ?*const anyopaque;
 };

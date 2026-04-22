@@ -11,7 +11,8 @@ pub const TypeRefEntry = struct {
     name: []const u8,
 };
 
-pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{});
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
 
 pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     return switch (coded) {
@@ -1321,4 +1322,9 @@ pub const aliases = struct {
     pub const tomConstants = i32;
     pub const OBJECTTYPE = i32;
     pub const MANCODE = i32;
+    pub const AutoCorrectProc = ?*const anyopaque;
+    pub const EDITWORDBREAKPROCEX = ?*const anyopaque;
+    pub const EDITSTREAMCALLBACK = ?*const anyopaque;
+    pub const PCreateTextServices = ?*const anyopaque;
+    pub const PShutdownTextServices = ?*const anyopaque;
 };

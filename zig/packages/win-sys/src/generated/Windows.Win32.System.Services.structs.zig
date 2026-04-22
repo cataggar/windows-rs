@@ -20,14 +20,14 @@ pub const SERVICE_TRIGGER_CUSTOM_STATE_ID = extern struct {
     Data: [2]u32,
 };
 pub const SERVICE_CUSTOM_SYSTEM_STATE_CHANGE_DATA_ITEM = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _s_e__Struct = extern struct {
-            DataOffset: u32,
-            Data: [1]u8,
-        };
-        CustomStateId: SERVICE_TRIGGER_CUSTOM_STATE_ID,
-        s: _s_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _s_e__Struct = extern struct {
+    DataOffset: u32,
+    Data: [1]u8,
+};
+    CustomStateId: SERVICE_TRIGGER_CUSTOM_STATE_ID,
+    s: _s_e__Struct,
+};
     u: _u_e__Union,
 };
 pub const SERVICE_DESCRIPTIONA = extern struct {

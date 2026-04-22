@@ -220,4 +220,6 @@ pub const aliases = struct {
     pub const WEBAUTHN_PLUGIN_PERFORM_UV_OPERATION_TYPE = i32;
     pub const WEBAUTHN_PLUGIN_REQUEST_TYPE = i32;
     pub const PLUGIN_LOCK_STATUS = i32;
+    pub const EXPERIMENTAL_WEBAUTHN_PLUGIN_STATUS_CHANGE_CALLBACK = ?*const anyopaque;
+    pub const WEBAUTHN_PLUGIN_STATUS_CHANGE_CALLBACK = ?*const anyopaque;
 };

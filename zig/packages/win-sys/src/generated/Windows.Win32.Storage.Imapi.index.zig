@@ -646,4 +646,5 @@ pub const aliases = struct {
     pub const IMMPID_NMP_ENUM = i32;
     pub const IMMPID_CPV_ENUM = i32;
     pub const LPMSGSESS = isize;
+    pub const MSGCALLRELEASE = ?*const anyopaque;
 };

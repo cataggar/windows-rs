@@ -27,3 +27,8 @@ pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
 }
 
 pub const MAX_D3D9ON12_QUEUES = 2;
+
+pub const aliases = struct {
+    pub const PFN_Direct3DCreate9On12Ex = ?*const anyopaque;
+    pub const PFN_Direct3DCreate9On12 = ?*const anyopaque;
+};

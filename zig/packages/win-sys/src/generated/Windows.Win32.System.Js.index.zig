@@ -179,4 +179,10 @@ pub const aliases = struct {
     pub const JsRuntimeAttributes = i32;
     pub const JsMemoryEventType = i32;
     pub const JsValueType = i32;
+    pub const JsMemoryAllocationCallback = ?*const anyopaque;
+    pub const JsBeforeCollectCallback = ?*const anyopaque;
+    pub const JsBackgroundWorkItemCallback = ?*const anyopaque;
+    pub const JsThreadServiceCallback = ?*const anyopaque;
+    pub const JsFinalizeCallback = ?*const anyopaque;
+    pub const JsNativeFunction = ?*const anyopaque;
 };

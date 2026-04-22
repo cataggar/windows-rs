@@ -1220,4 +1220,8 @@ pub const aliases = struct {
     pub const DSROLE_PRIMARY_DOMAIN_INFO_LEVEL = i32;
     pub const DSROLE_OPERATION_STATE = i32;
     pub const ADS_SEARCH_HANDLE = isize;
+    pub const LPCQADDFORMSPROC = ?*const anyopaque;
+    pub const LPCQADDPAGESPROC = ?*const anyopaque;
+    pub const LPCQPAGEPROC = ?*const anyopaque;
+    pub const LPDSENUMATTRIBUTES = ?*const anyopaque;
 };

@@ -890,4 +890,12 @@ pub const aliases = struct {
     pub const REGHANDLE = i64;
     pub const CONTROLTRACE_HANDLE = u64;
     pub const RELOGSTREAM_HANDLE = u64;
+    pub const PEVENT_TRACE_BUFFER_CALLBACKW = ?*const anyopaque;
+    pub const PEVENT_TRACE_BUFFER_CALLBACKA = ?*const anyopaque;
+    pub const PEVENT_CALLBACK = ?*const anyopaque;
+    pub const PEVENT_RECORD_CALLBACK = ?*const anyopaque;
+    pub const PETW_BUFFER_CALLBACK = ?*const anyopaque;
+    pub const PETW_BUFFER_COMPLETION_CALLBACK = ?*const anyopaque;
+    pub const WMIDPREQUEST = ?*const anyopaque;
+    pub const PENABLECALLBACK = ?*const anyopaque;
 };

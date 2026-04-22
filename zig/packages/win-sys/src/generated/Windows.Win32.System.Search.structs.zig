@@ -234,10 +234,10 @@ pub const SQL_DAY_SECOND_STRUCT = extern struct {
     fraction: u32,
 };
 pub const SQL_INTERVAL_STRUCT = extern struct {
-    pub const _intval_e__Union = extern union {
-        year_month: SQL_YEAR_MONTH_STRUCT,
-        day_second: SQL_DAY_SECOND_STRUCT,
-    };
+pub const _intval_e__Union = extern union {
+    year_month: SQL_YEAR_MONTH_STRUCT,
+    day_second: SQL_DAY_SECOND_STRUCT,
+};
     interval_type: i32,
     interval_sign: i16,
     intval: _intval_e__Union,
@@ -332,14 +332,14 @@ pub const BUCKETCATEGORIZE = extern struct {
     Distribution: u32,
 };
 pub const ODBC_VS_ARGS = extern struct {
-    pub const ODBC_VS_ARGS_0 = extern union {
-        wszArg: @"Windows.Win32.Foundation".PWSTR,
-        szArg: @"Windows.Win32.Foundation".PSTR,
-    };
-    pub const ODBC_VS_ARGS_1 = extern union {
-        wszCorrelation: @"Windows.Win32.Foundation".PWSTR,
-        szCorrelation: @"Windows.Win32.Foundation".PSTR,
-    };
+pub const ODBC_VS_ARGS_0 = extern union {
+    wszArg: @"Windows.Win32.Foundation".PWSTR,
+    szArg: @"Windows.Win32.Foundation".PSTR,
+};
+pub const ODBC_VS_ARGS_1 = extern union {
+    wszCorrelation: @"Windows.Win32.Foundation".PWSTR,
+    szCorrelation: @"Windows.Win32.Foundation".PSTR,
+};
     pguidEvent: *GUID,
     dwFlags: u32,
     Anonymous1: ODBC_VS_ARGS_0,

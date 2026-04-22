@@ -28,10 +28,10 @@ pub const SECURITY_ATTRIBUTES = extern struct {
     bInheritHandle: @"Windows.Win32.Foundation".BOOL,
 };
 pub const LLFILETIME = extern struct {
-    pub const LLFILETIME_0 = extern union {
-        ll: i64,
-        ft: @"Windows.Win32.Foundation".FILETIME,
-    };
+pub const LLFILETIME_0 = extern union {
+    ll: i64,
+    ft: @"Windows.Win32.Foundation".FILETIME,
+};
     Anonymous: LLFILETIME_0,
 };
 pub const GENERIC_MAPPING = extern struct {
@@ -374,13 +374,13 @@ pub const CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE = extern struct {
     ValueLength: u32,
 };
 pub const CLAIM_SECURITY_ATTRIBUTE_V1 = extern struct {
-    pub const _Values_e__Union = extern union {
-        pInt64: *i64,
-        pUint64: *u64,
-        ppString: *@"Windows.Win32.Foundation".PWSTR,
-        pFqbn: *CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE,
-        pOctetString: *CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE,
-    };
+pub const _Values_e__Union = extern union {
+    pInt64: *i64,
+    pUint64: *u64,
+    ppString: *@"Windows.Win32.Foundation".PWSTR,
+    pFqbn: *CLAIM_SECURITY_ATTRIBUTE_FQBN_VALUE,
+    pOctetString: *CLAIM_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE,
+};
     Name: @"Windows.Win32.Foundation".PWSTR,
     ValueType: u16,
     Reserved: u16,
@@ -389,13 +389,13 @@ pub const CLAIM_SECURITY_ATTRIBUTE_V1 = extern struct {
     Values: _Values_e__Union,
 };
 pub const CLAIM_SECURITY_ATTRIBUTE_RELATIVE_V1 = extern struct {
-    pub const _Values_e__Union = extern union {
-        pInt64: [1]u32,
-        pUint64: [1]u32,
-        ppString: [1]u32,
-        pFqbn: [1]u32,
-        pOctetString: [1]u32,
-    };
+pub const _Values_e__Union = extern union {
+    pInt64: [1]u32,
+    pUint64: [1]u32,
+    ppString: [1]u32,
+    pFqbn: [1]u32,
+    pOctetString: [1]u32,
+};
     Name: u32,
     ValueType: u16,
     Reserved: u16,
@@ -404,9 +404,9 @@ pub const CLAIM_SECURITY_ATTRIBUTE_RELATIVE_V1 = extern struct {
     Values: _Values_e__Union,
 };
 pub const CLAIM_SECURITY_ATTRIBUTES_INFORMATION = extern struct {
-    pub const _Attribute_e__Union = extern union {
-        pAttributeV1: *CLAIM_SECURITY_ATTRIBUTE_V1,
-    };
+pub const _Attribute_e__Union = extern union {
+    pAttributeV1: *CLAIM_SECURITY_ATTRIBUTE_V1,
+};
     Version: u16,
     Reserved: u16,
     AttributeCount: u32,

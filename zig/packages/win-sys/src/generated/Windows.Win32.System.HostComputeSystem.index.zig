@@ -192,4 +192,7 @@ pub const aliases = struct {
     pub const HCS_OPERATION = ?*anyopaque;
     pub const HCS_SYSTEM = ?*anyopaque;
     pub const HCS_PROCESS = ?*anyopaque;
+    pub const HCS_OPERATION_COMPLETION = ?*const anyopaque;
+    pub const HCS_EVENT_CALLBACK = ?*const anyopaque;
+    pub const HCS_NOTIFICATION_CALLBACK = ?*const anyopaque;
 };

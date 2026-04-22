@@ -166,4 +166,8 @@ pub const aliases = struct {
     pub const HSTRING_BUFFER = ?*anyopaque;
     pub const APARTMENT_SHUTDOWN_REGISTRATION_COOKIE = ?*anyopaque;
     pub const RO_REGISTRATION_COOKIE = isize;
+    pub const PINSPECT_HSTRING_CALLBACK = ?*const anyopaque;
+    pub const PINSPECT_HSTRING_CALLBACK2 = ?*const anyopaque;
+    pub const PFNGETACTIVATIONFACTORY = ?*const anyopaque;
+    pub const PINSPECT_MEMORY_CALLBACK = ?*const anyopaque;
 };

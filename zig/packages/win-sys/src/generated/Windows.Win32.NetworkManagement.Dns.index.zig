@@ -541,4 +541,11 @@ pub const aliases = struct {
     pub const DNS_CONNECTION_PROXY_TYPE = i32;
     pub const DNS_CONNECTION_PROXY_INFO_SWITCH = i32;
     pub const DNS_CONNECTION_POLICY_TAG = i32;
+    pub const DNS_PROXY_COMPLETION_ROUTINE = ?*const anyopaque;
+    pub const PDNS_QUERY_COMPLETION_ROUTINE = ?*const anyopaque;
+    pub const DNS_QUERY_RAW_COMPLETION_ROUTINE = ?*const anyopaque;
+    pub const PDNS_SERVICE_BROWSE_CALLBACK = ?*const anyopaque;
+    pub const PDNS_SERVICE_RESOLVE_COMPLETE = ?*const anyopaque;
+    pub const PDNS_SERVICE_REGISTER_COMPLETE = ?*const anyopaque;
+    pub const PMDNS_QUERY_CALLBACK = ?*const anyopaque;
 };

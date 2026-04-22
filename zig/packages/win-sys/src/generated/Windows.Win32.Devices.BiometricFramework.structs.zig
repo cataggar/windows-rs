@@ -21,17 +21,17 @@ pub const WINBIO_VERSION = extern struct {
     MinorVersion: u32,
 };
 pub const WINBIO_IDENTITY = extern struct {
-    pub const _Value_e__Union = extern union {
-        pub const _AccountSid_e__Struct = extern struct {
-            Size: u32,
-            Data: [68]u8,
-        };
-        Null: u32,
-        Wildcard: u32,
-        TemplateGuid: GUID,
-        AccountSid: _AccountSid_e__Struct,
-        SecureId: [32]u8,
-    };
+pub const _Value_e__Union = extern union {
+pub const _AccountSid_e__Struct = extern struct {
+    Size: u32,
+    Data: [68]u8,
+};
+    Null: u32,
+    Wildcard: u32,
+    TemplateGuid: GUID,
+    AccountSid: _AccountSid_e__Struct,
+    SecureId: [32]u8,
+};
     Type: u32,
     Value: _Value_e__Union,
 };
@@ -63,10 +63,10 @@ pub const WINBIO_REGISTERED_FORMAT = extern struct {
     Type: u16,
 };
 pub const WINBIO_BIR_HEADER = extern struct {
-    pub const _ValidityPeriod_e__Struct = extern struct {
-        BeginDate: i64,
-        EndDate: i64,
-    };
+pub const _ValidityPeriod_e__Struct = extern struct {
+    BeginDate: i64,
+    EndDate: i64,
+};
     ValidFields: u16,
     HeaderVersion: u8,
     PatronHeaderVersion: u8,
@@ -115,30 +115,30 @@ pub const WINBIO_SECURE_BUFFER_HEADER_V1 = extern struct {
     ValidationTag: u64,
 };
 pub const WINBIO_PRESENCE_PROPERTIES = extern union {
-    pub const _FacialFeatures_e__Struct = extern struct {
-        pub const _OpaqueEngineData_e__Struct = extern struct {
-            AdapterId: GUID,
-            Data: [78]u32,
-        };
-        BoundingBox: @"Windows.Win32.Foundation".RECT,
-        Distance: i32,
-        OpaqueEngineData: _OpaqueEngineData_e__Struct,
-    };
-    pub const _Iris_e__Struct = extern struct {
-        EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
-        EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
-        PupilCenter_1: @"Windows.Win32.Foundation".POINT,
-        PupilCenter_2: @"Windows.Win32.Foundation".POINT,
-        Distance: i32,
-    };
+pub const _FacialFeatures_e__Struct = extern struct {
+pub const _OpaqueEngineData_e__Struct = extern struct {
+    AdapterId: GUID,
+    Data: [78]u32,
+};
+    BoundingBox: @"Windows.Win32.Foundation".RECT,
+    Distance: i32,
+    OpaqueEngineData: _OpaqueEngineData_e__Struct,
+};
+pub const _Iris_e__Struct = extern struct {
+    EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
+    EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
+    PupilCenter_1: @"Windows.Win32.Foundation".POINT,
+    PupilCenter_2: @"Windows.Win32.Foundation".POINT,
+    Distance: i32,
+};
     FacialFeatures: _FacialFeatures_e__Struct,
     Iris: _Iris_e__Struct,
 };
 pub const WINBIO_PRESENCE = extern struct {
-    pub const _Authorization_e__Struct = extern struct {
-        Size: u32,
-        Data: [32]u8,
-    };
+pub const _Authorization_e__Struct = extern struct {
+    Size: u32,
+    Data: [32]u8,
+};
     Factor: u32,
     SubFactor: u8,
     Status: @"Windows.Win32.Foundation".HRESULT,
@@ -178,152 +178,152 @@ pub const WINBIO_STORAGE_SCHEMA = extern struct {
     ConnectionString: [256]u16,
 };
 pub const WINBIO_EXTENDED_SENSOR_INFO = extern struct {
-    pub const _Specific_e__Union = extern union {
-        pub const _FacialFeatures_e__Struct = extern struct {
-            pub const _HardwareInfo_e__Struct = extern struct {
-                ColorSensorId: [260]u16,
-                InfraredSensorId: [260]u16,
-                InfraredSensorRotationAngle: u32,
-            };
-            FrameSize: @"Windows.Win32.Foundation".RECT,
-            FrameOffset: @"Windows.Win32.Foundation".POINT,
-            MandatoryOrientation: u32,
-            HardwareInfo: _HardwareInfo_e__Struct,
-        };
-        pub const _Fingerprint_e__Struct = extern struct {
-            Reserved: u32,
-        };
-        pub const _Iris_e__Struct = extern struct {
-            FrameSize: @"Windows.Win32.Foundation".RECT,
-            FrameOffset: @"Windows.Win32.Foundation".POINT,
-            MandatoryOrientation: u32,
-        };
-        pub const _Voice_e__Struct = extern struct {
-            Reserved: u32,
-        };
-        Null: u32,
-        FacialFeatures: _FacialFeatures_e__Struct,
-        Fingerprint: _Fingerprint_e__Struct,
-        Iris: _Iris_e__Struct,
-        Voice: _Voice_e__Struct,
-    };
+pub const _Specific_e__Union = extern union {
+pub const _FacialFeatures_e__Struct = extern struct {
+pub const _HardwareInfo_e__Struct = extern struct {
+    ColorSensorId: [260]u16,
+    InfraredSensorId: [260]u16,
+    InfraredSensorRotationAngle: u32,
+};
+    FrameSize: @"Windows.Win32.Foundation".RECT,
+    FrameOffset: @"Windows.Win32.Foundation".POINT,
+    MandatoryOrientation: u32,
+    HardwareInfo: _HardwareInfo_e__Struct,
+};
+pub const _Fingerprint_e__Struct = extern struct {
+    Reserved: u32,
+};
+pub const _Iris_e__Struct = extern struct {
+    FrameSize: @"Windows.Win32.Foundation".RECT,
+    FrameOffset: @"Windows.Win32.Foundation".POINT,
+    MandatoryOrientation: u32,
+};
+pub const _Voice_e__Struct = extern struct {
+    Reserved: u32,
+};
+    Null: u32,
+    FacialFeatures: _FacialFeatures_e__Struct,
+    Fingerprint: _Fingerprint_e__Struct,
+    Iris: _Iris_e__Struct,
+    Voice: _Voice_e__Struct,
+};
     GenericSensorCapabilities: u32,
     Factor: u32,
     Specific: _Specific_e__Union,
 };
 pub const WINBIO_EXTENDED_ENGINE_INFO = extern struct {
-    pub const _Specific_e__Union = extern union {
-        pub const _FacialFeatures_e__Struct = extern struct {
-            pub const _EnrollmentRequirements_e__Struct = extern struct {
-                Null: u32,
-            };
-            Capabilities: u32,
-            EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
-        };
-        pub const _Fingerprint_e__Struct = extern struct {
-            pub const _EnrollmentRequirements_e__Struct_2 = extern struct {
-                GeneralSamples: u32,
-                Center: u32,
-                TopEdge: u32,
-                BottomEdge: u32,
-                LeftEdge: u32,
-                RightEdge: u32,
-            };
-            Capabilities: u32,
-            EnrollmentRequirements: _EnrollmentRequirements_e__Struct_2,
-        };
-        pub const _Iris_e__Struct = extern struct {
-            pub const _EnrollmentRequirements_e__Struct_3 = extern struct {
-                Null: u32,
-            };
-            Capabilities: u32,
-            EnrollmentRequirements: _EnrollmentRequirements_e__Struct_3,
-        };
-        pub const _Voice_e__Struct = extern struct {
-            pub const _EnrollmentRequirements_e__Struct_4 = extern struct {
-                Null: u32,
-            };
-            Capabilities: u32,
-            EnrollmentRequirements: _EnrollmentRequirements_e__Struct_4,
-        };
-        Null: u32,
-        FacialFeatures: _FacialFeatures_e__Struct,
-        Fingerprint: _Fingerprint_e__Struct,
-        Iris: _Iris_e__Struct,
-        Voice: _Voice_e__Struct,
-    };
+pub const _Specific_e__Union = extern union {
+pub const _FacialFeatures_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct = extern struct {
+    Null: u32,
+};
+    Capabilities: u32,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
+};
+pub const _Fingerprint_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct_2 = extern struct {
+    GeneralSamples: u32,
+    Center: u32,
+    TopEdge: u32,
+    BottomEdge: u32,
+    LeftEdge: u32,
+    RightEdge: u32,
+};
+    Capabilities: u32,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_2,
+};
+pub const _Iris_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct_3 = extern struct {
+    Null: u32,
+};
+    Capabilities: u32,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_3,
+};
+pub const _Voice_e__Struct = extern struct {
+pub const _EnrollmentRequirements_e__Struct_4 = extern struct {
+    Null: u32,
+};
+    Capabilities: u32,
+    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_4,
+};
+    Null: u32,
+    FacialFeatures: _FacialFeatures_e__Struct,
+    Fingerprint: _Fingerprint_e__Struct,
+    Iris: _Iris_e__Struct,
+    Voice: _Voice_e__Struct,
+};
     GenericEngineCapabilities: u32,
     Factor: u32,
     Specific: _Specific_e__Union,
 };
 pub const WINBIO_EXTENDED_STORAGE_INFO = extern struct {
-    pub const _Specific_e__Union = extern union {
-        pub const _FacialFeatures_e__Struct = extern struct {
-            Capabilities: u32,
-        };
-        pub const _Fingerprint_e__Struct = extern struct {
-            Capabilities: u32,
-        };
-        pub const _Iris_e__Struct = extern struct {
-            Capabilities: u32,
-        };
-        pub const _Voice_e__Struct = extern struct {
-            Capabilities: u32,
-        };
-        Null: u32,
-        FacialFeatures: _FacialFeatures_e__Struct,
-        Fingerprint: _Fingerprint_e__Struct,
-        Iris: _Iris_e__Struct,
-        Voice: _Voice_e__Struct,
-    };
+pub const _Specific_e__Union = extern union {
+pub const _FacialFeatures_e__Struct = extern struct {
+    Capabilities: u32,
+};
+pub const _Fingerprint_e__Struct = extern struct {
+    Capabilities: u32,
+};
+pub const _Iris_e__Struct = extern struct {
+    Capabilities: u32,
+};
+pub const _Voice_e__Struct = extern struct {
+    Capabilities: u32,
+};
+    Null: u32,
+    FacialFeatures: _FacialFeatures_e__Struct,
+    Fingerprint: _Fingerprint_e__Struct,
+    Iris: _Iris_e__Struct,
+    Voice: _Voice_e__Struct,
+};
     GenericStorageCapabilities: u32,
     Factor: u32,
     Specific: _Specific_e__Union,
 };
 pub const WINBIO_EXTENDED_ENROLLMENT_STATUS = extern struct {
-    pub const _Specific_e__Union = extern union {
-        pub const _FacialFeatures_e__Struct = extern struct {
-            pub const _OpaqueEngineData_e__Struct = extern struct {
-                AdapterId: GUID,
-                Data: [78]u32,
-            };
-            BoundingBox: @"Windows.Win32.Foundation".RECT,
-            Distance: i32,
-            OpaqueEngineData: _OpaqueEngineData_e__Struct,
-        };
-        pub const _Fingerprint_e__Struct = extern struct {
-            GeneralSamples: u32,
-            Center: u32,
-            TopEdge: u32,
-            BottomEdge: u32,
-            LeftEdge: u32,
-            RightEdge: u32,
-        };
-        pub const _Iris_e__Struct = extern struct {
-            pub const _Point3D_e__Struct = extern struct {
-                X: f64,
-                Y: f64,
-                Z: f64,
-            };
-            EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
-            EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
-            PupilCenter_1: @"Windows.Win32.Foundation".POINT,
-            PupilCenter_2: @"Windows.Win32.Foundation".POINT,
-            Distance: i32,
-            GridPointCompletionPercent: u32,
-            GridPointIndex: u16,
-            Point3D: _Point3D_e__Struct,
-            StopCaptureAndShowCriticalFeedback: @"Windows.Win32.Foundation".BOOL,
-        };
-        pub const _Voice_e__Struct = extern struct {
-            Reserved: u32,
-        };
-        Null: u32,
-        FacialFeatures: _FacialFeatures_e__Struct,
-        Fingerprint: _Fingerprint_e__Struct,
-        Iris: _Iris_e__Struct,
-        Voice: _Voice_e__Struct,
-    };
+pub const _Specific_e__Union = extern union {
+pub const _FacialFeatures_e__Struct = extern struct {
+pub const _OpaqueEngineData_e__Struct = extern struct {
+    AdapterId: GUID,
+    Data: [78]u32,
+};
+    BoundingBox: @"Windows.Win32.Foundation".RECT,
+    Distance: i32,
+    OpaqueEngineData: _OpaqueEngineData_e__Struct,
+};
+pub const _Fingerprint_e__Struct = extern struct {
+    GeneralSamples: u32,
+    Center: u32,
+    TopEdge: u32,
+    BottomEdge: u32,
+    LeftEdge: u32,
+    RightEdge: u32,
+};
+pub const _Iris_e__Struct = extern struct {
+pub const _Point3D_e__Struct = extern struct {
+    X: f64,
+    Y: f64,
+    Z: f64,
+};
+    EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
+    EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
+    PupilCenter_1: @"Windows.Win32.Foundation".POINT,
+    PupilCenter_2: @"Windows.Win32.Foundation".POINT,
+    Distance: i32,
+    GridPointCompletionPercent: u32,
+    GridPointIndex: u16,
+    Point3D: _Point3D_e__Struct,
+    StopCaptureAndShowCriticalFeedback: @"Windows.Win32.Foundation".BOOL,
+};
+pub const _Voice_e__Struct = extern struct {
+    Reserved: u32,
+};
+    Null: u32,
+    FacialFeatures: _FacialFeatures_e__Struct,
+    Fingerprint: _Fingerprint_e__Struct,
+    Iris: _Iris_e__Struct,
+    Voice: _Voice_e__Struct,
+};
     TemplateStatus: @"Windows.Win32.Foundation".HRESULT,
     RejectDetail: u32,
     PercentComplete: u32,

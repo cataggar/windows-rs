@@ -123,4 +123,12 @@ pub const aliases = struct {
     pub const PRJ_COMPLETE_COMMAND_TYPE = i32;
     pub const PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT = ?*anyopaque;
     pub const PRJ_DIR_ENTRY_BUFFER_HANDLE = ?*anyopaque;
+    pub const PRJ_START_DIRECTORY_ENUMERATION_CB = ?*const anyopaque;
+    pub const PRJ_GET_DIRECTORY_ENUMERATION_CB = ?*const anyopaque;
+    pub const PRJ_END_DIRECTORY_ENUMERATION_CB = ?*const anyopaque;
+    pub const PRJ_GET_PLACEHOLDER_INFO_CB = ?*const anyopaque;
+    pub const PRJ_GET_FILE_DATA_CB = ?*const anyopaque;
+    pub const PRJ_QUERY_FILE_NAME_CB = ?*const anyopaque;
+    pub const PRJ_NOTIFICATION_CB = ?*const anyopaque;
+    pub const PRJ_CANCEL_COMMAND_CB = ?*const anyopaque;
 };

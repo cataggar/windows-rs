@@ -90,18 +90,18 @@ pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION = extern struct {
     LimitFlags: u32,
 };
 pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2 = extern struct {
-    pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2_0 = extern union {
-        JobHighMemoryLimit: u64,
-        JobMemoryLimit: u64,
-    };
-    pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2_1 = extern union {
-        RateControlTolerance: i32,
-        CpuRateControlTolerance: i32,
-    };
-    pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2_2 = extern union {
-        RateControlToleranceInterval: i32,
-        CpuRateControlToleranceInterval: i32,
-    };
+pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2_0 = extern union {
+    JobHighMemoryLimit: u64,
+    JobMemoryLimit: u64,
+};
+pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2_1 = extern union {
+    RateControlTolerance: i32,
+    CpuRateControlTolerance: i32,
+};
+pub const JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2_2 = extern union {
+    RateControlToleranceInterval: i32,
+    CpuRateControlToleranceInterval: i32,
+};
     IoReadBytesLimit: u64,
     IoWriteBytesLimit: u64,
     PerJobUserTimeLimit: i64,
@@ -130,18 +130,18 @@ pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION = extern struct {
     RateControlToleranceLimit: i32,
 };
 pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2 = extern struct {
-    pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2_0 = extern union {
-        JobHighMemoryLimit: u64,
-        JobMemoryLimit: u64,
-    };
-    pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2_1 = extern union {
-        RateControlTolerance: i32,
-        CpuRateControlTolerance: i32,
-    };
-    pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2_2 = extern union {
-        RateControlToleranceLimit: i32,
-        CpuRateControlToleranceLimit: i32,
-    };
+pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2_0 = extern union {
+    JobHighMemoryLimit: u64,
+    JobMemoryLimit: u64,
+};
+pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2_1 = extern union {
+    RateControlTolerance: i32,
+    CpuRateControlTolerance: i32,
+};
+pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2_2 = extern union {
+    RateControlToleranceLimit: i32,
+    CpuRateControlToleranceLimit: i32,
+};
     LimitFlags: u32,
     ViolationLimitFlags: u32,
     IoReadBytes: u64,
@@ -161,15 +161,15 @@ pub const JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2 = extern struct {
     NetRateControlToleranceLimit: i32,
 };
 pub const JOBOBJECT_CPU_RATE_CONTROL_INFORMATION = extern struct {
-    pub const JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0 = extern union {
-        pub const JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0_0 = extern struct {
-            MinRate: u16,
-            MaxRate: u16,
-        };
-        CpuRate: u32,
-        Weight: u32,
-        Anonymous: JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0_0,
-    };
+pub const JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0 = extern union {
+pub const JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0_0 = extern struct {
+    MinRate: u16,
+    MaxRate: u16,
+};
+    CpuRate: u32,
+    Weight: u32,
+    Anonymous: JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0_0,
+};
     ControlFlags: u32,
     Anonymous: JOBOBJECT_CPU_RATE_CONTROL_INFORMATION_0,
 };

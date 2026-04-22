@@ -59,3 +59,15 @@ pub const SIP_CAP_SET_VERSION_3 = 3;
 pub const SIP_CAP_SET_CUR_VER = 3;
 pub const SIP_CAP_FLAG_SEALING = 1;
 pub const SIP_MAX_MAGIC_NUMBER = 4;
+
+pub const aliases = struct {
+    pub const pCryptSIPGetSignedDataMsg = ?*const anyopaque;
+    pub const pCryptSIPPutSignedDataMsg = ?*const anyopaque;
+    pub const pCryptSIPCreateIndirectData = ?*const anyopaque;
+    pub const pCryptSIPVerifyIndirectData = ?*const anyopaque;
+    pub const pCryptSIPRemoveSignedDataMsg = ?*const anyopaque;
+    pub const pfnIsFileSupported = ?*const anyopaque;
+    pub const pfnIsFileSupportedName = ?*const anyopaque;
+    pub const pCryptSIPGetCaps = ?*const anyopaque;
+    pub const pCryptSIPGetSealedDigest = ?*const anyopaque;
+};

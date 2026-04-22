@@ -1969,4 +1969,13 @@ pub const aliases = struct {
     pub const HTAPILINE = ?*anyopaque;
     pub const HTAPIPHONE = ?*anyopaque;
     pub const HPROVIDER = ?*anyopaque;
+    pub const LINECALLBACK = ?*const anyopaque;
+    pub const PHONECALLBACK = ?*const anyopaque;
+    pub const ASYNC_COMPLETION = ?*const anyopaque;
+    pub const LINEEVENT = ?*const anyopaque;
+    pub const PHONEEVENT = ?*const anyopaque;
+    pub const TUISPIDLLCALLBACK = ?*const anyopaque;
+    pub const LPOPENTNEFSTREAM = ?*const anyopaque;
+    pub const LPOPENTNEFSTREAMEX = ?*const anyopaque;
+    pub const LPGETTNEFSTREAMCODEPAGE = ?*const anyopaque;
 };

@@ -1937,4 +1937,11 @@ pub const aliases = struct {
     pub const Metafile = isize;
     pub const FontFamily = isize;
     pub const Region = isize;
+    pub const ImageAbort = ?*const anyopaque;
+    pub const DrawImageAbort = ?*const anyopaque;
+    pub const GetThumbnailImageAbort = ?*const anyopaque;
+    pub const EnumerateMetafileProc = ?*const anyopaque;
+    pub const DebugEventProc = ?*const anyopaque;
+    pub const NotificationHookProc = ?*const anyopaque;
+    pub const NotificationUnhookProc = ?*const anyopaque;
 };

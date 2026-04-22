@@ -423,4 +423,8 @@ pub const aliases = struct {
     pub const CRED_PROTECTION_TYPE = i32;
     pub const READER_SEL_REQUEST_MATCH_TYPE = i32;
     pub const CREDSPP_SUBMIT_TYPE = i32;
+    pub const LPOCNCONNPROCA = ?*const anyopaque;
+    pub const LPOCNCONNPROCW = ?*const anyopaque;
+    pub const LPOCNCHKPROC = ?*const anyopaque;
+    pub const LPOCNDSCPROC = ?*const anyopaque;
 };

@@ -601,4 +601,5 @@ pub const aliases = struct {
     pub const MQERROR = i32;
     pub const MQWARNING = i32;
     pub const MQConnectionState = i32;
+    pub const PMQRECEIVECALLBACK = ?*const anyopaque;
 };

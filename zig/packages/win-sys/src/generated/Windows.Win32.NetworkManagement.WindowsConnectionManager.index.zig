@@ -76,4 +76,5 @@ pub const aliases = struct {
     pub const WCM_MEDIA_TYPE = i32;
     pub const WCM_CONNECTION_COST = i32;
     pub const WCM_CONNECTION_COST_SOURCE = i32;
+    pub const ONDEMAND_NOTIFICATION_CALLBACK = ?*const anyopaque;
 };
