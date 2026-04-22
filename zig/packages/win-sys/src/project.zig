@@ -258,6 +258,20 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.UI.Accessibility.structs.zig");
     pub const @"Windows.Win32.UI.Magnification" =
         @import("generated/Windows.Win32.UI.Magnification.structs.zig");
+    pub const @"Windows.Win32.Graphics.Dxgi.Common" =
+        @import("generated/Windows.Win32.Graphics.Dxgi.Common.structs.zig");
+    pub const @"Windows.Win32.Graphics.Printing" =
+        @import("generated/Windows.Win32.Graphics.Printing.structs.zig");
+    pub const @"Windows.Win32.Graphics.OpenGL" =
+        @import("generated/Windows.Win32.Graphics.OpenGL.structs.zig");
+    pub const @"Windows.Win32.Graphics.Direct3D12" =
+        @import("generated/Windows.Win32.Graphics.Direct3D12.structs.zig");
+    pub const @"Windows.Win32.Devices.DeviceAndDriverInstallation" =
+        @import("generated/Windows.Win32.Devices.DeviceAndDriverInstallation.structs.zig");
+    pub const @"Windows.Win32.Devices.Enumeration.Pnp" =
+        @import("generated/Windows.Win32.Devices.Enumeration.Pnp.structs.zig");
+    pub const @"Windows.Win32.Devices.Display" =
+        @import("generated/Windows.Win32.Devices.Display.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
