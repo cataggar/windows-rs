@@ -448,24 +448,24 @@ pub const NTMS_COMPUTERINFORMATION = extern struct {
     dwMediaPoolPolicy: u32,
 };
 pub const NTMS_OBJECTINFORMATIONA = extern struct {
-pub const _Info_e__Union = extern union {
-    Drive: NTMS_DRIVEINFORMATIONA,
-    DriveType: NTMS_DRIVETYPEINFORMATIONA,
-    Library: NTMS_LIBRARYINFORMATION,
-    Changer: NTMS_CHANGERINFORMATIONA,
-    ChangerType: NTMS_CHANGERTYPEINFORMATIONA,
-    StorageSlot: NTMS_STORAGESLOTINFORMATION,
-    IEDoor: NTMS_IEDOORINFORMATION,
-    IEPort: NTMS_IEPORTINFORMATION,
-    PhysicalMedia: NTMS_PMIDINFORMATIONA,
-    LogicalMedia: NTMS_LMIDINFORMATION,
-    Partition: NTMS_PARTITIONINFORMATIONA,
-    MediaPool: NTMS_MEDIAPOOLINFORMATION,
-    MediaType: NTMS_MEDIATYPEINFORMATION,
-    LibRequest: NTMS_LIBREQUESTINFORMATIONA,
-    OpRequest: NTMS_OPREQUESTINFORMATIONA,
-    Computer: NTMS_COMPUTERINFORMATION,
-};
+    pub const _Info_e__Union = extern union {
+        Drive: NTMS_DRIVEINFORMATIONA,
+        DriveType: NTMS_DRIVETYPEINFORMATIONA,
+        Library: NTMS_LIBRARYINFORMATION,
+        Changer: NTMS_CHANGERINFORMATIONA,
+        ChangerType: NTMS_CHANGERTYPEINFORMATIONA,
+        StorageSlot: NTMS_STORAGESLOTINFORMATION,
+        IEDoor: NTMS_IEDOORINFORMATION,
+        IEPort: NTMS_IEPORTINFORMATION,
+        PhysicalMedia: NTMS_PMIDINFORMATIONA,
+        LogicalMedia: NTMS_LMIDINFORMATION,
+        Partition: NTMS_PARTITIONINFORMATIONA,
+        MediaPool: NTMS_MEDIAPOOLINFORMATION,
+        MediaType: NTMS_MEDIATYPEINFORMATION,
+        LibRequest: NTMS_LIBREQUESTINFORMATIONA,
+        OpRequest: NTMS_OPREQUESTINFORMATIONA,
+        Computer: NTMS_COMPUTERINFORMATION,
+    };
     dwSize: u32,
     dwType: u32,
     Created: @"Windows.Win32.Foundation".SYSTEMTIME,
@@ -478,24 +478,24 @@ pub const _Info_e__Union = extern union {
     Info: _Info_e__Union,
 };
 pub const NTMS_OBJECTINFORMATIONW = extern struct {
-pub const _Info_e__Union = extern union {
-    Drive: NTMS_DRIVEINFORMATIONW,
-    DriveType: NTMS_DRIVETYPEINFORMATIONW,
-    Library: NTMS_LIBRARYINFORMATION,
-    Changer: NTMS_CHANGERINFORMATIONW,
-    ChangerType: NTMS_CHANGERTYPEINFORMATIONW,
-    StorageSlot: NTMS_STORAGESLOTINFORMATION,
-    IEDoor: NTMS_IEDOORINFORMATION,
-    IEPort: NTMS_IEPORTINFORMATION,
-    PhysicalMedia: NTMS_PMIDINFORMATIONW,
-    LogicalMedia: NTMS_LMIDINFORMATION,
-    Partition: NTMS_PARTITIONINFORMATIONW,
-    MediaPool: NTMS_MEDIAPOOLINFORMATION,
-    MediaType: NTMS_MEDIATYPEINFORMATION,
-    LibRequest: NTMS_LIBREQUESTINFORMATIONW,
-    OpRequest: NTMS_OPREQUESTINFORMATIONW,
-    Computer: NTMS_COMPUTERINFORMATION,
-};
+    pub const _Info_e__Union = extern union {
+        Drive: NTMS_DRIVEINFORMATIONW,
+        DriveType: NTMS_DRIVETYPEINFORMATIONW,
+        Library: NTMS_LIBRARYINFORMATION,
+        Changer: NTMS_CHANGERINFORMATIONW,
+        ChangerType: NTMS_CHANGERTYPEINFORMATIONW,
+        StorageSlot: NTMS_STORAGESLOTINFORMATION,
+        IEDoor: NTMS_IEDOORINFORMATION,
+        IEPort: NTMS_IEPORTINFORMATION,
+        PhysicalMedia: NTMS_PMIDINFORMATIONW,
+        LogicalMedia: NTMS_LMIDINFORMATION,
+        Partition: NTMS_PARTITIONINFORMATIONW,
+        MediaPool: NTMS_MEDIAPOOLINFORMATION,
+        MediaType: NTMS_MEDIATYPEINFORMATION,
+        LibRequest: NTMS_LIBREQUESTINFORMATIONW,
+        OpRequest: NTMS_OPREQUESTINFORMATIONW,
+        Computer: NTMS_COMPUTERINFORMATION,
+    };
     dwSize: u32,
     dwType: u32,
     Created: @"Windows.Win32.Foundation".SYSTEMTIME,
@@ -637,23 +637,23 @@ pub const NTMS_I1_OPREQUESTINFORMATIONW = extern struct {
     szComputer: [64]u16,
 };
 pub const NTMS_I1_OBJECTINFORMATIONA = extern struct {
-pub const _Info_e__Union = extern union {
-    Drive: NTMS_DRIVEINFORMATIONA,
-    DriveType: NTMS_DRIVETYPEINFORMATIONA,
-    Library: NTMS_I1_LIBRARYINFORMATION,
-    Changer: NTMS_CHANGERINFORMATIONA,
-    ChangerType: NTMS_CHANGERTYPEINFORMATIONA,
-    StorageSlot: NTMS_STORAGESLOTINFORMATION,
-    IEDoor: NTMS_IEDOORINFORMATION,
-    IEPort: NTMS_IEPORTINFORMATION,
-    PhysicalMedia: NTMS_I1_PMIDINFORMATIONA,
-    LogicalMedia: NTMS_LMIDINFORMATION,
-    Partition: NTMS_I1_PARTITIONINFORMATIONA,
-    MediaPool: NTMS_MEDIAPOOLINFORMATION,
-    MediaType: NTMS_MEDIATYPEINFORMATION,
-    LibRequest: NTMS_I1_LIBREQUESTINFORMATIONA,
-    OpRequest: NTMS_I1_OPREQUESTINFORMATIONA,
-};
+    pub const _Info_e__Union = extern union {
+        Drive: NTMS_DRIVEINFORMATIONA,
+        DriveType: NTMS_DRIVETYPEINFORMATIONA,
+        Library: NTMS_I1_LIBRARYINFORMATION,
+        Changer: NTMS_CHANGERINFORMATIONA,
+        ChangerType: NTMS_CHANGERTYPEINFORMATIONA,
+        StorageSlot: NTMS_STORAGESLOTINFORMATION,
+        IEDoor: NTMS_IEDOORINFORMATION,
+        IEPort: NTMS_IEPORTINFORMATION,
+        PhysicalMedia: NTMS_I1_PMIDINFORMATIONA,
+        LogicalMedia: NTMS_LMIDINFORMATION,
+        Partition: NTMS_I1_PARTITIONINFORMATIONA,
+        MediaPool: NTMS_MEDIAPOOLINFORMATION,
+        MediaType: NTMS_MEDIATYPEINFORMATION,
+        LibRequest: NTMS_I1_LIBREQUESTINFORMATIONA,
+        OpRequest: NTMS_I1_OPREQUESTINFORMATIONA,
+    };
     dwSize: u32,
     dwType: u32,
     Created: @"Windows.Win32.Foundation".SYSTEMTIME,
@@ -666,23 +666,23 @@ pub const _Info_e__Union = extern union {
     Info: _Info_e__Union,
 };
 pub const NTMS_I1_OBJECTINFORMATIONW = extern struct {
-pub const _Info_e__Union = extern union {
-    Drive: NTMS_DRIVEINFORMATIONW,
-    DriveType: NTMS_DRIVETYPEINFORMATIONW,
-    Library: NTMS_I1_LIBRARYINFORMATION,
-    Changer: NTMS_CHANGERINFORMATIONW,
-    ChangerType: NTMS_CHANGERTYPEINFORMATIONW,
-    StorageSlot: NTMS_STORAGESLOTINFORMATION,
-    IEDoor: NTMS_IEDOORINFORMATION,
-    IEPort: NTMS_IEPORTINFORMATION,
-    PhysicalMedia: NTMS_I1_PMIDINFORMATIONW,
-    LogicalMedia: NTMS_LMIDINFORMATION,
-    Partition: NTMS_I1_PARTITIONINFORMATIONW,
-    MediaPool: NTMS_MEDIAPOOLINFORMATION,
-    MediaType: NTMS_MEDIATYPEINFORMATION,
-    LibRequest: NTMS_I1_LIBREQUESTINFORMATIONW,
-    OpRequest: NTMS_I1_OPREQUESTINFORMATIONW,
-};
+    pub const _Info_e__Union = extern union {
+        Drive: NTMS_DRIVEINFORMATIONW,
+        DriveType: NTMS_DRIVETYPEINFORMATIONW,
+        Library: NTMS_I1_LIBRARYINFORMATION,
+        Changer: NTMS_CHANGERINFORMATIONW,
+        ChangerType: NTMS_CHANGERTYPEINFORMATIONW,
+        StorageSlot: NTMS_STORAGESLOTINFORMATION,
+        IEDoor: NTMS_IEDOORINFORMATION,
+        IEPort: NTMS_IEPORTINFORMATION,
+        PhysicalMedia: NTMS_I1_PMIDINFORMATIONW,
+        LogicalMedia: NTMS_LMIDINFORMATION,
+        Partition: NTMS_I1_PARTITIONINFORMATIONW,
+        MediaPool: NTMS_MEDIAPOOLINFORMATION,
+        MediaType: NTMS_MEDIATYPEINFORMATION,
+        LibRequest: NTMS_I1_LIBREQUESTINFORMATIONW,
+        OpRequest: NTMS_I1_OPREQUESTINFORMATIONW,
+    };
     dwSize: u32,
     dwType: u32,
     Created: @"Windows.Win32.Foundation".SYSTEMTIME,
@@ -793,52 +793,52 @@ pub const CLS_ARCHIVE_DESCRIPTOR = extern struct {
     infoContainer: CLS_CONTAINER_INFORMATION,
 };
 pub const CLFS_MGMT_POLICY = extern struct {
-pub const _PolicyParameters_e__Union = extern union {
-pub const _MaximumSize_e__Struct = extern struct {
-    Containers: u32,
-};
-pub const _MinimumSize_e__Struct = extern struct {
-    Containers: u32,
-};
-pub const _NewContainerSize_e__Struct = extern struct {
-    SizeInBytes: u32,
-};
-pub const _GrowthRate_e__Struct = extern struct {
-    AbsoluteGrowthInContainers: u32,
-    RelativeGrowthPercentage: u32,
-};
-pub const _LogTail_e__Struct = extern struct {
-    MinimumAvailablePercentage: u32,
-    MinimumAvailableContainers: u32,
-};
-pub const _AutoShrink_e__Struct = extern struct {
-    Percentage: u32,
-};
-pub const _AutoGrow_e__Struct = extern struct {
-    Enabled: u32,
-};
-pub const _NewContainerPrefix_e__Struct = extern struct {
-    PrefixLengthInBytes: u16,
-    PrefixString: [1]u16,
-};
-pub const _NewContainerSuffix_e__Struct = extern struct {
-    NextContainerSuffix: u64,
-};
-pub const _NewContainerExtension_e__Struct = extern struct {
-    ExtensionLengthInBytes: u16,
-    ExtensionString: [1]u16,
-};
-    MaximumSize: _MaximumSize_e__Struct,
-    MinimumSize: _MinimumSize_e__Struct,
-    NewContainerSize: _NewContainerSize_e__Struct,
-    GrowthRate: _GrowthRate_e__Struct,
-    LogTail: _LogTail_e__Struct,
-    AutoShrink: _AutoShrink_e__Struct,
-    AutoGrow: _AutoGrow_e__Struct,
-    NewContainerPrefix: _NewContainerPrefix_e__Struct,
-    NewContainerSuffix: _NewContainerSuffix_e__Struct,
-    NewContainerExtension: _NewContainerExtension_e__Struct,
-};
+    pub const _PolicyParameters_e__Union = extern union {
+        pub const _MaximumSize_e__Struct = extern struct {
+            Containers: u32,
+        };
+        pub const _MinimumSize_e__Struct = extern struct {
+            Containers: u32,
+        };
+        pub const _NewContainerSize_e__Struct = extern struct {
+            SizeInBytes: u32,
+        };
+        pub const _GrowthRate_e__Struct = extern struct {
+            AbsoluteGrowthInContainers: u32,
+            RelativeGrowthPercentage: u32,
+        };
+        pub const _LogTail_e__Struct = extern struct {
+            MinimumAvailablePercentage: u32,
+            MinimumAvailableContainers: u32,
+        };
+        pub const _AutoShrink_e__Struct = extern struct {
+            Percentage: u32,
+        };
+        pub const _AutoGrow_e__Struct = extern struct {
+            Enabled: u32,
+        };
+        pub const _NewContainerPrefix_e__Struct = extern struct {
+            PrefixLengthInBytes: u16,
+            PrefixString: [1]u16,
+        };
+        pub const _NewContainerSuffix_e__Struct = extern struct {
+            NextContainerSuffix: u64,
+        };
+        pub const _NewContainerExtension_e__Struct = extern struct {
+            ExtensionLengthInBytes: u16,
+            ExtensionString: [1]u16,
+        };
+        MaximumSize: _MaximumSize_e__Struct,
+        MinimumSize: _MinimumSize_e__Struct,
+        NewContainerSize: _NewContainerSize_e__Struct,
+        GrowthRate: _GrowthRate_e__Struct,
+        LogTail: _LogTail_e__Struct,
+        AutoShrink: _AutoShrink_e__Struct,
+        AutoGrow: _AutoGrow_e__Struct,
+        NewContainerPrefix: _NewContainerPrefix_e__Struct,
+        NewContainerSuffix: _NewContainerSuffix_e__Struct,
+        NewContainerExtension: _NewContainerExtension_e__Struct,
+    };
     Version: u32,
     LengthInBytes: u32,
     PolicyFlags: u32,
@@ -951,10 +951,10 @@ pub const WOF_FILE_COMPRESSION_INFO_V1 = extern struct {
     Flags: u32,
 };
 pub const TXF_ID = extern struct {
-pub const TXF_ID_0 = extern struct {
-    LowPart: i64,
-    HighPart: i64,
-};
+    pub const TXF_ID_0 = extern struct {
+        LowPart: i64,
+        HighPart: i64,
+    };
     Anonymous: TXF_ID_0,
 };
 pub const TXF_LOG_RECORD_BASE = extern struct {
@@ -1303,18 +1303,18 @@ pub const IORING_CAPABILITIES = extern struct {
     FeatureFlags: i32,
 };
 pub const IORING_HANDLE_REF = extern struct {
-pub const HandleUnion = extern union {
-    Handle: @"Windows.Win32.Foundation".HANDLE,
-    Index: u32,
-};
+    pub const HandleUnion = extern union {
+        Handle: @"Windows.Win32.Foundation".HANDLE,
+        Index: u32,
+    };
     Kind: i32,
     Handle: HandleUnion,
 };
 pub const IORING_BUFFER_REF = extern struct {
-pub const BufferUnion = extern union {
-    Address: *anyopaque,
-    IndexAndOffset: IORING_REGISTERED_BUFFER,
-};
+    pub const BufferUnion = extern union {
+        Address: *anyopaque,
+        IndexAndOffset: IORING_REGISTERED_BUFFER,
+    };
     Kind: i32,
     Buffer: BufferUnion,
 };
@@ -1333,10 +1333,10 @@ pub const FILE_NOTIFY_INFORMATION = extern struct {
     FileName: [1]u16,
 };
 pub const FILE_NOTIFY_EXTENDED_INFORMATION = extern struct {
-pub const FILE_NOTIFY_EXTENDED_INFORMATION_0 = extern union {
-    ReparsePointTag: u32,
-    EaSize: u32,
-};
+    pub const FILE_NOTIFY_EXTENDED_INFORMATION_0 = extern union {
+        ReparsePointTag: u32,
+        EaSize: u32,
+    };
     NextEntryOffset: u32,
     Action: u32,
     CreationTime: i64,
@@ -1374,9 +1374,9 @@ pub const FILE_SEGMENT_ELEMENT = extern union {
     Alignment: u64,
 };
 pub const REPARSE_GUID_DATA_BUFFER = extern struct {
-pub const _GenericReparseBuffer_e__Struct = extern struct {
-    DataBuffer: [1]u8,
-};
+    pub const _GenericReparseBuffer_e__Struct = extern struct {
+        DataBuffer: [1]u8,
+    };
     ReparseTag: u32,
     ReparseDataLength: u16,
     Reserved: u16,
@@ -1423,68 +1423,68 @@ pub const WIN32_STREAM_ID = extern struct {
     cStreamName: [1]u16,
 };
 pub const COPYFILE2_MESSAGE = extern struct {
-pub const _Info_e__Union = extern union {
-pub const _ChunkStarted_e__Struct = extern struct {
-    dwStreamNumber: u32,
-    dwReserved: u32,
-    hSourceFile: @"Windows.Win32.Foundation".HANDLE,
-    hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
-    uliChunkNumber: u64,
-    uliChunkSize: u64,
-    uliStreamSize: u64,
-    uliTotalFileSize: u64,
-};
-pub const _ChunkFinished_e__Struct = extern struct {
-    dwStreamNumber: u32,
-    dwFlags: u32,
-    hSourceFile: @"Windows.Win32.Foundation".HANDLE,
-    hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
-    uliChunkNumber: u64,
-    uliChunkSize: u64,
-    uliStreamSize: u64,
-    uliStreamBytesTransferred: u64,
-    uliTotalFileSize: u64,
-    uliTotalBytesTransferred: u64,
-};
-pub const _StreamStarted_e__Struct = extern struct {
-    dwStreamNumber: u32,
-    dwReserved: u32,
-    hSourceFile: @"Windows.Win32.Foundation".HANDLE,
-    hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
-    uliStreamSize: u64,
-    uliTotalFileSize: u64,
-};
-pub const _StreamFinished_e__Struct = extern struct {
-    dwStreamNumber: u32,
-    dwReserved: u32,
-    hSourceFile: @"Windows.Win32.Foundation".HANDLE,
-    hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
-    uliStreamSize: u64,
-    uliStreamBytesTransferred: u64,
-    uliTotalFileSize: u64,
-    uliTotalBytesTransferred: u64,
-};
-pub const _PollContinue_e__Struct = extern struct {
-    dwReserved: u32,
-};
-pub const _Error_e__Struct = extern struct {
-    CopyPhase: i32,
-    dwStreamNumber: u32,
-    hrFailure: @"Windows.Win32.Foundation".HRESULT,
-    dwReserved: u32,
-    uliChunkNumber: u64,
-    uliStreamSize: u64,
-    uliStreamBytesTransferred: u64,
-    uliTotalFileSize: u64,
-    uliTotalBytesTransferred: u64,
-};
-    ChunkStarted: _ChunkStarted_e__Struct,
-    ChunkFinished: _ChunkFinished_e__Struct,
-    StreamStarted: _StreamStarted_e__Struct,
-    StreamFinished: _StreamFinished_e__Struct,
-    PollContinue: _PollContinue_e__Struct,
-    Error: _Error_e__Struct,
-};
+    pub const _Info_e__Union = extern union {
+        pub const _ChunkStarted_e__Struct = extern struct {
+            dwStreamNumber: u32,
+            dwReserved: u32,
+            hSourceFile: @"Windows.Win32.Foundation".HANDLE,
+            hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
+            uliChunkNumber: u64,
+            uliChunkSize: u64,
+            uliStreamSize: u64,
+            uliTotalFileSize: u64,
+        };
+        pub const _ChunkFinished_e__Struct = extern struct {
+            dwStreamNumber: u32,
+            dwFlags: u32,
+            hSourceFile: @"Windows.Win32.Foundation".HANDLE,
+            hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
+            uliChunkNumber: u64,
+            uliChunkSize: u64,
+            uliStreamSize: u64,
+            uliStreamBytesTransferred: u64,
+            uliTotalFileSize: u64,
+            uliTotalBytesTransferred: u64,
+        };
+        pub const _StreamStarted_e__Struct = extern struct {
+            dwStreamNumber: u32,
+            dwReserved: u32,
+            hSourceFile: @"Windows.Win32.Foundation".HANDLE,
+            hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
+            uliStreamSize: u64,
+            uliTotalFileSize: u64,
+        };
+        pub const _StreamFinished_e__Struct = extern struct {
+            dwStreamNumber: u32,
+            dwReserved: u32,
+            hSourceFile: @"Windows.Win32.Foundation".HANDLE,
+            hDestinationFile: @"Windows.Win32.Foundation".HANDLE,
+            uliStreamSize: u64,
+            uliStreamBytesTransferred: u64,
+            uliTotalFileSize: u64,
+            uliTotalBytesTransferred: u64,
+        };
+        pub const _PollContinue_e__Struct = extern struct {
+            dwReserved: u32,
+        };
+        pub const _Error_e__Struct = extern struct {
+            CopyPhase: i32,
+            dwStreamNumber: u32,
+            hrFailure: @"Windows.Win32.Foundation".HRESULT,
+            dwReserved: u32,
+            uliChunkNumber: u64,
+            uliStreamSize: u64,
+            uliStreamBytesTransferred: u64,
+            uliTotalFileSize: u64,
+            uliTotalBytesTransferred: u64,
+        };
+        ChunkStarted: _ChunkStarted_e__Struct,
+        ChunkFinished: _ChunkFinished_e__Struct,
+        StreamStarted: _StreamStarted_e__Struct,
+        StreamFinished: _StreamFinished_e__Struct,
+        PollContinue: _PollContinue_e__Struct,
+        Error: _Error_e__Struct,
+    };
     Type: i32,
     dwPadding: u32,
     Info: _Info_e__Union,
@@ -1515,10 +1515,10 @@ pub const FILE_CASE_SENSITIVE_INFO = extern struct {
     Flags: u32,
 };
 pub const FILE_RENAME_INFO = extern struct {
-pub const FILE_RENAME_INFO_0 = extern union {
-    ReplaceIfExists: @"Windows.Win32.Foundation".BOOLEAN,
-    Flags: u32,
-};
+    pub const FILE_RENAME_INFO_0 = extern union {
+        ReplaceIfExists: @"Windows.Win32.Foundation".BOOLEAN,
+        Flags: u32,
+    };
     Anonymous: FILE_RENAME_INFO_0,
     RootDirectory: @"Windows.Win32.Foundation".HANDLE,
     FileNameLength: u32,
@@ -1619,24 +1619,24 @@ pub const FILE_ID_EXTD_DIR_INFO = extern struct {
     FileName: [1]u16,
 };
 pub const FILE_REMOTE_PROTOCOL_INFO = extern struct {
-pub const _GenericReserved_e__Struct = extern struct {
-    Reserved: [8]u32,
-};
-pub const _ProtocolSpecific_e__Union = extern union {
-pub const _Smb2_e__Struct = extern struct {
-pub const _Server_e__Struct = extern struct {
-    Capabilities: u32,
-};
-pub const _Share_e__Struct = extern struct {
-    Capabilities: u32,
-    ShareFlags: u32,
-};
-    Server: _Server_e__Struct,
-    Share: _Share_e__Struct,
-};
-    Smb2: _Smb2_e__Struct,
-    Reserved: [16]u32,
-};
+    pub const _GenericReserved_e__Struct = extern struct {
+        Reserved: [8]u32,
+    };
+    pub const _ProtocolSpecific_e__Union = extern union {
+        pub const _Smb2_e__Struct = extern struct {
+            pub const _Server_e__Struct = extern struct {
+                Capabilities: u32,
+            };
+            pub const _Share_e__Struct = extern struct {
+                Capabilities: u32,
+                ShareFlags: u32,
+            };
+            Server: _Server_e__Struct,
+            Share: _Share_e__Struct,
+        };
+        Smb2: _Smb2_e__Struct,
+        Reserved: [16]u32,
+    };
     StructureVersion: u16,
     StructureSize: u16,
     Protocol: u32,
@@ -1649,11 +1649,11 @@ pub const _Share_e__Struct = extern struct {
     ProtocolSpecific: _ProtocolSpecific_e__Union,
 };
 pub const FILE_ID_DESCRIPTOR = extern struct {
-pub const FILE_ID_DESCRIPTOR_0 = extern union {
-    FileId: i64,
-    ObjectId: GUID,
-    ExtendedFileId: FILE_ID_128,
-};
+    pub const FILE_ID_DESCRIPTOR_0 = extern union {
+        FileId: i64,
+        ObjectId: GUID,
+        ExtendedFileId: FILE_ID_128,
+    };
     dwSize: u32,
     Type: i32,
     Anonymous: FILE_ID_DESCRIPTOR_0,

@@ -154,10 +154,10 @@ pub const HiFiCOLOR = extern struct {
     channel: [8]u8,
 };
 pub const COLOR = extern union {
-pub const COLOR_0 = extern struct {
-    reserved1: u32,
-    reserved2: *anyopaque,
-};
+    pub const COLOR_0 = extern struct {
+        reserved1: u32,
+        reserved2: *anyopaque,
+    };
     gray: GRAYCOLOR,
     rgb: RGBCOLOR,
     cmyk: CMYKCOLOR,

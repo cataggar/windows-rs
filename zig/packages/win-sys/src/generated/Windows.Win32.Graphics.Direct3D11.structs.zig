@@ -149,14 +149,14 @@ pub const D3D11_TEXTURE3D_DESC = extern struct {
     MiscFlags: u32,
 };
 pub const D3D11_BUFFER_SRV = extern struct {
-pub const D3D11_BUFFER_SRV_0 = extern union {
-    FirstElement: u32,
-    ElementOffset: u32,
-};
-pub const D3D11_BUFFER_SRV_1 = extern union {
-    NumElements: u32,
-    ElementWidth: u32,
-};
+    pub const D3D11_BUFFER_SRV_0 = extern union {
+        FirstElement: u32,
+        ElementOffset: u32,
+    };
+    pub const D3D11_BUFFER_SRV_1 = extern union {
+        NumElements: u32,
+        ElementWidth: u32,
+    };
     Anonymous1: D3D11_BUFFER_SRV_0,
     Anonymous2: D3D11_BUFFER_SRV_1,
 };
@@ -207,32 +207,32 @@ pub const D3D11_TEX2DMS_ARRAY_SRV = extern struct {
     ArraySize: u32,
 };
 pub const D3D11_SHADER_RESOURCE_VIEW_DESC = extern struct {
-pub const D3D11_SHADER_RESOURCE_VIEW_DESC_0 = extern union {
-    Buffer: D3D11_BUFFER_SRV,
-    Texture1D: D3D11_TEX1D_SRV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_SRV,
-    Texture2D: D3D11_TEX2D_SRV,
-    Texture2DArray: D3D11_TEX2D_ARRAY_SRV,
-    Texture2DMS: D3D11_TEX2DMS_SRV,
-    Texture2DMSArray: D3D11_TEX2DMS_ARRAY_SRV,
-    Texture3D: D3D11_TEX3D_SRV,
-    TextureCube: D3D11_TEXCUBE_SRV,
-    TextureCubeArray: D3D11_TEXCUBE_ARRAY_SRV,
-    BufferEx: D3D11_BUFFEREX_SRV,
-};
+    pub const D3D11_SHADER_RESOURCE_VIEW_DESC_0 = extern union {
+        Buffer: D3D11_BUFFER_SRV,
+        Texture1D: D3D11_TEX1D_SRV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_SRV,
+        Texture2D: D3D11_TEX2D_SRV,
+        Texture2DArray: D3D11_TEX2D_ARRAY_SRV,
+        Texture2DMS: D3D11_TEX2DMS_SRV,
+        Texture2DMSArray: D3D11_TEX2DMS_ARRAY_SRV,
+        Texture3D: D3D11_TEX3D_SRV,
+        TextureCube: D3D11_TEXCUBE_SRV,
+        TextureCubeArray: D3D11_TEXCUBE_ARRAY_SRV,
+        BufferEx: D3D11_BUFFEREX_SRV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D11_SHADER_RESOURCE_VIEW_DESC_0,
 };
 pub const D3D11_BUFFER_RTV = extern struct {
-pub const D3D11_BUFFER_RTV_0 = extern union {
-    FirstElement: u32,
-    ElementOffset: u32,
-};
-pub const D3D11_BUFFER_RTV_1 = extern union {
-    NumElements: u32,
-    ElementWidth: u32,
-};
+    pub const D3D11_BUFFER_RTV_0 = extern union {
+        FirstElement: u32,
+        ElementOffset: u32,
+    };
+    pub const D3D11_BUFFER_RTV_1 = extern union {
+        NumElements: u32,
+        ElementWidth: u32,
+    };
     Anonymous1: D3D11_BUFFER_RTV_0,
     Anonymous2: D3D11_BUFFER_RTV_1,
 };
@@ -265,16 +265,16 @@ pub const D3D11_TEX3D_RTV = extern struct {
     WSize: u32,
 };
 pub const D3D11_RENDER_TARGET_VIEW_DESC = extern struct {
-pub const D3D11_RENDER_TARGET_VIEW_DESC_0 = extern union {
-    Buffer: D3D11_BUFFER_RTV,
-    Texture1D: D3D11_TEX1D_RTV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_RTV,
-    Texture2D: D3D11_TEX2D_RTV,
-    Texture2DArray: D3D11_TEX2D_ARRAY_RTV,
-    Texture2DMS: D3D11_TEX2DMS_RTV,
-    Texture2DMSArray: D3D11_TEX2DMS_ARRAY_RTV,
-    Texture3D: D3D11_TEX3D_RTV,
-};
+    pub const D3D11_RENDER_TARGET_VIEW_DESC_0 = extern union {
+        Buffer: D3D11_BUFFER_RTV,
+        Texture1D: D3D11_TEX1D_RTV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_RTV,
+        Texture2D: D3D11_TEX2D_RTV,
+        Texture2DArray: D3D11_TEX2D_ARRAY_RTV,
+        Texture2DMS: D3D11_TEX2DMS_RTV,
+        Texture2DMSArray: D3D11_TEX2DMS_ARRAY_RTV,
+        Texture3D: D3D11_TEX3D_RTV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D11_RENDER_TARGET_VIEW_DESC_0,
@@ -303,14 +303,14 @@ pub const D3D11_TEX2DMS_ARRAY_DSV = extern struct {
     ArraySize: u32,
 };
 pub const D3D11_DEPTH_STENCIL_VIEW_DESC = extern struct {
-pub const D3D11_DEPTH_STENCIL_VIEW_DESC_0 = extern union {
-    Texture1D: D3D11_TEX1D_DSV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_DSV,
-    Texture2D: D3D11_TEX2D_DSV,
-    Texture2DArray: D3D11_TEX2D_ARRAY_DSV,
-    Texture2DMS: D3D11_TEX2DMS_DSV,
-    Texture2DMSArray: D3D11_TEX2DMS_ARRAY_DSV,
-};
+    pub const D3D11_DEPTH_STENCIL_VIEW_DESC_0 = extern union {
+        Texture1D: D3D11_TEX1D_DSV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_DSV,
+        Texture2D: D3D11_TEX2D_DSV,
+        Texture2DArray: D3D11_TEX2D_ARRAY_DSV,
+        Texture2DMS: D3D11_TEX2DMS_DSV,
+        Texture2DMSArray: D3D11_TEX2DMS_ARRAY_DSV,
+    };
     Format: i32,
     ViewDimension: i32,
     Flags: u32,
@@ -343,14 +343,14 @@ pub const D3D11_TEX3D_UAV = extern struct {
     WSize: u32,
 };
 pub const D3D11_UNORDERED_ACCESS_VIEW_DESC = extern struct {
-pub const D3D11_UNORDERED_ACCESS_VIEW_DESC_0 = extern union {
-    Buffer: D3D11_BUFFER_UAV,
-    Texture1D: D3D11_TEX1D_UAV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_UAV,
-    Texture2D: D3D11_TEX2D_UAV,
-    Texture2DArray: D3D11_TEX2D_ARRAY_UAV,
-    Texture3D: D3D11_TEX3D_UAV,
-};
+    pub const D3D11_UNORDERED_ACCESS_VIEW_DESC_0 = extern union {
+        Buffer: D3D11_BUFFER_UAV,
+        Texture1D: D3D11_TEX1D_UAV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_UAV,
+        Texture2D: D3D11_TEX2D_UAV,
+        Texture2DArray: D3D11_TEX2D_ARRAY_UAV,
+        Texture3D: D3D11_TEX3D_UAV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D11_UNORDERED_ACCESS_VIEW_DESC_0,
@@ -615,10 +615,10 @@ pub const D3D11_VIDEO_COLOR_YCbCrA = extern struct {
     A: f32,
 };
 pub const D3D11_VIDEO_COLOR = extern struct {
-pub const D3D11_VIDEO_COLOR_0 = extern union {
-    YCbCr: D3D11_VIDEO_COLOR_YCbCrA,
-    RGBA: D3D11_VIDEO_COLOR_RGBA,
-};
+    pub const D3D11_VIDEO_COLOR_0 = extern union {
+        YCbCr: D3D11_VIDEO_COLOR_YCbCrA,
+        RGBA: D3D11_VIDEO_COLOR_RGBA,
+    };
     Anonymous: D3D11_VIDEO_COLOR_0,
 };
 pub const D3D11_VIDEO_PROCESSOR_COLOR_SPACE = extern struct {
@@ -640,9 +640,9 @@ pub const D3D11_AUTHENTICATED_QUERY_OUTPUT = extern struct {
     ReturnCode: @"Windows.Win32.Foundation".HRESULT,
 };
 pub const D3D11_AUTHENTICATED_PROTECTION_FLAGS = extern union {
-pub const _Flags_e__Struct = extern struct {
-    _bitfield: u32,
-};
+    pub const _Flags_e__Struct = extern struct {
+        _bitfield: u32,
+    };
     Flags: _Flags_e__Struct,
     Value: u32,
 };
@@ -775,9 +775,9 @@ pub const D3D11_TEX2D_VDOV = extern struct {
     ArraySlice: u32,
 };
 pub const D3D11_VIDEO_DECODER_OUTPUT_VIEW_DESC = extern struct {
-pub const D3D11_VIDEO_DECODER_OUTPUT_VIEW_DESC_0 = extern union {
-    Texture2D: D3D11_TEX2D_VDOV,
-};
+    pub const D3D11_VIDEO_DECODER_OUTPUT_VIEW_DESC_0 = extern union {
+        Texture2D: D3D11_TEX2D_VDOV,
+    };
     DecodeProfile: GUID,
     ViewDimension: i32,
     Anonymous: D3D11_VIDEO_DECODER_OUTPUT_VIEW_DESC_0,
@@ -787,9 +787,9 @@ pub const D3D11_TEX2D_VPIV = extern struct {
     ArraySlice: u32,
 };
 pub const D3D11_VIDEO_PROCESSOR_INPUT_VIEW_DESC = extern struct {
-pub const D3D11_VIDEO_PROCESSOR_INPUT_VIEW_DESC_0 = extern union {
-    Texture2D: D3D11_TEX2D_VPIV,
-};
+    pub const D3D11_VIDEO_PROCESSOR_INPUT_VIEW_DESC_0 = extern union {
+        Texture2D: D3D11_TEX2D_VPIV,
+    };
     FourCC: u32,
     ViewDimension: i32,
     Anonymous: D3D11_VIDEO_PROCESSOR_INPUT_VIEW_DESC_0,
@@ -803,10 +803,10 @@ pub const D3D11_TEX2D_ARRAY_VPOV = extern struct {
     ArraySize: u32,
 };
 pub const D3D11_VIDEO_PROCESSOR_OUTPUT_VIEW_DESC = extern struct {
-pub const D3D11_VIDEO_PROCESSOR_OUTPUT_VIEW_DESC_0 = extern union {
-    Texture2D: D3D11_TEX2D_VPOV,
-    Texture2DArray: D3D11_TEX2D_ARRAY_VPOV,
-};
+    pub const D3D11_VIDEO_PROCESSOR_OUTPUT_VIEW_DESC_0 = extern union {
+        Texture2D: D3D11_TEX2D_VPOV,
+        Texture2DArray: D3D11_TEX2D_ARRAY_VPOV,
+    };
     ViewDimension: i32,
     Anonymous: D3D11_VIDEO_PROCESSOR_OUTPUT_VIEW_DESC_0,
 };
@@ -985,19 +985,19 @@ pub const D3D11_TEX2D_ARRAY_SRV1 = extern struct {
     PlaneSlice: u32,
 };
 pub const D3D11_SHADER_RESOURCE_VIEW_DESC1 = extern struct {
-pub const D3D11_SHADER_RESOURCE_VIEW_DESC1_0 = extern union {
-    Buffer: D3D11_BUFFER_SRV,
-    Texture1D: D3D11_TEX1D_SRV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_SRV,
-    Texture2D: D3D11_TEX2D_SRV1,
-    Texture2DArray: D3D11_TEX2D_ARRAY_SRV1,
-    Texture2DMS: D3D11_TEX2DMS_SRV,
-    Texture2DMSArray: D3D11_TEX2DMS_ARRAY_SRV,
-    Texture3D: D3D11_TEX3D_SRV,
-    TextureCube: D3D11_TEXCUBE_SRV,
-    TextureCubeArray: D3D11_TEXCUBE_ARRAY_SRV,
-    BufferEx: D3D11_BUFFEREX_SRV,
-};
+    pub const D3D11_SHADER_RESOURCE_VIEW_DESC1_0 = extern union {
+        Buffer: D3D11_BUFFER_SRV,
+        Texture1D: D3D11_TEX1D_SRV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_SRV,
+        Texture2D: D3D11_TEX2D_SRV1,
+        Texture2DArray: D3D11_TEX2D_ARRAY_SRV1,
+        Texture2DMS: D3D11_TEX2DMS_SRV,
+        Texture2DMSArray: D3D11_TEX2DMS_ARRAY_SRV,
+        Texture3D: D3D11_TEX3D_SRV,
+        TextureCube: D3D11_TEXCUBE_SRV,
+        TextureCubeArray: D3D11_TEXCUBE_ARRAY_SRV,
+        BufferEx: D3D11_BUFFEREX_SRV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D11_SHADER_RESOURCE_VIEW_DESC1_0,
@@ -1013,16 +1013,16 @@ pub const D3D11_TEX2D_ARRAY_RTV1 = extern struct {
     PlaneSlice: u32,
 };
 pub const D3D11_RENDER_TARGET_VIEW_DESC1 = extern struct {
-pub const D3D11_RENDER_TARGET_VIEW_DESC1_0 = extern union {
-    Buffer: D3D11_BUFFER_RTV,
-    Texture1D: D3D11_TEX1D_RTV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_RTV,
-    Texture2D: D3D11_TEX2D_RTV1,
-    Texture2DArray: D3D11_TEX2D_ARRAY_RTV1,
-    Texture2DMS: D3D11_TEX2DMS_RTV,
-    Texture2DMSArray: D3D11_TEX2DMS_ARRAY_RTV,
-    Texture3D: D3D11_TEX3D_RTV,
-};
+    pub const D3D11_RENDER_TARGET_VIEW_DESC1_0 = extern union {
+        Buffer: D3D11_BUFFER_RTV,
+        Texture1D: D3D11_TEX1D_RTV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_RTV,
+        Texture2D: D3D11_TEX2D_RTV1,
+        Texture2DArray: D3D11_TEX2D_ARRAY_RTV1,
+        Texture2DMS: D3D11_TEX2DMS_RTV,
+        Texture2DMSArray: D3D11_TEX2DMS_ARRAY_RTV,
+        Texture3D: D3D11_TEX3D_RTV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D11_RENDER_TARGET_VIEW_DESC1_0,
@@ -1038,14 +1038,14 @@ pub const D3D11_TEX2D_ARRAY_UAV1 = extern struct {
     PlaneSlice: u32,
 };
 pub const D3D11_UNORDERED_ACCESS_VIEW_DESC1 = extern struct {
-pub const D3D11_UNORDERED_ACCESS_VIEW_DESC1_0 = extern union {
-    Buffer: D3D11_BUFFER_UAV,
-    Texture1D: D3D11_TEX1D_UAV,
-    Texture1DArray: D3D11_TEX1D_ARRAY_UAV,
-    Texture2D: D3D11_TEX2D_UAV1,
-    Texture2DArray: D3D11_TEX2D_ARRAY_UAV1,
-    Texture3D: D3D11_TEX3D_UAV,
-};
+    pub const D3D11_UNORDERED_ACCESS_VIEW_DESC1_0 = extern union {
+        Buffer: D3D11_BUFFER_UAV,
+        Texture1D: D3D11_TEX1D_UAV,
+        Texture1DArray: D3D11_TEX1D_ARRAY_UAV,
+        Texture2D: D3D11_TEX2D_UAV1,
+        Texture2DArray: D3D11_TEX2D_ARRAY_UAV1,
+        Texture3D: D3D11_TEX3D_UAV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D11_UNORDERED_ACCESS_VIEW_DESC1_0,
@@ -1242,14 +1242,14 @@ pub const D3D11_COMPUTE_SHADER_TRACE_DESC = extern struct {
     ThreadGroupID: [3]u32,
 };
 pub const D3D11_SHADER_TRACE_DESC = extern struct {
-pub const D3D11_SHADER_TRACE_DESC_0 = extern union {
-    VertexShaderTraceDesc: D3D11_VERTEX_SHADER_TRACE_DESC,
-    HullShaderTraceDesc: D3D11_HULL_SHADER_TRACE_DESC,
-    DomainShaderTraceDesc: D3D11_DOMAIN_SHADER_TRACE_DESC,
-    GeometryShaderTraceDesc: D3D11_GEOMETRY_SHADER_TRACE_DESC,
-    PixelShaderTraceDesc: D3D11_PIXEL_SHADER_TRACE_DESC,
-    ComputeShaderTraceDesc: D3D11_COMPUTE_SHADER_TRACE_DESC,
-};
+    pub const D3D11_SHADER_TRACE_DESC_0 = extern union {
+        VertexShaderTraceDesc: D3D11_VERTEX_SHADER_TRACE_DESC,
+        HullShaderTraceDesc: D3D11_HULL_SHADER_TRACE_DESC,
+        DomainShaderTraceDesc: D3D11_DOMAIN_SHADER_TRACE_DESC,
+        GeometryShaderTraceDesc: D3D11_GEOMETRY_SHADER_TRACE_DESC,
+        PixelShaderTraceDesc: D3D11_PIXEL_SHADER_TRACE_DESC,
+        ComputeShaderTraceDesc: D3D11_COMPUTE_SHADER_TRACE_DESC,
+    };
     Type: i32,
     Flags: u32,
     Anonymous: D3D11_SHADER_TRACE_DESC_0,
@@ -1284,10 +1284,10 @@ pub const D3D11_TRACE_VALUE = extern struct {
     ValidMask: u8,
 };
 pub const D3D11_TRACE_REGISTER = extern struct {
-pub const D3D11_TRACE_REGISTER_0 = extern union {
-    Index1D: u16,
-    Index2D: [2]u16,
-};
+    pub const D3D11_TRACE_REGISTER_0 = extern union {
+        Index1D: u16,
+        Index2D: [2]u16,
+    };
     RegType: i32,
     Anonymous: D3D11_TRACE_REGISTER_0,
     OperandIndex: u8,

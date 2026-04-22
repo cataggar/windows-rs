@@ -76,10 +76,10 @@ pub const TF_PRESERVEDKEY = extern struct {
     uModifiers: u32,
 };
 pub const TF_DA_COLOR = extern struct {
-pub const TF_DA_COLOR_0 = extern union {
-    nIndex: i32,
-    cr: @"Windows.Win32.Foundation".COLORREF,
-};
+    pub const TF_DA_COLOR_0 = extern union {
+        nIndex: i32,
+        cr: @"Windows.Win32.Foundation".COLORREF,
+    };
     type: i32,
     Anonymous: TF_DA_COLOR_0,
 };
@@ -92,9 +92,9 @@ pub const TF_DISPLAYATTRIBUTE = extern struct {
     bAttr: i32,
 };
 pub const TF_LMLATTELEMENT = extern struct {
-pub const TF_LMLATTELEMENT_0 = extern union {
-    iCost: i32,
-};
+    pub const TF_LMLATTELEMENT_0 = extern union {
+        iCost: i32,
+    };
     dwFrameStart: u32,
     dwFrameLen: u32,
     dwFlags: u32,

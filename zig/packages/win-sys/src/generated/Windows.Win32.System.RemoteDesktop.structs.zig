@@ -560,21 +560,21 @@ pub const RFX_GFX_MSG_RDP_DATA = extern struct {
     rdpData: [1]u8,
 };
 pub const WTS_SOCKADDR = extern struct {
-pub const _u_e__Union = extern union {
-pub const _ipv4_e__Struct = extern struct {
-    sin_port: u16,
-    IN_ADDR: u32,
-    sin_zero: [8]u8,
-};
-pub const _ipv6_e__Struct = extern struct {
-    sin6_port: u16,
-    sin6_flowinfo: u32,
-    sin6_addr: [8]u16,
-    sin6_scope_id: u32,
-};
-    ipv4: _ipv4_e__Struct,
-    ipv6: _ipv6_e__Struct,
-};
+    pub const _u_e__Union = extern union {
+        pub const _ipv4_e__Struct = extern struct {
+            sin_port: u16,
+            IN_ADDR: u32,
+            sin_zero: [8]u8,
+        };
+        pub const _ipv6_e__Struct = extern struct {
+            sin6_port: u16,
+            sin6_flowinfo: u32,
+            sin6_addr: [8]u16,
+            sin6_scope_id: u32,
+        };
+        ipv4: _ipv4_e__Struct,
+        ipv6: _ipv6_e__Struct,
+    };
     sin_family: u16,
     u: _u_e__Union,
 };
@@ -749,20 +749,20 @@ pub const WTS_DISPLAY_IOCTL = extern struct {
     cbDisplayIOCtlData: u32,
 };
 pub const WTS_PROPERTY_VALUE = extern struct {
-pub const _u_e__Union = extern union {
-pub const _strVal_e__Struct = extern struct {
-    size: u32,
-    pstrVal: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const _bVal_e__Struct = extern struct {
-    size: u32,
-    pbVal: @"Windows.Win32.Foundation".PSTR,
-};
-    ulVal: u32,
-    strVal: _strVal_e__Struct,
-    bVal: _bVal_e__Struct,
-    guidVal: GUID,
-};
+    pub const _u_e__Union = extern union {
+        pub const _strVal_e__Struct = extern struct {
+            size: u32,
+            pstrVal: @"Windows.Win32.Foundation".PWSTR,
+        };
+        pub const _bVal_e__Struct = extern struct {
+            size: u32,
+            pbVal: @"Windows.Win32.Foundation".PSTR,
+        };
+        ulVal: u32,
+        strVal: _strVal_e__Struct,
+        bVal: _bVal_e__Struct,
+        guidVal: GUID,
+    };
     Type: u16,
     u: _u_e__Union,
 };

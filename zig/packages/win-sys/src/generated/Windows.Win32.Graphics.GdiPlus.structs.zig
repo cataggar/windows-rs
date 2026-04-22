@@ -89,9 +89,9 @@ pub const GdiplusStartupInput = extern struct {
     SuppressExternalCodecs: @"Windows.Win32.Foundation".BOOL,
 };
 pub const GdiplusStartupInputEx = extern struct {
-pub const Version = extern struct {
-    value__: u32,
-};
+    pub const Version = extern struct {
+        value__: u32,
+    };
     Base: GdiplusStartupInput,
     StartupParameters: i32,
 };
@@ -139,10 +139,10 @@ pub const WmfPlaceableFileHeader = extern struct {
     Checksum: i16,
 };
 pub const MetafileHeader = extern struct {
-pub const MetafileHeader_0 = extern union {
-    WmfHeader: @"Windows.Win32.Graphics.Gdi".METAHEADER,
-    EmfHeader: ENHMETAHEADER3,
-};
+    pub const MetafileHeader_0 = extern union {
+        WmfHeader: @"Windows.Win32.Graphics.Gdi".METAHEADER,
+        EmfHeader: ENHMETAHEADER3,
+    };
     Type: i32,
     Size: u32,
     Version: u32,

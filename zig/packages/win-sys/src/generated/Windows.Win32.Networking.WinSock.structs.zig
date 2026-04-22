@@ -53,21 +53,21 @@ pub const WSADATA = extern struct {
     szSystemStatus: [129]@"Windows.Win32.Foundation".CHAR,
 };
 pub const IN_ADDR = extern struct {
-pub const _S_un_e__Union = extern union {
-pub const _S_un_b_e__Struct = extern struct {
-    s_b1: u8,
-    s_b2: u8,
-    s_b3: u8,
-    s_b4: u8,
-};
-pub const _S_un_w_e__Struct = extern struct {
-    s_w1: u16,
-    s_w2: u16,
-};
-    S_un_b: _S_un_b_e__Struct,
-    S_un_w: _S_un_w_e__Struct,
-    S_addr: u32,
-};
+    pub const _S_un_e__Union = extern union {
+        pub const _S_un_b_e__Struct = extern struct {
+            s_b1: u8,
+            s_b2: u8,
+            s_b3: u8,
+            s_b4: u8,
+        };
+        pub const _S_un_w_e__Struct = extern struct {
+            s_w1: u16,
+            s_w2: u16,
+        };
+        S_un_b: _S_un_b_e__Struct,
+        S_un_w: _S_un_w_e__Struct,
+        S_addr: u32,
+    };
     S_un: _S_un_e__Union,
 };
 pub const SOCKADDR = extern struct {
@@ -106,13 +106,13 @@ pub const SOCKET_PROCESSOR_AFFINITY = extern struct {
     Reserved: u16,
 };
 pub const SCOPE_ID = extern struct {
-pub const SCOPE_ID_0 = extern union {
-pub const SCOPE_ID_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: SCOPE_ID_0_0,
-    Value: u32,
-};
+    pub const SCOPE_ID_0 = extern union {
+        pub const SCOPE_ID_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: SCOPE_ID_0_0,
+        Value: u32,
+    };
     Anonymous: SCOPE_ID_0,
 };
 pub const SOCKADDR_IN = extern struct {
@@ -271,10 +271,10 @@ pub const ADDRINFOEX5 = extern struct {
     ai_ttl: u32,
 };
 pub const ADDRINFO_DNS_SERVER = extern struct {
-pub const ADDRINFO_DNS_SERVER_0 = extern union {
-    ai_template: @"Windows.Win32.Foundation".PWSTR,
-    ai_hostname: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const ADDRINFO_DNS_SERVER_0 = extern union {
+        ai_template: @"Windows.Win32.Foundation".PWSTR,
+        ai_hostname: @"Windows.Win32.Foundation".PWSTR,
+    };
     ai_servertype: u32,
     ai_flags: u64,
     ai_addrlen: u32,
@@ -559,10 +559,10 @@ pub const SOCK_NOTIFY_REGISTRATION = extern struct {
     registrationResult: u32,
 };
 pub const IN6_ADDR = extern struct {
-pub const _u_e__Union = extern union {
-    Byte: [16]u8,
-    Word: [8]u16,
-};
+    pub const _u_e__Union = extern union {
+        Byte: [16]u8,
+        Word: [8]u16,
+    };
     u: _u_e__Union,
 };
 pub const sockaddr_in6_old = extern struct {
@@ -589,10 +589,10 @@ pub const INTERFACE_INFO_EX = extern struct {
     iiNetmask: SOCKET_ADDRESS,
 };
 pub const SOCKADDR_IN6 = extern struct {
-pub const SOCKADDR_IN6_0 = extern union {
-    sin6_scope_id: u32,
-    sin6_scope_struct: SCOPE_ID,
-};
+    pub const SOCKADDR_IN6_0 = extern union {
+        sin6_scope_id: u32,
+        sin6_scope_struct: SCOPE_ID,
+    };
     sin6_family: u16,
     sin6_port: u16,
     sin6_flowinfo: u32,
@@ -797,40 +797,40 @@ pub const WCE_DEVICELIST = extern struct {
     Device: [1]WCE_IRDA_DEVICE_INFO,
 };
 pub const WINDOWS_IAS_SET = extern struct {
-pub const _irdaAttribute_e__Union = extern union {
-pub const _irdaAttribOctetSeq_e__Struct = extern struct {
-    Len: u16,
-    OctetSeq: [1024]u8,
-};
-pub const _irdaAttribUsrStr_e__Struct = extern struct {
-    Len: u8,
-    CharSet: u8,
-    UsrStr: [256]u8,
-};
-    irdaAttribInt: i32,
-    irdaAttribOctetSeq: _irdaAttribOctetSeq_e__Struct,
-    irdaAttribUsrStr: _irdaAttribUsrStr_e__Struct,
-};
+    pub const _irdaAttribute_e__Union = extern union {
+        pub const _irdaAttribOctetSeq_e__Struct = extern struct {
+            Len: u16,
+            OctetSeq: [1024]u8,
+        };
+        pub const _irdaAttribUsrStr_e__Struct = extern struct {
+            Len: u8,
+            CharSet: u8,
+            UsrStr: [256]u8,
+        };
+        irdaAttribInt: i32,
+        irdaAttribOctetSeq: _irdaAttribOctetSeq_e__Struct,
+        irdaAttribUsrStr: _irdaAttribUsrStr_e__Struct,
+    };
     irdaClassName: [64]@"Windows.Win32.Foundation".CHAR,
     irdaAttribName: [256]@"Windows.Win32.Foundation".CHAR,
     irdaAttribType: u32,
     irdaAttribute: _irdaAttribute_e__Union,
 };
 pub const WINDOWS_IAS_QUERY = extern struct {
-pub const _irdaAttribute_e__Union = extern union {
-pub const _irdaAttribOctetSeq_e__Struct = extern struct {
-    Len: u32,
-    OctetSeq: [1024]u8,
-};
-pub const _irdaAttribUsrStr_e__Struct = extern struct {
-    Len: u32,
-    CharSet: u32,
-    UsrStr: [256]u8,
-};
-    irdaAttribInt: i32,
-    irdaAttribOctetSeq: _irdaAttribOctetSeq_e__Struct,
-    irdaAttribUsrStr: _irdaAttribUsrStr_e__Struct,
-};
+    pub const _irdaAttribute_e__Union = extern union {
+        pub const _irdaAttribOctetSeq_e__Struct = extern struct {
+            Len: u32,
+            OctetSeq: [1024]u8,
+        };
+        pub const _irdaAttribUsrStr_e__Struct = extern struct {
+            Len: u32,
+            CharSet: u32,
+            UsrStr: [256]u8,
+        };
+        irdaAttribInt: i32,
+        irdaAttribOctetSeq: _irdaAttribOctetSeq_e__Struct,
+        irdaAttribUsrStr: _irdaAttribUsrStr_e__Struct,
+    };
     irdaDeviceID: [4]u8,
     irdaClassName: [64]@"Windows.Win32.Foundation".CHAR,
     irdaAttribName: [256]@"Windows.Win32.Foundation".CHAR,
@@ -1113,10 +1113,10 @@ pub const AALUSER_PARAMETERS = extern struct {
     UserDefined: u32,
 };
 pub const AAL_PARAMETERS_IE = extern struct {
-pub const _AALSpecificParameters_e__Union = extern union {
-    AAL5Parameters: AAL5_PARAMETERS,
-    AALUserParameters: AALUSER_PARAMETERS,
-};
+    pub const _AALSpecificParameters_e__Union = extern union {
+        AAL5Parameters: AAL5_PARAMETERS,
+        AALUserParameters: AALUSER_PARAMETERS,
+    };
     AALType: i32,
     AALSpecificParameters: _AALSpecificParameters_e__Union,
 };
@@ -1204,53 +1204,53 @@ pub const TRANSMIT_FILE_BUFFERS = extern struct {
     TailLength: u32,
 };
 pub const TRANSMIT_PACKETS_ELEMENT = extern struct {
-pub const TRANSMIT_PACKETS_ELEMENT_0 = extern union {
-pub const TRANSMIT_PACKETS_ELEMENT_0_0 = extern struct {
-    nFileOffset: i64,
-    hFile: @"Windows.Win32.Foundation".HANDLE,
-};
-    Anonymous: TRANSMIT_PACKETS_ELEMENT_0_0,
-    pBuffer: *anyopaque,
-};
+    pub const TRANSMIT_PACKETS_ELEMENT_0 = extern union {
+        pub const TRANSMIT_PACKETS_ELEMENT_0_0 = extern struct {
+            nFileOffset: i64,
+            hFile: @"Windows.Win32.Foundation".HANDLE,
+        };
+        Anonymous: TRANSMIT_PACKETS_ELEMENT_0_0,
+        pBuffer: *anyopaque,
+    };
     dwElFlags: u32,
     cLength: u32,
     Anonymous: TRANSMIT_PACKETS_ELEMENT_0,
 };
 pub const NLA_BLOB = extern struct {
-pub const _header_e__Struct = extern struct {
-    type: i32,
-    dwSize: u32,
-    nextOffset: u32,
-};
-pub const _data_e__Union = extern union {
-pub const _interfaceData_e__Struct = extern struct {
-    dwType: u32,
-    dwSpeed: u32,
-    adapterName: [1]@"Windows.Win32.Foundation".CHAR,
-};
-pub const _locationData_e__Struct = extern struct {
-    information: [1]@"Windows.Win32.Foundation".CHAR,
-};
-pub const _connectivity_e__Struct = extern struct {
-    type: i32,
-    internet: i32,
-};
-pub const _ICS_e__Struct = extern struct {
-pub const _remote_e__Struct = extern struct {
-    speed: u32,
-    type: u32,
-    state: u32,
-    machineName: [256]u16,
-    sharedAdapterName: [256]u16,
-};
-    remote: _remote_e__Struct,
-};
-    rawData: [1]@"Windows.Win32.Foundation".CHAR,
-    interfaceData: _interfaceData_e__Struct,
-    locationData: _locationData_e__Struct,
-    connectivity: _connectivity_e__Struct,
-    ICS: _ICS_e__Struct,
-};
+    pub const _header_e__Struct = extern struct {
+        type: i32,
+        dwSize: u32,
+        nextOffset: u32,
+    };
+    pub const _data_e__Union = extern union {
+        pub const _interfaceData_e__Struct = extern struct {
+            dwType: u32,
+            dwSpeed: u32,
+            adapterName: [1]@"Windows.Win32.Foundation".CHAR,
+        };
+        pub const _locationData_e__Struct = extern struct {
+            information: [1]@"Windows.Win32.Foundation".CHAR,
+        };
+        pub const _connectivity_e__Struct = extern struct {
+            type: i32,
+            internet: i32,
+        };
+        pub const _ICS_e__Struct = extern struct {
+            pub const _remote_e__Struct = extern struct {
+                speed: u32,
+                type: u32,
+                state: u32,
+                machineName: [256]u16,
+                sharedAdapterName: [256]u16,
+            };
+            remote: _remote_e__Struct,
+        };
+        rawData: [1]@"Windows.Win32.Foundation".CHAR,
+        interfaceData: _interfaceData_e__Struct,
+        locationData: _locationData_e__Struct,
+        connectivity: _connectivity_e__Struct,
+        ICS: _ICS_e__Struct,
+    };
     header: _header_e__Struct,
     data: _data_e__Union,
 };
@@ -1261,19 +1261,19 @@ pub const WSAPOLLDATA = extern struct {
     fdArray: [1]WSAPOLLFD,
 };
 pub const RIO_NOTIFICATION_COMPLETION = extern struct {
-pub const RIO_NOTIFICATION_COMPLETION_0 = extern union {
-pub const _Event_e__Struct = extern struct {
-    EventHandle: @"Windows.Win32.Foundation".HANDLE,
-    NotifyReset: @"Windows.Win32.Foundation".BOOL,
-};
-pub const _Iocp_e__Struct = extern struct {
-    IocpHandle: @"Windows.Win32.Foundation".HANDLE,
-    CompletionKey: *anyopaque,
-    Overlapped: *anyopaque,
-};
-    Event: _Event_e__Struct,
-    Iocp: _Iocp_e__Struct,
-};
+    pub const RIO_NOTIFICATION_COMPLETION_0 = extern union {
+        pub const _Event_e__Struct = extern struct {
+            EventHandle: @"Windows.Win32.Foundation".HANDLE,
+            NotifyReset: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const _Iocp_e__Struct = extern struct {
+            IocpHandle: @"Windows.Win32.Foundation".HANDLE,
+            CompletionKey: *anyopaque,
+            Overlapped: *anyopaque,
+        };
+        Event: _Event_e__Struct,
+        Iocp: _Iocp_e__Struct,
+    };
     Type: i32,
     Anonymous: RIO_NOTIFICATION_COMPLETION_0,
 };
@@ -1457,9 +1457,9 @@ pub const SOCKADDR_VNS = extern struct {
     filler: [5]u8,
 };
 pub const DL_OUI = extern union {
-pub const DL_OUI_0 = extern struct {
-    _bitfield: u8,
-};
+    pub const DL_OUI_0 = extern struct {
+        _bitfield: u8,
+    };
     Byte: [3]u8,
     Anonymous: DL_OUI_0,
 };
@@ -1467,10 +1467,10 @@ pub const DL_EI48 = extern union {
     Byte: [3]u8,
 };
 pub const DL_EUI48 = extern union {
-pub const DL_EUI48_0 = extern struct {
-    Oui: DL_OUI,
-    Ei48: DL_EI48,
-};
+    pub const DL_EUI48_0 = extern struct {
+        Oui: DL_OUI,
+        Ei48: DL_EI48,
+    };
     Byte: [6]u8,
     Anonymous: DL_EUI48_0,
 };
@@ -1478,19 +1478,19 @@ pub const DL_EI64 = extern union {
     Byte: [5]u8,
 };
 pub const DL_EUI64 = extern union {
-pub const DL_EUI64_0 = extern struct {
-pub const DL_EUI64_0_0 = extern union {
-pub const DL_EUI64_0_0_0 = extern struct {
-    Type: u8,
-    Tse: u8,
-    Ei48: DL_EI48,
-};
-    Ei64: DL_EI64,
-    Anonymous: DL_EUI64_0_0_0,
-};
-    Oui: DL_OUI,
-    Anonymous: DL_EUI64_0_0,
-};
+    pub const DL_EUI64_0 = extern struct {
+        pub const DL_EUI64_0_0 = extern union {
+            pub const DL_EUI64_0_0_0 = extern struct {
+                Type: u8,
+                Tse: u8,
+                Ei48: DL_EI48,
+            };
+            Ei64: DL_EI64,
+            Anonymous: DL_EUI64_0_0_0,
+        };
+        Oui: DL_OUI,
+        Anonymous: DL_EUI64_0_0,
+    };
     Byte: [8]u8,
     Value: u64,
     Anonymous: DL_EUI64_0,
@@ -1503,22 +1503,22 @@ pub const SNAP_HEADER = extern struct {
     Type: u16,
 };
 pub const ETHERNET_HEADER = extern struct {
-pub const ETHERNET_HEADER_0 = extern union {
-    Type: u16,
-    Length: u16,
-};
+    pub const ETHERNET_HEADER_0 = extern union {
+        Type: u16,
+        Length: u16,
+    };
     Destination: DL_EUI48,
     Source: DL_EUI48,
     Anonymous: ETHERNET_HEADER_0,
 };
 pub const VLAN_TAG = extern struct {
-pub const VLAN_TAG_0 = extern union {
-pub const VLAN_TAG_0_0 = extern struct {
-    _bitfield: u16,
-};
-    Tag: u16,
-    Anonymous: VLAN_TAG_0_0,
-};
+    pub const VLAN_TAG_0 = extern union {
+        pub const VLAN_TAG_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        Tag: u16,
+        Anonymous: VLAN_TAG_0_0,
+    };
     Anonymous: VLAN_TAG_0,
     Type: u16,
 };
@@ -1528,36 +1528,36 @@ pub const ICMP_HEADER = extern struct {
     Checksum: u16,
 };
 pub const ICMP_MESSAGE = extern struct {
-pub const _Data_e__Union = extern union {
-    Data32: [1]u32,
-    Data16: [2]u16,
-    Data8: [4]u8,
-};
+    pub const _Data_e__Union = extern union {
+        Data32: [1]u32,
+        Data16: [2]u16,
+        Data8: [4]u8,
+    };
     Header: ICMP_HEADER,
     Data: _Data_e__Union,
 };
 pub const IPV4_HEADER = extern struct {
-pub const IPV4_HEADER_0 = extern union {
-pub const IPV4_HEADER_0_0 = extern struct {
-    _bitfield: u8,
-};
-    VersionAndHeaderLength: u8,
-    Anonymous: IPV4_HEADER_0_0,
-};
-pub const IPV4_HEADER_1 = extern union {
-pub const IPV4_HEADER_1_0 = extern struct {
-    _bitfield: u8,
-};
-    TypeOfServiceAndEcnField: u8,
-    Anonymous: IPV4_HEADER_1_0,
-};
-pub const IPV4_HEADER_2 = extern union {
-pub const IPV4_HEADER_2_0 = extern struct {
-    _bitfield: u16,
-};
-    FlagsAndOffset: u16,
-    Anonymous: IPV4_HEADER_2_0,
-};
+    pub const IPV4_HEADER_0 = extern union {
+        pub const IPV4_HEADER_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        VersionAndHeaderLength: u8,
+        Anonymous: IPV4_HEADER_0_0,
+    };
+    pub const IPV4_HEADER_1 = extern union {
+        pub const IPV4_HEADER_1_0 = extern struct {
+            _bitfield: u8,
+        };
+        TypeOfServiceAndEcnField: u8,
+        Anonymous: IPV4_HEADER_1_0,
+    };
+    pub const IPV4_HEADER_2 = extern union {
+        pub const IPV4_HEADER_2_0 = extern struct {
+            _bitfield: u16,
+        };
+        FlagsAndOffset: u16,
+        Anonymous: IPV4_HEADER_2_0,
+    };
     Anonymous1: IPV4_HEADER_0,
     Anonymous2: IPV4_HEADER_1,
     TotalLength: u16,
@@ -1570,24 +1570,24 @@ pub const IPV4_HEADER_2_0 = extern struct {
     DestinationAddress: IN_ADDR,
 };
 pub const IPV4_OPTION_HEADER = extern struct {
-pub const IPV4_OPTION_HEADER_0 = extern union {
-pub const IPV4_OPTION_HEADER_0_0 = extern struct {
-    _bitfield: u8,
-};
-    OptionType: u8,
-    Anonymous: IPV4_OPTION_HEADER_0_0,
-};
+    pub const IPV4_OPTION_HEADER_0 = extern union {
+        pub const IPV4_OPTION_HEADER_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        OptionType: u8,
+        Anonymous: IPV4_OPTION_HEADER_0_0,
+    };
     Anonymous: IPV4_OPTION_HEADER_0,
     OptionLength: u8,
 };
 pub const IPV4_TIMESTAMP_OPTION = extern struct {
-pub const IPV4_TIMESTAMP_OPTION_0 = extern union {
-pub const IPV4_TIMESTAMP_OPTION_0_0 = extern struct {
-    _bitfield: u8,
-};
-    FlagsOverflow: u8,
-    Anonymous: IPV4_TIMESTAMP_OPTION_0_0,
-};
+    pub const IPV4_TIMESTAMP_OPTION_0 = extern union {
+        pub const IPV4_TIMESTAMP_OPTION_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        FlagsOverflow: u8,
+        Anonymous: IPV4_TIMESTAMP_OPTION_0_0,
+    };
     OptionHeader: IPV4_OPTION_HEADER,
     Pointer: u8,
     Anonymous: IPV4_TIMESTAMP_OPTION_0,
@@ -1625,38 +1625,38 @@ pub const ARP_HEADER = extern struct {
     SenderHardwareAddress: [1]u8,
 };
 pub const IGMP_HEADER = extern struct {
-pub const IGMP_HEADER_0 = extern union {
-pub const IGMP_HEADER_0_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: IGMP_HEADER_0_0,
-    VersionType: u8,
-};
-pub const IGMP_HEADER_1 = extern union {
-    Reserved: u8,
-    MaxRespTime: u8,
-    Code: u8,
-};
+    pub const IGMP_HEADER_0 = extern union {
+        pub const IGMP_HEADER_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: IGMP_HEADER_0_0,
+        VersionType: u8,
+    };
+    pub const IGMP_HEADER_1 = extern union {
+        Reserved: u8,
+        MaxRespTime: u8,
+        Code: u8,
+    };
     Anonymous1: IGMP_HEADER_0,
     Anonymous2: IGMP_HEADER_1,
     Checksum: u16,
     MulticastAddress: IN_ADDR,
 };
 pub const IGMPV3_QUERY_HEADER = extern struct {
-pub const IGMPV3_QUERY_HEADER_0 = extern union {
-pub const IGMPV3_QUERY_HEADER_0_0 = extern struct {
-    _bitfield: u8,
-};
-    MaxRespCode: u8,
-    Anonymous: IGMPV3_QUERY_HEADER_0_0,
-};
-pub const IGMPV3_QUERY_HEADER_1 = extern union {
-pub const IGMPV3_QUERY_HEADER_1_0 = extern struct {
-    _bitfield: u8,
-};
-    QueriersQueryInterfaceCode: u8,
-    Anonymous: IGMPV3_QUERY_HEADER_1_0,
-};
+    pub const IGMPV3_QUERY_HEADER_0 = extern union {
+        pub const IGMPV3_QUERY_HEADER_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        MaxRespCode: u8,
+        Anonymous: IGMPV3_QUERY_HEADER_0_0,
+    };
+    pub const IGMPV3_QUERY_HEADER_1 = extern union {
+        pub const IGMPV3_QUERY_HEADER_1_0 = extern struct {
+            _bitfield: u8,
+        };
+        QueriersQueryInterfaceCode: u8,
+        Anonymous: IGMPV3_QUERY_HEADER_1_0,
+    };
     Type: u8,
     Anonymous1: IGMPV3_QUERY_HEADER_0,
     Checksum: u16,
@@ -1679,13 +1679,13 @@ pub const IGMPV3_REPORT_HEADER = extern struct {
     RecordCount: u16,
 };
 pub const IPV6_HEADER = extern struct {
-pub const IPV6_HEADER_0 = extern union {
-pub const IPV6_HEADER_0_0 = extern struct {
-    _bitfield: u32,
-};
-    VersionClassFlow: u32,
-    Anonymous: IPV6_HEADER_0_0,
-};
+    pub const IPV6_HEADER_0 = extern union {
+        pub const IPV6_HEADER_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        VersionClassFlow: u32,
+        Anonymous: IPV6_HEADER_0_0,
+    };
     Anonymous: IPV6_HEADER_0,
     PayloadLength: u16,
     NextHeader: u8,
@@ -1694,13 +1694,13 @@ pub const IPV6_HEADER_0_0 = extern struct {
     DestinationAddress: IN6_ADDR,
 };
 pub const IPV6_FRAGMENT_HEADER = extern struct {
-pub const IPV6_FRAGMENT_HEADER_0 = extern union {
-pub const IPV6_FRAGMENT_HEADER_0_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: IPV6_FRAGMENT_HEADER_0_0,
-    OffsetAndFlags: u16,
-};
+    pub const IPV6_FRAGMENT_HEADER_0 = extern union {
+        pub const IPV6_FRAGMENT_HEADER_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: IPV6_FRAGMENT_HEADER_0_0,
+        OffsetAndFlags: u16,
+    };
     NextHeader: u8,
     Reserved: u8,
     Anonymous: IPV6_FRAGMENT_HEADER_0,
@@ -1738,9 +1738,9 @@ pub const ND_ROUTER_ADVERT_HEADER = extern struct {
     nd_ra_retransmit: u32,
 };
 pub const IPV6_ROUTER_ADVERTISEMENT_FLAGS = extern union {
-pub const IPV6_ROUTER_ADVERTISEMENT_FLAGS_0 = extern struct {
-    _bitfield: u8,
-};
+    pub const IPV6_ROUTER_ADVERTISEMENT_FLAGS_0 = extern struct {
+        _bitfield: u8,
+    };
     Anonymous: IPV6_ROUTER_ADVERTISEMENT_FLAGS_0,
     Value: u8,
 };
@@ -1753,10 +1753,10 @@ pub const ND_NEIGHBOR_ADVERT_HEADER = extern struct {
     nd_na_target: IN6_ADDR,
 };
 pub const IPV6_NEIGHBOR_ADVERTISEMENT_FLAGS = extern union {
-pub const IPV6_NEIGHBOR_ADVERTISEMENT_FLAGS_0 = extern struct {
-    _bitfield: u8,
-    Reserved2: [3]u8,
-};
+    pub const IPV6_NEIGHBOR_ADVERTISEMENT_FLAGS_0 = extern struct {
+        _bitfield: u8,
+        Reserved2: [3]u8,
+    };
     Anonymous: IPV6_NEIGHBOR_ADVERTISEMENT_FLAGS_0,
     Value: u32,
 };
@@ -1770,21 +1770,21 @@ pub const ND_OPTION_HDR = extern struct {
     nd_opt_len: u8,
 };
 pub const ND_OPTION_PREFIX_INFO = extern struct {
-pub const ND_OPTION_PREFIX_INFO_0 = extern union {
-pub const _Flags_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    nd_opt_pi_flags_reserved: u8,
-    Flags: _Flags_e__Struct,
-};
-pub const ND_OPTION_PREFIX_INFO_1 = extern union {
-pub const ND_OPTION_PREFIX_INFO_1_0 = extern struct {
-    nd_opt_pi_reserved3: [3]u8,
-    nd_opt_pi_site_prefix_len: u8,
-};
-    nd_opt_pi_reserved2: u32,
-    Anonymous: ND_OPTION_PREFIX_INFO_1_0,
-};
+    pub const ND_OPTION_PREFIX_INFO_0 = extern union {
+        pub const _Flags_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        nd_opt_pi_flags_reserved: u8,
+        Flags: _Flags_e__Struct,
+    };
+    pub const ND_OPTION_PREFIX_INFO_1 = extern union {
+        pub const ND_OPTION_PREFIX_INFO_1_0 = extern struct {
+            nd_opt_pi_reserved3: [3]u8,
+            nd_opt_pi_site_prefix_len: u8,
+        };
+        nd_opt_pi_reserved2: u32,
+        Anonymous: ND_OPTION_PREFIX_INFO_1_0,
+    };
     nd_opt_pi_type: u8,
     nd_opt_pi_len: u8,
     nd_opt_pi_prefix_len: u8,
@@ -1807,13 +1807,13 @@ pub const ND_OPTION_MTU = extern struct {
     nd_opt_mtu_mtu: u32,
 };
 pub const ND_OPTION_ROUTE_INFO = extern struct {
-pub const ND_OPTION_ROUTE_INFO_0 = extern union {
-pub const _Flags_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    nd_opt_ri_flags_reserved: u8,
-    Flags: _Flags_e__Struct,
-};
+    pub const ND_OPTION_ROUTE_INFO_0 = extern union {
+        pub const _Flags_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        nd_opt_ri_flags_reserved: u8,
+        Flags: _Flags_e__Struct,
+    };
     nd_opt_ri_type: u8,
     nd_opt_ri_len: u8,
     nd_opt_ri_prefix_len: u8,
@@ -1834,13 +1834,13 @@ pub const ND_OPTION_DNSSL = extern struct {
     nd_opt_dnssl_lifetime: u32,
 };
 pub const ND_OPTION_PREF64 = extern struct {
-pub const ND_OPTION_PREF64_0 = extern union {
-pub const ND_OPTION_PREF64_0_0 = extern struct {
-    _bitfield: u16,
-};
-    nd_opt_p64_lifetime_plc: u16,
-    Anonymous: ND_OPTION_PREF64_0_0,
-};
+    pub const ND_OPTION_PREF64_0 = extern union {
+        pub const ND_OPTION_PREF64_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        nd_opt_p64_lifetime_plc: u16,
+        Anonymous: ND_OPTION_PREF64_0_0,
+    };
     nd_opt_p64_type: u8,
     nd_opt_p64_len: u8,
     Anonymous: ND_OPTION_PREF64_0,
@@ -1853,20 +1853,20 @@ pub const MLD_HEADER = extern struct {
     MulticastAddress: IN6_ADDR,
 };
 pub const MLDV2_QUERY_HEADER = extern struct {
-pub const MLDV2_QUERY_HEADER_0 = extern union {
-pub const MLDV2_QUERY_HEADER_0_0 = extern struct {
-    _bitfield: u16,
-};
-    MaxRespCode: u16,
-    Anonymous: MLDV2_QUERY_HEADER_0_0,
-};
-pub const MLDV2_QUERY_HEADER_1 = extern union {
-pub const MLDV2_QUERY_HEADER_1_0 = extern struct {
-    _bitfield: u8,
-};
-    QueriersQueryInterfaceCode: u8,
-    Anonymous: MLDV2_QUERY_HEADER_1_0,
-};
+    pub const MLDV2_QUERY_HEADER_0 = extern union {
+        pub const MLDV2_QUERY_HEADER_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        MaxRespCode: u16,
+        Anonymous: MLDV2_QUERY_HEADER_0_0,
+    };
+    pub const MLDV2_QUERY_HEADER_1 = extern union {
+        pub const MLDV2_QUERY_HEADER_1_0 = extern struct {
+            _bitfield: u8,
+        };
+        QueriersQueryInterfaceCode: u8,
+        Anonymous: MLDV2_QUERY_HEADER_1_0,
+    };
     IcmpHeader: ICMP_HEADER,
     Anonymous1: MLDV2_QUERY_HEADER_0,
     Reserved: u16,
@@ -1912,10 +1912,10 @@ pub const TCP_OPT_SACK_PERMITTED = extern struct {
     Length: u8,
 };
 pub const TCP_OPT_SACK = extern struct {
-pub const tcp_opt_sack_block = extern struct {
-    Left: u32,
-    Right: u32,
-};
+    pub const tcp_opt_sack_block = extern struct {
+        Left: u32,
+        Right: u32,
+    };
     Kind: u8,
     Length: u8,
     Block: [1]tcp_opt_sack_block,
@@ -1941,32 +1941,32 @@ pub const DL_TUNNEL_ADDRESS = extern struct {
     IpAddress: [1]u8,
 };
 pub const DL_TEREDO_ADDRESS = extern struct {
-pub const DL_TEREDO_ADDRESS_0 = extern union {
-pub const DL_TEREDO_ADDRESS_0_0 = extern struct {
-    Flags: u16,
-    MappedPort: u16,
-    MappedAddress: IN_ADDR,
-};
-    Eui64: DL_EUI64,
-    Anonymous: DL_TEREDO_ADDRESS_0_0,
-};
+    pub const DL_TEREDO_ADDRESS_0 = extern union {
+        pub const DL_TEREDO_ADDRESS_0_0 = extern struct {
+            Flags: u16,
+            MappedPort: u16,
+            MappedAddress: IN_ADDR,
+        };
+        Eui64: DL_EUI64,
+        Anonymous: DL_TEREDO_ADDRESS_0_0,
+    };
     Reserved: [6]u8,
     Anonymous: DL_TEREDO_ADDRESS_0,
 };
 pub const DL_TEREDO_ADDRESS_PRV = extern struct {
-pub const DL_TEREDO_ADDRESS_PRV_0 = extern union {
-pub const DL_TEREDO_ADDRESS_PRV_0_0 = extern struct {
-    Flags: u16,
-    MappedPort: u16,
-    MappedAddress: IN_ADDR,
-    LocalAddress: IN_ADDR,
-    InterfaceIndex: u32,
-    LocalPort: u16,
-    DlDestination: DL_EUI48,
-};
-    Eui64: DL_EUI64,
-    Anonymous: DL_TEREDO_ADDRESS_PRV_0_0,
-};
+    pub const DL_TEREDO_ADDRESS_PRV_0 = extern union {
+        pub const DL_TEREDO_ADDRESS_PRV_0_0 = extern struct {
+            Flags: u16,
+            MappedPort: u16,
+            MappedAddress: IN_ADDR,
+            LocalAddress: IN_ADDR,
+            InterfaceIndex: u32,
+            LocalPort: u16,
+            DlDestination: DL_EUI48,
+        };
+        Eui64: DL_EUI64,
+        Anonymous: DL_TEREDO_ADDRESS_PRV_0_0,
+    };
     Reserved: [6]u8,
     Anonymous: DL_TEREDO_ADDRESS_PRV_0,
 };
@@ -1974,10 +1974,10 @@ pub const IPTLS_METADATA = extern struct {
     SequenceNumber: u64,
 };
 pub const NPI_MODULEID = extern struct {
-pub const NPI_MODULEID_0 = extern union {
-    Guid: GUID,
-    IfLuid: @"Windows.Win32.Foundation".LUID,
-};
+    pub const NPI_MODULEID_0 = extern union {
+        Guid: GUID,
+        IfLuid: @"Windows.Win32.Foundation".LUID,
+    };
     Length: u16,
     Type: i32,
     Anonymous: NPI_MODULEID_0,

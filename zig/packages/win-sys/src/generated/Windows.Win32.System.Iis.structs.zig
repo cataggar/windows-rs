@@ -91,10 +91,10 @@ pub const METADATA_GETALL_RECORD = extern struct {
     dwMDDataTag: u32,
 };
 pub const METADATA_GETALL_INTERNAL_RECORD = extern struct {
-pub const METADATA_GETALL_INTERNAL_RECORD_0 = extern union {
-    dwMDDataOffset: usize,
-    pbMDData: *u8,
-};
+    pub const METADATA_GETALL_INTERNAL_RECORD_0 = extern union {
+        dwMDDataOffset: usize,
+        pbMDData: *u8,
+    };
     dwMDIdentifier: u32,
     dwMDAttributes: u32,
     dwMDUserType: u32,

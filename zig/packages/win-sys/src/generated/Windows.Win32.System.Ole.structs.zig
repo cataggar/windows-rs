@@ -141,27 +141,27 @@ pub const FONTDESC = extern struct {
     fStrikethrough: @"Windows.Win32.Foundation".BOOL,
 };
 pub const PICTDESC = extern struct {
-pub const PICTDESC_0 = extern union {
-pub const _bmp_e__Struct = extern struct {
-    hbitmap: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    hpal: @"Windows.Win32.Graphics.Gdi".HPALETTE,
-};
-pub const _wmf_e__Struct = extern struct {
-    hmeta: @"Windows.Win32.Graphics.Gdi".HMETAFILE,
-    xExt: i32,
-    yExt: i32,
-};
-pub const _icon_e__Struct = extern struct {
-    hicon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-};
-pub const _emf_e__Struct = extern struct {
-    hemf: @"Windows.Win32.Graphics.Gdi".HENHMETAFILE,
-};
-    bmp: _bmp_e__Struct,
-    wmf: _wmf_e__Struct,
-    icon: _icon_e__Struct,
-    emf: _emf_e__Struct,
-};
+    pub const PICTDESC_0 = extern union {
+        pub const _bmp_e__Struct = extern struct {
+            hbitmap: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+            hpal: @"Windows.Win32.Graphics.Gdi".HPALETTE,
+        };
+        pub const _wmf_e__Struct = extern struct {
+            hmeta: @"Windows.Win32.Graphics.Gdi".HMETAFILE,
+            xExt: i32,
+            yExt: i32,
+        };
+        pub const _icon_e__Struct = extern struct {
+            hicon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        };
+        pub const _emf_e__Struct = extern struct {
+            hemf: @"Windows.Win32.Graphics.Gdi".HENHMETAFILE,
+        };
+        bmp: _bmp_e__Struct,
+        wmf: _wmf_e__Struct,
+        icon: _icon_e__Struct,
+        emf: _emf_e__Struct,
+    };
     cbSizeofstruct: u32,
     picType: u32,
     Anonymous: PICTDESC_0,

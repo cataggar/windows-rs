@@ -35,11 +35,11 @@ pub const INTERACTION_ARGUMENTS_CROSS_SLIDE = extern struct {
     flags: u32,
 };
 pub const INTERACTION_CONTEXT_OUTPUT = extern struct {
-pub const _arguments_e__Union = extern union {
-    manipulation: INTERACTION_ARGUMENTS_MANIPULATION,
-    tap: INTERACTION_ARGUMENTS_TAP,
-    crossSlide: INTERACTION_ARGUMENTS_CROSS_SLIDE,
-};
+    pub const _arguments_e__Union = extern union {
+        manipulation: INTERACTION_ARGUMENTS_MANIPULATION,
+        tap: INTERACTION_ARGUMENTS_TAP,
+        crossSlide: INTERACTION_ARGUMENTS_CROSS_SLIDE,
+    };
     interactionId: i32,
     interactionFlags: u32,
     inputType: i32,
@@ -48,11 +48,11 @@ pub const _arguments_e__Union = extern union {
     arguments: _arguments_e__Union,
 };
 pub const INTERACTION_CONTEXT_OUTPUT2 = extern struct {
-pub const _arguments_e__Union = extern union {
-    manipulation: INTERACTION_ARGUMENTS_MANIPULATION,
-    tap: INTERACTION_ARGUMENTS_TAP,
-    crossSlide: INTERACTION_ARGUMENTS_CROSS_SLIDE,
-};
+    pub const _arguments_e__Union = extern union {
+        manipulation: INTERACTION_ARGUMENTS_MANIPULATION,
+        tap: INTERACTION_ARGUMENTS_TAP,
+        crossSlide: INTERACTION_ARGUMENTS_CROSS_SLIDE,
+    };
     interactionId: i32,
     interactionFlags: u32,
     inputType: i32,

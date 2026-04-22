@@ -250,29 +250,29 @@ pub const KDEVICE_QUEUE = extern struct {
     Busy: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const OWNER_ENTRY = extern struct {
-pub const OWNER_ENTRY_0 = extern union {
-pub const OWNER_ENTRY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: OWNER_ENTRY_0_0,
-    TableSize: u32,
-};
+    pub const OWNER_ENTRY_0 = extern union {
+        pub const OWNER_ENTRY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: OWNER_ENTRY_0_0,
+        TableSize: u32,
+    };
     OwnerThread: usize,
     Anonymous: OWNER_ENTRY_0,
 };
 pub const ERESOURCE = extern struct {
-pub const ERESOURCE_0 = extern union {
-pub const ERESOURCE_0_0 = extern struct {
-    ReservedLowFlags: u8,
-    WaiterPriority: u8,
-};
-    Flag: u16,
-    Anonymous: ERESOURCE_0_0,
-};
-pub const ERESOURCE_1 = extern union {
-    Address: *anyopaque,
-    CreatorBackTraceIndex: usize,
-};
+    pub const ERESOURCE_0 = extern union {
+        pub const ERESOURCE_0_0 = extern struct {
+            ReservedLowFlags: u8,
+            WaiterPriority: u8,
+        };
+        Flag: u16,
+        Anonymous: ERESOURCE_0_0,
+    };
+    pub const ERESOURCE_1 = extern union {
+        Address: *anyopaque,
+        CreatorBackTraceIndex: usize,
+    };
     SystemResourcesList: @"Windows.Win32.System.Kernel".LIST_ENTRY,
     OwnerTable: *OWNER_ENTRY,
     ActiveCount: i16,
@@ -294,10 +294,10 @@ pub const SECURITY_SUBJECT_CONTEXT = extern struct {
     ProcessAuditId: *anyopaque,
 };
 pub const ACCESS_STATE = extern struct {
-pub const _Privileges_e__Union = extern union {
-    InitialPrivilegeSet: @"Windows.Wdk.System.SystemServices".INITIAL_PRIVILEGE_SET,
-    PrivilegeSet: @"Windows.Win32.Security".PRIVILEGE_SET,
-};
+    pub const _Privileges_e__Union = extern union {
+        InitialPrivilegeSet: @"Windows.Wdk.System.SystemServices".INITIAL_PRIVILEGE_SET,
+        PrivilegeSet: @"Windows.Win32.Security".PRIVILEGE_SET,
+    };
     OperationID: @"Windows.Win32.Foundation".LUID,
     SecurityEvaluated: @"Windows.Win32.Foundation".BOOLEAN,
     GenerateAudit: @"Windows.Win32.Foundation".BOOLEAN,

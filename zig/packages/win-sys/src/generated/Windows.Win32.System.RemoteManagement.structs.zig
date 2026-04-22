@@ -31,11 +31,11 @@ pub const WSMAN_DATA_BINARY = extern struct {
     data: *u8,
 };
 pub const WSMAN_DATA = extern struct {
-pub const WSMAN_DATA_0 = extern union {
-    text: WSMAN_DATA_TEXT,
-    binaryData: WSMAN_DATA_BINARY,
-    number: u32,
-};
+    pub const WSMAN_DATA_0 = extern union {
+        text: WSMAN_DATA_TEXT,
+        binaryData: WSMAN_DATA_BINARY,
+        number: u32,
+    };
     type: i32,
     Anonymous: WSMAN_DATA_0,
 };
@@ -51,10 +51,10 @@ pub const WSMAN_USERNAME_PASSWORD_CREDS = extern struct {
     password: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const WSMAN_AUTHENTICATION_CREDENTIALS = extern struct {
-pub const WSMAN_AUTHENTICATION_CREDENTIALS_0 = extern union {
-    userAccount: WSMAN_USERNAME_PASSWORD_CREDS,
-    certificateThumbprint: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const WSMAN_AUTHENTICATION_CREDENTIALS_0 = extern union {
+        userAccount: WSMAN_USERNAME_PASSWORD_CREDS,
+        certificateThumbprint: @"Windows.Win32.Foundation".PWSTR,
+    };
     authenticationMechanism: u32,
     Anonymous: WSMAN_AUTHENTICATION_CREDENTIALS_0,
 };

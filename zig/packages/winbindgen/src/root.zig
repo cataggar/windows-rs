@@ -1197,16 +1197,16 @@ fn isSignedRepr(ty: winmd.Ty) bool {
 /// entry here produces "expected type expression, found '<kw>'" errors.
 fn isZigReservedIdent(name: []const u8) bool {
     const reserved = [_][]const u8{
-        "addrspace",    "align",        "allowzero",   "and",         "anyframe",
-        "anytype",      "asm",          "async",       "await",       "break",
-        "callconv",     "catch",        "comptime",    "const",       "continue",
-        "defer",        "else",         "enum",        "errdefer",    "error",
-        "export",       "extern",       "fn",          "for",         "if",
-        "inline",       "linksection",  "noalias",     "noinline",    "nosuspend",
-        "opaque",       "or",           "orelse",      "packed",      "pub",
-        "resume",       "return",       "struct",      "suspend",     "switch",
-        "test",         "threadlocal",  "try",         "union",       "unreachable",
-        "usingnamespace", "var",        "volatile",    "while",
+        "addrspace",      "align",       "allowzero", "and",      "anyframe",
+        "anytype",        "asm",         "async",     "await",    "break",
+        "callconv",       "catch",       "comptime",  "const",    "continue",
+        "defer",          "else",        "enum",      "errdefer", "error",
+        "export",         "extern",      "fn",        "for",      "if",
+        "inline",         "linksection", "noalias",   "noinline", "nosuspend",
+        "opaque",         "or",          "orelse",    "packed",   "pub",
+        "resume",         "return",      "struct",    "suspend",  "switch",
+        "test",           "threadlocal", "try",       "union",    "unreachable",
+        "usingnamespace", "var",         "volatile",  "while",
     };
     for (reserved) |kw| {
         if (std.mem.eql(u8, name, kw)) return true;

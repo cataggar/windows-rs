@@ -79,18 +79,18 @@ pub const REGFILTERPINS2 = extern struct {
     clsPinCategory: *GUID,
 };
 pub const REGFILTER2 = extern struct {
-pub const REGFILTER2_0 = extern union {
-pub const REGFILTER2_0_0 = extern struct {
-    cPins: u32,
-    rgPins: *REGFILTERPINS,
-};
-pub const REGFILTER2_0_1 = extern struct {
-    cPins2: u32,
-    rgPins2: *REGFILTERPINS2,
-};
-    Anonymous1: REGFILTER2_0_0,
-    Anonymous2: REGFILTER2_0_1,
-};
+    pub const REGFILTER2_0 = extern union {
+        pub const REGFILTER2_0_0 = extern struct {
+            cPins: u32,
+            rgPins: *REGFILTERPINS,
+        };
+        pub const REGFILTER2_0_1 = extern struct {
+            cPins2: u32,
+            rgPins2: *REGFILTERPINS2,
+        };
+        Anonymous1: REGFILTER2_0_0,
+        Anonymous2: REGFILTER2_0_1,
+    };
     dwVersion: u32,
     dwMerit: u32,
     Anonymous: REGFILTER2_0,
@@ -319,10 +319,10 @@ pub const DVD_SubpictureAttributes = extern struct {
     LanguageExtension: i32,
 };
 pub const DVD_TitleAttributes = extern struct {
-pub const DVD_TitleAttributes_0 = extern union {
-    AppMode: i32,
-    TitleLength: DVD_HMSF_TIMECODE,
-};
+    pub const DVD_TitleAttributes_0 = extern union {
+        AppMode: i32,
+        TitleLength: DVD_HMSF_TIMECODE,
+    };
     Anonymous: DVD_TitleAttributes_0,
     VideoAttributes: DVD_VideoAttributes,
     ulNumberOfAudioStreams: u32,
@@ -689,11 +689,11 @@ pub const TRUECOLORINFO = extern struct {
     bmiColors: [256]@"Windows.Win32.Graphics.Gdi".RGBQUAD,
 };
 pub const VIDEOINFO = extern struct {
-pub const VIDEOINFO_0 = extern union {
-    bmiColors: [256]@"Windows.Win32.Graphics.Gdi".RGBQUAD,
-    dwBitMasks: [3]u32,
-    TrueColorInfo: TRUECOLORINFO,
-};
+    pub const VIDEOINFO_0 = extern union {
+        bmiColors: [256]@"Windows.Win32.Graphics.Gdi".RGBQUAD,
+        dwBitMasks: [3]u32,
+        TrueColorInfo: TRUECOLORINFO,
+    };
     rcSource: @"Windows.Win32.Foundation".RECT,
     rcTarget: @"Windows.Win32.Foundation".RECT,
     dwBitRate: u32,
@@ -808,12 +808,12 @@ pub const AVIEXTHEADER = extern struct {
     dwFuture: [61]u32,
 };
 pub const AVISTREAMHEADER = extern struct {
-pub const _rcFrame_e__Struct = extern struct {
-    left: i16,
-    top: i16,
-    right: i16,
-    bottom: i16,
-};
+    pub const _rcFrame_e__Struct = extern struct {
+        left: i16,
+        top: i16,
+        right: i16,
+        bottom: i16,
+    };
     fcc: u32,
     cb: u32,
     fccType: u32,
@@ -832,12 +832,12 @@ pub const _rcFrame_e__Struct = extern struct {
     rcFrame: _rcFrame_e__Struct,
 };
 pub const AVIOLDINDEX = extern struct {
-pub const _avioldindex_entry = extern struct {
-    dwChunkId: u32,
-    dwFlags: u32,
-    dwOffset: u32,
-    dwSize: u32,
-};
+    pub const _avioldindex_entry = extern struct {
+        dwChunkId: u32,
+        dwFlags: u32,
+        dwOffset: u32,
+        dwSize: u32,
+    };
     fcc: u32,
     cb: u32,
     aIndex: [1]_avioldindex_entry,
@@ -859,11 +859,11 @@ pub const AVIMETAINDEX = extern struct {
     adwIndex: [1]u32,
 };
 pub const AVISUPERINDEX = extern struct {
-pub const _avisuperindex_entry = extern struct {
-    qwOffset: u64,
-    dwSize: u32,
-    dwDuration: u32,
-};
+    pub const _avisuperindex_entry = extern struct {
+        qwOffset: u64,
+        dwSize: u32,
+        dwDuration: u32,
+    };
     fcc: u32,
     cb: u32,
     wLongsPerEntry: u16,
@@ -939,11 +939,11 @@ pub const AVITCDLINDEX = extern struct {
     adwTrailingFill: [3512]u32,
 };
 pub const AVIFIELDINDEX = extern struct {
-pub const _avifieldindex_entry = extern struct {
-    dwOffset: u32,
-    dwSize: u32,
-    dwOffsetField2: u32,
-};
+    pub const _avifieldindex_entry = extern struct {
+        dwOffset: u32,
+        dwSize: u32,
+        dwOffsetField2: u32,
+    };
     fcc: u32,
     cb: u32,
     wLongsPerEntry: u16,

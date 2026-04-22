@@ -42,13 +42,13 @@ pub const DISPLAYCONFIG_2DREGION = extern struct {
     cy: u32,
 };
 pub const DISPLAYCONFIG_VIDEO_SIGNAL_INFO = extern struct {
-pub const DISPLAYCONFIG_VIDEO_SIGNAL_INFO_0 = extern union {
-pub const _AdditionalSignalInfo_e__Struct = extern struct {
-    _bitfield: u32,
-};
-    AdditionalSignalInfo: _AdditionalSignalInfo_e__Struct,
-    videoStandard: u32,
-};
+    pub const DISPLAYCONFIG_VIDEO_SIGNAL_INFO_0 = extern union {
+        pub const _AdditionalSignalInfo_e__Struct = extern struct {
+            _bitfield: u32,
+        };
+        AdditionalSignalInfo: _AdditionalSignalInfo_e__Struct,
+        videoStandard: u32,
+    };
     pixelRate: u64,
     hSyncFreq: DISPLAYCONFIG_RATIONAL,
     vSyncFreq: DISPLAYCONFIG_RATIONAL,
@@ -72,37 +72,37 @@ pub const DISPLAYCONFIG_DESKTOP_IMAGE_INFO = extern struct {
     DesktopImageClip: @"Windows.Win32.Foundation".RECTL,
 };
 pub const DISPLAYCONFIG_MODE_INFO = extern struct {
-pub const DISPLAYCONFIG_MODE_INFO_0 = extern union {
-    targetMode: DISPLAYCONFIG_TARGET_MODE,
-    sourceMode: DISPLAYCONFIG_SOURCE_MODE,
-    desktopImageInfo: DISPLAYCONFIG_DESKTOP_IMAGE_INFO,
-};
+    pub const DISPLAYCONFIG_MODE_INFO_0 = extern union {
+        targetMode: DISPLAYCONFIG_TARGET_MODE,
+        sourceMode: DISPLAYCONFIG_SOURCE_MODE,
+        desktopImageInfo: DISPLAYCONFIG_DESKTOP_IMAGE_INFO,
+    };
     infoType: i32,
     id: u32,
     adapterId: @"Windows.Win32.Foundation".LUID,
     Anonymous: DISPLAYCONFIG_MODE_INFO_0,
 };
 pub const DISPLAYCONFIG_PATH_SOURCE_INFO = extern struct {
-pub const DISPLAYCONFIG_PATH_SOURCE_INFO_0 = extern union {
-pub const DISPLAYCONFIG_PATH_SOURCE_INFO_0_0 = extern struct {
-    _bitfield: u32,
-};
-    modeInfoIdx: u32,
-    Anonymous: DISPLAYCONFIG_PATH_SOURCE_INFO_0_0,
-};
+    pub const DISPLAYCONFIG_PATH_SOURCE_INFO_0 = extern union {
+        pub const DISPLAYCONFIG_PATH_SOURCE_INFO_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        modeInfoIdx: u32,
+        Anonymous: DISPLAYCONFIG_PATH_SOURCE_INFO_0_0,
+    };
     adapterId: @"Windows.Win32.Foundation".LUID,
     id: u32,
     Anonymous: DISPLAYCONFIG_PATH_SOURCE_INFO_0,
     statusFlags: u32,
 };
 pub const DISPLAYCONFIG_PATH_TARGET_INFO = extern struct {
-pub const DISPLAYCONFIG_PATH_TARGET_INFO_0 = extern union {
-pub const DISPLAYCONFIG_PATH_TARGET_INFO_0_0 = extern struct {
-    _bitfield: u32,
-};
-    modeInfoIdx: u32,
-    Anonymous: DISPLAYCONFIG_PATH_TARGET_INFO_0_0,
-};
+    pub const DISPLAYCONFIG_PATH_TARGET_INFO_0 = extern union {
+        pub const DISPLAYCONFIG_PATH_TARGET_INFO_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        modeInfoIdx: u32,
+        Anonymous: DISPLAYCONFIG_PATH_TARGET_INFO_0_0,
+    };
     adapterId: @"Windows.Win32.Foundation".LUID,
     id: u32,
     Anonymous: DISPLAYCONFIG_PATH_TARGET_INFO_0,
@@ -130,13 +130,13 @@ pub const DISPLAYCONFIG_SOURCE_DEVICE_NAME = extern struct {
     viewGdiDeviceName: [32]u16,
 };
 pub const DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS = extern struct {
-pub const DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0 = extern union {
-pub const DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0 = extern union {
+        pub const DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0_0,
+        value: u32,
+    };
     Anonymous: DISPLAYCONFIG_TARGET_DEVICE_NAME_FLAGS_0,
 };
 pub const DISPLAYCONFIG_TARGET_DEVICE_NAME = extern struct {
@@ -164,59 +164,59 @@ pub const DISPLAYCONFIG_TARGET_BASE_TYPE = extern struct {
     baseOutputTechnology: i32,
 };
 pub const DISPLAYCONFIG_SET_TARGET_PERSISTENCE = extern struct {
-pub const DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0 = extern union {
-pub const DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0 = extern union {
+        pub const DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_SET_TARGET_PERSISTENCE_0,
 };
 pub const DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION = extern struct {
-pub const DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0 = extern union {
-pub const DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0 = extern union {
+        pub const DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_SUPPORT_VIRTUAL_RESOLUTION_0,
 };
 pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO = extern struct {
-pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0 = extern union {
-pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0 = extern union {
+        pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_0,
     colorEncoding: i32,
     bitsPerColorChannel: u32,
 };
 pub const DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE = extern struct {
-pub const DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0 = extern union {
-pub const DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0 = extern union {
+        pub const DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_SET_ADVANCED_COLOR_STATE_0,
 };
 pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2 = extern struct {
-pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0 = extern union {
-pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0 = extern union {
+        pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0,
     colorEncoding: i32,
@@ -224,24 +224,24 @@ pub const DISPLAYCONFIG_GET_ADVANCED_COLOR_INFO_2_0_0 = extern struct {
     activeColorMode: i32,
 };
 pub const DISPLAYCONFIG_SET_HDR_STATE = extern struct {
-pub const DISPLAYCONFIG_SET_HDR_STATE_0 = extern union {
-pub const DISPLAYCONFIG_SET_HDR_STATE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_SET_HDR_STATE_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_SET_HDR_STATE_0 = extern union {
+        pub const DISPLAYCONFIG_SET_HDR_STATE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_SET_HDR_STATE_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_SET_HDR_STATE_0,
 };
 pub const DISPLAYCONFIG_SET_WCG_STATE = extern struct {
-pub const DISPLAYCONFIG_SET_WCG_STATE_0 = extern union {
-pub const DISPLAYCONFIG_SET_WCG_STATE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_SET_WCG_STATE_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_SET_WCG_STATE_0 = extern union {
+        pub const DISPLAYCONFIG_SET_WCG_STATE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_SET_WCG_STATE_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_SET_WCG_STATE_0,
 };
@@ -250,24 +250,24 @@ pub const DISPLAYCONFIG_SDR_WHITE_LEVEL = extern struct {
     SDRWhiteLevel: u32,
 };
 pub const DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION = extern struct {
-pub const DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0 = extern union {
-pub const DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0 = extern union {
+        pub const DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_GET_MONITOR_SPECIALIZATION_0,
 };
 pub const DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION = extern struct {
-pub const DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0 = extern union {
-pub const DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0_0,
-    value: u32,
-};
+    pub const DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0 = extern union {
+        pub const DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0_0,
+        value: u32,
+    };
     header: DISPLAYCONFIG_DEVICE_INFO_HEADER,
     Anonymous: DISPLAYCONFIG_SET_MONITOR_SPECIALIZATION_0,
     specializationType: GUID,
@@ -888,10 +888,10 @@ pub const VIDEO_CLUTDATA = extern struct {
     Unused: u8,
 };
 pub const VIDEO_CLUT = extern struct {
-pub const VIDEO_CLUT_0 = extern union {
-    RgbArray: VIDEO_CLUTDATA,
-    RgbLong: u32,
-};
+    pub const VIDEO_CLUT_0 = extern union {
+        RgbArray: VIDEO_CLUTDATA,
+        RgbLong: u32,
+    };
     NumEntries: u16,
     FirstEntry: u16,
     LookupTable: [1]VIDEO_CLUT_0,
@@ -1014,10 +1014,10 @@ pub const DISPLAY_BRIGHTNESS = extern struct {
     ucDCBrightness: u8,
 };
 pub const VIDEO_BRIGHTNESS_POLICY = extern struct {
-pub const VIDEO_BRIGHTNESS_POLICY_0 = extern struct {
-    BatteryLevel: u8,
-    Brightness: u8,
-};
+    pub const VIDEO_BRIGHTNESS_POLICY_0 = extern struct {
+        BatteryLevel: u8,
+        Brightness: u8,
+    };
     DefaultToBiosPolicy: @"Windows.Win32.Foundation".BOOLEAN,
     LevelCount: u8,
     Level: [1]VIDEO_BRIGHTNESS_POLICY_0,
@@ -1095,13 +1095,13 @@ pub const VIDEO_QUERY_PERFORMANCE_COUNTER = extern struct {
     Buffer: *VIDEO_PERFORMANCE_COUNTER,
 };
 pub const PANEL_QUERY_BRIGHTNESS_CAPS = extern struct {
-pub const PANEL_QUERY_BRIGHTNESS_CAPS_0 = extern union {
-pub const PANEL_QUERY_BRIGHTNESS_CAPS_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: PANEL_QUERY_BRIGHTNESS_CAPS_0_0,
-    Value: u32,
-};
+    pub const PANEL_QUERY_BRIGHTNESS_CAPS_0 = extern union {
+        pub const PANEL_QUERY_BRIGHTNESS_CAPS_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: PANEL_QUERY_BRIGHTNESS_CAPS_0_0,
+        Value: u32,
+    };
     Version: i32,
     Anonymous: PANEL_QUERY_BRIGHTNESS_CAPS_0,
 };
@@ -1121,22 +1121,22 @@ pub const BRIGHTNESS_NIT_RANGES = extern struct {
     SupportedRanges: [16]BRIGHTNESS_NIT_RANGE,
 };
 pub const PANEL_QUERY_BRIGHTNESS_RANGES = extern struct {
-pub const PANEL_QUERY_BRIGHTNESS_RANGES_0 = extern union {
-    BrightnessLevel: BRIGHTNESS_LEVEL,
-    NitRanges: BRIGHTNESS_NIT_RANGES,
-};
+    pub const PANEL_QUERY_BRIGHTNESS_RANGES_0 = extern union {
+        BrightnessLevel: BRIGHTNESS_LEVEL,
+        NitRanges: BRIGHTNESS_NIT_RANGES,
+    };
     Version: i32,
     Anonymous: PANEL_QUERY_BRIGHTNESS_RANGES_0,
 };
 pub const PANEL_GET_BRIGHTNESS = extern struct {
-pub const PANEL_GET_BRIGHTNESS_0 = extern union {
-pub const PANEL_GET_BRIGHTNESS_0_0 = extern struct {
-    CurrentInMillinits: u32,
-    TargetInMillinits: u32,
-};
-    Level: u8,
-    Anonymous: PANEL_GET_BRIGHTNESS_0_0,
-};
+    pub const PANEL_GET_BRIGHTNESS_0 = extern union {
+        pub const PANEL_GET_BRIGHTNESS_0_0 = extern struct {
+            CurrentInMillinits: u32,
+            TargetInMillinits: u32,
+        };
+        Level: u8,
+        Anonymous: PANEL_GET_BRIGHTNESS_0_0,
+    };
     Version: i32,
     Anonymous: PANEL_GET_BRIGHTNESS_0,
 };
@@ -1145,39 +1145,39 @@ pub const CHROMATICITY_COORDINATE = extern struct {
     y: f32,
 };
 pub const PANEL_BRIGHTNESS_SENSOR_DATA = extern struct {
-pub const PANEL_BRIGHTNESS_SENSOR_DATA_0 = extern union {
-pub const PANEL_BRIGHTNESS_SENSOR_DATA_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: PANEL_BRIGHTNESS_SENSOR_DATA_0_0,
-    Value: u32,
-};
+    pub const PANEL_BRIGHTNESS_SENSOR_DATA_0 = extern union {
+        pub const PANEL_BRIGHTNESS_SENSOR_DATA_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: PANEL_BRIGHTNESS_SENSOR_DATA_0_0,
+        Value: u32,
+    };
     Anonymous: PANEL_BRIGHTNESS_SENSOR_DATA_0,
     AlsReading: f32,
     ChromaticityCoordinate: CHROMATICITY_COORDINATE,
     ColorTemperature: f32,
 };
 pub const PANEL_SET_BRIGHTNESS = extern struct {
-pub const PANEL_SET_BRIGHTNESS_0 = extern union {
-pub const PANEL_SET_BRIGHTNESS_0_0 = extern struct {
-    Millinits: u32,
-    TransitionTimeInMs: u32,
-    SensorData: PANEL_BRIGHTNESS_SENSOR_DATA,
-};
-    Level: u8,
-    Anonymous: PANEL_SET_BRIGHTNESS_0_0,
-};
+    pub const PANEL_SET_BRIGHTNESS_0 = extern union {
+        pub const PANEL_SET_BRIGHTNESS_0_0 = extern struct {
+            Millinits: u32,
+            TransitionTimeInMs: u32,
+            SensorData: PANEL_BRIGHTNESS_SENSOR_DATA,
+        };
+        Level: u8,
+        Anonymous: PANEL_SET_BRIGHTNESS_0_0,
+    };
     Version: i32,
     Anonymous: PANEL_SET_BRIGHTNESS_0,
 };
 pub const PANEL_SET_BRIGHTNESS_STATE = extern struct {
-pub const PANEL_SET_BRIGHTNESS_STATE_0 = extern union {
-pub const PANEL_SET_BRIGHTNESS_STATE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: PANEL_SET_BRIGHTNESS_STATE_0_0,
-    Value: u32,
-};
+    pub const PANEL_SET_BRIGHTNESS_STATE_0 = extern union {
+        pub const PANEL_SET_BRIGHTNESS_STATE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: PANEL_SET_BRIGHTNESS_STATE_0_0,
+        Value: u32,
+    };
     Anonymous: PANEL_SET_BRIGHTNESS_STATE_0,
 };
 pub const PANEL_SET_BACKLIGHT_OPTIMIZATION = extern struct {
@@ -1194,17 +1194,17 @@ pub const PANEL_GET_BACKLIGHT_REDUCTION = extern struct {
     GammaRamp: BACKLIGHT_REDUCTION_GAMMA_RAMP,
 };
 pub const COLORSPACE_TRANSFORM_DATA_CAP = extern struct {
-pub const COLORSPACE_TRANSFORM_DATA_CAP_0 = extern union {
-pub const COLORSPACE_TRANSFORM_DATA_CAP_0_0 = extern struct {
-    _bitfield: u32,
-};
-pub const COLORSPACE_TRANSFORM_DATA_CAP_0_1 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous1: COLORSPACE_TRANSFORM_DATA_CAP_0_0,
-    Anonymous2: COLORSPACE_TRANSFORM_DATA_CAP_0_1,
-    Value: u32,
-};
+    pub const COLORSPACE_TRANSFORM_DATA_CAP_0 = extern union {
+        pub const COLORSPACE_TRANSFORM_DATA_CAP_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        pub const COLORSPACE_TRANSFORM_DATA_CAP_0_1 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous1: COLORSPACE_TRANSFORM_DATA_CAP_0_0,
+        Anonymous2: COLORSPACE_TRANSFORM_DATA_CAP_0_1,
+        Value: u32,
+    };
     DataType: i32,
     Anonymous: COLORSPACE_TRANSFORM_DATA_CAP_0,
     NumericRangeMin: f32,
@@ -1215,13 +1215,13 @@ pub const COLORSPACE_TRANSFORM_1DLUT_CAP = extern struct {
     DataCap: COLORSPACE_TRANSFORM_DATA_CAP,
 };
 pub const COLORSPACE_TRANSFORM_MATRIX_CAP = extern struct {
-pub const COLORSPACE_TRANSFORM_MATRIX_CAP_0 = extern union {
-pub const COLORSPACE_TRANSFORM_MATRIX_CAP_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: COLORSPACE_TRANSFORM_MATRIX_CAP_0_0,
-    Value: u32,
-};
+    pub const COLORSPACE_TRANSFORM_MATRIX_CAP_0 = extern union {
+        pub const COLORSPACE_TRANSFORM_MATRIX_CAP_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: COLORSPACE_TRANSFORM_MATRIX_CAP_0_0,
+        Value: u32,
+    };
     Anonymous: COLORSPACE_TRANSFORM_MATRIX_CAP_0,
     DataCap: COLORSPACE_TRANSFORM_DATA_CAP,
 };
@@ -1269,12 +1269,12 @@ pub const COLORSPACE_TRANSFORM_MATRIX_V2 = extern struct {
     LookupTable1DRegamma: [4096]GAMMA_RAMP_RGB,
 };
 pub const COLORSPACE_TRANSFORM = extern struct {
-pub const _Data_e__Union = extern union {
-    Rgb256x3x16: GAMMA_RAMP_RGB256x3x16,
-    Dxgi1: GAMMA_RAMP_DXGI_1,
-    T3x4: COLORSPACE_TRANSFORM_3x4,
-    MatrixV2: COLORSPACE_TRANSFORM_MATRIX_V2,
-};
+    pub const _Data_e__Union = extern union {
+        Rgb256x3x16: GAMMA_RAMP_RGB256x3x16,
+        Dxgi1: GAMMA_RAMP_DXGI_1,
+        T3x4: COLORSPACE_TRANSFORM_3x4,
+        MatrixV2: COLORSPACE_TRANSFORM_MATRIX_V2,
+    };
     Type: i32,
     Data: _Data_e__Union,
 };
@@ -1307,30 +1307,30 @@ pub const MIPI_DSI_CAPS = extern struct {
     LengthLo: u8,
 };
 pub const MIPI_DSI_PACKET = extern struct {
-pub const MIPI_DSI_PACKET_0 = extern union {
-pub const MIPI_DSI_PACKET_0_0 = extern struct {
-    _bitfield: u8,
-};
-    DataId: u8,
-    Anonymous: MIPI_DSI_PACKET_0_0,
-};
-pub const MIPI_DSI_PACKET_1 = extern union {
-pub const MIPI_DSI_PACKET_1_0 = extern struct {
-    Data0: u8,
-    Data1: u8,
-};
-    Anonymous: MIPI_DSI_PACKET_1_0,
-    LongWriteWordCount: u16,
-};
+    pub const MIPI_DSI_PACKET_0 = extern union {
+        pub const MIPI_DSI_PACKET_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        DataId: u8,
+        Anonymous: MIPI_DSI_PACKET_0_0,
+    };
+    pub const MIPI_DSI_PACKET_1 = extern union {
+        pub const MIPI_DSI_PACKET_1_0 = extern struct {
+            Data0: u8,
+            Data1: u8,
+        };
+        Anonymous: MIPI_DSI_PACKET_1_0,
+        LongWriteWordCount: u16,
+    };
     Anonymous1: MIPI_DSI_PACKET_0,
     Anonymous2: MIPI_DSI_PACKET_1,
     EccFiller: u8,
     Payload: [8]u8,
 };
 pub const MIPI_DSI_TRANSMISSION = extern struct {
-pub const MIPI_DSI_TRANSMISSION_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const MIPI_DSI_TRANSMISSION_0 = extern struct {
+        _bitfield: u16,
+    };
     TotalBufferSize: u32,
     PacketCount: u8,
     FailedPacket: u8,
@@ -1342,13 +1342,13 @@ pub const MIPI_DSI_TRANSMISSION_0 = extern struct {
     Packets: [1]MIPI_DSI_PACKET,
 };
 pub const MIPI_DSI_RESET = extern struct {
-pub const MIPI_DSI_RESET_0 = extern union {
-pub const MIPI_DSI_RESET_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: MIPI_DSI_RESET_0_0,
-    Results: u32,
-};
+    pub const MIPI_DSI_RESET_0 = extern union {
+        pub const MIPI_DSI_RESET_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: MIPI_DSI_RESET_0_0,
+        Results: u32,
+    };
     Flags: u32,
     Anonymous: MIPI_DSI_RESET_0,
 };

@@ -29,31 +29,31 @@ pub const DELAYLOAD_INFO = extern struct {
     LastError: u32,
 };
 pub const IMAGE_THUNK_DATA64 = extern struct {
-pub const _u1_e__Union = extern union {
-    ForwarderString: u64,
-    Function: u64,
-    Ordinal: u64,
-    AddressOfData: u64,
-};
+    pub const _u1_e__Union = extern union {
+        ForwarderString: u64,
+        Function: u64,
+        Ordinal: u64,
+        AddressOfData: u64,
+    };
     u1: _u1_e__Union,
 };
 pub const IMAGE_THUNK_DATA32 = extern struct {
-pub const _u1_e__Union = extern union {
-    ForwarderString: u32,
-    Function: u32,
-    Ordinal: u32,
-    AddressOfData: u32,
-};
+    pub const _u1_e__Union = extern union {
+        ForwarderString: u32,
+        Function: u32,
+        Ordinal: u32,
+        AddressOfData: u32,
+    };
     u1: _u1_e__Union,
 };
 pub const IMAGE_DELAYLOAD_DESCRIPTOR = extern struct {
-pub const _Attributes_e__Union = extern union {
-pub const _Attributes_e__Union_0 = extern struct {
-    _bitfield: u32,
-};
-    AllAttributes: u32,
-    Anonymous: _Attributes_e__Union_0,
-};
+    pub const _Attributes_e__Union = extern union {
+        pub const _Attributes_e__Union_0 = extern struct {
+            _bitfield: u32,
+        };
+        AllAttributes: u32,
+        Anonymous: _Attributes_e__Union_0,
+    };
     Attributes: _Attributes_e__Union,
     DllNameRVA: u32,
     ModuleHandleRVA: u32,
@@ -77,9 +77,9 @@ pub const JIT_DEBUG_INFO = extern struct {
     lpContextRecord: u64,
 };
 pub const PROCESS_CREATION_SVE_VECTOR_LENGTH = extern union {
-pub const PROCESS_CREATION_SVE_VECTOR_LENGTH_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const PROCESS_CREATION_SVE_VECTOR_LENGTH_0 = extern struct {
+        _bitfield: u32,
+    };
     Data: u32,
     Anonymous: PROCESS_CREATION_SVE_VECTOR_LENGTH_0,
 };
@@ -121,10 +121,10 @@ pub const CLIENT_ID = extern struct {
     UniqueThread: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const LDR_DATA_TABLE_ENTRY = extern struct {
-pub const LDR_DATA_TABLE_ENTRY_0 = extern union {
-    CheckSum: u32,
-    Reserved6: *anyopaque,
-};
+    pub const LDR_DATA_TABLE_ENTRY_0 = extern union {
+        CheckSum: u32,
+        Reserved6: *anyopaque,
+    };
     Reserved1: [2]*anyopaque,
     InMemoryOrderLinks: @"Windows.Win32.System.Kernel".LIST_ENTRY,
     Reserved2: [2]*anyopaque,
@@ -458,10 +458,10 @@ pub const TCP_REQUEST_SET_INFORMATION_EX = extern struct {
     Buffer: [1]u8,
 };
 pub const TDI_TL_IO_CONTROL_ENDPOINT = extern struct {
-pub const TDI_TL_IO_CONTROL_ENDPOINT_0 = extern union {
-    IoControlCode: u32,
-    OptionName: u32,
-};
+    pub const TDI_TL_IO_CONTROL_ENDPOINT_0 = extern union {
+        IoControlCode: u32,
+        OptionName: u32,
+    };
     Type: i32,
     Level: u32,
     Anonymous: TDI_TL_IO_CONTROL_ENDPOINT_0,
@@ -483,10 +483,10 @@ pub const WLDP_DEVICE_SECURITY_INFORMATION = extern struct {
     ManufacturerID: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const DELAYLOAD_PROC_DESCRIPTOR = extern struct {
-pub const _Description_e__Union = extern union {
-    Name: @"Windows.Win32.Foundation".PSTR,
-    Ordinal: u32,
-};
+    pub const _Description_e__Union = extern union {
+        Name: @"Windows.Win32.Foundation".PSTR,
+        Ordinal: u32,
+    };
     ImportDescribedByName: u32,
     Description: _Description_e__Union,
 };

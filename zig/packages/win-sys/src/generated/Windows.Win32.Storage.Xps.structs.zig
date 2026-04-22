@@ -82,27 +82,27 @@ pub const XPS_MATRIX = extern struct {
     m32: f32,
 };
 pub const XPS_COLOR = extern struct {
-pub const XPS_COLOR_VALUE = extern union {
-pub const _sRGB_e__Struct = extern struct {
-    alpha: u8,
-    red: u8,
-    green: u8,
-    blue: u8,
-};
-pub const _scRGB_e__Struct = extern struct {
-    alpha: f32,
-    red: f32,
-    green: f32,
-    blue: f32,
-};
-pub const _context_e__Struct = extern struct {
-    channelCount: u8,
-    channels: [9]f32,
-};
-    sRGB: _sRGB_e__Struct,
-    scRGB: _scRGB_e__Struct,
-    context: _context_e__Struct,
-};
+    pub const XPS_COLOR_VALUE = extern union {
+        pub const _sRGB_e__Struct = extern struct {
+            alpha: u8,
+            red: u8,
+            green: u8,
+            blue: u8,
+        };
+        pub const _scRGB_e__Struct = extern struct {
+            alpha: f32,
+            red: f32,
+            green: f32,
+            blue: f32,
+        };
+        pub const _context_e__Struct = extern struct {
+            channelCount: u8,
+            channels: [9]f32,
+        };
+        sRGB: _sRGB_e__Struct,
+        scRGB: _scRGB_e__Struct,
+        context: _context_e__Struct,
+    };
     colorType: i32,
     value: XPS_COLOR_VALUE,
 };

@@ -8,30 +8,30 @@ const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
 pub const NVME_CONTROLLER_CAPABILITIES = extern union {
-pub const NVME_CONTROLLER_CAPABILITIES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const NVME_CONTROLLER_CAPABILITIES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: NVME_CONTROLLER_CAPABILITIES_0,
     AsUlonglong: u64,
 };
 pub const NVME_VERSION = extern union {
-pub const NVME_VERSION_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_VERSION_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_VERSION_0,
     AsUlong: u32,
 };
 pub const NVME_CONTROLLER_CONFIGURATION = extern union {
-pub const NVME_CONTROLLER_CONFIGURATION_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CONTROLLER_CONFIGURATION_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CONTROLLER_CONFIGURATION_0,
     AsUlong: u32,
 };
 pub const NVME_CONTROLLER_STATUS = extern union {
-pub const NVME_CONTROLLER_STATUS_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CONTROLLER_STATUS_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CONTROLLER_STATUS_0,
     AsUlong: u32,
 };
@@ -39,37 +39,37 @@ pub const NVME_NVM_SUBSYSTEM_RESET = extern struct {
     NSSRC: u32,
 };
 pub const NVME_ADMIN_QUEUE_ATTRIBUTES = extern union {
-pub const NVME_ADMIN_QUEUE_ATTRIBUTES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_ADMIN_QUEUE_ATTRIBUTES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_ADMIN_QUEUE_ATTRIBUTES_0,
     AsUlong: u32,
 };
 pub const NVME_ADMIN_SUBMISSION_QUEUE_BASE_ADDRESS = extern union {
-pub const NVME_ADMIN_SUBMISSION_QUEUE_BASE_ADDRESS_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const NVME_ADMIN_SUBMISSION_QUEUE_BASE_ADDRESS_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: NVME_ADMIN_SUBMISSION_QUEUE_BASE_ADDRESS_0,
     AsUlonglong: u64,
 };
 pub const NVME_ADMIN_COMPLETION_QUEUE_BASE_ADDRESS = extern union {
-pub const NVME_ADMIN_COMPLETION_QUEUE_BASE_ADDRESS_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const NVME_ADMIN_COMPLETION_QUEUE_BASE_ADDRESS_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: NVME_ADMIN_COMPLETION_QUEUE_BASE_ADDRESS_0,
     AsUlonglong: u64,
 };
 pub const NVME_CONTROLLER_MEMORY_BUFFER_LOCATION = extern union {
-pub const NVME_CONTROLLER_MEMORY_BUFFER_LOCATION_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CONTROLLER_MEMORY_BUFFER_LOCATION_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CONTROLLER_MEMORY_BUFFER_LOCATION_0,
     AsUlong: u32,
 };
 pub const NVME_CONTROLLER_MEMORY_BUFFER_SIZE = extern union {
-pub const NVME_CONTROLLER_MEMORY_BUFFER_SIZE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CONTROLLER_MEMORY_BUFFER_SIZE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CONTROLLER_MEMORY_BUFFER_SIZE_0,
     AsUlong: u32,
 };
@@ -77,24 +77,24 @@ pub const NVME_NVM_SUBSYSTEM_SHUTDOWN = extern struct {
     NSSC: u32,
 };
 pub const NVME_CONTROLLER_READY_TIMEOUTS = extern union {
-pub const NVME_CONTROLLER_READY_TIMEOUTS_0 = extern struct {
-    CRWMT: u16,
-    CRIMT: u16,
-};
+    pub const NVME_CONTROLLER_READY_TIMEOUTS_0 = extern struct {
+        CRWMT: u16,
+        CRIMT: u16,
+    };
     Anonymous: NVME_CONTROLLER_READY_TIMEOUTS_0,
     AsUlong: u32,
 };
 pub const NVME_SUBMISSION_QUEUE_TAIL_DOORBELL = extern union {
-pub const NVME_SUBMISSION_QUEUE_TAIL_DOORBELL_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_SUBMISSION_QUEUE_TAIL_DOORBELL_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_SUBMISSION_QUEUE_TAIL_DOORBELL_0,
     AsUlong: u32,
 };
 pub const NVME_COMPLETION_QUEUE_HEAD_DOORBELL = extern union {
-pub const NVME_COMPLETION_QUEUE_HEAD_DOORBELL_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_COMPLETION_QUEUE_HEAD_DOORBELL_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_COMPLETION_QUEUE_HEAD_DOORBELL_0,
     AsUlong: u32,
 };
@@ -120,29 +120,29 @@ pub const NVME_CONTROLLER_REGISTERS = extern struct {
     Doorbells: [1]u32,
 };
 pub const NVME_COMMAND_STATUS = extern union {
-pub const NVME_COMMAND_STATUS_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const NVME_COMMAND_STATUS_0 = extern struct {
+        _bitfield: u16,
+    };
     Anonymous: NVME_COMMAND_STATUS_0,
     AsUshort: u16,
 };
 pub const NVME_COMPLETION_ENTRY = extern struct {
-pub const _DW2_e__Union = extern union {
-pub const _DW2_e__Union_0 = extern struct {
-    SQHD: u16,
-    SQID: u16,
-};
-    Anonymous: _DW2_e__Union_0,
-    AsUlong: u32,
-};
-pub const _DW3_e__Union = extern union {
-pub const _DW3_e__Union_0 = extern struct {
-    CID: u16,
-    Status: NVME_COMMAND_STATUS,
-};
-    Anonymous: _DW3_e__Union_0,
-    AsUlong: u32,
-};
+    pub const _DW2_e__Union = extern union {
+        pub const _DW2_e__Union_0 = extern struct {
+            SQHD: u16,
+            SQID: u16,
+        };
+        Anonymous: _DW2_e__Union_0,
+        AsUlong: u32,
+    };
+    pub const _DW3_e__Union = extern union {
+        pub const _DW3_e__Union_0 = extern struct {
+            CID: u16,
+            Status: NVME_COMMAND_STATUS,
+        };
+        Anonymous: _DW3_e__Union_0,
+        AsUlong: u32,
+    };
     DW0: u32,
     DW1: u32,
     DW2: _DW2_e__Union,
@@ -152,82 +152,82 @@ pub const NVME_COMPLETION_DW0_ASYNC_EVENT_REQUEST = extern struct {
     _bitfield: u32,
 };
 pub const NVME_CDW10_ABORT = extern union {
-pub const NVME_CDW10_ABORT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_ABORT_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_ABORT_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_IDENTIFY = extern union {
-pub const NVME_CDW10_IDENTIFY_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_IDENTIFY_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_IDENTIFY_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_IDENTIFY = extern union {
-pub const NVME_CDW11_IDENTIFY_0 = extern struct {
-    NVMSETID: u16,
-    Reserved: u16,
-};
-pub const NVME_CDW11_IDENTIFY_1 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_IDENTIFY_0 = extern struct {
+        NVMSETID: u16,
+        Reserved: u16,
+    };
+    pub const NVME_CDW11_IDENTIFY_1 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous1: NVME_CDW11_IDENTIFY_0,
     Anonymous2: NVME_CDW11_IDENTIFY_1,
     AsUlong: u32,
 };
 pub const NVME_CDW14_IDENTIFY = extern union {
-pub const NVME_CDW14_IDENTIFY_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW14_IDENTIFY_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW14_IDENTIFY_0,
     AsUlong: u32,
 };
 pub const NVME_LBA_FORMAT = extern union {
-pub const NVME_LBA_FORMAT_0 = extern struct {
-    MS: u16,
-    LBADS: u8,
-    _bitfield: u8,
-};
+    pub const NVME_LBA_FORMAT_0 = extern struct {
+        MS: u16,
+        LBADS: u8,
+        _bitfield: u8,
+    };
     Anonymous: NVME_LBA_FORMAT_0,
     AsUlong: u32,
 };
 pub const NVM_RESERVATION_CAPABILITIES = extern union {
-pub const NVM_RESERVATION_CAPABILITIES_0 = extern struct {
-    _bitfield: u8,
-};
+    pub const NVM_RESERVATION_CAPABILITIES_0 = extern struct {
+        _bitfield: u8,
+    };
     Anonymous: NVM_RESERVATION_CAPABILITIES_0,
     AsUchar: u8,
 };
 pub const NVME_IDENTIFY_NAMESPACE_DATA = extern struct {
-pub const _NSFEAT_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _FLBAS_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _MC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _DPC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _DPS_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _NMIC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _FPI_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _DLFEAT_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _NSATTR_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _NSFEAT_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _FLBAS_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _MC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _DPC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _DPS_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _NMIC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _FPI_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _DLFEAT_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _NSATTR_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     NSZE: u64,
     NCAP: u64,
     NUSE: u64,
@@ -286,78 +286,78 @@ pub const NVME_POWER_STATE_DESC = extern struct {
     Reserved9: [9]u8,
 };
 pub const NVME_IDENTIFY_CONTROLLER_DATA = extern struct {
-pub const _CMIC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _OAES_e__Struct = extern struct {
-    _bitfield: u32,
-};
-pub const _CTRATT_e__Struct = extern struct {
-    _bitfield: u32,
-};
-pub const _RRLS_e__Struct = extern struct {
-    _bitfield: u16,
-};
-pub const _OACS_e__Struct = extern struct {
-    _bitfield: u16,
-};
-pub const _FRMW_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _LPA_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _AVSCC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _APSTA_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _RPMBS_e__Struct = extern struct {
-    _bitfield: u32,
-};
-pub const _HCTMA_e__Struct = extern struct {
-    _bitfield: u16,
-};
-pub const _SANICAP_e__Struct = extern struct {
-    _bitfield: u32,
-};
-pub const _ANACAP_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _SQES_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _CQES_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _ONCS_e__Struct = extern struct {
-    _bitfield: u16,
-};
-pub const _FUSES_e__Struct = extern struct {
-    _bitfield: u16,
-};
-pub const _FNA_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _VWC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _NVSCC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _NWPC_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _SGLS_e__Struct = extern struct {
-    _bitfield: u32,
-};
-pub const _FCATT_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _OFCS_e__Struct = extern struct {
-    _bitfield: u16,
-};
+    pub const _CMIC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _OAES_e__Struct = extern struct {
+        _bitfield: u32,
+    };
+    pub const _CTRATT_e__Struct = extern struct {
+        _bitfield: u32,
+    };
+    pub const _RRLS_e__Struct = extern struct {
+        _bitfield: u16,
+    };
+    pub const _OACS_e__Struct = extern struct {
+        _bitfield: u16,
+    };
+    pub const _FRMW_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _LPA_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _AVSCC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _APSTA_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _RPMBS_e__Struct = extern struct {
+        _bitfield: u32,
+    };
+    pub const _HCTMA_e__Struct = extern struct {
+        _bitfield: u16,
+    };
+    pub const _SANICAP_e__Struct = extern struct {
+        _bitfield: u32,
+    };
+    pub const _ANACAP_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _SQES_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _CQES_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _ONCS_e__Struct = extern struct {
+        _bitfield: u16,
+    };
+    pub const _FUSES_e__Struct = extern struct {
+        _bitfield: u16,
+    };
+    pub const _FNA_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _VWC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _NVSCC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _NWPC_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _SGLS_e__Struct = extern struct {
+        _bitfield: u32,
+    };
+    pub const _FCATT_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _OFCS_e__Struct = extern struct {
+        _bitfield: u16,
+    };
     VID: u16,
     SSVID: u16,
     SN: [20]u8,
@@ -488,12 +488,12 @@ pub const NVME_LBA_ZONE_FORMAT = extern struct {
     Reserved: [7]u8,
 };
 pub const NVME_IDENTIFY_SPECIFIC_NAMESPACE_IO_COMMAND_SET = extern struct {
-pub const _ZOC_e__Struct = extern struct {
-    _bitfield: u16,
-};
-pub const _OZCS_e__Struct = extern struct {
-    _bitfield: u16,
-};
+    pub const _ZOC_e__Struct = extern struct {
+        _bitfield: u16,
+    };
+    pub const _OZCS_e__Struct = extern struct {
+        _bitfield: u16,
+    };
     ZOC: _ZOC_e__Struct,
     OZCS: _OZCS_e__Struct,
     MAR: u32,
@@ -537,9 +537,9 @@ pub const NVME_IDENTIFY_IO_COMMAND_SET = extern struct {
     IOCommandSetVector: [512]IO_COMMAND_SET_VECTOR,
 };
 pub const NVME_LBA_RANGET_TYPE_ENTRY = extern struct {
-pub const _Attributes_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _Attributes_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     Type: u8,
     Attributes: _Attributes_e__Struct,
     Reserved0: [14]u8,
@@ -549,23 +549,23 @@ pub const _Attributes_e__Struct = extern struct {
     Reserved1: [16]u8,
 };
 pub const NVME_WCS_DEVICE_RESET_ACTION = extern struct {
-pub const NVME_WCS_DEVICE_RESET_ACTION_0 = extern union {
-pub const NVME_WCS_DEVICE_RESET_ACTION_0_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: NVME_WCS_DEVICE_RESET_ACTION_0_0,
-    AsUCHAR: u8,
-};
+    pub const NVME_WCS_DEVICE_RESET_ACTION_0 = extern union {
+        pub const NVME_WCS_DEVICE_RESET_ACTION_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: NVME_WCS_DEVICE_RESET_ACTION_0_0,
+        AsUCHAR: u8,
+    };
     Anonymous: NVME_WCS_DEVICE_RESET_ACTION_0,
 };
 pub const NVME_WCS_DEVICE_CAPABILITIES = extern struct {
-pub const NVME_WCS_DEVICE_CAPABILITIES_0 = extern union {
-pub const NVME_WCS_DEVICE_CAPABILITIES_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: NVME_WCS_DEVICE_CAPABILITIES_0_0,
-    AsULONG: u32,
-};
+    pub const NVME_WCS_DEVICE_CAPABILITIES_0 = extern union {
+        pub const NVME_WCS_DEVICE_CAPABILITIES_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: NVME_WCS_DEVICE_CAPABILITIES_0_0,
+        AsULONG: u32,
+    };
     Anonymous: NVME_WCS_DEVICE_CAPABILITIES_0,
 };
 pub const NVME_WCS_DEVICE_SMART_ATTRIBUTES_LOG = extern struct {
@@ -574,26 +574,26 @@ pub const NVME_WCS_DEVICE_SMART_ATTRIBUTES_LOG = extern struct {
     LogPageGUID: GUID,
 };
 pub const NVME_WCS_DEVICE_SMART_ATTRIBUTES_LOG_V2 = extern struct {
-pub const _BadUserNANDBlockCount_e__Struct = extern struct {
-    RawCount: [6]u8,
-    Normalized: [2]u8,
-};
-pub const _BadSystemNANDBlockCount_e__Struct = extern struct {
-    RawCount: [6]u8,
-    Normalized: [2]u8,
-};
-pub const _EndToEndCorrectionCounts_e__Struct = extern struct {
-    DetectedCounts: u32,
-    CorrectedCounts: u32,
-};
-pub const _UserDataEraseCounts_e__Struct = extern struct {
-    MaximumCount: u32,
-    MinimumCount: u32,
-};
-pub const _ThermalThrottling_e__Struct = extern struct {
-    EventCount: u8,
-    Status: u8,
-};
+    pub const _BadUserNANDBlockCount_e__Struct = extern struct {
+        RawCount: [6]u8,
+        Normalized: [2]u8,
+    };
+    pub const _BadSystemNANDBlockCount_e__Struct = extern struct {
+        RawCount: [6]u8,
+        Normalized: [2]u8,
+    };
+    pub const _EndToEndCorrectionCounts_e__Struct = extern struct {
+        DetectedCounts: u32,
+        CorrectedCounts: u32,
+    };
+    pub const _UserDataEraseCounts_e__Struct = extern struct {
+        MaximumCount: u32,
+        MinimumCount: u32,
+    };
+    pub const _ThermalThrottling_e__Struct = extern struct {
+        EventCount: u8,
+        Status: u8,
+    };
     MediaUnitsWritten: [16]u8,
     MediaUnitsRead: [16]u8,
     BadUserNANDBlockCount: _BadUserNANDBlockCount_e__Struct,
@@ -624,32 +624,32 @@ pub const _ThermalThrottling_e__Struct = extern struct {
     LogPageGUID: GUID,
 };
 pub const NVME_OCP_DEVICE_SMART_INFORMATION_LOG_V3 = extern struct {
-pub const _BadUserNANDBlockCount_e__Struct = extern struct {
-    RawCount: [6]u8,
-    Normalized: [2]u8,
-};
-pub const _BadSystemNANDBlockCount_e__Struct = extern struct {
-    RawCount: [6]u8,
-    Normalized: [2]u8,
-};
-pub const _EndToEndCorrectionCounts_e__Struct = extern struct {
-    DetectedCounts: u32,
-    CorrectedCounts: u32,
-};
-pub const _UserDataEraseCounts_e__Struct = extern struct {
-    MaximumCount: u32,
-    MinimumCount: u32,
-};
-pub const _ThermalThrottling_e__Struct = extern struct {
-    EventCount: u8,
-    Status: u8,
-};
-pub const _DSSDSpecVersion_e__Struct = extern struct {
-    Errata: u8,
-    PointVersion: u16,
-    MinorVersion: u16,
-    MajorVersion: u8,
-};
+    pub const _BadUserNANDBlockCount_e__Struct = extern struct {
+        RawCount: [6]u8,
+        Normalized: [2]u8,
+    };
+    pub const _BadSystemNANDBlockCount_e__Struct = extern struct {
+        RawCount: [6]u8,
+        Normalized: [2]u8,
+    };
+    pub const _EndToEndCorrectionCounts_e__Struct = extern struct {
+        DetectedCounts: u32,
+        CorrectedCounts: u32,
+    };
+    pub const _UserDataEraseCounts_e__Struct = extern struct {
+        MaximumCount: u32,
+        MinimumCount: u32,
+    };
+    pub const _ThermalThrottling_e__Struct = extern struct {
+        EventCount: u8,
+        Status: u8,
+    };
+    pub const _DSSDSpecVersion_e__Struct = extern struct {
+        Errata: u8,
+        PointVersion: u16,
+        MinorVersion: u16,
+        MajorVersion: u8,
+    };
     MediaUnitsWritten: [16]u8,
     MediaUnitsRead: [16]u8,
     BadUserNANDBlockCount: _BadUserNANDBlockCount_e__Struct,
@@ -738,23 +738,23 @@ pub const NVME_OCP_DEVICE_FIRMWARE_ACTIVATION_HISTORY_LOG = extern struct {
     LogPageGUID: GUID,
 };
 pub const LATENCY_MONITOR_FEATURE_STATUS = extern struct {
-pub const LATENCY_MONITOR_FEATURE_STATUS_0 = extern union {
-pub const LATENCY_MONITOR_FEATURE_STATUS_0_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: LATENCY_MONITOR_FEATURE_STATUS_0_0,
-    AsUchar: u8,
-};
+    pub const LATENCY_MONITOR_FEATURE_STATUS_0 = extern union {
+        pub const LATENCY_MONITOR_FEATURE_STATUS_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: LATENCY_MONITOR_FEATURE_STATUS_0_0,
+        AsUchar: u8,
+    };
     Anonymous: LATENCY_MONITOR_FEATURE_STATUS_0,
 };
 pub const ACTIVE_LATENCY_CONFIGURATION = extern struct {
-pub const ACTIVE_LATENCY_CONFIGURATION_0 = extern union {
-pub const ACTIVE_LATENCY_CONFIGURATION_0_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: ACTIVE_LATENCY_CONFIGURATION_0_0,
-    AsUshort: u16,
-};
+    pub const ACTIVE_LATENCY_CONFIGURATION_0 = extern union {
+        pub const ACTIVE_LATENCY_CONFIGURATION_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: ACTIVE_LATENCY_CONFIGURATION_0_0,
+        AsUshort: u16,
+    };
     Anonymous: ACTIVE_LATENCY_CONFIGURATION_0,
 };
 pub const BUCKET_COUNTER = extern struct {
@@ -798,13 +798,13 @@ pub const DEBUG_BIT_FIELD = extern struct {
     _bitfield: u16,
 };
 pub const NVME_OCP_DEVICE_LATENCY_MONITOR_LOG = extern struct {
-pub const _DebugLogStampUnits_e__Union = extern union {
-pub const _DebugLogStampUnits_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _DebugLogStampUnits_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _DebugLogStampUnits_e__Union = extern union {
+        pub const _DebugLogStampUnits_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _DebugLogStampUnits_e__Union_0,
+        AsUchar: u8,
+    };
     FeatureStatus: LATENCY_MONITOR_FEATURE_STATUS,
     Reserved0: u8,
     ActiveBucketTimer: u16,
@@ -846,48 +846,48 @@ pub const DSSD_POWER_STATE_DESCRIPTOR = extern struct {
     _bitfield: u8,
 };
 pub const NVME_OCP_DEVICE_CAPABILITIES_LOG = extern struct {
-pub const _OobMgmtSupport_e__Union = extern union {
-pub const _OobMgmtSupport_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _OobMgmtSupport_e__Union_0,
-    AsUshort: u16,
-};
-pub const _WriteZeroesCommand_e__Union = extern union {
-pub const _WriteZeroesCommand_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _WriteZeroesCommand_e__Union_0,
-    AsUshort: u16,
-};
-pub const _SanitizeCommand_e__Union = extern union {
-pub const _SanitizeCommand_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _SanitizeCommand_e__Union_0,
-    AsUshort: u16,
-};
-pub const _DatasetMgmtCommand_e__Union = extern union {
-pub const _DatasetMgmtCommand_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _DatasetMgmtCommand_e__Union_0,
-    AsUshort: u16,
-};
-pub const _WriteUncorrectableCommand_e__Union = extern union {
-pub const _WriteUncorrectableCommand_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _WriteUncorrectableCommand_e__Union_0,
-    AsUshort: u16,
-};
-pub const _FusedCommand_e__Union = extern union {
-pub const _FusedCommand_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _FusedCommand_e__Union_0,
-    AsUshort: u16,
-};
+    pub const _OobMgmtSupport_e__Union = extern union {
+        pub const _OobMgmtSupport_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _OobMgmtSupport_e__Union_0,
+        AsUshort: u16,
+    };
+    pub const _WriteZeroesCommand_e__Union = extern union {
+        pub const _WriteZeroesCommand_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _WriteZeroesCommand_e__Union_0,
+        AsUshort: u16,
+    };
+    pub const _SanitizeCommand_e__Union = extern union {
+        pub const _SanitizeCommand_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _SanitizeCommand_e__Union_0,
+        AsUshort: u16,
+    };
+    pub const _DatasetMgmtCommand_e__Union = extern union {
+        pub const _DatasetMgmtCommand_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _DatasetMgmtCommand_e__Union_0,
+        AsUshort: u16,
+    };
+    pub const _WriteUncorrectableCommand_e__Union = extern union {
+        pub const _WriteUncorrectableCommand_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _WriteUncorrectableCommand_e__Union_0,
+        AsUshort: u16,
+    };
+    pub const _FusedCommand_e__Union = extern union {
+        pub const _FusedCommand_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _FusedCommand_e__Union_0,
+        AsUshort: u16,
+    };
     PciePorts: u16,
     OobMgmtSupport: _OobMgmtSupport_e__Union,
     WriteZeroesCommand: _WriteZeroesCommand_e__Union,
@@ -914,13 +914,13 @@ pub const NVME_OCP_DEVICE_UNSUPPORTED_REQUIREMENTS_LOG = extern struct {
     LogPageGUID: GUID,
 };
 pub const NVME_OCP_DEVICE_TCG_CONFIGURATION_LOG = extern struct {
-pub const _State_e__Union = extern union {
-pub const _State_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _State_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _State_e__Union = extern union {
+        pub const _State_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _State_e__Union_0,
+        AsUchar: u8,
+    };
     State: _State_e__Union,
     Reserved0: [3]u8,
     LSPActivationCount: u8,
@@ -983,135 +983,135 @@ pub const NVME_OCP_DEVICE_TCG_HISTORY_LOG = extern struct {
     LogPageGUID: GUID,
 };
 pub const NVME_CDW10_CREATE_IO_QUEUE = extern union {
-pub const NVME_CDW10_CREATE_IO_QUEUE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_CREATE_IO_QUEUE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_CREATE_IO_QUEUE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_CREATE_IO_CQ = extern union {
-pub const NVME_CDW11_CREATE_IO_CQ_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_CREATE_IO_CQ_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_CREATE_IO_CQ_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_DELETE_IO_QUEUE = extern union {
-pub const NVME_CDW10_DELETE_IO_QUEUE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_DELETE_IO_QUEUE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_DELETE_IO_QUEUE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_CREATE_IO_SQ = extern union {
-pub const NVME_CDW11_CREATE_IO_SQ_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_CREATE_IO_SQ_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_CREATE_IO_SQ_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_GET_FEATURES = extern union {
-pub const NVME_CDW10_GET_FEATURES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_GET_FEATURES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_GET_FEATURES_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_SET_FEATURES = extern union {
-pub const NVME_CDW10_SET_FEATURES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_SET_FEATURES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_SET_FEATURES_0,
     AsUlong: u32,
 };
 pub const NVME_GET_FEATURE_TIMESTAMP = extern struct {
-pub const NVME_GET_FEATURE_TIMESTAMP_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const NVME_GET_FEATURE_TIMESTAMP_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: NVME_GET_FEATURE_TIMESTAMP_0,
     AsUlonglong: u64,
 };
 pub const NVME_CDW11_FEATURE_NUMBER_OF_QUEUES = extern union {
-pub const NVME_CDW11_FEATURE_NUMBER_OF_QUEUES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_NUMBER_OF_QUEUES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_NUMBER_OF_QUEUES_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_INTERRUPT_COALESCING = extern union {
-pub const NVME_CDW11_FEATURE_INTERRUPT_COALESCING_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_INTERRUPT_COALESCING_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_INTERRUPT_COALESCING_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_INTERRUPT_VECTOR_CONFIG = extern union {
-pub const NVME_CDW11_FEATURE_INTERRUPT_VECTOR_CONFIG_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_INTERRUPT_VECTOR_CONFIG_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_INTERRUPT_VECTOR_CONFIG_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_WRITE_ATOMICITY_NORMAL = extern union {
-pub const NVME_CDW11_FEATURE_WRITE_ATOMICITY_NORMAL_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_WRITE_ATOMICITY_NORMAL_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_WRITE_ATOMICITY_NORMAL_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_NON_OPERATIONAL_POWER_STATE = extern union {
-pub const NVME_CDW11_FEATURE_NON_OPERATIONAL_POWER_STATE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_NON_OPERATIONAL_POWER_STATE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_NON_OPERATIONAL_POWER_STATE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_LBA_RANGE_TYPE = extern union {
-pub const NVME_CDW11_FEATURE_LBA_RANGE_TYPE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_LBA_RANGE_TYPE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_LBA_RANGE_TYPE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_ARBITRATION = extern union {
-pub const NVME_CDW11_FEATURE_ARBITRATION_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_ARBITRATION_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_ARBITRATION_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_VOLATILE_WRITE_CACHE = extern union {
-pub const NVME_CDW11_FEATURE_VOLATILE_WRITE_CACHE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_VOLATILE_WRITE_CACHE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_VOLATILE_WRITE_CACHE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_SUPPORTED_CAPABILITY = extern union {
-pub const NVME_CDW11_FEATURE_SUPPORTED_CAPABILITY_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_SUPPORTED_CAPABILITY_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_SUPPORTED_CAPABILITY_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_ASYNC_EVENT_CONFIG = extern union {
-pub const NVME_CDW11_FEATURE_ASYNC_EVENT_CONFIG_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_ASYNC_EVENT_CONFIG_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_ASYNC_EVENT_CONFIG_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_POWER_MANAGEMENT = extern union {
-pub const NVME_CDW11_FEATURE_POWER_MANAGEMENT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_POWER_MANAGEMENT_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_POWER_MANAGEMENT_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_AUTO_POWER_STATE_TRANSITION = extern union {
-pub const NVME_CDW11_FEATURE_AUTO_POWER_STATE_TRANSITION_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_AUTO_POWER_STATE_TRANSITION_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_AUTO_POWER_STATE_TRANSITION_0,
     AsUlong: u32,
 };
@@ -1120,51 +1120,51 @@ pub const NVME_AUTO_POWER_STATE_TRANSITION_ENTRY = extern struct {
     Reserved1: u32,
 };
 pub const NVME_CDW11_FEATURE_TEMPERATURE_THRESHOLD = extern union {
-pub const NVME_CDW11_FEATURE_TEMPERATURE_THRESHOLD_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_TEMPERATURE_THRESHOLD_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_TEMPERATURE_THRESHOLD_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_ERROR_RECOVERY = extern union {
-pub const NVME_CDW11_FEATURE_ERROR_RECOVERY_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_ERROR_RECOVERY_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_ERROR_RECOVERY_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_HOST_MEMORY_BUFFER = extern union {
-pub const NVME_CDW11_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_HOST_MEMORY_BUFFER_0,
     AsUlong: u32,
 };
 pub const NVME_CDW12_FEATURE_HOST_MEMORY_BUFFER = extern union {
-pub const NVME_CDW12_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
-    HSIZE: u32,
-};
+    pub const NVME_CDW12_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
+        HSIZE: u32,
+    };
     Anonymous: NVME_CDW12_FEATURE_HOST_MEMORY_BUFFER_0,
     AsUlong: u32,
 };
 pub const NVME_CDW13_FEATURE_HOST_MEMORY_BUFFER = extern union {
-pub const NVME_CDW13_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW13_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW13_FEATURE_HOST_MEMORY_BUFFER_0,
     AsUlong: u32,
 };
 pub const NVME_CDW14_FEATURE_HOST_MEMORY_BUFFER = extern union {
-pub const NVME_CDW14_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
-    HMDLUA: u32,
-};
+    pub const NVME_CDW14_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
+        HMDLUA: u32,
+    };
     Anonymous: NVME_CDW14_FEATURE_HOST_MEMORY_BUFFER_0,
     AsUlong: u32,
 };
 pub const NVME_CDW15_FEATURE_HOST_MEMORY_BUFFER = extern union {
-pub const NVME_CDW15_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
-    HMDLEC: u32,
-};
+    pub const NVME_CDW15_FEATURE_HOST_MEMORY_BUFFER_0 = extern struct {
+        HMDLEC: u32,
+    };
     Anonymous: NVME_CDW15_FEATURE_HOST_MEMORY_BUFFER_0,
     AsUlong: u32,
 };
@@ -1180,23 +1180,23 @@ pub const NVME_HOST_BEHAVIOR_SUPPORT_DATA = extern struct {
     Reserved: [509]u8,
 };
 pub const NVME_CDW11_FEATURE_IO_COMMAND_SET_PROFILE = extern union {
-pub const NVME_CDW11_FEATURE_IO_COMMAND_SET_PROFILE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_IO_COMMAND_SET_PROFILE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_IO_COMMAND_SET_PROFILE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_GET_HOST_METADATA = extern union {
-pub const NVME_CDW11_FEATURE_GET_HOST_METADATA_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_GET_HOST_METADATA_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_GET_HOST_METADATA_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_SET_HOST_METADATA = extern union {
-pub const NVME_CDW11_FEATURE_SET_HOST_METADATA_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_SET_HOST_METADATA_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_SET_HOST_METADATA_0,
     AsUlong: u32,
 };
@@ -1210,64 +1210,64 @@ pub const NVME_FEATURE_HOST_METADATA_DATA = extern struct {
     MetadataElementDescriptors: [4094]u8,
 };
 pub const NVME_CDW0_FEATURE_ERROR_INJECTION = extern union {
-pub const NVME_CDW0_FEATURE_ERROR_INJECTION_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW0_FEATURE_ERROR_INJECTION_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW0_FEATURE_ERROR_INJECTION_0,
     AsUlong: u32,
 };
 pub const NVME_ERROR_INJECTION_ENTRY = extern struct {
-pub const _Flags_e__Union = extern union {
-pub const _Flags_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Flags_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Flags_e__Union = extern union {
+        pub const _Flags_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Flags_e__Union_0,
+        AsUchar: u8,
+    };
     Flags: _Flags_e__Union,
     Reserved1: u8,
     ErrorInjectionType: u16,
     ErrorInjectionTypeSpecific: [28]u8,
 };
 pub const NVME_CDW11_FEATURE_CLEAR_FW_UPDATE_HISTORY = extern union {
-pub const NVME_CDW11_FEATURE_CLEAR_FW_UPDATE_HISTORY_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_CLEAR_FW_UPDATE_HISTORY_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_CLEAR_FW_UPDATE_HISTORY_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_READONLY_WRITETHROUGH_MODE = extern union {
-pub const NVME_CDW11_FEATURE_READONLY_WRITETHROUGH_MODE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_READONLY_WRITETHROUGH_MODE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_READONLY_WRITETHROUGH_MODE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW0_FEATURE_READONLY_WRITETHROUGH_MODE = extern union {
-pub const NVME_CDW0_FEATURE_READONLY_WRITETHROUGH_MODE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW0_FEATURE_READONLY_WRITETHROUGH_MODE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW0_FEATURE_READONLY_WRITETHROUGH_MODE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_CLEAR_PCIE_CORRECTABLE_ERROR_COUNTERS = extern union {
-pub const NVME_CDW11_FEATURE_CLEAR_PCIE_CORRECTABLE_ERROR_COUNTERS_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_CLEAR_PCIE_CORRECTABLE_ERROR_COUNTERS_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_CLEAR_PCIE_CORRECTABLE_ERROR_COUNTERS_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_FEATURE_ENABLE_IEEE1667_SILO = extern union {
-pub const NVME_CDW11_FEATURE_ENABLE_IEEE1667_SILO_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_FEATURE_ENABLE_IEEE1667_SILO_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_FEATURE_ENABLE_IEEE1667_SILO_0,
     AsUlong: u32,
 };
 pub const NVME_CDW0_FEATURE_ENABLE_IEEE1667_SILO = extern union {
-pub const NVME_CDW0_FEATURE_ENABLE_IEEE1667_SILO_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW0_FEATURE_ENABLE_IEEE1667_SILO_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW0_FEATURE_ENABLE_IEEE1667_SILO_0,
     AsUlong: u32,
 };
@@ -1285,9 +1285,9 @@ pub const NVME_LATENCY_MONITORING_ENTRY = extern struct {
     Reserved0: [4083]u8,
 };
 pub const NVME_CDW0_FEATURE_DSSD_POWER_STATE = extern union {
-pub const NVME_CDW0_FEATURE_DSSD_POWER_STATE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW0_FEATURE_DSSD_POWER_STATE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW0_FEATURE_DSSD_POWER_STATE_0,
     AsUlong: u32,
 };
@@ -1344,37 +1344,37 @@ pub const NVME_CDW15_FEATURES = extern union {
     AsUlong: u32,
 };
 pub const NVME_CDW10_GET_LOG_PAGE = extern union {
-pub const NVME_CDW10_GET_LOG_PAGE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_GET_LOG_PAGE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_GET_LOG_PAGE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_GET_LOG_PAGE_V121 = extern union {
-pub const NVME_CDW10_GET_LOG_PAGE_V121_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_GET_LOG_PAGE_V121_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_GET_LOG_PAGE_V121_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_GET_LOG_PAGE_V13 = extern union {
-pub const NVME_CDW10_GET_LOG_PAGE_V13_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_GET_LOG_PAGE_V13_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_GET_LOG_PAGE_V13_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_GET_LOG_PAGE_V20 = extern union {
-pub const NVME_CDW10_GET_LOG_PAGE_V20_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_GET_LOG_PAGE_V20_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_GET_LOG_PAGE_V20_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_GET_LOG_PAGE = extern union {
-pub const NVME_CDW11_GET_LOG_PAGE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_GET_LOG_PAGE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_GET_LOG_PAGE_0,
     AsUlong: u32,
 };
@@ -1387,16 +1387,16 @@ pub const NVME_CDW13_GET_LOG_PAGE = extern union {
     AsUlong: u32,
 };
 pub const NVME_CDW14_GET_LOG_PAGE = extern union {
-pub const NVME_CDW14_GET_LOG_PAGE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW14_GET_LOG_PAGE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW14_GET_LOG_PAGE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW14_GET_LOG_PAGE_V20 = extern union {
-pub const NVME_CDW14_GET_LOG_PAGE_V20_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW14_GET_LOG_PAGE_V20_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW14_GET_LOG_PAGE_V20_0,
     AsUlong: u32,
 };
@@ -1410,9 +1410,9 @@ pub const NVME_SUPPORTED_LOG_PAGES_LOG = extern struct {
     LogPageIdentifierSupported: [256]NVME_LID_SUPPORTED_AND_EFFECTS,
 };
 pub const NVME_ERROR_INFO_LOG = extern struct {
-pub const _ParameterErrorLocation_e__Struct = extern struct {
-    _bitfield: u16,
-};
+    pub const _ParameterErrorLocation_e__Struct = extern struct {
+        _bitfield: u16,
+    };
     ErrorCount: u64,
     SQID: u16,
     CMDID: u16,
@@ -1428,13 +1428,13 @@ pub const _ParameterErrorLocation_e__Struct = extern struct {
     Reserved1: [22]u8,
 };
 pub const NVME_HEALTH_INFO_LOG = extern struct {
-pub const _CriticalWarning_e__Union = extern union {
-pub const _CriticalWarning_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _CriticalWarning_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _CriticalWarning_e__Union = extern union {
+        pub const _CriticalWarning_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _CriticalWarning_e__Union_0,
+        AsUchar: u8,
+    };
     CriticalWarning: _CriticalWarning_e__Union,
     Temperature: [2]u8,
     AvailableSpare: u8,
@@ -1493,9 +1493,9 @@ pub const NVME_TELEMETRY_CONTROLLER_INITIATED_LOG = extern struct {
     ReasonIdentifier: [128]u8,
 };
 pub const NVME_FIRMWARE_SLOT_INFO_LOG = extern struct {
-pub const _AFI_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _AFI_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     AFI: _AFI_e__Struct,
     Reserved0: [7]u8,
     FRS: [7]u64,
@@ -1510,9 +1510,9 @@ pub const NVME_CHANGED_ZONE_LIST_LOG = extern struct {
     ZoneIdentifier: [511]u64,
 };
 pub const NVME_COMMAND_EFFECTS_DATA = extern union {
-pub const NVME_COMMAND_EFFECTS_DATA_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_COMMAND_EFFECTS_DATA_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_COMMAND_EFFECTS_DATA_0,
     AsUlong: u32,
 };
@@ -1522,15 +1522,15 @@ pub const NVME_COMMAND_EFFECTS_LOG = extern struct {
     Reserved: [2048]u8,
 };
 pub const NVME_DEVICE_SELF_TEST_RESULT_DATA = extern struct {
-pub const _Status_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _ValidDiagnostics_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _StatusCodeType_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _Status_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _ValidDiagnostics_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _StatusCodeType_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     Status: _Status_e__Struct,
     SegmentNumber: u8,
     ValidDiagnostics: _ValidDiagnostics_e__Struct,
@@ -1543,12 +1543,12 @@ pub const _StatusCodeType_e__Struct = extern struct {
     VendorSpecific: u16,
 };
 pub const NVME_DEVICE_SELF_TEST_LOG = extern struct {
-pub const _CurrentOperation_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _CurrentCompletion_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _CurrentOperation_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _CurrentCompletion_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     CurrentOperation: _CurrentOperation_e__Struct,
     CurrentCompletion: _CurrentCompletion_e__Struct,
     Reserved: [2]u8,
@@ -1638,30 +1638,30 @@ pub const NVME_CDW11_FIRMWARE_DOWNLOAD = extern struct {
     OFST: u32,
 };
 pub const NVME_CDW10_FIRMWARE_ACTIVATE = extern union {
-pub const NVME_CDW10_FIRMWARE_ACTIVATE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_FIRMWARE_ACTIVATE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_FIRMWARE_ACTIVATE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_FORMAT_NVM = extern union {
-pub const NVME_CDW10_FORMAT_NVM_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_FORMAT_NVM_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_FORMAT_NVM_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_SANITIZE = extern union {
-pub const NVME_CDW10_SANITIZE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_SANITIZE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_SANITIZE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_SANITIZE = extern union {
-pub const NVME_CDW11_SANITIZE_0 = extern struct {
-    OVRPAT: u32,
-};
+    pub const NVME_CDW11_SANITIZE_0 = extern struct {
+        OVRPAT: u32,
+    };
     Anonymous: NVME_CDW11_SANITIZE_0,
     AsUlong: u32,
 };
@@ -1669,9 +1669,9 @@ pub const NVME_CDW0_RESERVATION_PERSISTENCE = extern struct {
     _bitfield: u32,
 };
 pub const NVME_CDW10_RESERVATION_ACQUIRE = extern union {
-pub const NVME_CDW10_RESERVATION_ACQUIRE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_RESERVATION_ACQUIRE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_RESERVATION_ACQUIRE_0,
     AsUlong: u32,
 };
@@ -1680,9 +1680,9 @@ pub const NVME_RESERVATION_ACQUIRE_DATA_STRUCTURE = extern struct {
     PRKEY: u64,
 };
 pub const NVME_CDW10_RESERVATION_REGISTER = extern union {
-pub const NVME_CDW10_RESERVATION_REGISTER_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_RESERVATION_REGISTER_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_RESERVATION_REGISTER_0,
     AsUlong: u32,
 };
@@ -1691,9 +1691,9 @@ pub const NVME_RESERVATION_REGISTER_DATA_STRUCTURE = extern struct {
     NRKEY: u64,
 };
 pub const NVME_CDW10_RESERVATION_RELEASE = extern union {
-pub const NVME_CDW10_RESERVATION_RELEASE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_RESERVATION_RELEASE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_RESERVATION_RELEASE_0,
     AsUlong: u32,
 };
@@ -1701,16 +1701,16 @@ pub const NVME_RESERVATION_RELEASE_DATA_STRUCTURE = extern struct {
     CRKEY: u64,
 };
 pub const NVME_CDW10_RESERVATION_REPORT = extern union {
-pub const NVME_CDW10_RESERVATION_REPORT_0 = extern struct {
-    NUMD: u32,
-};
+    pub const NVME_CDW10_RESERVATION_REPORT_0 = extern struct {
+        NUMD: u32,
+    };
     Anonymous: NVME_CDW10_RESERVATION_REPORT_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_RESERVATION_REPORT = extern union {
-pub const NVME_CDW11_RESERVATION_REPORT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_RESERVATION_REPORT_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_RESERVATION_REPORT_0,
     AsUlong: u32,
 };
@@ -1723,9 +1723,9 @@ pub const NVME_RESERVATION_REPORT_STATUS_HEADER = extern struct {
     Reserved1: [14]u8,
 };
 pub const NVME_REGISTERED_CONTROLLER_DATA = extern struct {
-pub const _RCSTS_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _RCSTS_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     CNTLID: u16,
     RCSTS: _RCSTS_e__Struct,
     Reserved: [5]u8,
@@ -1737,9 +1737,9 @@ pub const NVME_RESERVATION_REPORT_STATUS_DATA_STRUCTURE = extern struct {
     RegisteredControllersData: [1]NVME_REGISTERED_CONTROLLER_DATA,
 };
 pub const NVME_REGISTERED_CONTROLLER_EXTENDED_DATA = extern struct {
-pub const _RCSTS_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _RCSTS_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     CNTLID: u16,
     RCSTS: _RCSTS_e__Struct,
     Reserved: [5]u8,
@@ -1756,9 +1756,9 @@ pub const NVME_CDW10_DIRECTIVE_RECEIVE = extern struct {
     NUMD: u32,
 };
 pub const NVME_CDW11_DIRECTIVE_RECEIVE = extern union {
-pub const NVME_CDW11_DIRECTIVE_RECEIVE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_DIRECTIVE_RECEIVE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_DIRECTIVE_RECEIVE_0,
     AsUlong: u32,
 };
@@ -1766,9 +1766,9 @@ pub const NVME_CDW10_DIRECTIVE_SEND = extern struct {
     NUMD: u32,
 };
 pub const NVME_CDW11_DIRECTIVE_SEND = extern union {
-pub const NVME_CDW11_DIRECTIVE_SEND_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_DIRECTIVE_SEND_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_DIRECTIVE_SEND_0,
     AsUlong: u32,
 };
@@ -1781,9 +1781,9 @@ pub const NVME_DIRECTIVE_IDENTIFY_RETURN_PARAMETERS = extern struct {
     DirectivesEnabled: NVME_DIRECTIVE_IDENTIFY_RETURN_PARAMETERS_DESCRIPTOR,
 };
 pub const NVME_CDW12_DIRECTIVE_SEND_IDENTIFY_ENABLE_DIRECTIVE = extern union {
-pub const NVME_CDW12_DIRECTIVE_SEND_IDENTIFY_ENABLE_DIRECTIVE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW12_DIRECTIVE_SEND_IDENTIFY_ENABLE_DIRECTIVE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW12_DIRECTIVE_SEND_IDENTIFY_ENABLE_DIRECTIVE_0,
     AsUlong: u32,
 };
@@ -1803,16 +1803,16 @@ pub const NVME_DIRECTIVE_STREAMS_GET_STATUS_DATA = extern struct {
     StreamIdentifiers: [65535]u16,
 };
 pub const NVME_CDW12_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES = extern union {
-pub const NVME_CDW12_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW12_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW12_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES_0,
     AsUlong: u32,
 };
 pub const NVME_COMPLETION_DW0_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES = extern struct {
-pub const NVME_COMPLETION_DW0_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_COMPLETION_DW0_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_COMPLETION_DW0_DIRECTIVE_RECEIVE_STREAMS_ALLOCATE_RESOURCES_0,
     AsUlong: u32,
 };
@@ -1825,9 +1825,9 @@ pub const NVME_CDW12_DIRECTIVE_RECEIVE = extern union {
     AsUlong: u32,
 };
 pub const NVME_CDW10_SECURITY_SEND_RECEIVE = extern union {
-pub const NVME_CDW10_SECURITY_SEND_RECEIVE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_SECURITY_SEND_RECEIVE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_SECURITY_SEND_RECEIVE_0,
     AsUlong: u32,
 };
@@ -1838,35 +1838,35 @@ pub const NVME_CDW11_SECURITY_RECEIVE = extern struct {
     AL: u32,
 };
 pub const NVME_CDW12_READ_WRITE = extern union {
-pub const NVME_CDW12_READ_WRITE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW12_READ_WRITE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW12_READ_WRITE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW13_READ_WRITE = extern union {
-pub const NVME_CDW13_READ_WRITE_0 = extern struct {
-pub const _DSM_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    DSM: _DSM_e__Struct,
-    Reserved: u8,
-    DSPEC: u16,
-};
+    pub const NVME_CDW13_READ_WRITE_0 = extern struct {
+        pub const _DSM_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        DSM: _DSM_e__Struct,
+        Reserved: u8,
+        DSPEC: u16,
+    };
     Anonymous: NVME_CDW13_READ_WRITE_0,
     AsUlong: u32,
 };
 pub const NVME_CDW15_READ_WRITE = extern union {
-pub const NVME_CDW15_READ_WRITE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW15_READ_WRITE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW15_READ_WRITE_0,
     AsUlong: u32,
 };
 pub const NVME_CONTEXT_ATTRIBUTES = extern union {
-pub const NVME_CONTEXT_ATTRIBUTES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CONTEXT_ATTRIBUTES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CONTEXT_ATTRIBUTES_0,
     AsUlong: u32,
 };
@@ -1876,43 +1876,43 @@ pub const NVME_LBA_RANGE = extern struct {
     StartingLBA: u64,
 };
 pub const NVME_CDW10_DATASET_MANAGEMENT = extern union {
-pub const NVME_CDW10_DATASET_MANAGEMENT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_DATASET_MANAGEMENT_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_DATASET_MANAGEMENT_0,
     AsUlong: u32,
 };
 pub const NVME_CDW11_DATASET_MANAGEMENT = extern union {
-pub const NVME_CDW11_DATASET_MANAGEMENT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW11_DATASET_MANAGEMENT_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW11_DATASET_MANAGEMENT_0,
     AsUlong: u32,
 };
 pub const NVME_CDW12_VERIFYCOMMAND = extern union {
-pub const NVME_CDW12_VERIFYCOMMAND_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW12_VERIFYCOMMAND_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW12_VERIFYCOMMAND_0,
     AsUlong: u32,
 };
 pub const NVME_CDW15_VERIFY_COMMAND = extern union {
-pub const NVME_CDW15_VERIFY_COMMAND_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW15_VERIFY_COMMAND_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW15_VERIFY_COMMAND_0,
     AsUlong: u32,
 };
 pub const NVME_ZONE_DESCRIPTOR = extern struct {
-pub const NVME_ZONE_DESCRIPTOR_0 = extern struct {
-    _bitfield: u8,
-};
-pub const NVME_ZONE_DESCRIPTOR_1 = extern struct {
-    _bitfield: u8,
-};
-pub const _ZA_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const NVME_ZONE_DESCRIPTOR_0 = extern struct {
+        _bitfield: u8,
+    };
+    pub const NVME_ZONE_DESCRIPTOR_1 = extern struct {
+        _bitfield: u8,
+    };
+    pub const _ZA_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     Anonymous1: NVME_ZONE_DESCRIPTOR_0,
     Anonymous2: NVME_ZONE_DESCRIPTOR_1,
     ZA: _ZA_e__Struct,
@@ -1926,9 +1926,9 @@ pub const NVME_CDW10_ZONE_MANAGEMENT_SEND = extern struct {
     SLBA: u64,
 };
 pub const NVME_CDW13_ZONE_MANAGEMENT_SEND = extern union {
-pub const NVME_CDW13_ZONE_MANAGEMENT_SEND_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW13_ZONE_MANAGEMENT_SEND_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW13_ZONE_MANAGEMENT_SEND_0,
     AsUlong: u32,
 };
@@ -1953,9 +1953,9 @@ pub const NVME_CDW10_ZONE_MANAGEMENT_RECEIVE = extern struct {
     SLBA: u64,
 };
 pub const NVME_CDW13_ZONE_MANAGEMENT_RECEIVE = extern union {
-pub const NVME_CDW13_ZONE_MANAGEMENT_RECEIVE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW13_ZONE_MANAGEMENT_RECEIVE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW13_ZONE_MANAGEMENT_RECEIVE_0,
     AsUlong: u32,
 };
@@ -1963,334 +1963,334 @@ pub const NVME_CDW10_ZONE_APPEND = extern struct {
     SLBA: u64,
 };
 pub const NVME_CDW12_ZONE_APPEND = extern union {
-pub const NVME_CDW12_ZONE_APPEND_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW12_ZONE_APPEND_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW12_ZONE_APPEND_0,
     AsUlong: u32,
 };
 pub const NVME_CDW15_ZONE_APPEND = extern union {
-pub const NVME_CDW15_ZONE_APPEND_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW15_ZONE_APPEND_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW15_ZONE_APPEND_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_DEVICE_SELF_TEST = extern union {
-pub const NVME_CDW10_DEVICE_SELF_TEST_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_DEVICE_SELF_TEST_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_DEVICE_SELF_TEST_0,
     AsUlong: u32,
 };
 pub const NVME_CDW10_DISCOVERY_INFO_MGMT = extern union {
-pub const NVME_CDW10_DISCOVERY_INFO_MGMT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_CDW10_DISCOVERY_INFO_MGMT_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_CDW10_DISCOVERY_INFO_MGMT_0,
     AsUlong: u32,
 };
 pub const NVME_COMMAND_DWORD0 = extern union {
-pub const NVME_COMMAND_DWORD0_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const NVME_COMMAND_DWORD0_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: NVME_COMMAND_DWORD0_0,
     AsUlong: u32,
 };
 pub const NVME_PRP_ENTRY = extern union {
-pub const NVME_PRP_ENTRY_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const NVME_PRP_ENTRY_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: NVME_PRP_ENTRY_0,
     AsUlonglong: u64,
 };
 pub const NVME_COMMAND = extern struct {
-pub const NVME_COMMAND_0 = extern union {
-pub const NVME_COMMAND_0_0 = extern struct {
-    PRP1: u64,
-    PRP2: u64,
-};
-    Anonymous: NVME_COMMAND_0_0,
-    SGL1: [2]u64,
-};
-pub const _u_e__Union = extern union {
-pub const _GENERAL_e__Struct = extern struct {
-    CDW10: u32,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _IDENTIFY_e__Struct = extern struct {
-pub const _IDENTIFY_e__Struct_0 = extern union {
-    CDW14: u32,
-    CDW14_V20: NVME_CDW14_IDENTIFY,
-};
-    CDW10: NVME_CDW10_IDENTIFY,
-    CDW11: NVME_CDW11_IDENTIFY,
-    CDW12: u32,
-    CDW13: u32,
-    Anonymous: _IDENTIFY_e__Struct_0,
-    CDW15: u32,
-};
-pub const _ABORT_e__Struct = extern struct {
-    CDW10: NVME_CDW10_ABORT,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _GETFEATURES_e__Struct = extern struct {
-    CDW10: NVME_CDW10_GET_FEATURES,
-    CDW11: NVME_CDW11_FEATURES,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _SETFEATURES_e__Struct = extern struct {
-    CDW10: NVME_CDW10_SET_FEATURES,
-    CDW11: NVME_CDW11_FEATURES,
-    CDW12: NVME_CDW12_FEATURES,
-    CDW13: NVME_CDW13_FEATURES,
-    CDW14: NVME_CDW14_FEATURES,
-    CDW15: NVME_CDW15_FEATURES,
-};
-pub const _GETLOGPAGE_e__Struct = extern struct {
-pub const _GETLOGPAGE_e__Struct_0 = extern union {
-    CDW10: NVME_CDW10_GET_LOG_PAGE,
-    CDW10_V121: NVME_CDW10_GET_LOG_PAGE_V121,
-    CDW10_V13: NVME_CDW10_GET_LOG_PAGE_V13,
-    CDW10_V20: NVME_CDW10_GET_LOG_PAGE_V20,
-};
-pub const _GETLOGPAGE_e__Struct_1 = extern union {
-    CDW14: NVME_CDW14_GET_LOG_PAGE,
-    CDW14_V20: NVME_CDW14_GET_LOG_PAGE_V20,
-};
-    Anonymous1: _GETLOGPAGE_e__Struct_0,
-    CDW11: NVME_CDW11_GET_LOG_PAGE,
-    CDW12: NVME_CDW12_GET_LOG_PAGE,
-    CDW13: NVME_CDW13_GET_LOG_PAGE,
-    Anonymous2: _GETLOGPAGE_e__Struct_1,
-    CDW15: u32,
-};
-pub const _CREATEIOCQ_e__Struct = extern struct {
-    CDW10: NVME_CDW10_CREATE_IO_QUEUE,
-    CDW11: NVME_CDW11_CREATE_IO_CQ,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _CREATEIOSQ_e__Struct = extern struct {
-    CDW10: NVME_CDW10_CREATE_IO_QUEUE,
-    CDW11: NVME_CDW11_CREATE_IO_SQ,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _DELETEIOQUEUE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_DELETE_IO_QUEUE,
-};
-pub const _DATASETMANAGEMENT_e__Struct = extern struct {
-    CDW10: NVME_CDW10_DATASET_MANAGEMENT,
-    CDW11: NVME_CDW11_DATASET_MANAGEMENT,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _SECURITYSEND_e__Struct = extern struct {
-    CDW10: NVME_CDW10_SECURITY_SEND_RECEIVE,
-    CDW11: NVME_CDW11_SECURITY_SEND,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _SECURITYRECEIVE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_SECURITY_SEND_RECEIVE,
-    CDW11: NVME_CDW11_SECURITY_RECEIVE,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _FIRMWAREDOWNLOAD_e__Struct = extern struct {
-    CDW10: NVME_CDW10_FIRMWARE_DOWNLOAD,
-    CDW11: NVME_CDW11_FIRMWARE_DOWNLOAD,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _FIRMWAREACTIVATE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_FIRMWARE_ACTIVATE,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _FORMATNVM_e__Struct = extern struct {
-    CDW10: NVME_CDW10_FORMAT_NVM,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _DIRECTIVERECEIVE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_DIRECTIVE_RECEIVE,
-    CDW11: NVME_CDW11_DIRECTIVE_RECEIVE,
-    CDW12: NVME_CDW12_DIRECTIVE_RECEIVE,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _DIRECTIVESEND_e__Struct = extern struct {
-    CDW10: NVME_CDW10_DIRECTIVE_SEND,
-    CDW11: NVME_CDW11_DIRECTIVE_SEND,
-    CDW12: NVME_CDW12_DIRECTIVE_SEND,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _SANITIZE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_SANITIZE,
-    CDW11: NVME_CDW11_SANITIZE,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _READWRITE_e__Struct = extern struct {
-    LBALOW: u32,
-    LBAHIGH: u32,
-    CDW12: NVME_CDW12_READ_WRITE,
-    CDW13: NVME_CDW13_READ_WRITE,
-    CDW14: u32,
-    CDW15: NVME_CDW15_READ_WRITE,
-};
-pub const _RESERVATIONACQUIRE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_RESERVATION_ACQUIRE,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _RESERVATIONREGISTER_e__Struct = extern struct {
-    CDW10: NVME_CDW10_RESERVATION_REGISTER,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _RESERVATIONRELEASE_e__Struct = extern struct {
-    CDW10: NVME_CDW10_RESERVATION_RELEASE,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _RESERVATIONREPORT_e__Struct = extern struct {
-    CDW10: NVME_CDW10_RESERVATION_REPORT,
-    CDW11: NVME_CDW11_RESERVATION_REPORT,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _ZONEMANAGEMENTSEND_e__Struct = extern struct {
-    CDW1011: NVME_CDW10_ZONE_MANAGEMENT_SEND,
-    CDW12: u32,
-    CDW13: NVME_CDW13_ZONE_MANAGEMENT_SEND,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _ZONEMANAGEMENTRECEIVE_e__Struct = extern struct {
-    CDW1011: NVME_CDW10_ZONE_MANAGEMENT_RECEIVE,
-    DWORDCOUNT: u32,
-    CDW13: NVME_CDW13_ZONE_MANAGEMENT_RECEIVE,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _ZONEAPPEND_e__Struct = extern struct {
-    CDW1011: NVME_CDW10_ZONE_APPEND,
-    CDW12: NVME_CDW12_ZONE_APPEND,
-    CDW13: u32,
-    ILBRT: u32,
-    CDW15: NVME_CDW15_ZONE_APPEND,
-};
-pub const _DEVICESELFTEST_e__Struct = extern struct {
-    CDW10: NVME_CDW10_DEVICE_SELF_TEST,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _DISCOVERYINFOMGMT_e__Struct = extern struct {
-    CDW10: NVME_CDW10_DISCOVERY_INFO_MGMT,
-    CDW11: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _VENDORSPECIFIC_e__Struct = extern struct {
-    NDT: u32,
-    NDM: u32,
-    CDW12: u32,
-    CDW13: u32,
-    CDW14: u32,
-    CDW15: u32,
-};
-pub const _VERIFYCOMMAND_e__Struct = extern struct {
-    LBALOW: u32,
-    LBAHIGH: u32,
-    CDW12: NVME_CDW12_VERIFYCOMMAND,
-    CDW13: u32,
-    EILBRT: u32,
-    CDW15: NVME_CDW15_VERIFY_COMMAND,
-};
-    GENERAL: _GENERAL_e__Struct,
-    IDENTIFY: _IDENTIFY_e__Struct,
-    ABORT: _ABORT_e__Struct,
-    GETFEATURES: _GETFEATURES_e__Struct,
-    SETFEATURES: _SETFEATURES_e__Struct,
-    GETLOGPAGE: _GETLOGPAGE_e__Struct,
-    CREATEIOCQ: _CREATEIOCQ_e__Struct,
-    CREATEIOSQ: _CREATEIOSQ_e__Struct,
-    DELETEIOQUEUE: _DELETEIOQUEUE_e__Struct,
-    DATASETMANAGEMENT: _DATASETMANAGEMENT_e__Struct,
-    SECURITYSEND: _SECURITYSEND_e__Struct,
-    SECURITYRECEIVE: _SECURITYRECEIVE_e__Struct,
-    FIRMWAREDOWNLOAD: _FIRMWAREDOWNLOAD_e__Struct,
-    FIRMWAREACTIVATE: _FIRMWAREACTIVATE_e__Struct,
-    FORMATNVM: _FORMATNVM_e__Struct,
-    DIRECTIVERECEIVE: _DIRECTIVERECEIVE_e__Struct,
-    DIRECTIVESEND: _DIRECTIVESEND_e__Struct,
-    SANITIZE: _SANITIZE_e__Struct,
-    READWRITE: _READWRITE_e__Struct,
-    RESERVATIONACQUIRE: _RESERVATIONACQUIRE_e__Struct,
-    RESERVATIONREGISTER: _RESERVATIONREGISTER_e__Struct,
-    RESERVATIONRELEASE: _RESERVATIONRELEASE_e__Struct,
-    RESERVATIONREPORT: _RESERVATIONREPORT_e__Struct,
-    ZONEMANAGEMENTSEND: _ZONEMANAGEMENTSEND_e__Struct,
-    ZONEMANAGEMENTRECEIVE: _ZONEMANAGEMENTRECEIVE_e__Struct,
-    ZONEAPPEND: _ZONEAPPEND_e__Struct,
-    DEVICESELFTEST: _DEVICESELFTEST_e__Struct,
-    DISCOVERYINFOMGMT: _DISCOVERYINFOMGMT_e__Struct,
-    VENDORSPECIFIC: _VENDORSPECIFIC_e__Struct,
-    VERIFYCOMMAND: _VERIFYCOMMAND_e__Struct,
-};
+    pub const NVME_COMMAND_0 = extern union {
+        pub const NVME_COMMAND_0_0 = extern struct {
+            PRP1: u64,
+            PRP2: u64,
+        };
+        Anonymous: NVME_COMMAND_0_0,
+        SGL1: [2]u64,
+    };
+    pub const _u_e__Union = extern union {
+        pub const _GENERAL_e__Struct = extern struct {
+            CDW10: u32,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _IDENTIFY_e__Struct = extern struct {
+            pub const _IDENTIFY_e__Struct_0 = extern union {
+                CDW14: u32,
+                CDW14_V20: NVME_CDW14_IDENTIFY,
+            };
+            CDW10: NVME_CDW10_IDENTIFY,
+            CDW11: NVME_CDW11_IDENTIFY,
+            CDW12: u32,
+            CDW13: u32,
+            Anonymous: _IDENTIFY_e__Struct_0,
+            CDW15: u32,
+        };
+        pub const _ABORT_e__Struct = extern struct {
+            CDW10: NVME_CDW10_ABORT,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _GETFEATURES_e__Struct = extern struct {
+            CDW10: NVME_CDW10_GET_FEATURES,
+            CDW11: NVME_CDW11_FEATURES,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _SETFEATURES_e__Struct = extern struct {
+            CDW10: NVME_CDW10_SET_FEATURES,
+            CDW11: NVME_CDW11_FEATURES,
+            CDW12: NVME_CDW12_FEATURES,
+            CDW13: NVME_CDW13_FEATURES,
+            CDW14: NVME_CDW14_FEATURES,
+            CDW15: NVME_CDW15_FEATURES,
+        };
+        pub const _GETLOGPAGE_e__Struct = extern struct {
+            pub const _GETLOGPAGE_e__Struct_0 = extern union {
+                CDW10: NVME_CDW10_GET_LOG_PAGE,
+                CDW10_V121: NVME_CDW10_GET_LOG_PAGE_V121,
+                CDW10_V13: NVME_CDW10_GET_LOG_PAGE_V13,
+                CDW10_V20: NVME_CDW10_GET_LOG_PAGE_V20,
+            };
+            pub const _GETLOGPAGE_e__Struct_1 = extern union {
+                CDW14: NVME_CDW14_GET_LOG_PAGE,
+                CDW14_V20: NVME_CDW14_GET_LOG_PAGE_V20,
+            };
+            Anonymous1: _GETLOGPAGE_e__Struct_0,
+            CDW11: NVME_CDW11_GET_LOG_PAGE,
+            CDW12: NVME_CDW12_GET_LOG_PAGE,
+            CDW13: NVME_CDW13_GET_LOG_PAGE,
+            Anonymous2: _GETLOGPAGE_e__Struct_1,
+            CDW15: u32,
+        };
+        pub const _CREATEIOCQ_e__Struct = extern struct {
+            CDW10: NVME_CDW10_CREATE_IO_QUEUE,
+            CDW11: NVME_CDW11_CREATE_IO_CQ,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _CREATEIOSQ_e__Struct = extern struct {
+            CDW10: NVME_CDW10_CREATE_IO_QUEUE,
+            CDW11: NVME_CDW11_CREATE_IO_SQ,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _DELETEIOQUEUE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_DELETE_IO_QUEUE,
+        };
+        pub const _DATASETMANAGEMENT_e__Struct = extern struct {
+            CDW10: NVME_CDW10_DATASET_MANAGEMENT,
+            CDW11: NVME_CDW11_DATASET_MANAGEMENT,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _SECURITYSEND_e__Struct = extern struct {
+            CDW10: NVME_CDW10_SECURITY_SEND_RECEIVE,
+            CDW11: NVME_CDW11_SECURITY_SEND,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _SECURITYRECEIVE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_SECURITY_SEND_RECEIVE,
+            CDW11: NVME_CDW11_SECURITY_RECEIVE,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _FIRMWAREDOWNLOAD_e__Struct = extern struct {
+            CDW10: NVME_CDW10_FIRMWARE_DOWNLOAD,
+            CDW11: NVME_CDW11_FIRMWARE_DOWNLOAD,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _FIRMWAREACTIVATE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_FIRMWARE_ACTIVATE,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _FORMATNVM_e__Struct = extern struct {
+            CDW10: NVME_CDW10_FORMAT_NVM,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _DIRECTIVERECEIVE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_DIRECTIVE_RECEIVE,
+            CDW11: NVME_CDW11_DIRECTIVE_RECEIVE,
+            CDW12: NVME_CDW12_DIRECTIVE_RECEIVE,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _DIRECTIVESEND_e__Struct = extern struct {
+            CDW10: NVME_CDW10_DIRECTIVE_SEND,
+            CDW11: NVME_CDW11_DIRECTIVE_SEND,
+            CDW12: NVME_CDW12_DIRECTIVE_SEND,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _SANITIZE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_SANITIZE,
+            CDW11: NVME_CDW11_SANITIZE,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _READWRITE_e__Struct = extern struct {
+            LBALOW: u32,
+            LBAHIGH: u32,
+            CDW12: NVME_CDW12_READ_WRITE,
+            CDW13: NVME_CDW13_READ_WRITE,
+            CDW14: u32,
+            CDW15: NVME_CDW15_READ_WRITE,
+        };
+        pub const _RESERVATIONACQUIRE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_RESERVATION_ACQUIRE,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _RESERVATIONREGISTER_e__Struct = extern struct {
+            CDW10: NVME_CDW10_RESERVATION_REGISTER,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _RESERVATIONRELEASE_e__Struct = extern struct {
+            CDW10: NVME_CDW10_RESERVATION_RELEASE,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _RESERVATIONREPORT_e__Struct = extern struct {
+            CDW10: NVME_CDW10_RESERVATION_REPORT,
+            CDW11: NVME_CDW11_RESERVATION_REPORT,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _ZONEMANAGEMENTSEND_e__Struct = extern struct {
+            CDW1011: NVME_CDW10_ZONE_MANAGEMENT_SEND,
+            CDW12: u32,
+            CDW13: NVME_CDW13_ZONE_MANAGEMENT_SEND,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _ZONEMANAGEMENTRECEIVE_e__Struct = extern struct {
+            CDW1011: NVME_CDW10_ZONE_MANAGEMENT_RECEIVE,
+            DWORDCOUNT: u32,
+            CDW13: NVME_CDW13_ZONE_MANAGEMENT_RECEIVE,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _ZONEAPPEND_e__Struct = extern struct {
+            CDW1011: NVME_CDW10_ZONE_APPEND,
+            CDW12: NVME_CDW12_ZONE_APPEND,
+            CDW13: u32,
+            ILBRT: u32,
+            CDW15: NVME_CDW15_ZONE_APPEND,
+        };
+        pub const _DEVICESELFTEST_e__Struct = extern struct {
+            CDW10: NVME_CDW10_DEVICE_SELF_TEST,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _DISCOVERYINFOMGMT_e__Struct = extern struct {
+            CDW10: NVME_CDW10_DISCOVERY_INFO_MGMT,
+            CDW11: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _VENDORSPECIFIC_e__Struct = extern struct {
+            NDT: u32,
+            NDM: u32,
+            CDW12: u32,
+            CDW13: u32,
+            CDW14: u32,
+            CDW15: u32,
+        };
+        pub const _VERIFYCOMMAND_e__Struct = extern struct {
+            LBALOW: u32,
+            LBAHIGH: u32,
+            CDW12: NVME_CDW12_VERIFYCOMMAND,
+            CDW13: u32,
+            EILBRT: u32,
+            CDW15: NVME_CDW15_VERIFY_COMMAND,
+        };
+        GENERAL: _GENERAL_e__Struct,
+        IDENTIFY: _IDENTIFY_e__Struct,
+        ABORT: _ABORT_e__Struct,
+        GETFEATURES: _GETFEATURES_e__Struct,
+        SETFEATURES: _SETFEATURES_e__Struct,
+        GETLOGPAGE: _GETLOGPAGE_e__Struct,
+        CREATEIOCQ: _CREATEIOCQ_e__Struct,
+        CREATEIOSQ: _CREATEIOSQ_e__Struct,
+        DELETEIOQUEUE: _DELETEIOQUEUE_e__Struct,
+        DATASETMANAGEMENT: _DATASETMANAGEMENT_e__Struct,
+        SECURITYSEND: _SECURITYSEND_e__Struct,
+        SECURITYRECEIVE: _SECURITYRECEIVE_e__Struct,
+        FIRMWAREDOWNLOAD: _FIRMWAREDOWNLOAD_e__Struct,
+        FIRMWAREACTIVATE: _FIRMWAREACTIVATE_e__Struct,
+        FORMATNVM: _FORMATNVM_e__Struct,
+        DIRECTIVERECEIVE: _DIRECTIVERECEIVE_e__Struct,
+        DIRECTIVESEND: _DIRECTIVESEND_e__Struct,
+        SANITIZE: _SANITIZE_e__Struct,
+        READWRITE: _READWRITE_e__Struct,
+        RESERVATIONACQUIRE: _RESERVATIONACQUIRE_e__Struct,
+        RESERVATIONREGISTER: _RESERVATIONREGISTER_e__Struct,
+        RESERVATIONRELEASE: _RESERVATIONRELEASE_e__Struct,
+        RESERVATIONREPORT: _RESERVATIONREPORT_e__Struct,
+        ZONEMANAGEMENTSEND: _ZONEMANAGEMENTSEND_e__Struct,
+        ZONEMANAGEMENTRECEIVE: _ZONEMANAGEMENTRECEIVE_e__Struct,
+        ZONEAPPEND: _ZONEAPPEND_e__Struct,
+        DEVICESELFTEST: _DEVICESELFTEST_e__Struct,
+        DISCOVERYINFOMGMT: _DISCOVERYINFOMGMT_e__Struct,
+        VENDORSPECIFIC: _VENDORSPECIFIC_e__Struct,
+        VERIFYCOMMAND: _VERIFYCOMMAND_e__Struct,
+    };
     CDW0: NVME_COMMAND_DWORD0,
     NSID: u32,
     Reserved0: [2]u32,
@@ -2305,89 +2305,89 @@ pub const NVME_SCSI_NAME_STRING = extern struct {
     SerialNumber: [20]@"Windows.Win32.Foundation".CHAR,
 };
 pub const NVME_SGL_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Reserved0: [15]u8,
     Identifier: _Identifier_e__Union,
 };
 pub const NVME_SGL_DATABLOCK_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Address: u64,
     Length: u32,
     Reserved0: [3]u8,
     Identifier: _Identifier_e__Union,
 };
 pub const NVME_SGL_BITBUCKET_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Reserved0: u64,
     Length: u32,
     Reserved1: [3]u8,
     Identifier: _Identifier_e__Union,
 };
 pub const NVME_SGL_SEGMENT_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Address: u64,
     Length: u32,
     Reserved0: [3]u8,
     Identifier: _Identifier_e__Union,
 };
 pub const NVME_SGL_LASTSEG_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Address: u64,
     Length: u32,
     Reserved0: [3]u8,
     Identifier: _Identifier_e__Union,
 };
 pub const NVME_SGL_KEYDATABLOCK_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Address: u64,
     Length: [3]u8,
     Key: [4]u8,
     Identifier: _Identifier_e__Union,
 };
 pub const NVME_SGL_TRANSPORTDATA_DESC = extern struct {
-pub const _Identifier_e__Union = extern union {
-pub const _Identifier_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _Identifier_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _Identifier_e__Union = extern union {
+        pub const _Identifier_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _Identifier_e__Union_0,
+        AsUchar: u8,
+    };
     Reserved0: u64,
     Length: u32,
     Reserved1: [3]u8,
@@ -2409,13 +2409,13 @@ pub const NVMEOF_FABRICS_RESPONSE = extern struct {
     STS: u16,
 };
 pub const NVMEOF_CONNECT_COMMAND = extern struct {
-pub const _CATTR_e__Union = extern union {
-pub const _CATTR_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _CATTR_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _CATTR_e__Union = extern union {
+        pub const _CATTR_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _CATTR_e__Union_0,
+        AsUchar: u8,
+    };
     OPC: u8,
     Reserved0: u8,
     CID: u16,
@@ -2439,21 +2439,21 @@ pub const NVMEOF_CONNECT_DATA = extern struct {
     Reserved1: [256]u8,
 };
 pub const NVMEOF_CONNECT_RESPONSE = extern struct {
-pub const _SCSpecific_e__Union = extern union {
-pub const _Success_e__Struct = extern struct {
-pub const _AUTHREQ_e__Union = extern union {
-pub const _AUTHREQ_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _AUTHREQ_e__Union_0,
-    AsUshort: u16,
-};
-    CNTLID: u16,
-    AUTHREQ: _AUTHREQ_e__Union,
-};
-    Success: _Success_e__Struct,
-    AsUlong: u32,
-};
+    pub const _SCSpecific_e__Union = extern union {
+        pub const _Success_e__Struct = extern struct {
+            pub const _AUTHREQ_e__Union = extern union {
+                pub const _AUTHREQ_e__Union_0 = extern struct {
+                    _bitfield: u16,
+                };
+                Anonymous: _AUTHREQ_e__Union_0,
+                AsUshort: u16,
+            };
+            CNTLID: u16,
+            AUTHREQ: _AUTHREQ_e__Union,
+        };
+        Success: _Success_e__Struct,
+        AsUlong: u32,
+    };
     SCSpecific: _SCSpecific_e__Union,
     Reserved0: u32,
     SQHD: u16,
@@ -2479,9 +2479,9 @@ pub const NVMEOF_DISCONNECT_RESPONSE = extern struct {
     STS: u16,
 };
 pub const NVMEOF_PROPERTY_GET_COMMAND = extern struct {
-pub const _ATTRIB_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _ATTRIB_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     OPC: u8,
     Reserved0: u8,
     CID: u16,
@@ -2493,14 +2493,14 @@ pub const _ATTRIB_e__Struct = extern struct {
     Reserved3: [16]u8,
 };
 pub const NVMEOF_PROPERTY_GET_RESPONSE = extern struct {
-pub const _VALUE_e__Union = extern union {
-pub const _FourBytes_e__Struct = extern struct {
-    Value: u32,
-    Reserved: u32,
-};
-    FourBytes: _FourBytes_e__Struct,
-    EightBytes: u64,
-};
+    pub const _VALUE_e__Union = extern union {
+        pub const _FourBytes_e__Struct = extern struct {
+            Value: u32,
+            Reserved: u32,
+        };
+        FourBytes: _FourBytes_e__Struct,
+        EightBytes: u64,
+    };
     VALUE: _VALUE_e__Union,
     SQHD: u16,
     Reserved0: u16,
@@ -2508,17 +2508,17 @@ pub const _FourBytes_e__Struct = extern struct {
     STS: u16,
 };
 pub const NVMEOF_PROPERTY_SET_COMMAND = extern struct {
-pub const _ATTRIB_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _VALUE_e__Union = extern union {
-pub const _FourBytes_e__Struct = extern struct {
-    Value: u32,
-    Reserved: u32,
-};
-    FourBytes: _FourBytes_e__Struct,
-    EightBytes: u64,
-};
+    pub const _ATTRIB_e__Struct = extern struct {
+        _bitfield: u8,
+    };
+    pub const _VALUE_e__Union = extern union {
+        pub const _FourBytes_e__Struct = extern struct {
+            Value: u32,
+            Reserved: u32,
+        };
+        FourBytes: _FourBytes_e__Struct,
+        EightBytes: u64,
+    };
     OPC: u8,
     Reserved0: u8,
     CID: u16,
@@ -2580,20 +2580,20 @@ pub const NVMEOF_AUTH_SEND_RESPONSE = extern struct {
     STS: u16,
 };
 pub const NVME_DISCOVERY_ENTRY = extern struct {
-pub const _TREQ_e__Union = extern union {
-pub const _TREQ_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _TREQ_e__Union_0,
-    AsUchar: u8,
-};
-pub const _EFLAGS_e__Union = extern union {
-pub const _EFLAGS_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _EFLAGS_e__Union_0,
-    AsUshort: u16,
-};
+    pub const _TREQ_e__Union = extern union {
+        pub const _TREQ_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _TREQ_e__Union_0,
+        AsUchar: u8,
+    };
+    pub const _EFLAGS_e__Union = extern union {
+        pub const _EFLAGS_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _EFLAGS_e__Union_0,
+        AsUshort: u16,
+    };
     TRTYPE: u8,
     ADRFAM: u8,
     SUBTYPE: u8,
@@ -2610,20 +2610,20 @@ pub const _EFLAGS_e__Union_0 = extern struct {
     TSAS: [256]u8,
 };
 pub const NVME_EXTENDED_DISCOVERY_ENTRY = extern struct {
-pub const _TREQ_e__Union = extern union {
-pub const _TREQ_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _TREQ_e__Union_0,
-    AsUchar: u8,
-};
-pub const _EFLAGS_e__Union = extern union {
-pub const _EFLAGS_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _EFLAGS_e__Union_0,
-    AsUshort: u16,
-};
+    pub const _TREQ_e__Union = extern union {
+        pub const _TREQ_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _TREQ_e__Union_0,
+        AsUchar: u8,
+    };
+    pub const _EFLAGS_e__Union = extern union {
+        pub const _EFLAGS_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _EFLAGS_e__Union_0,
+        AsUshort: u16,
+    };
     TRTYPE: u8,
     ADRFAM: u8,
     SUBTYPE: u8,
@@ -2648,13 +2648,13 @@ pub const NVME_EXTENDED_ATTR = extern struct {
     EXATVAL: [1]u8,
 };
 pub const NVME_DISCOVERY_HEADER = extern struct {
-pub const _DLPF_e__Union = extern union {
-pub const _DLPF_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: _DLPF_e__Union_0,
-    AsUchar: u8,
-};
+    pub const _DLPF_e__Union = extern union {
+        pub const _DLPF_e__Union_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: _DLPF_e__Union_0,
+        AsUchar: u8,
+    };
     GENCTR: u64,
     NUMREC: u64,
     RECFMT: u16,
@@ -2664,13 +2664,13 @@ pub const _DLPF_e__Union_0 = extern struct {
     Reserved1: [1000]u8,
 };
 pub const NVME_DISCOVERY_INFO_MGMT_HEADER = extern struct {
-pub const _EKTYPE_e__Union = extern union {
-pub const _EKTYPE_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _EKTYPE_e__Union_0,
-    AsUshort: u16,
-};
+    pub const _EKTYPE_e__Union = extern union {
+        pub const _EKTYPE_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _EKTYPE_e__Union_0,
+        AsUshort: u16,
+    };
     TDL: u32,
     Reserved0: u32,
     NUMENT: u64,

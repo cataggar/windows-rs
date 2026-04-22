@@ -148,14 +148,14 @@ pub const MIB_IPFORWARDNUMBER = extern struct {
     dwValue: u32,
 };
 pub const MIB_IPFORWARDROW = extern struct {
-pub const MIB_IPFORWARDROW_0 = extern union {
-    dwForwardType: u32,
-    ForwardType: i32,
-};
-pub const MIB_IPFORWARDROW_1 = extern union {
-    dwForwardProto: u32,
-    ForwardProto: i32,
-};
+    pub const MIB_IPFORWARDROW_0 = extern union {
+        dwForwardType: u32,
+        ForwardType: i32,
+    };
+    pub const MIB_IPFORWARDROW_1 = extern union {
+        dwForwardProto: u32,
+        ForwardProto: i32,
+    };
     dwForwardDest: u32,
     dwForwardMask: u32,
     dwForwardPolicy: u32,
@@ -176,10 +176,10 @@ pub const MIB_IPFORWARDTABLE = extern struct {
     table: [1]MIB_IPFORWARDROW,
 };
 pub const MIB_IPNETROW_LH = extern struct {
-pub const MIB_IPNETROW_LH_0 = extern union {
-    dwType: u32,
-    Type: i32,
-};
+    pub const MIB_IPNETROW_LH_0 = extern union {
+        dwType: u32,
+        Type: i32,
+    };
     dwIndex: u32,
     dwPhysAddrLen: u32,
     bPhysAddr: [8]u8,
@@ -198,10 +198,10 @@ pub const MIB_IPNETTABLE = extern struct {
     table: [1]MIB_IPNETROW_LH,
 };
 pub const MIB_IPSTATS_LH = extern struct {
-pub const MIB_IPSTATS_LH_0 = extern union {
-    dwForwarding: u32,
-    Forwarding: i32,
-};
+    pub const MIB_IPSTATS_LH_0 = extern union {
+        dwForwarding: u32,
+        Forwarding: i32,
+    };
     Anonymous: MIB_IPSTATS_LH_0,
     dwDefaultTTL: u32,
     dwInReceives: u32,
@@ -401,10 +401,10 @@ pub const MIB_IPMCAST_IF_TABLE = extern struct {
     table: [1]MIB_IPMCAST_IF_ENTRY,
 };
 pub const MIB_TCPROW_LH = extern struct {
-pub const MIB_TCPROW_LH_0 = extern union {
-    dwState: u32,
-    State: i32,
-};
+    pub const MIB_TCPROW_LH_0 = extern union {
+        dwState: u32,
+        State: i32,
+    };
     Anonymous: MIB_TCPROW_LH_0,
     dwLocalAddr: u32,
     dwLocalPort: u32,
@@ -520,10 +520,10 @@ pub const MIB_TCP6TABLE_OWNER_MODULE = extern struct {
     table: [1]MIB_TCP6ROW_OWNER_MODULE,
 };
 pub const MIB_TCPSTATS_LH = extern struct {
-pub const MIB_TCPSTATS_LH_0 = extern union {
-    dwRtoAlgorithm: u32,
-    RtoAlgorithm: i32,
-};
+    pub const MIB_TCPSTATS_LH_0 = extern union {
+        dwRtoAlgorithm: u32,
+        RtoAlgorithm: i32,
+    };
     Anonymous: MIB_TCPSTATS_LH_0,
     dwRtoMin: u32,
     dwRtoMax: u32,
@@ -592,13 +592,13 @@ pub const MIB_UDPTABLE_OWNER_PID = extern struct {
     table: [1]MIB_UDPROW_OWNER_PID,
 };
 pub const MIB_UDPROW_OWNER_MODULE = extern struct {
-pub const MIB_UDPROW_OWNER_MODULE_0 = extern union {
-pub const MIB_UDPROW_OWNER_MODULE_0_0 = extern struct {
-    _bitfield: i32,
-};
-    Anonymous: MIB_UDPROW_OWNER_MODULE_0_0,
-    dwFlags: i32,
-};
+    pub const MIB_UDPROW_OWNER_MODULE_0 = extern union {
+        pub const MIB_UDPROW_OWNER_MODULE_0_0 = extern struct {
+            _bitfield: i32,
+        };
+        Anonymous: MIB_UDPROW_OWNER_MODULE_0_0,
+        dwFlags: i32,
+    };
     dwLocalAddr: u32,
     dwLocalPort: u32,
     dwOwningPid: u32,
@@ -611,13 +611,13 @@ pub const MIB_UDPTABLE_OWNER_MODULE = extern struct {
     table: [1]MIB_UDPROW_OWNER_MODULE,
 };
 pub const MIB_UDPROW2 = extern struct {
-pub const MIB_UDPROW2_0 = extern union {
-pub const MIB_UDPROW2_0_0 = extern struct {
-    _bitfield: i32,
-};
-    Anonymous: MIB_UDPROW2_0_0,
-    dwFlags: i32,
-};
+    pub const MIB_UDPROW2_0 = extern union {
+        pub const MIB_UDPROW2_0_0 = extern struct {
+            _bitfield: i32,
+        };
+        Anonymous: MIB_UDPROW2_0_0,
+        dwFlags: i32,
+    };
     dwLocalAddr: u32,
     dwLocalPort: u32,
     dwOwningPid: u32,
@@ -651,13 +651,13 @@ pub const MIB_UDP6TABLE_OWNER_PID = extern struct {
     table: [1]MIB_UDP6ROW_OWNER_PID,
 };
 pub const MIB_UDP6ROW_OWNER_MODULE = extern struct {
-pub const MIB_UDP6ROW_OWNER_MODULE_0 = extern union {
-pub const MIB_UDP6ROW_OWNER_MODULE_0_0 = extern struct {
-    _bitfield: i32,
-};
-    Anonymous: MIB_UDP6ROW_OWNER_MODULE_0_0,
-    dwFlags: i32,
-};
+    pub const MIB_UDP6ROW_OWNER_MODULE_0 = extern union {
+        pub const MIB_UDP6ROW_OWNER_MODULE_0_0 = extern struct {
+            _bitfield: i32,
+        };
+        Anonymous: MIB_UDP6ROW_OWNER_MODULE_0_0,
+        dwFlags: i32,
+    };
     ucLocalAddr: [16]u8,
     dwLocalScopeId: u32,
     dwLocalPort: u32,
@@ -671,13 +671,13 @@ pub const MIB_UDP6TABLE_OWNER_MODULE = extern struct {
     table: [1]MIB_UDP6ROW_OWNER_MODULE,
 };
 pub const MIB_UDP6ROW2 = extern struct {
-pub const MIB_UDP6ROW2_0 = extern union {
-pub const MIB_UDP6ROW2_0_0 = extern struct {
-    _bitfield: i32,
-};
-    Anonymous: MIB_UDP6ROW2_0_0,
-    dwFlags: i32,
-};
+    pub const MIB_UDP6ROW2_0 = extern union {
+        pub const MIB_UDP6ROW2_0_0 = extern struct {
+            _bitfield: i32,
+        };
+        Anonymous: MIB_UDP6ROW2_0_0,
+        dwFlags: i32,
+    };
     ucLocalAddr: [16]u8,
     dwLocalScopeId: u32,
     dwLocalPort: u32,
@@ -764,10 +764,10 @@ pub const MIB_ROUTESTATE = extern struct {
     bRoutesSetToStack: @"Windows.Win32.Foundation".BOOL,
 };
 pub const MIB_OPAQUE_INFO = extern struct {
-pub const MIB_OPAQUE_INFO_0 = extern union {
-    ullAlign: u64,
-    rgbyData: [1]u8,
-};
+    pub const MIB_OPAQUE_INFO_0 = extern union {
+        ullAlign: u64,
+        rgbyData: [1]u8,
+    };
     dwId: u32,
     Anonymous: MIB_OPAQUE_INFO_0,
 };
@@ -801,14 +801,14 @@ pub const IP_ADAPTER_INFO = extern struct {
     LeaseExpires: i64,
 };
 pub const IP_ADAPTER_UNICAST_ADDRESS_LH = extern struct {
-pub const IP_ADAPTER_UNICAST_ADDRESS_LH_0 = extern union {
-pub const IP_ADAPTER_UNICAST_ADDRESS_LH_0_0 = extern struct {
-    Length: u32,
-    Flags: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_UNICAST_ADDRESS_LH_0_0,
-};
+    pub const IP_ADAPTER_UNICAST_ADDRESS_LH_0 = extern union {
+        pub const IP_ADAPTER_UNICAST_ADDRESS_LH_0_0 = extern struct {
+            Length: u32,
+            Flags: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_UNICAST_ADDRESS_LH_0_0,
+    };
     Anonymous: IP_ADAPTER_UNICAST_ADDRESS_LH_0,
     Next: *IP_ADAPTER_UNICAST_ADDRESS_LH,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
@@ -821,14 +821,14 @@ pub const IP_ADAPTER_UNICAST_ADDRESS_LH_0_0 = extern struct {
     OnLinkPrefixLength: u8,
 };
 pub const IP_ADAPTER_UNICAST_ADDRESS_XP = extern struct {
-pub const IP_ADAPTER_UNICAST_ADDRESS_XP_0 = extern union {
-pub const IP_ADAPTER_UNICAST_ADDRESS_XP_0_0 = extern struct {
-    Length: u32,
-    Flags: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_UNICAST_ADDRESS_XP_0_0,
-};
+    pub const IP_ADAPTER_UNICAST_ADDRESS_XP_0 = extern union {
+        pub const IP_ADAPTER_UNICAST_ADDRESS_XP_0_0 = extern struct {
+            Length: u32,
+            Flags: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_UNICAST_ADDRESS_XP_0_0,
+    };
     Anonymous: IP_ADAPTER_UNICAST_ADDRESS_XP_0,
     Next: *IP_ADAPTER_UNICAST_ADDRESS_XP,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
@@ -840,79 +840,79 @@ pub const IP_ADAPTER_UNICAST_ADDRESS_XP_0_0 = extern struct {
     LeaseLifetime: u32,
 };
 pub const IP_ADAPTER_ANYCAST_ADDRESS_XP = extern struct {
-pub const IP_ADAPTER_ANYCAST_ADDRESS_XP_0 = extern union {
-pub const IP_ADAPTER_ANYCAST_ADDRESS_XP_0_0 = extern struct {
-    Length: u32,
-    Flags: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_ANYCAST_ADDRESS_XP_0_0,
-};
+    pub const IP_ADAPTER_ANYCAST_ADDRESS_XP_0 = extern union {
+        pub const IP_ADAPTER_ANYCAST_ADDRESS_XP_0_0 = extern struct {
+            Length: u32,
+            Flags: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_ANYCAST_ADDRESS_XP_0_0,
+    };
     Anonymous: IP_ADAPTER_ANYCAST_ADDRESS_XP_0,
     Next: *IP_ADAPTER_ANYCAST_ADDRESS_XP,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
 };
 pub const IP_ADAPTER_MULTICAST_ADDRESS_XP = extern struct {
-pub const IP_ADAPTER_MULTICAST_ADDRESS_XP_0 = extern union {
-pub const IP_ADAPTER_MULTICAST_ADDRESS_XP_0_0 = extern struct {
-    Length: u32,
-    Flags: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_MULTICAST_ADDRESS_XP_0_0,
-};
+    pub const IP_ADAPTER_MULTICAST_ADDRESS_XP_0 = extern union {
+        pub const IP_ADAPTER_MULTICAST_ADDRESS_XP_0_0 = extern struct {
+            Length: u32,
+            Flags: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_MULTICAST_ADDRESS_XP_0_0,
+    };
     Anonymous: IP_ADAPTER_MULTICAST_ADDRESS_XP_0,
     Next: *IP_ADAPTER_MULTICAST_ADDRESS_XP,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
 };
 pub const IP_ADAPTER_DNS_SERVER_ADDRESS_XP = extern struct {
-pub const IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0 = extern union {
-pub const IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0_0 = extern struct {
-    Length: u32,
-    Reserved: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0_0,
-};
+    pub const IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0 = extern union {
+        pub const IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0_0 = extern struct {
+            Length: u32,
+            Reserved: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0_0,
+    };
     Anonymous: IP_ADAPTER_DNS_SERVER_ADDRESS_XP_0,
     Next: *IP_ADAPTER_DNS_SERVER_ADDRESS_XP,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
 };
 pub const IP_ADAPTER_WINS_SERVER_ADDRESS_LH = extern struct {
-pub const IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0 = extern union {
-pub const IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0_0 = extern struct {
-    Length: u32,
-    Reserved: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0_0,
-};
+    pub const IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0 = extern union {
+        pub const IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0_0 = extern struct {
+            Length: u32,
+            Reserved: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0_0,
+    };
     Anonymous: IP_ADAPTER_WINS_SERVER_ADDRESS_LH_0,
     Next: *IP_ADAPTER_WINS_SERVER_ADDRESS_LH,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
 };
 pub const IP_ADAPTER_GATEWAY_ADDRESS_LH = extern struct {
-pub const IP_ADAPTER_GATEWAY_ADDRESS_LH_0 = extern union {
-pub const IP_ADAPTER_GATEWAY_ADDRESS_LH_0_0 = extern struct {
-    Length: u32,
-    Reserved: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_GATEWAY_ADDRESS_LH_0_0,
-};
+    pub const IP_ADAPTER_GATEWAY_ADDRESS_LH_0 = extern union {
+        pub const IP_ADAPTER_GATEWAY_ADDRESS_LH_0_0 = extern struct {
+            Length: u32,
+            Reserved: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_GATEWAY_ADDRESS_LH_0_0,
+    };
     Anonymous: IP_ADAPTER_GATEWAY_ADDRESS_LH_0,
     Next: *IP_ADAPTER_GATEWAY_ADDRESS_LH,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
 };
 pub const IP_ADAPTER_PREFIX_XP = extern struct {
-pub const IP_ADAPTER_PREFIX_XP_0 = extern union {
-pub const IP_ADAPTER_PREFIX_XP_0_0 = extern struct {
-    Length: u32,
-    Flags: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_PREFIX_XP_0_0,
-};
+    pub const IP_ADAPTER_PREFIX_XP_0 = extern union {
+        pub const IP_ADAPTER_PREFIX_XP_0_0 = extern struct {
+            Length: u32,
+            Flags: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_PREFIX_XP_0_0,
+    };
     Anonymous: IP_ADAPTER_PREFIX_XP_0,
     Next: *IP_ADAPTER_PREFIX_XP,
     Address: @"Windows.Win32.Networking.WinSock".SOCKET_ADDRESS,
@@ -923,21 +923,21 @@ pub const IP_ADAPTER_DNS_SUFFIX = extern struct {
     String: [256]u16,
 };
 pub const IP_ADAPTER_ADDRESSES_LH = extern struct {
-pub const IP_ADAPTER_ADDRESSES_LH_0 = extern union {
-pub const IP_ADAPTER_ADDRESSES_LH_0_0 = extern struct {
-    Length: u32,
-    IfIndex: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_ADDRESSES_LH_0_0,
-};
-pub const IP_ADAPTER_ADDRESSES_LH_1 = extern union {
-pub const IP_ADAPTER_ADDRESSES_LH_1_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: IP_ADAPTER_ADDRESSES_LH_1_0,
-};
+    pub const IP_ADAPTER_ADDRESSES_LH_0 = extern union {
+        pub const IP_ADAPTER_ADDRESSES_LH_0_0 = extern struct {
+            Length: u32,
+            IfIndex: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_ADDRESSES_LH_0_0,
+    };
+    pub const IP_ADAPTER_ADDRESSES_LH_1 = extern union {
+        pub const IP_ADAPTER_ADDRESSES_LH_1_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: IP_ADAPTER_ADDRESSES_LH_1_0,
+    };
     Anonymous1: IP_ADAPTER_ADDRESSES_LH_0,
     Next: *IP_ADAPTER_ADDRESSES_LH,
     AdapterName: @"Windows.Win32.Foundation".PSTR,
@@ -976,14 +976,14 @@ pub const IP_ADAPTER_ADDRESSES_LH_1_0 = extern struct {
     FirstDnsSuffix: *IP_ADAPTER_DNS_SUFFIX,
 };
 pub const IP_ADAPTER_ADDRESSES_XP = extern struct {
-pub const IP_ADAPTER_ADDRESSES_XP_0 = extern union {
-pub const IP_ADAPTER_ADDRESSES_XP_0_0 = extern struct {
-    Length: u32,
-    IfIndex: u32,
-};
-    Alignment: u64,
-    Anonymous: IP_ADAPTER_ADDRESSES_XP_0_0,
-};
+    pub const IP_ADAPTER_ADDRESSES_XP_0 = extern union {
+        pub const IP_ADAPTER_ADDRESSES_XP_0_0 = extern struct {
+            Length: u32,
+            IfIndex: u32,
+        };
+        Alignment: u64,
+        Anonymous: IP_ADAPTER_ADDRESSES_XP_0_0,
+    };
     Anonymous: IP_ADAPTER_ADDRESSES_XP_0,
     Next: *IP_ADAPTER_ADDRESSES_XP,
     AdapterName: @"Windows.Win32.Foundation".PSTR,
@@ -1212,23 +1212,23 @@ pub const INTERFACE_HARDWARE_CROSSTIMESTAMP = extern struct {
     SystemTimestamp2: u64,
 };
 pub const NET_ADDRESS_INFO = extern struct {
-pub const NET_ADDRESS_INFO_0 = extern union {
-pub const _NamedAddress_e__Struct = extern struct {
-    Address: [256]u16,
-    Port: [6]u16,
-};
-    NamedAddress: _NamedAddress_e__Struct,
-    Ipv4Address: @"Windows.Win32.Networking.WinSock".SOCKADDR_IN,
-    Ipv6Address: @"Windows.Win32.Networking.WinSock".SOCKADDR_IN6,
-    IpAddress: @"Windows.Win32.Networking.WinSock".SOCKADDR,
-};
+    pub const NET_ADDRESS_INFO_0 = extern union {
+        pub const _NamedAddress_e__Struct = extern struct {
+            Address: [256]u16,
+            Port: [6]u16,
+        };
+        NamedAddress: _NamedAddress_e__Struct,
+        Ipv4Address: @"Windows.Win32.Networking.WinSock".SOCKADDR_IN,
+        Ipv6Address: @"Windows.Win32.Networking.WinSock".SOCKADDR_IN6,
+        IpAddress: @"Windows.Win32.Networking.WinSock".SOCKADDR,
+    };
     Format: i32,
     Anonymous: NET_ADDRESS_INFO_0,
 };
 pub const MIB_IF_ROW2 = extern struct {
-pub const _InterfaceAndOperStatusFlags_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _InterfaceAndOperStatusFlags_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     InterfaceLuid: @"Windows.Win32.NetworkManagement.Ndis".NET_LUID_LH,
     InterfaceIndex: u32,
     InterfaceGuid: GUID,
@@ -1400,10 +1400,10 @@ pub const MIB_IPFORWARD_TABLE2 = extern struct {
     Table: [1]MIB_IPFORWARD_ROW2,
 };
 pub const MIB_IPPATH_ROW = extern struct {
-pub const MIB_IPPATH_ROW_0 = extern union {
-    LastReachable: u32,
-    LastUnreachable: u32,
-};
+    pub const MIB_IPPATH_ROW_0 = extern union {
+        LastReachable: u32,
+        LastUnreachable: u32,
+    };
     Source: @"Windows.Win32.Networking.WinSock".SOCKADDR_INET,
     Destination: @"Windows.Win32.Networking.WinSock".SOCKADDR_INET,
     InterfaceLuid: @"Windows.Win32.NetworkManagement.Ndis".NET_LUID_LH,
@@ -1422,17 +1422,17 @@ pub const MIB_IPPATH_TABLE = extern struct {
     Table: [1]MIB_IPPATH_ROW,
 };
 pub const MIB_IPNET_ROW2 = extern struct {
-pub const MIB_IPNET_ROW2_0 = extern union {
-pub const MIB_IPNET_ROW2_0_0 = extern struct {
-    _bitfield: u8,
-};
-    Anonymous: MIB_IPNET_ROW2_0_0,
-    Flags: u8,
-};
-pub const _ReachabilityTime_e__Union = extern union {
-    LastReachable: u32,
-    LastUnreachable: u32,
-};
+    pub const MIB_IPNET_ROW2_0 = extern union {
+        pub const MIB_IPNET_ROW2_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        Anonymous: MIB_IPNET_ROW2_0_0,
+        Flags: u8,
+    };
+    pub const _ReachabilityTime_e__Union = extern union {
+        LastReachable: u32,
+        LastUnreachable: u32,
+    };
     Address: @"Windows.Win32.Networking.WinSock".SOCKADDR_INET,
     InterfaceIndex: u32,
     InterfaceLuid: @"Windows.Win32.NetworkManagement.Ndis".NET_LUID_LH,

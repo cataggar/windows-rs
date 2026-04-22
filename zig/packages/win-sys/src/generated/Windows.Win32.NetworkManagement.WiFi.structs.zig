@@ -338,10 +338,10 @@ pub const DOT11_RECV_SENSITIVITY = extern struct {
     lRSSIMax: i32,
 };
 pub const DOT11_RECV_SENSITIVITY_LIST = extern struct {
-pub const DOT11_RECV_SENSITIVITY_LIST_0 = extern union {
-    dot11PhyType: i32,
-    uPhyId: u32,
-};
+    pub const DOT11_RECV_SENSITIVITY_LIST_0 = extern union {
+        dot11PhyType: i32,
+        uPhyId: u32,
+    };
     Anonymous: DOT11_RECV_SENSITIVITY_LIST_0,
     uNumOfEntries: u32,
     uTotalNumOfEntries: u32,
@@ -400,11 +400,11 @@ pub const DOT11_BYTE_ARRAY = extern struct {
     ucBuffer: [1]u8,
 };
 pub const DOT11_BSS_ENTRY_PHY_SPECIFIC_INFO = extern union {
-pub const _FHSS_e__Struct = extern struct {
-    uHopPattern: u32,
-    uHopSet: u32,
-    uDwellTime: u32,
-};
+    pub const _FHSS_e__Struct = extern struct {
+        uHopPattern: u32,
+        uHopSet: u32,
+        uDwellTime: u32,
+    };
     uChCenterFrequency: u32,
     FHSS: _FHSS_e__Struct,
 };
@@ -674,11 +674,11 @@ pub const DOT11_ERP_PHY_ATTRIBUTES = extern struct {
     bShortSlotTimeOptionImplemented: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const DOT11_PHY_ATTRIBUTES = extern struct {
-pub const _PhySpecificAttributes_e__Union = extern union {
-    HRDSSSAttributes: DOT11_HRDSSS_PHY_ATTRIBUTES,
-    OFDMAttributes: DOT11_OFDM_PHY_ATTRIBUTES,
-    ERPAttributes: DOT11_ERP_PHY_ATTRIBUTES,
-};
+    pub const _PhySpecificAttributes_e__Union = extern union {
+        HRDSSSAttributes: DOT11_HRDSSS_PHY_ATTRIBUTES,
+        OFDMAttributes: DOT11_OFDM_PHY_ATTRIBUTES,
+        ERPAttributes: DOT11_ERP_PHY_ATTRIBUTES,
+    };
     Header: @"Windows.Win32.NetworkManagement.Ndis".NDIS_OBJECT_HEADER,
     PhyType: i32,
     bHardwarePhyState: @"Windows.Win32.Foundation".BOOLEAN,
@@ -954,10 +954,10 @@ pub const DOT11_STOP_AP_PARAMETERS = extern struct {
     ulReason: u32,
 };
 pub const DOT11_PHY_FREQUENCY_ADOPTED_PARAMETERS = extern struct {
-pub const DOT11_PHY_FREQUENCY_ADOPTED_PARAMETERS_0 = extern union {
-    ulChannel: u32,
-    ulFrequency: u32,
-};
+    pub const DOT11_PHY_FREQUENCY_ADOPTED_PARAMETERS_0 = extern union {
+        ulChannel: u32,
+        ulFrequency: u32,
+    };
     Header: @"Windows.Win32.NetworkManagement.Ndis".NDIS_OBJECT_HEADER,
     ulPhyId: u32,
     Anonymous: DOT11_PHY_FREQUENCY_ADOPTED_PARAMETERS_0,
@@ -1581,10 +1581,10 @@ pub const WLAN_RAW_DATA = extern struct {
     DataBlob: [1]u8,
 };
 pub const WLAN_RAW_DATA_LIST = extern struct {
-pub const WLAN_RAW_DATA_LIST_0 = extern struct {
-    dwDataOffset: u32,
-    dwDataSize: u32,
-};
+    pub const WLAN_RAW_DATA_LIST_0 = extern struct {
+        dwDataOffset: u32,
+        dwDataSize: u32,
+    };
     dwTotalSize: u32,
     dwNumberOfItems: u32,
     DataList: [1]WLAN_RAW_DATA_LIST_0,

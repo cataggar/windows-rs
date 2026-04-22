@@ -14,20 +14,20 @@ pub const AtlThunkData_t = extern struct {
     Value: isize,
 };
 pub const PROCESS_HEAP_ENTRY = extern struct {
-pub const PROCESS_HEAP_ENTRY_0 = extern union {
-pub const _Block_e__Struct = extern struct {
-    hMem: @"Windows.Win32.Foundation".HANDLE,
-    dwReserved: [3]u32,
-};
-pub const _Region_e__Struct = extern struct {
-    dwCommittedSize: u32,
-    dwUnCommittedSize: u32,
-    lpFirstBlock: *anyopaque,
-    lpLastBlock: *anyopaque,
-};
-    Block: _Block_e__Struct,
-    Region: _Region_e__Struct,
-};
+    pub const PROCESS_HEAP_ENTRY_0 = extern union {
+        pub const _Block_e__Struct = extern struct {
+            hMem: @"Windows.Win32.Foundation".HANDLE,
+            dwReserved: [3]u32,
+        };
+        pub const _Region_e__Struct = extern struct {
+            dwCommittedSize: u32,
+            dwUnCommittedSize: u32,
+            lpFirstBlock: *anyopaque,
+            lpLastBlock: *anyopaque,
+        };
+        Block: _Block_e__Struct,
+        Region: _Region_e__Struct,
+    };
     lpData: *anyopaque,
     cbData: u32,
     cbOverhead: u8,
@@ -47,13 +47,13 @@ pub const WIN32_MEMORY_RANGE_ENTRY = extern struct {
     NumberOfBytes: usize,
 };
 pub const WIN32_MEMORY_REGION_INFORMATION = extern struct {
-pub const WIN32_MEMORY_REGION_INFORMATION_0 = extern union {
-pub const WIN32_MEMORY_REGION_INFORMATION_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: WIN32_MEMORY_REGION_INFORMATION_0_0,
-};
+    pub const WIN32_MEMORY_REGION_INFORMATION_0 = extern union {
+        pub const WIN32_MEMORY_REGION_INFORMATION_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: WIN32_MEMORY_REGION_INFORMATION_0_0,
+    };
     AllocationBase: *anyopaque,
     AllocationProtect: u32,
     Anonymous: WIN32_MEMORY_REGION_INFORMATION_0,
@@ -80,9 +80,9 @@ pub const WIN32_MEMORY_PARTITION_INFORMATION = extern struct {
     PartitionId: u32,
 };
 pub const WIN32_MEMORY_NUMA_PERFORMANCE_ENTRY = extern struct {
-pub const _Flags_e__Struct = extern struct {
-    _bitfield: u8,
-};
+    pub const _Flags_e__Struct = extern struct {
+        _bitfield: u8,
+    };
     InitiatorNodeNumber: u32,
     TargetNodeNumber: u32,
     DataType: u8,
@@ -129,16 +129,16 @@ pub const CFG_CALL_TARGET_INFO = extern struct {
     Flags: usize,
 };
 pub const MEM_EXTENDED_PARAMETER = extern struct {
-pub const MEM_EXTENDED_PARAMETER_0 = extern struct {
-    _bitfield: u64,
-};
-pub const MEM_EXTENDED_PARAMETER_1 = extern union {
-    ULong64: u64,
-    Pointer: *anyopaque,
-    Size: usize,
-    Handle: @"Windows.Win32.Foundation".HANDLE,
-    ULong: u32,
-};
+    pub const MEM_EXTENDED_PARAMETER_0 = extern struct {
+        _bitfield: u64,
+    };
+    pub const MEM_EXTENDED_PARAMETER_1 = extern union {
+        ULong64: u64,
+        Pointer: *anyopaque,
+        Size: usize,
+        Handle: @"Windows.Win32.Foundation".HANDLE,
+        ULong: u32,
+    };
     Anonymous1: MEM_EXTENDED_PARAMETER_0,
     Anonymous2: MEM_EXTENDED_PARAMETER_1,
 };

@@ -29,14 +29,14 @@ pub const smiCNTR64 = extern struct {
     lopart: u32,
 };
 pub const smiVALUE = extern struct {
-pub const _value_e__Union = extern union {
-    sNumber: i32,
-    uNumber: u32,
-    hNumber: smiCNTR64,
-    string: smiOCTETS,
-    oid: smiOID,
-    empty: u8,
-};
+    pub const _value_e__Union = extern union {
+        sNumber: i32,
+        uNumber: u32,
+        hNumber: smiCNTR64,
+        string: smiOCTETS,
+        oid: smiOID,
+        empty: u8,
+    };
     syntax: u32,
     value: _value_e__Union,
 };

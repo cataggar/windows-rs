@@ -93,10 +93,10 @@ pub const SHNAMEMAPPINGW = extern struct {
     cchNewPath: i32,
 };
 pub const SHELLEXECUTEINFOA = extern struct {
-pub const SHELLEXECUTEINFOA_0 = extern union {
-    hIcon: @"Windows.Win32.Foundation".HANDLE,
-    hMonitor: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const SHELLEXECUTEINFOA_0 = extern union {
+        hIcon: @"Windows.Win32.Foundation".HANDLE,
+        hMonitor: @"Windows.Win32.Foundation".HANDLE,
+    };
     cbSize: u32,
     fMask: u32,
     hwnd: @"Windows.Win32.Foundation".HWND,
@@ -114,10 +114,10 @@ pub const SHELLEXECUTEINFOA_0 = extern union {
     hProcess: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const SHELLEXECUTEINFOW = extern struct {
-pub const SHELLEXECUTEINFOW_0 = extern union {
-    hIcon: @"Windows.Win32.Foundation".HANDLE,
-    hMonitor: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const SHELLEXECUTEINFOW_0 = extern union {
+        hIcon: @"Windows.Win32.Foundation".HANDLE,
+        hMonitor: @"Windows.Win32.Foundation".HANDLE,
+    };
     cbSize: u32,
     fMask: u32,
     hwnd: @"Windows.Win32.Foundation".HWND,
@@ -160,10 +160,10 @@ pub const SHQUERYRBINFO = extern struct {
     i64NumItems: i64,
 };
 pub const NOTIFYICONDATAA = extern struct {
-pub const NOTIFYICONDATAA_0 = extern union {
-    uTimeout: u32,
-    uVersion: u32,
-};
+    pub const NOTIFYICONDATAA_0 = extern union {
+        uTimeout: u32,
+        uVersion: u32,
+    };
     cbSize: u32,
     hWnd: @"Windows.Win32.Foundation".HWND,
     uID: u32,
@@ -181,10 +181,10 @@ pub const NOTIFYICONDATAA_0 = extern union {
     hBalloonIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
 };
 pub const NOTIFYICONDATAW = extern struct {
-pub const NOTIFYICONDATAW_0 = extern union {
-    uTimeout: u32,
-    uVersion: u32,
-};
+    pub const NOTIFYICONDATAW_0 = extern union {
+        uTimeout: u32,
+        uVersion: u32,
+    };
     cbSize: u32,
     hWnd: @"Windows.Win32.Foundation".HWND,
     uID: u32,

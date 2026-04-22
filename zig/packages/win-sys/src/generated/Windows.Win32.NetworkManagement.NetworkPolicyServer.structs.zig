@@ -7,10 +7,10 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 
 pub const RADIUS_ATTRIBUTE = extern struct {
-pub const RADIUS_ATTRIBUTE_0 = extern union {
-    dwValue: u32,
-    lpValue: *u8,
-};
+    pub const RADIUS_ATTRIBUTE_0 = extern union {
+        dwValue: u32,
+        lpValue: *u8,
+    };
     dwAttrType: u32,
     fDataType: i32,
     cbDataLength: u32,

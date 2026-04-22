@@ -336,13 +336,13 @@ pub const NVCACHE_HINT_PAYLOAD = extern struct {
     Reserved: [4]u8,
 };
 pub const NV_SEP_CACHE_PARAMETER = extern struct {
-pub const _Flags_e__Union = extern union {
-pub const _CacheFlags_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    CacheFlags: _CacheFlags_e__Struct,
-    CacheFlagsSet: u8,
-};
+    pub const _Flags_e__Union = extern union {
+        pub const _CacheFlags_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        CacheFlags: _CacheFlags_e__Struct,
+        CacheFlagsSet: u8,
+    };
     Version: u32,
     Size: u32,
     Flags: _Flags_e__Union,
@@ -391,25 +391,25 @@ pub const NVCACHE_PRIORITY_LEVEL_DESCRIPTOR = extern struct {
     Reserved1: u32,
 };
 pub const HYBRID_INFORMATION = extern struct {
-pub const _Attributes_e__Struct = extern struct {
-    _bitfield: u32,
-};
-pub const _Priorities_e__Struct = extern struct {
-pub const _SupportedCommands_e__Struct = extern struct {
-    _bitfield: u32,
-    MaxEvictCommands: u32,
-    MaxLbaRangeCountForEvict: u32,
-    MaxLbaRangeCountForChangeLba: u32,
-};
-    PriorityLevelCount: u8,
-    MaxPriorityBehavior: @"Windows.Win32.Foundation".BOOLEAN,
-    OptimalWriteGranularity: u8,
-    Reserved: u8,
-    DirtyThresholdLow: u32,
-    DirtyThresholdHigh: u32,
-    SupportedCommands: _SupportedCommands_e__Struct,
-    Priority: [1]NVCACHE_PRIORITY_LEVEL_DESCRIPTOR,
-};
+    pub const _Attributes_e__Struct = extern struct {
+        _bitfield: u32,
+    };
+    pub const _Priorities_e__Struct = extern struct {
+        pub const _SupportedCommands_e__Struct = extern struct {
+            _bitfield: u32,
+            MaxEvictCommands: u32,
+            MaxLbaRangeCountForEvict: u32,
+            MaxLbaRangeCountForChangeLba: u32,
+        };
+        PriorityLevelCount: u8,
+        MaxPriorityBehavior: @"Windows.Win32.Foundation".BOOLEAN,
+        OptimalWriteGranularity: u8,
+        Reserved: u8,
+        DirtyThresholdLow: u32,
+        DirtyThresholdHigh: u32,
+        SupportedCommands: _SupportedCommands_e__Struct,
+        Priority: [1]NVCACHE_PRIORITY_LEVEL_DESCRIPTOR,
+    };
     Version: u32,
     Size: u32,
     HybridSupported: @"Windows.Win32.Foundation".BOOLEAN,
@@ -445,10 +445,10 @@ pub const FIRMWARE_REQUEST_BLOCK = extern struct {
     DataBufferLength: u32,
 };
 pub const STORAGE_FIRMWARE_SLOT_INFO = extern struct {
-pub const _Revision_e__Union = extern union {
-    Info: [8]u8,
-    AsUlonglong: u64,
-};
+    pub const _Revision_e__Union = extern union {
+        Info: [8]u8,
+        AsUlonglong: u64,
+    };
     SlotNumber: u8,
     ReadOnly: @"Windows.Win32.Foundation".BOOLEAN,
     Reserved: [6]u8,
@@ -556,9 +556,9 @@ pub const DUMP_DRIVER_EX = extern struct {
     DriverFullPath: NTSCSI_UNICODE_STRING,
 };
 pub const STORAGE_ENDURANCE_INFO = extern struct {
-pub const _Flags_e__Struct = extern struct {
-    _bitfield: u32,
-};
+    pub const _Flags_e__Struct = extern struct {
+        _bitfield: u32,
+    };
     ValidFields: u32,
     GroupId: u32,
     Flags: _Flags_e__Struct,
@@ -595,9 +595,9 @@ pub const IKE_AUTHENTICATION_PRESHARED_KEY = extern struct {
     Key: *u8,
 };
 pub const IKE_AUTHENTICATION_INFORMATION = extern struct {
-pub const IKE_AUTHENTICATION_INFORMATION_0 = extern union {
-    PsKey: IKE_AUTHENTICATION_PRESHARED_KEY,
-};
+    pub const IKE_AUTHENTICATION_INFORMATION_0 = extern union {
+        PsKey: IKE_AUTHENTICATION_PRESHARED_KEY,
+    };
     AuthMethod: i32,
     Anonymous: IKE_AUTHENTICATION_INFORMATION_0,
 };

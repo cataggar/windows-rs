@@ -11,10 +11,10 @@ pub const ROPARAMIIDHANDLE = extern struct {
     Value: *anyopaque,
 };
 pub const IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_SMALL = extern struct {
-pub const IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_SMALL_0 = extern union {
-    ClassToken: u32,
-    FilterOffset: u32,
-};
+    pub const IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_SMALL_0 = extern union {
+        ClassToken: u32,
+        FilterOffset: u32,
+    };
     _bitfield1: u32,
     _bitfield2: u32,
     Anonymous: IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_SMALL_0,
@@ -27,10 +27,10 @@ pub const IMAGE_COR_ILMETHOD_SECT_FAT = extern struct {
     _bitfield: u32,
 };
 pub const IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_FAT = extern struct {
-pub const IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_FAT_0 = extern union {
-    ClassToken: u32,
-    FilterOffset: u32,
-};
+    pub const IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_FAT_0 = extern union {
+        ClassToken: u32,
+        FilterOffset: u32,
+    };
     Flags: i32,
     TryOffset: u32,
     TryLength: u32,
