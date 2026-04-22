@@ -37,10 +37,10 @@ pub fn main() !void {
 
     const h_process = win.GetCurrentProcess();
 
-    var h_token: isize = 0;
+    var h_token: ?*anyopaque = null;
     const open_ok = win.OpenProcessToken(h_process, sec.TOKEN_QUERY, &h_token);
     std.debug.assert(open_ok != 0);
-    std.debug.assert(h_token != 0);
+    std.debug.assert(h_token != null);
     defer _ = win.CloseHandle(h_token);
 
     // TOKEN_ELEVATION has a single DWORD field (TokenIsElevated).
@@ -58,6 +58,6 @@ pub fn main() !void {
 
     std.debug.print(
         "hProcess=0x{x} | hToken=0x{x} | TokenIsElevated={d}\n",
-        .{ @as(usize, @bitCast(h_process)), @as(usize, @bitCast(h_token)), elevation },
+        .{ @intFromPtr(h_process), @intFromPtr(h_token), elevation },
     );
 }

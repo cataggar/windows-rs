@@ -45,14 +45,14 @@ pub fn main() !void {
         null,
         fs.CREATE_ALWAYS,
         fs.FILE_ATTRIBUTE_NORMAL,
-        0,
+        null,
     );
-    if (handle == fnd.INVALID_HANDLE_VALUE) {
+    if (@intFromPtr(handle) == @as(usize, @bitCast(@as(isize, fnd.INVALID_HANDLE_VALUE)))) {
         const err = win.GetLastError();
         std.debug.print("CreateFileW failed: GetLastError = {d}\n", .{err});
         return error.CreateFileFailed;
     }
-    std.debug.assert(handle != 0);
+    std.debug.assert(handle != null);
 
     // --- WriteFile -----------------------------------------------------
     var bytes_written: u32 = 0;
@@ -76,6 +76,6 @@ pub fn main() !void {
 
     std.debug.print(
         "CreateFileW ok (handle=0x{x}) | WriteFile wrote {d} bytes | CloseHandle + DeleteFileW ok\n",
-        .{ @as(usize, @bitCast(handle)), bytes_written },
+        .{ @intFromPtr(handle), bytes_written },
     );
 }

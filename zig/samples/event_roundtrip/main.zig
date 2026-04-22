@@ -30,7 +30,7 @@ pub fn main() !void {
 
     // lpEventAttributes=null, bManualReset=TRUE, bInitialState=FALSE, lpName=null.
     const handle = win.CreateEventW(null, 1, 0, null);
-    if (handle == 0) {
+    if (handle == null) {
         std.debug.print("CreateEventW failed\n", .{});
         return error.CreateEventFailed;
     }
@@ -47,6 +47,6 @@ pub fn main() !void {
 
     std.debug.print(
         "CreateEventW = 0x{x} | Wait(pre-set) = {d} (TIMEOUT) | SetEvent ok | Wait(post-set) = {d} (OBJECT_0)\n",
-        .{ @as(usize, @bitCast(handle)), rc1, rc2 },
+        .{ @intFromPtr(handle), rc1, rc2 },
     );
 }

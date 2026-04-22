@@ -18,7 +18,7 @@ pub fn main() !void {
     });
 
     const desktop = win.GetDesktopWindow();
-    if (desktop == 0) {
+    if (desktop == null) {
         std.debug.print("GetDesktopWindow returned null\n", .{});
         return error.NoDesktopWindow;
     }
@@ -26,11 +26,11 @@ pub fn main() !void {
     const real = win.IsWindow(desktop);
     std.debug.assert(real != 0);
 
-    const fake = win.IsWindow(0);
+    const fake = win.IsWindow(null);
     std.debug.assert(fake == 0);
 
     std.debug.print(
         "GetDesktopWindow = 0x{x} | IsWindow(desktop) = {d} | IsWindow(null) = {d}\n",
-        .{ @as(usize, @bitCast(desktop)), real, fake },
+        .{ @intFromPtr(desktop), real, fake },
     );
 }

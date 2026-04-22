@@ -46,7 +46,7 @@ pub fn main() !void {
     var fd: win_sys.structs.WIN32_FIND_DATAW = undefined;
 
     const h = win.FindFirstFileW(@constCast(pattern.ptr), &fd);
-    if (h == foundation.INVALID_HANDLE_VALUE) {
+    if (@intFromPtr(h) == @as(usize, @bitCast(@as(isize, foundation.INVALID_HANDLE_VALUE)))) {
         const e = win.GetLastError();
         std.debug.print("FindFirstFileW failed: GetLastError={d}\n", .{e});
         return;

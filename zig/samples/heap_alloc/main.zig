@@ -22,7 +22,7 @@ pub fn main() !void {
     });
 
     const heap = win.GetProcessHeap();
-    if (heap == 0) return error.NoProcessHeap;
+    if (heap == null) return error.NoProcessHeap;
 
     const size: usize = 1024;
     const raw = win.HeapAlloc(heap, mem.HEAP_ZERO_MEMORY, size);
@@ -41,6 +41,6 @@ pub fn main() !void {
 
     std.debug.print(
         "GetProcessHeap = 0x{x} | HeapAlloc({d}) ok | round-trip {d} bytes | HeapFree ok\n",
-        .{ @as(usize, @bitCast(heap)), size, payload.len },
+        .{ @intFromPtr(heap), size, payload.len },
     );
 }

@@ -62,56 +62,32 @@ fn winmdAlias(comptime ns: []const u8, comptime name: []const u8) ?type {
     return @field(aliases, name);
 }
 
-/// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
-/// Values are ZST markers; the actual Zig type comes from
-/// `fnTypeForAlias`. This keeps the alias list in one place and
-/// compile-checks every name at comptime.
-fn fnTypeForAlias(comptime name: []const u8) ?type {
-    // PSID lacks NativeTypedefAttribute in the current winmd and its
-    // sole field isn't named "Value", so the generator's auto-alias
-    // pass doesn't pick it up. Hand-listed until that's relaxed.
-    if (std.mem.eql(u8, name, "PSID")) return ?*anyopaque;
+/// Consult the generator-emitted `<ns>.structs.zig` sidecar for a
+/// concrete `extern struct`/`extern union` matching the TypeRef. This
+/// retires the hand-listed layout-exposed struct aliases (FILETIME,
+/// WIN32_FIND_DATAW, SYSTEM_INFO, …) by pulling directly from the
+/// namespace the TypeRef points at — no central map required.
+///
+/// Returns null if the namespace has no generated structs sidecar, or
+/// if the sidecar doesn't declare a type of that name (e.g. opaque
+/// aliases that stay in `fnTypeForAlias`).
+fn structAlias(comptime ns: []const u8, comptime name: []const u8) ?type {
+    if (!@hasDecl(generated_structs, ns)) return null;
+    const ns_structs = @field(generated_structs, ns);
+    if (!@hasDecl(ns_structs, name)) return null;
+    return @field(ns_structs, name);
+}
 
-    // FARPROC and friends are raw function pointers; project()
-    // surfaces them as opaque so callers @ptrCast to the concrete
-    // signature they need (GetProcAddress's whole point).
+/// Hand-listed `Windows.Win32.Foundation`-area TypeRefs that neither
+/// `winmdAlias` (no matching entry in the generated `aliases` block)
+/// nor `structAlias` (no matching decl in any `<ns>.structs.zig`
+/// sidecar) can resolve. Currently this reduces to a single entry:
+/// FARPROC, which is a raw function-pointer alias GetProcAddress
+/// returns — callers `@ptrCast` it to the concrete signature they
+/// need so the sys layer surfaces it as `?*const anyopaque`.
+fn fnTypeForAlias(comptime name: []const u8) ?type {
     if (std.mem.eql(u8, name, "FARPROC")) return ?*const anyopaque;
 
-    // Struct TypeRefs that win-sys treats as opaque: callers pass
-    // pointers (usually null) rather than filling fields in. The
-    // high-level `win` layer will wrap these with proper structs
-    // when a call actually needs to populate them.
-    //
-    // SECURITY_ATTRIBUTES is the canonical example — almost every
-    // handle-creating Win32 API takes `LPSECURITY_ATTRIBUTES` as a
-    // "pass null for default" parameter. Keeping it opaque lets
-    // CreateEventW/CreateMutex/etc. project without pulling in the
-    // whole Security namespace's struct layouts.
-    if (std.mem.eql(u8, name, "SECURITY_ATTRIBUTES")) return anyopaque;
-    // OVERLAPPED is the async-I/O control block used by ReadFile/
-    // WriteFile. Synchronous callers pass null; async callers will
-    // eventually want the real struct, but keep opaque at the sys
-    // layer until the I/O namespace is actually wired.
-    if (std.mem.eql(u8, name, "OVERLAPPED")) return anyopaque;
-
-    // Concrete Win32 structs that callers need to *read* field-wise.
-    // Unlike the opaque aliases above, these expose their layout so
-    // samples can access e.g. cFileName without @ptrCast gymnastics.
-    //
-    // The generator will eventually emit these from winmd TypeDef
-    // Field tables; for now, handcraft them here as the first test
-    // of the pattern. Layouts are `extern struct` to guarantee C
-    // ABI compat — Zig is free to reorder plain structs but extern
-    // is fixed field order, no padding insertions beyond C rules.
-    if (std.mem.eql(u8, name, "FILETIME")) return structs.FILETIME;
-    if (std.mem.eql(u8, name, "WIN32_FIND_DATAW")) return structs.WIN32_FIND_DATAW;
-    // SYSTEM_INFO has an anonymous union (`Anonymous: SYSTEM_INFO_0`)
-    // at offset 0 — the winmd encodes this as a NestedType reference
-    // `SYSTEM_INFO_0 → SYSTEM_INFO`. For now, match the top-level
-    // struct by its canonical name; the inner union and `_0_0` struct
-    // are only referenced *from inside* SYSTEM_INFO's layout, so they
-    // never surface through an API signature and don't need aliases.
-    if (std.mem.eql(u8, name, "SYSTEM_INFO")) return structs.SYSTEM_INFO;
     return null;
 }
 
@@ -196,17 +172,24 @@ fn tyToZigType(
             // Three-tier lookup:
             //  1. The TypeRef's own namespace index may expose an
             //     `aliases` block — emitted by `winbindgen --index`
-            //     for every `System.Enum`-extending TypeDef. Covers
-            //     all flag/status enums mechanically (WIN32_ERROR,
-            //     THREAD_ACCESS_RIGHTS, etc.) — no hand-list needed.
-            //  2. Hand-list in `fnTypeForAlias` for shapes the
-            //     generator can't derive from a single field yet:
-            //     `NativeTypedefAttribute` handles (HANDLE, HWND),
-            //     strings (PWSTR, PSTR, BSTR), and a couple of
-            //     opaque/concrete struct aliases.
-            //  3. @compileError so missing TypeRefs surface at the
+            //     for every `System.Enum`-extending TypeDef and every
+            //     single-field typedef wrapper (BOOL/HRESULT/PWSTR/H*…).
+            //     Covers all flag/status enums and NativeTypedef
+            //     handles mechanically — no hand-list needed.
+            //  2. The TypeRef's own namespace `structs` sidecar may
+            //     declare a concrete `extern struct`/`extern union`
+            //     with the same name. Retires the hand-listed layout-
+            //     exposed aliases (FILETIME, WIN32_FIND_DATAW,
+            //     SYSTEM_INFO) by pulling directly from the namespace.
+            //  3. Hand-list in `fnTypeForAlias` for shapes the
+            //     generator can't derive: PSID (no Value field,
+            //     no NativeTypedefAttribute), FARPROC (function
+            //     pointer), and opaque aliases like SECURITY_ATTRIBUTES
+            //     and OVERLAPPED that are passed as null pointers.
+            //  4. @compileError so missing TypeRefs surface at the
             //     call site rather than silently projecting as void.
             if (winmdAlias(resolved.namespace, resolved.name)) |a| break :blk a;
+            if (structAlias(resolved.namespace, resolved.name)) |a| break :blk a;
             const aliased = fnTypeForAlias(resolved.name) orelse
                 @compileError("project: no alias for TypeRef " ++
                     resolved.namespace ++ "." ++ resolved.name ++
@@ -497,17 +480,18 @@ test "project: WindowsAndMessaging { MessageBoxW } type-checks" {
 test "project: Storage.FileSystem { CreateFileW, WriteFile, DeleteFileW } type-checks" {
     // CreateFileW signature:
     //   HANDLE CreateFileW(
-    //       PCWSTR                lpFileName,        -- PWSTR in winmd
-    //       u32                   dwDesiredAccess,   -- bare u32 (no enum wrapper)
-    //       FILE_SHARE_MODE       dwShareMode,       -- u32 alias
-    //       SECURITY_ATTRIBUTES*  lpSecurityAttrs,   -- anyopaque alias → ?*anyopaque
+    //       PCWSTR                    lpFileName,        -- PWSTR in winmd
+    //       u32                       dwDesiredAccess,   -- bare u32 (no enum wrapper)
+    //       FILE_SHARE_MODE           dwShareMode,       -- u32 alias
+    //       SECURITY_ATTRIBUTES*      lpSecurityAttrs,   -- concrete struct via structAlias
     //       FILE_CREATION_DISPOSITION dwCreationDisposition, -- u32 alias
     //       FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes,  -- u32 alias
-    //       HANDLE                hTemplateFile,
+    //       HANDLE                    hTemplateFile,
     //   );
     //
     // WriteFile(HANDLE, *const u8, u32, *u32, OVERLAPPED*) -> BOOL.
-    //   OVERLAPPED aliases to anyopaque so synchronous callers pass null.
+    //   OVERLAPPED resolves via structAlias to the concrete sidecar
+    //   struct in `Windows.Win32.System.IO.structs`.
     //
     // DeleteFileW(PCWSTR) -> BOOL. Exercises a single-PWSTR API and
     // keeps the sample able to clean up its temp file without leaking.
@@ -515,17 +499,20 @@ test "project: Storage.FileSystem { CreateFileW, WriteFile, DeleteFileW } type-c
         .@"Windows.Win32.Storage.FileSystem" = .{ "CreateFileW", "WriteFile", "DeleteFileW" },
     });
 
+    const SEC_ATTR = generated_structs.@"Windows.Win32.Security".SECURITY_ATTRIBUTES;
+    const OVERLAPPED = generated_structs.@"Windows.Win32.System.IO".OVERLAPPED;
+
     try std.testing.expectEqual(
         @as(
             type,
-            *const fn (?[*:0]u16, u32, u32, ?*anyopaque, u32, u32, ?*anyopaque) callconv(.winapi) ?*anyopaque,
+            *const fn (?[*:0]u16, u32, u32, ?*SEC_ATTR, u32, u32, ?*anyopaque) callconv(.winapi) ?*anyopaque,
         ),
         @TypeOf(win.CreateFileW),
     );
     try std.testing.expectEqual(
         @as(
             type,
-            *const fn (?*anyopaque, ?*u8, u32, ?*u32, ?*anyopaque) callconv(.winapi) i32,
+            *const fn (?*anyopaque, ?*u8, u32, ?*u32, ?*OVERLAPPED) callconv(.winapi) i32,
         ),
         @TypeOf(win.WriteFile),
     );

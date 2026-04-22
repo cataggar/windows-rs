@@ -38,8 +38,8 @@ pub fn main(init: std.process.Init) !void {
     // literal into a mutable buffer to feed LoadLibraryW.
     var kernel32_name = std.unicode.utf8ToUtf16LeStringLiteral("kernel32.dll").*;
     const hmod = win.LoadLibraryW(&kernel32_name);
-    if (hmod == 0) return error.LoadLibraryWFailed;
-    try stdout.print("LoadLibraryW(kernel32.dll) = 0x{x}\n", .{@as(usize, @bitCast(hmod))});
+    if (hmod == null) return error.LoadLibraryWFailed;
+    try stdout.print("LoadLibraryW(kernel32.dll) = 0x{x}\n", .{@intFromPtr(hmod)});
     defer _ = win.FreeLibrary(hmod);
 
     // `GetCurrentProcessId` is exported by name. PSTR in the winmd
