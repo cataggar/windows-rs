@@ -194,6 +194,30 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.System.IO.structs.zig");
     pub const @"Windows.Win32.System.Environment" =
         @import("generated/Windows.Win32.System.Environment.structs.zig");
+    pub const @"Windows.Win32.System.DataExchange" =
+        @import("generated/Windows.Win32.System.DataExchange.structs.zig");
+    pub const @"Windows.Win32.Security.Authorization" =
+        @import("generated/Windows.Win32.Security.Authorization.structs.zig");
+    pub const @"Windows.Win32.Security.Cryptography" =
+        @import("generated/Windows.Win32.Security.Cryptography.structs.zig");
+    pub const @"Windows.Win32.Globalization" =
+        @import("generated/Windows.Win32.Globalization.structs.zig");
+    pub const @"Windows.Win32.UI.Input.KeyboardAndMouse" =
+        @import("generated/Windows.Win32.UI.Input.KeyboardAndMouse.structs.zig");
+    pub const @"Windows.Win32.UI.Shell.Common" =
+        @import("generated/Windows.Win32.UI.Shell.Common.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.Ndis" =
+        @import("generated/Windows.Win32.NetworkManagement.Ndis.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.WNet" =
+        @import("generated/Windows.Win32.NetworkManagement.WNet.structs.zig");
+    pub const @"Windows.Win32.Networking.WinSock" =
+        @import("generated/Windows.Win32.Networking.WinSock.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.IpHelper" =
+        @import("generated/Windows.Win32.NetworkManagement.IpHelper.structs.zig");
+    pub const @"Windows.Win32.UI.Shell" =
+        @import("generated/Windows.Win32.UI.Shell.structs.zig");
+    pub const @"Windows.Win32.System.Services" =
+        @import("generated/Windows.Win32.System.Services.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
