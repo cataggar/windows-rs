@@ -10550,3 +10550,14 @@ pub const NTDDI_MAXVER = 2560;
 pub const _WIN32_IE_MAXVER = 2560;
 pub const _WIN32_WINNT_MAXVER = 2560;
 pub const WINVER_MAXVER = 2560;
+
+pub const aliases = struct {
+    pub const WIN32_ERROR = u32;
+    pub const WAIT_EVENT = u32;
+    pub const NTSTATUS_FACILITY_CODE = u32;
+    pub const NTSTATUS_SEVERITY_CODE = u32;
+    pub const DUPLICATE_HANDLE_OPTIONS = u32;
+    pub const HANDLE_FLAGS = u32;
+    pub const GENERIC_ACCESS_RIGHTS = u32;
+    pub const OBJECT_ATTRIBUTE_FLAGS = u32;
+};

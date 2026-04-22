@@ -303,3 +303,25 @@ pub const HeapCompatibilityInformation = 0;
 pub const HeapEnableTerminationOnCorruption = 1;
 pub const HeapOptimizeResources = 3;
 pub const HeapTag = 7;
+
+pub const aliases = struct {
+    pub const SECTION_FLAGS = u32;
+    pub const FILE_MAP = u32;
+    pub const HEAP_FLAGS = u32;
+    pub const PAGE_PROTECTION_FLAGS = u32;
+    pub const UNMAP_VIEW_OF_FILE_FLAGS = u32;
+    pub const VIRTUAL_FREE_TYPE = u32;
+    pub const VIRTUAL_ALLOCATION_TYPE = u32;
+    pub const LOCAL_ALLOC_FLAGS = u32;
+    pub const GLOBAL_ALLOC_FLAGS = u32;
+    pub const PAGE_TYPE = u32;
+    pub const SETPROCESSWORKINGSETSIZEEX_FLAGS = u32;
+    pub const MEMORY_RESOURCE_NOTIFICATION_TYPE = i32;
+    pub const OFFER_PRIORITY = i32;
+    pub const WIN32_MEMORY_INFORMATION_CLASS = i32;
+    pub const WIN32_MEMORY_PARTITION_INFORMATION_CLASS = i32;
+    pub const MEM_EXTENDED_PARAMETER_TYPE = i32;
+    pub const MEM_DEDICATED_ATTRIBUTE_TYPE = i32;
+    pub const MEM_SECTION_EXTENDED_PARAMETER_TYPE = i32;
+    pub const HEAP_INFORMATION_CLASS = i32;
+};

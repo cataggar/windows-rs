@@ -601,3 +601,23 @@ pub const DEPPolicyAlwaysOn = 1;
 pub const DEPPolicyOptIn = 2;
 pub const DEPPolicyOptOut = 3;
 pub const DEPTotalPolicyCount = 4;
+
+pub const aliases = struct {
+    pub const VER_FLAGS = u32;
+    pub const IMAGE_FILE_MACHINE = u16;
+    pub const PROCESSOR_ARCHITECTURE = u16;
+    pub const FIRMWARE_TABLE_PROVIDER = u32;
+    pub const USER_CET_ENVIRONMENT = u32;
+    pub const OS_PRODUCT_TYPE = u32;
+    pub const DEVICEFAMILYINFOENUM = u32;
+    pub const DEVICEFAMILYDEVICEFORM = u32;
+    pub const COMPUTER_NAME_FORMAT = i32;
+    pub const DEVELOPER_DRIVE_ENABLEMENT_STATE = i32;
+    pub const FIRMWARE_TYPE = i32;
+    pub const LOGICAL_PROCESSOR_RELATIONSHIP = i32;
+    pub const PROCESSOR_CACHE_TYPE = i32;
+    pub const CPU_SET_INFORMATION_TYPE = i32;
+    pub const OS_DEPLOYEMENT_STATE_VALUES = i32;
+    pub const RTL_SYSTEM_GLOBAL_DATA_ID = i32;
+    pub const DEP_SYSTEM_POLICY_TYPE = i32;
+};

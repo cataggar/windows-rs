@@ -715,6 +715,37 @@ pub fn emitMethodIndex(
             }
         }
     }
+
+    // Fourth pass: emit `pub const aliases = struct { ... };` —
+    // a per-namespace lookup from enum TypeDef name to the Zig
+    // integer type that backs its `value__` field. Lets `project()`
+    // auto-project TypeRefs like `BOOL`, `HRESULT`, `WIN32_ERROR`,
+    // etc. without a hand-maintained switch in `project.zig`.
+    //
+    // Only `System.Enum`-extending TypeDefs are surfaced here;
+    // `NativeTypedefAttribute` markers for handles/strings still
+    // require the hand-list (they project to pointer-shaped types,
+    // not primitives, and the shape isn't mechanically derivable
+    // from a single field sig yet).
+    var any_alias = false;
+    row = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok == 0) continue;
+        const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+        if (!std.mem.eql(u8, base.namespace, "System")) continue;
+        if (!std.mem.eql(u8, base.name, "Enum")) continue;
+
+        const repr = enumUnderlyingReprForRow(file, gpa, row) orelse continue;
+        const type_name = file.str(.type_def, row, 1);
+        if (!any_alias) {
+            try writer.writeAll("\npub const aliases = struct {\n");
+            any_alias = true;
+        }
+        try writer.print("    pub const {s} = {s};\n", .{ type_name, repr });
+    }
+    if (any_alias) try writer.writeAll("};\n");
 }
 
 /// Walk a MethodDef signature blob and record every TypeDefOrRef
@@ -3266,6 +3297,40 @@ test "collectStructsClosure walks cross-namespace TypeRef graph" {
     while (i < closure.len) : (i += 1) {
         try std.testing.expect(std.mem.lessThan(u8, closure[i - 1], closure[i]));
     }
+}
+
+test "emitMethodIndex emits aliases block for enum TypeDefs" {
+    const bytes = @embedFile("Windows.Win32.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitMethodIndex(
+        &buf.writer,
+        arena.allocator(),
+        &file,
+        "Windows.Win32.Foundation",
+        .x64,
+    );
+    const out = buf.written();
+
+    // Foundation hosts WIN32_ERROR, WAIT_EVENT, HANDLE_FLAGS, and
+    // a handful of other System.Enum-extending TypeDefs. They
+    // must all land in the emitted `aliases = struct { … };` block
+    // so `project.zig` can look them up by TypeRef name without a
+    // hand-maintained switch.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const aliases = struct {") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_ERROR = u32;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WAIT_EVENT = u32;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HANDLE_FLAGS = u32;") != null);
+    // BOOL and HRESULT are NativeTypedefAttribute wrappers, not
+    // `System.Enum` subclasses — they must *not* be emitted here.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL =") == null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT =") == null);
 }
 
 test "emitStructs renames MIDL anon nested types to <outer>_<index>" {

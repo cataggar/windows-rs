@@ -43,53 +43,52 @@ const generated = @import("generated/mod.zig");
 /// `zig build bindings` (which invokes `winbindgen --emit-mod`).
 pub const index = generated.index;
 
+/// Consult the generator-emitted `aliases` block in the TypeRef's
+/// own namespace index module. Returns the backing integer type
+/// for `System.Enum`-extending TypeDefs (WIN32_ERROR, THREAD_ACCESS_RIGHTS,
+/// …) or null if the namespace has no aliases block or the name
+/// isn't declared there.
+///
+/// This retires the majority of `fnTypeForAlias` by moving the
+/// source of truth into the `.winmd` — new enums show up without
+/// a code edit. Shapes the generator can't derive yet (handles,
+/// strings, opaque structs) stay in `fnTypeForAlias`.
+fn winmdAlias(comptime ns: []const u8, comptime name: []const u8) ?type {
+    if (!@hasDecl(index, ns)) return null;
+    const ns_idx = @field(index, ns);
+    if (!@hasDecl(ns_idx, "aliases")) return null;
+    const aliases = ns_idx.aliases;
+    if (!@hasDecl(aliases, name)) return null;
+    return @field(aliases, name);
+}
+
 /// Alias table for well-known `Windows.Win32.Foundation` TypeRefs.
 /// Values are ZST markers; the actual Zig type comes from
 /// `fnTypeForAlias`. This keeps the alias list in one place and
 /// compile-checks every name at comptime.
 fn fnTypeForAlias(comptime name: []const u8) ?type {
-    // Handles are all pointer-sized opaque values. Flag/error
-    // enums are u32. HRESULT/NTSTATUS are signed 32-bit status
-    // codes. String types are null-terminated pointers.
+    // NativeTypedefAttribute wrappers — these aren't `System.Enum`-
+    // extending TypeDefs, so the generator's `aliases` block
+    // doesn't cover them. Hand-listed until the generator learns
+    // to read NativeTypedefAttribute.
     if (std.mem.eql(u8, name, "BOOL")) return i32;
     if (std.mem.eql(u8, name, "HRESULT")) return i32;
     if (std.mem.eql(u8, name, "NTSTATUS")) return i32;
-    if (std.mem.eql(u8, name, "WIN32_ERROR")) return u32;
-    if (std.mem.eql(u8, name, "DUPLICATE_HANDLE_OPTIONS")) return u32;
-    if (std.mem.eql(u8, name, "HANDLE_FLAGS")) return u32;
-    if (std.mem.eql(u8, name, "LOAD_LIBRARY_FLAGS")) return u32;
-    if (std.mem.eql(u8, name, "WAIT_EVENT")) return u32;
-    if (std.mem.eql(u8, name, "STD_HANDLE")) return u32;
-    if (std.mem.eql(u8, name, "CONSOLE_MODE")) return u32;
-    if (std.mem.eql(u8, name, "MESSAGEBOX_STYLE")) return u32;
-    if (std.mem.eql(u8, name, "MESSAGEBOX_RESULT")) return i32;
-    if (std.mem.eql(u8, name, "FILE_SHARE_MODE")) return u32;
-    if (std.mem.eql(u8, name, "FILE_CREATION_DISPOSITION")) return u32;
-    if (std.mem.eql(u8, name, "FILE_FLAGS_AND_ATTRIBUTES")) return u32;
-    if (std.mem.eql(u8, name, "HEAP_FLAGS")) return u32;
-    if (std.mem.eql(u8, name, "VIRTUAL_ALLOCATION_TYPE")) return u32;
-    if (std.mem.eql(u8, name, "VIRTUAL_FREE_TYPE")) return u32;
-    if (std.mem.eql(u8, name, "PAGE_PROTECTION_FLAGS")) return u32;
-    // Security namespace — WELL_KNOWN_SID_TYPE is a C-style enum
-    // (first member `value__: i32`), and PSID is a raw opaque
-    // pointer (`*mut c_void` in windows-rs). Callers pass buffers
-    // or previously-returned handles; we don't inspect fields.
-    if (std.mem.eql(u8, name, "WELL_KNOWN_SID_TYPE")) return i32;
     if (std.mem.eql(u8, name, "PSID")) return ?*anyopaque;
-    // TOKEN_ACCESS_MASK is a flags enum (TOKEN_QUERY, TOKEN_ADJUST_*,
-    // etc.) backed by DWORD. TOKEN_INFORMATION_CLASS is a C enum
-    // selector for GetTokenInformation (TokenElevation = 20, etc.).
-    if (std.mem.eql(u8, name, "TOKEN_ACCESS_MASK")) return u32;
-    if (std.mem.eql(u8, name, "TOKEN_INFORMATION_CLASS")) return i32;
+
+    // Handles (NativeTypedefAttribute over an `isize` field).
     if (std.mem.eql(u8, name, "HANDLE")) return isize;
     if (std.mem.eql(u8, name, "HWND")) return isize;
     if (std.mem.eql(u8, name, "HMODULE")) return isize;
     if (std.mem.eql(u8, name, "HGLOBAL")) return isize;
     if (std.mem.eql(u8, name, "HLOCAL")) return isize;
     if (std.mem.eql(u8, name, "HRSRC")) return isize;
+
+    // String types — NativeTypedefAttribute over char-pointer fields.
     if (std.mem.eql(u8, name, "BSTR")) return ?[*:0]u16;
     if (std.mem.eql(u8, name, "PWSTR")) return ?[*:0]u16;
     if (std.mem.eql(u8, name, "PSTR")) return ?[*:0]u8;
+
     // FARPROC and friends are raw function pointers; project()
     // surfaces them as opaque so callers @ptrCast to the concrete
     // signature they need (GetProcAddress's whole point).
@@ -211,6 +210,20 @@ fn tyToZigType(
             const resolved = NamespaceIndex.resolveTypeRef(t.coded_index) orelse
                 @compileError("project: unresolved TypeRef in " ++ method_name ++
                     " (coded index missing from resolveTypeRef table)");
+            // Three-tier lookup:
+            //  1. The TypeRef's own namespace index may expose an
+            //     `aliases` block — emitted by `winbindgen --index`
+            //     for every `System.Enum`-extending TypeDef. Covers
+            //     all flag/status enums mechanically (WIN32_ERROR,
+            //     THREAD_ACCESS_RIGHTS, etc.) — no hand-list needed.
+            //  2. Hand-list in `fnTypeForAlias` for shapes the
+            //     generator can't derive from a single field yet:
+            //     `NativeTypedefAttribute` handles (HANDLE, HWND),
+            //     strings (PWSTR, PSTR, BSTR), and a couple of
+            //     opaque/concrete struct aliases.
+            //  3. @compileError so missing TypeRefs surface at the
+            //     call site rather than silently projecting as void.
+            if (winmdAlias(resolved.namespace, resolved.name)) |a| break :blk a;
             const aliased = fnTypeForAlias(resolved.name) orelse
                 @compileError("project: no alias for TypeRef " ++
                     resolved.namespace ++ "." ++ resolved.name ++

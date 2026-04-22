@@ -330,3 +330,12 @@ pub const Reserved3 = 4;
 pub const ConsoleSetForeground = 5;
 pub const ConsoleSetWindowOwner = 6;
 pub const ConsoleEndTask = 7;
+
+pub const aliases = struct {
+    pub const CONSOLE_MODE = u32;
+    pub const STD_HANDLE = u32;
+    pub const CONSOLE_CHARACTER_ATTRIBUTES = u16;
+    pub const ALLOC_CONSOLE_MODE = i32;
+    pub const ALLOC_CONSOLE_RESULT = i32;
+    pub const CONSOLECONTROL = i32;
+};
