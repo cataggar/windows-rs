@@ -288,6 +288,20 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.NetworkManagement.Dhcp.structs.zig");
     pub const @"Windows.Win32.NetworkManagement.Dns" =
         @import("generated/Windows.Win32.NetworkManagement.Dns.structs.zig");
+    pub const @"Windows.Win32.Security.Credentials" =
+        @import("generated/Windows.Win32.Security.Credentials.structs.zig");
+    pub const @"Windows.Win32.Security.ExtensibleAuthenticationProtocol" =
+        @import("generated/Windows.Win32.Security.ExtensibleAuthenticationProtocol.structs.zig");
+    pub const @"Windows.Win32.System.PasswordManagement" =
+        @import("generated/Windows.Win32.System.PasswordManagement.structs.zig");
+    pub const @"Windows.Win32.Security.Authentication.Identity" =
+        @import("generated/Windows.Win32.Security.Authentication.Identity.structs.zig");
+    pub const @"Windows.Win32.NetworkManagement.WiFi" =
+        @import("generated/Windows.Win32.NetworkManagement.WiFi.structs.zig");
+    pub const @"Windows.Win32.Networking.WinInet" =
+        @import("generated/Windows.Win32.Networking.WinInet.structs.zig");
+    pub const @"Windows.Win32.Networking.WinHttp" =
+        @import("generated/Windows.Win32.Networking.WinHttp.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
