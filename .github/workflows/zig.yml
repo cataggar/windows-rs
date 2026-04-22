@@ -123,11 +123,11 @@ jobs:
       matrix:
         include:
           - target: x86_64-windows
-            expected: 0x8664  # IMAGE_FILE_MACHINE_AMD64
+            expected: "0x8664"  # IMAGE_FILE_MACHINE_AMD64
           - target: x86-windows
-            expected: 0x014c  # IMAGE_FILE_MACHINE_I386
+            expected: "0x014c"  # IMAGE_FILE_MACHINE_I386
           - target: aarch64-windows
-            expected: 0xaa64  # IMAGE_FILE_MACHINE_ARM64
+            expected: "0xaa64"  # IMAGE_FILE_MACHINE_ARM64
     steps:
       - name: Checkout
         uses: actions/checkout@v6

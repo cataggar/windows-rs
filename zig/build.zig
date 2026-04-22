@@ -1234,7 +1234,13 @@ pub fn build(b: *std.Build) void {
     // Make `zig build test` also compile every sample, so low-level
     // type changes in win-sys (e.g. phase 6/U switching HANDLE from
     // `isize` to `?*anyopaque`) can't break sample code silently. The
-    // samples step only installs artifacts; it doesn't run them, so
-    // this keeps `test` cross-platform-safe.
-    test_step.dependOn(samples_step);
+    // samples step only installs artifacts; it doesn't run them.
+    // Only wire this in on Windows hosts — on Linux, native-target
+    // samples hit "dynamic library 'USER32' requires PIC" because
+    // `@extern(..., .{ .library_name = ... })` cannot resolve Windows
+    // DLLs on a Linux target. Linux test coverage still compiles every
+    // namespace via the `compile-check-bundle-*` cross loop above.
+    if (host_is_windows) {
+        test_step.dependOn(samples_step);
+    }
 }
