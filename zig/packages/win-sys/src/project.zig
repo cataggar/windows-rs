@@ -244,6 +244,20 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.UI.Controls.Dialogs.structs.zig");
     pub const @"Windows.Win32.UI.HiDpi" =
         @import("generated/Windows.Win32.UI.HiDpi.structs.zig");
+    pub const @"Windows.Win32.UI.Input" =
+        @import("generated/Windows.Win32.UI.Input.structs.zig");
+    pub const @"Windows.Win32.UI.Input.Pointer" =
+        @import("generated/Windows.Win32.UI.Input.Pointer.structs.zig");
+    pub const @"Windows.Win32.UI.Input.Touch" =
+        @import("generated/Windows.Win32.UI.Input.Touch.structs.zig");
+    pub const @"Windows.Win32.UI.ColorSystem" =
+        @import("generated/Windows.Win32.UI.ColorSystem.structs.zig");
+    pub const @"Windows.Win32.UI.TextServices" =
+        @import("generated/Windows.Win32.UI.TextServices.structs.zig");
+    pub const @"Windows.Win32.UI.Accessibility" =
+        @import("generated/Windows.Win32.UI.Accessibility.structs.zig");
+    pub const @"Windows.Win32.UI.Magnification" =
+        @import("generated/Windows.Win32.UI.Magnification.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
