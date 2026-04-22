@@ -218,6 +218,20 @@ const generated_structs = struct {
         @import("generated/Windows.Win32.UI.Shell.structs.zig");
     pub const @"Windows.Win32.System.Services" =
         @import("generated/Windows.Win32.System.Services.structs.zig");
+    pub const @"Windows.Win32.System.JobObjects" =
+        @import("generated/Windows.Win32.System.JobObjects.structs.zig");
+    pub const @"Windows.Win32.System.Power" =
+        @import("generated/Windows.Win32.System.Power.structs.zig");
+    pub const @"Windows.Win32.System.Rpc" =
+        @import("generated/Windows.Win32.System.Rpc.structs.zig");
+    pub const @"Windows.Win32.System.Performance" =
+        @import("generated/Windows.Win32.System.Performance.structs.zig");
+    pub const @"Windows.Win32.System.EventLog" =
+        @import("generated/Windows.Win32.System.EventLog.structs.zig");
+    pub const @"Windows.Win32.System.Diagnostics.ToolHelp" =
+        @import("generated/Windows.Win32.System.Diagnostics.ToolHelp.structs.zig");
+    pub const @"Windows.Win32.System.Diagnostics.Etw" =
+        @import("generated/Windows.Win32.System.Diagnostics.Etw.structs.zig");
 };
 
 /// Concrete struct projections. Public so callers can name the
