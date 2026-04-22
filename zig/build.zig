@@ -1266,6 +1266,16 @@ pub fn build(b: *std.Build) void {
             .extra_libs = &.{ "urlmon", "oleaut32", "ole32" },
             .needs_win = true,
         },
+        .{
+            .name = "hstring-roundtrip",
+            .root = "samples/hstring_roundtrip/main.zig",
+            .needs_win = true,
+        },
+        .{
+            .name = "winrt-uri",
+            .root = "samples/winrt_uri/main.zig",
+            .needs_win = true,
+        },
     };
 
     for (samples) |s| {
