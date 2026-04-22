@@ -18,7 +18,6 @@ const std = @import("std");
 const win = @import("win");
 
 const core = win.core;
-const Hstring = core.Hstring;
 const IInspectable = core.IInspectable;
 
 const Foundation = win.WinRT.Foundation;
@@ -58,10 +57,12 @@ pub fn main(init: std.process.Init) !void {
     const stringable = try uri.cast(IStringable.Vtbl, &IStringable.IID);
     defer stringable.deinit();
 
-    var out: core.HSTRING = null;
+    // `ToStringOwned` is the M2 return-side sugar: the emitter wraps
+    // the raw `ToString(result: *HSTRING)` with a variant that
+    // translates HRESULT through `win_core.hresult.ok` and returns an
+    // owning `Hstring` for `defer deinit()`.
     const stringable_this: *const IStringable = @ptrCast(@alignCast(stringable.ptr));
-    try core.hresult.ok(stringable_this.ToString(&out));
-    var got = Hstring.fromRaw(out);
+    var got = try stringable_this.ToStringOwned();
     defer got.deinit();
 
     var utf8: [512]u8 = undefined;

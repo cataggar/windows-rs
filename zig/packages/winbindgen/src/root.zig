@@ -1661,6 +1661,31 @@ fn writeMethodWrapper(
         }
         try writer.writeAll(");\n    }\n");
     }
+
+    // M2 sugar: if the split return type is HSTRING, emit a companion
+    // `<Method>Owned` wrapper that returns `!win_core.Hstring` instead
+    // of taking a `result: *HSTRING` out-param. HRESULT is translated
+    // to a Zig error via `win_core.hresult.ok`; on success the raw
+    // HSTRING is wrapped in an owning `Hstring` the caller must
+    // `defer deinit()`. Input params pass through unchanged (raw
+    // HSTRING for any `Ty.string` inputs — callers who want `[]const u16`
+    // inputs can compose `FromUtf16` separately).
+    if (split_return and sig.return_type == .string) {
+        try writer.print("    pub fn {s}Owned(self: *const {s}", .{ method_name, this_name });
+        for (sig.params, 0..) |p, i| {
+            try writer.print(", p{d}: ", .{i});
+            try writeParam(writer, arena, p, current_namespace, cross);
+        }
+        try writer.writeAll(") !win_core.Hstring {\n");
+        try writer.writeAll("        var r: HSTRING = null;\n");
+        try writer.print("        try win_core.hresult.ok(self.vtable.{s}(self", .{method_name});
+        for (sig.params, 0..) |_, i| {
+            try writer.print(", p{d}", .{i});
+        }
+        try writer.writeAll(", &r));\n");
+        try writer.writeAll("        return win_core.Hstring.fromRaw(r);\n");
+        try writer.writeAll("    }\n");
+    }
 }
 
 /// Emit a function-pointer type for a single MethodDef row, WinRT-ABI
@@ -2730,6 +2755,29 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     // Methods with no HSTRING inputs (e.g. IStringable.ToString) should
     // NOT get a FromUtf16 companion — the sugar is opt-in by signature.
     try std.testing.expect(std.mem.indexOf(u8, out, "ToStringFromUtf16") == null);
+
+    // M2 return-side sugar: `IStringable.ToString` returns an HSTRING
+    // via a `result: *HSTRING` out-param, so the emitter should add a
+    // `ToStringOwned` companion that returns `!win_core.Hstring` and
+    // internally translates the HRESULT through `win_core.hresult.ok`,
+    // then wraps the raw handle with `Hstring.fromRaw` for caller
+    // `defer deinit()`.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "pub fn ToStringOwned(self: *const IStringable) !win_core.Hstring {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "var r: HSTRING = null;") != null);
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "try win_core.hresult.ok(self.vtable.ToString(self, &r));",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "return win_core.Hstring.fromRaw(r);") != null);
+
+    // Non-HSTRING-returning methods (e.g. IClosable.Close, which is
+    // void/HRESULT-only) should NOT get an `Owned` companion.
+    try std.testing.expect(std.mem.indexOf(u8, out, "CloseOwned") == null);
 
     // Many interfaces should have been emitted.
     var count: usize = 0;

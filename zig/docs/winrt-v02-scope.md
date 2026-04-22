@@ -100,8 +100,7 @@ pattern.
 
 ### M2 — WinRT `HSTRING` round-trip
 
-**Status: partial — raw HSTRING helpers done, method-wrapper
-auto-conversion next.**
+**Status: done** (checkpoints 129–130).
 
 Done:
 - `win-core` has `Hstring.create` / `Hstring.fromRaw` / `Hstring.slice`
@@ -110,18 +109,26 @@ Done:
 - `sample_hstring_roundtrip` canary exercises the round-trip.
 - Emitter types WinRT method `HSTRING` params correctly (they compile
   and link through `winrt_uri`).
+- **Input sugar** (checkpoint 129): emitter adds
+  `<Method>FromUtf16` companion on every method with an HSTRING input.
+  Accepts `[]const u16`, handles `Hstring.create`/`deinit` internally,
+  maps allocator failure to `E_OUTOFMEMORY`. `winrt_uri` uses
+  `factory_this.CreateUriFromUtf16(url, &raw)` directly.
+- **Return sugar** (checkpoint 130): emitter adds `<Method>Owned`
+  companion on every method that returns an HSTRING via split
+  `result: *HSTRING`. Returns `!win_core.Hstring`, translates HRESULT
+  through `win_core.hresult.ok`, wraps the raw handle via
+  `Hstring.fromRaw` for caller `defer deinit()`. `winrt_uri` uses
+  `stringable_this.ToStringOwned()`.
 
-Pending — method-wrapper sugar:
-- When a WinRT method takes `HSTRING`, the generated handle method
-  should *also* accept `[]const u8` (or `[]const u16`) and manage the
-  HSTRING lifetime internally. Today `winrt_uri` has to write
-  `var url_h = try Hstring.create(url); defer url_h.deinit();` before
-  every call; the goal is `factory_this.CreateUri("https://...", &raw)`.
-- Symmetric convenience on the return side: when a WinRT method returns
-  `HSTRING` via out-parameter (`IStringable.ToString(result: *HSTRING)`),
-  expose an owned-`Hstring` variant the caller can `defer deinit`.
-- Sample update: once both land, `winrt_uri` drops the explicit HSTRING
-  dance entirely (~8 lines disappear).
+Follow-on (not blocking closure):
+- Combined `<Method>OwnedFromUtf16` for methods taking HSTRING in *and*
+  out. Not needed for any v0.2 sample; emit on demand when a sample
+  calls for it.
+- `win-core` dead-code cleanup — delete hand-written
+  `IID_IStringable` / `IStringable_Vtbl` /
+  `IID_IUriRuntimeClassFactory` / `IUriRuntimeClassFactory_Vtbl` and
+  the self-referencing `win-core` test that still blocks them.
 
 ### M3 — Activation factories
 
