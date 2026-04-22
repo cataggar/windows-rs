@@ -25,6 +25,15 @@ pub const bench_10 = win_sys.project(.{
     .@"Windows.Win32.Storage.FileSystem" = .{ "SearchPathW", "SearchPathA", "CompareFileTime", "CreateDirectoryA", "CreateDirectoryW", "CreateFileA", "CreateFileW", "DefineDosDeviceW", "DeleteFileA", "DeleteFileW" },
 });
 
+// Exercise the function-pointer typedef alias resolver: ReadFileEx,
+// WriteFileEx, ReadFileScatter, and WriteFileGather all take an
+// LPOVERLAPPED_COMPLETION_ROUTINE parameter, which is a
+// System.MulticastDelegate TypeDef surfaced as `?*const anyopaque`
+// by the aliases-block emitter.
+pub const bench_fnptr_callbacks = win_sys.project(.{
+    .@"Windows.Win32.Storage.FileSystem" = .{ "ReadFileEx", "WriteFileEx", "ReadFileScatter", "WriteFileGather" },
+});
+
 pub const bench_50 = win_sys.project(.{
     .@"Windows.Win32.Storage.FileSystem" = .{ "SearchPathW", "SearchPathA", "CompareFileTime", "CreateDirectoryA", "CreateDirectoryW", "CreateFileA", "CreateFileW", "DefineDosDeviceW", "DeleteFileA", "DeleteFileW", "DeleteVolumeMountPointW", "FileTimeToLocalFileTime", "FindClose", "FindCloseChangeNotification", "FindFirstChangeNotificationA", "FindFirstChangeNotificationW", "FindFirstFileA", "FindFirstFileW", "FindFirstFileExA", "FindFirstFileExW", "FindFirstVolumeW", "FindNextChangeNotification", "FindNextFileA", "FindNextFileW", "FindNextVolumeW", "FindVolumeClose", "FlushFileBuffers", "GetDiskFreeSpaceA", "GetDiskFreeSpaceW", "GetDiskFreeSpaceExA", "GetDiskFreeSpaceExW", "GetDiskSpaceInformationA", "GetDiskSpaceInformationW", "GetDriveTypeA", "GetDriveTypeW", "GetFileAttributesA", "GetFileAttributesW", "GetFileAttributesExA", "GetFileAttributesExW", "GetFileInformationByHandle", "GetFileSize", "GetFileSizeEx", "GetFileType", "GetFinalPathNameByHandleA", "GetFinalPathNameByHandleW", "GetFileTime", "GetFullPathNameW", "GetFullPathNameA", "GetLogicalDrives", "GetLogicalDriveStringsW" },
 });
@@ -40,4 +49,5 @@ pub fn main() !void {
     std.debug.print("bench_10:  {s}\n", .{@typeName(@TypeOf(bench_10))});
     std.debug.print("bench_50:  {s}\n", .{@typeName(@TypeOf(bench_50))});
     std.debug.print("bench_100: {s}\n", .{@typeName(@TypeOf(bench_100))});
+    std.debug.print("bench_fnptr_callbacks: {s}\n", .{@typeName(@TypeOf(bench_fnptr_callbacks))});
 }

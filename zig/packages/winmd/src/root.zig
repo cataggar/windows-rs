@@ -439,6 +439,12 @@ pub const Ty = union(enum) {
     array: *const Ty,
     /// ELEMENT_TYPE_ARRAY with rank 1 and an explicit fixed size.
     array_fixed: struct { inner: *const Ty, size: u32 },
+    /// ELEMENT_TYPE_FNPTR — a function-pointer typedef (e.g. the sole
+    /// field of `LPOVERLAPPED_COMPLETION_ROUTINE`). The inner method
+    /// signature is consumed but not preserved: downstream consumers
+    /// project function-pointer typedefs as opaque `?*const anyopaque`
+    /// so the exact parameter shape is not needed.
+    fn_ptr,
 };
 
 /// CIL ELEMENT_TYPE codes we care about (ECMA-335 §II.23.1.16).
@@ -468,6 +474,7 @@ const ELEMENT_TYPE_U: u8 = 0x19;
 const ELEMENT_TYPE_OBJECT: u8 = 0x1C;
 const ELEMENT_TYPE_SZARRAY: u8 = 0x1D;
 const ELEMENT_TYPE_MVAR: u8 = 0x1E;
+const ELEMENT_TYPE_FNPTR: u8 = 0x1B;
 const ELEMENT_TYPE_CMOD_REQD: u8 = 0x1F;
 const ELEMENT_TYPE_CMOD_OPT: u8 = 0x20;
 
@@ -749,6 +756,23 @@ pub fn readTypeCode(arena: std.mem.Allocator, file: *const File, c: *SigCursor) 
         },
         ELEMENT_TYPE_VAR => .{ .var_generic = try c.readCompressed() },
         ELEMENT_TYPE_MVAR => .{ .mvar_generic = try c.readCompressed() },
+        ELEMENT_TYPE_FNPTR => blk: {
+            // §II.23.2.12 FNPTR <MethodDefSig or MethodRefSig>.
+            // We don't preserve the inner signature — consumers project
+            // every function-pointer typedef as `?*const anyopaque` —
+            // but we must still consume the nested method sig bytes so
+            // the enclosing field-sig `!c.eof()` check doesn't fire.
+            const conv = try c.readU8();
+            const is_generic = (conv & 0x10) != 0;
+            if (is_generic) _ = try c.readCompressed(); // GenParamCount
+            const param_count = try c.readCompressed();
+            _ = try readTypeSignature(arena, file, c); // return type
+            var i: u32 = 0;
+            while (i < param_count) : (i += 1) {
+                _ = try readTypeSignature(arena, file, c);
+            }
+            break :blk .fn_ptr;
+        },
         ELEMENT_TYPE_GENERICINST => blk: {
             const inner_code = try c.readU8();
             if (inner_code != ELEMENT_TYPE_VALUETYPE and inner_code != ELEMENT_TYPE_CLASS) {

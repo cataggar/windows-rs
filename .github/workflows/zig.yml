@@ -139,13 +139,24 @@ jobs:
         working-directory: zig
         shell: bash
         run: |
-          # Cover one "ordinary" DLL (kernel32) plus three representative
-          # gap DLLs that Zig's bundled MinGW defs do *not* ship, to
-          # prove `win-targets` closes the gap:
+          # Cover one "ordinary" DLL (kernel32) plus representative gap
+          # DLLs that Zig's bundled MinGW defs do *not* ship, to prove
+          # `win-targets` closes the gap across DLL categories:
+          #   - kernel32        : baseline (ordinary)
           #   - amsi            : security subsystem
           #   - sechost         : service-control forwarder
           #   - windows.ui.xaml : WinRT UWP
-          for dll in kernel32 amsi sechost windows.ui.xaml; do
+          #   - advapi32        : registry / security APIs
+          #   - user32          : USER GUI
+          #   - gdi32           : GDI graphics
+          #   - ole32           : COM core
+          #   - oleaut32        : COM automation
+          #   - shlwapi         : shell utility
+          #   - winhttp         : HTTP client
+          #   - ws2_32          : Winsock
+          #   - dxgi            : DirectX infra
+          #   - d3d12           : Direct3D 12
+          for dll in kernel32 amsi sechost windows.ui.xaml advapi32 user32 gdi32 ole32 oleaut32 shlwapi winhttp ws2_32 dxgi d3d12; do
             echo "::group::$dll for ${{ matrix.target }}"
             zig build lib -Ddll="$dll" -Dtarget=${{ matrix.target }}
             lib="zig-out/lib/$dll.lib"

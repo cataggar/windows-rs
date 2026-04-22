@@ -728,10 +728,8 @@ pub fn emitMethodIndex(
     //  2. `NativeTypedefAttribute`-decorated TypeDefs (exactly one
     //     field) → emit `NAME = <zig-of-field-type>;` for the cases
     //     we know how to project (primitives, pointer-to-char for
-    //     strings, pointer-to-void for opaque pointers). Function
-    //     pointers (FARPROC) are *not* handled here — their field
-    //     type is a FNPTR and the caller-facing shape depends on
-    //     the target signature; those stay in `fnTypeForAlias`.
+    //     strings, pointer-to-void for opaque pointers, and function
+    //     pointers as `?*const anyopaque`).
     var any_alias = false;
     row = 0;
     while (row < rows) : (row += 1) {
@@ -788,6 +786,40 @@ pub fn emitMethodIndex(
         }
         try writer.print("    pub const {s} = {s};\n", .{ type_name, zig });
     }
+    // Sixth pass: surface delegate TypeDefs (extends
+    // `System.MulticastDelegate`) as function-pointer typedef
+    // aliases. In win32metadata these carry 0 fields + 2 methods
+    // (`.ctor`, `Invoke`), so the single-field path above skips
+    // them. Like struct-wrapped fn-ptr typedefs, we project them
+    // as opaque `?*const anyopaque` — the concrete callee signature
+    // is reconstructed at the call site via `@ptrCast`, matching
+    // how `windows-sys` surfaces callbacks.
+    //
+    // Some delegates are declared multiple times in the same
+    // namespace (once per `[SupportedArchitecture]` variant);
+    // dedupe by name so the `aliases` struct has no duplicate
+    // members.
+    var seen_delegates: std.StringHashMap(void) = .init(gpa);
+    defer seen_delegates.deinit();
+    row = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok == 0) continue;
+        const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
+        if (!std.mem.eql(u8, base.namespace, "System")) continue;
+        if (!std.mem.eql(u8, base.name, "MulticastDelegate")) continue;
+
+        const type_name = file.str(.type_def, row, 1);
+        const gop = seen_delegates.getOrPut(type_name) catch continue;
+        if (gop.found_existing) continue;
+
+        if (!any_alias) {
+            try writer.writeAll("\npub const aliases = struct {\n");
+            any_alias = true;
+        }
+        try writer.print("    pub const {s} = ?*const anyopaque;\n", .{type_name});
+    }
     if (any_alias) try writer.writeAll("};\n");
 }
 
@@ -825,6 +857,11 @@ fn nativeTypedefZigType(ty: winmd.Ty) ?[]const u8 {
             .void => "?*anyopaque",
             else => null,
         } else null,
+        // Function-pointer typedef (e.g. `LPOVERLAPPED_COMPLETION_ROUTINE`).
+        // The exact callee signature is not preserved: callers either
+        // pass null or `@ptrCast` a concrete fn pointer at the call
+        // site. This mirrors how `windows-sys` surfaces callbacks.
+        .fn_ptr => "?*const anyopaque",
         else => null,
     };
 }
