@@ -2117,10 +2117,16 @@ fn buildTypeEntryMap(arena: std.mem.Allocator, file: *const winmd.File) !TypeEnt
 /// `entries` (cross-winmd TypeRefs) pass through unchecked — the
 /// sidecar's cross-namespace import mechanism carries them.
 ///
-/// Recursion uses `memo` to break cycles (a self-referential
-/// struct would otherwise loop forever); cycles default to `yes`
-/// to avoid false negatives on graphs whose in-progress node
-/// happens to be the one we're asking about.
+/// Recursion uses `memo` to break cycles. When the DFS hits an
+/// ancestor that is still `in_progress`, we return a tentative
+/// `yes` and set `tainted_out.* = true`. Tainted `yes` results
+/// are not memoized — they'd otherwise poison cousins that
+/// depend on an ancestor which later resolves to `.no`
+/// (e.g. RESTRICTION → RESTRICTION_0 → NODERESTRICTION, where
+/// NODERESTRICTION.paRes points back at the still-`in_progress`
+/// RESTRICTION). After the outermost DFS call returns, no row
+/// is `in_progress`, so re-querying a tainted row yields a
+/// definitive answer.
 fn canRepresentField(
     ty: winmd.Ty,
     file: *const winmd.File,
@@ -2128,6 +2134,7 @@ fn canRepresentField(
     memo: *EmitMemo,
     arena: std.mem.Allocator,
     arch: Arch,
+    tainted_out: *bool,
 ) bool {
     return switch (ty) {
         .void,
@@ -2155,12 +2162,12 @@ fn canRepresentField(
             // (writeZigTy does the rewrite); no need to emit the enum.
             if (entry.kind == .enum_type) break :blk true;
             if (entry.kind != .struct_or_union) break :blk false;
-            break :blk isRowEmittable(file, entry.row, arch, entries, memo, arena);
+            break :blk isRowEmittable(file, entry.row, arch, entries, memo, arena, tainted_out);
         },
-        .ref_mut, .ref_const => |inner| canRepresentField(inner.*, file, entries, memo, arena, arch),
-        .ptr_mut => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch),
-        .ptr_const => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch),
-        .array_fixed => |a| canRepresentField(a.inner.*, file, entries, memo, arena, arch),
+        .ref_mut, .ref_const => |inner| canRepresentField(inner.*, file, entries, memo, arena, arch, tainted_out),
+        .ptr_mut => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch, tainted_out),
+        .ptr_const => |p| canRepresentField(p.inner.*, file, entries, memo, arena, arch, tainted_out),
+        .array_fixed => |a| canRepresentField(a.inner.*, file, entries, memo, arena, arch, tainted_out),
         else => false,
     };
 }
@@ -2168,8 +2175,10 @@ fn canRepresentField(
 /// Memoized DFS: is this TypeDef row emittable into a sidecar?
 /// Answer is `yes` iff every non-static instance field has a
 /// representable type and every nested TypeDef is itself
-/// emittable. Cycles return `yes` tentatively to support types
-/// that (indirectly) point at themselves.
+/// emittable. Cycles return `yes` tentatively (via `tainted_out`)
+/// to support types that (indirectly) point at themselves; the
+/// tentative result is not memoized so later re-queries can settle
+/// definitively once the cycle's ancestors have committed.
 fn isRowEmittable(
     file: *const winmd.File,
     row: u32,
@@ -2177,11 +2186,17 @@ fn isRowEmittable(
     entries: *const TypeEntryMap,
     memo: *EmitMemo,
     arena: std.mem.Allocator,
+    tainted_out: *bool,
 ) bool {
     if (memo.get(row)) |s| switch (s) {
         .yes => return true,
         .no => return false,
-        .in_progress => return true, // cycle: assume yes to avoid false-negative
+        .in_progress => {
+            // Cycle: return tentative yes. Caller must treat their
+            // own result as tainted so it doesn't get memoized.
+            tainted_out.* = true;
+            return true;
+        },
         .unknown => {},
     };
     memo.put(arena, row, .in_progress) catch return false;
@@ -2190,6 +2205,8 @@ fn isRowEmittable(
         memo.put(arena, row, .no) catch {};
         return false;
     }
+
+    var local_tainted: bool = false;
 
     const FIELD_ATTR_STATIC: u32 = 0x10;
     const field_list = file.list(.type_def, row, 4, .field);
@@ -2201,7 +2218,7 @@ fn isRowEmittable(
             memo.put(arena, row, .no) catch {};
             return false;
         };
-        if (!canRepresentField(ty, file, entries, memo, arena, arch)) {
+        if (!canRepresentField(ty, file, entries, memo, arena, arch, &local_tainted)) {
             memo.put(arena, row, .no) catch {};
             return false;
         }
@@ -2215,13 +2232,22 @@ fn isRowEmittable(
         if (nested_typedef == 0) continue;
         const child_row = nested_typedef - 1;
         if (!supportsArch(file, .type_def, child_row, arch)) continue;
-        if (!isRowEmittable(file, child_row, arch, entries, memo, arena)) {
+        if (!isRowEmittable(file, child_row, arch, entries, memo, arena, &local_tainted)) {
             memo.put(arena, row, .no) catch {};
             return false;
         }
     }
 
-    memo.put(arena, row, .yes) catch {};
+    if (local_tainted) {
+        // Our `yes` depended on an ancestor still `in_progress`.
+        // Don't memoize — clear the `in_progress` placeholder so a
+        // later query re-runs the DFS (by which time the ancestor
+        // will have committed either `.yes` or `.no`).
+        _ = memo.remove(row);
+        tainted_out.* = true;
+    } else {
+        memo.put(arena, row, .yes) catch {};
+    }
     return true;
 }
 
@@ -2233,7 +2259,8 @@ fn typeDefRepresentable(
     entries: *const TypeEntryMap,
     memo: *EmitMemo,
 ) bool {
-    return isRowEmittable(file, row, arch, entries, memo, arena);
+    var tainted: bool = false;
+    return isRowEmittable(file, row, arch, entries, memo, arena, &tainted);
 }
 
 fn emitOneStruct(
