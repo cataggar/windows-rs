@@ -972,4 +972,11 @@ pub fn build(b: *std.Build) void {
         );
         sample_run_step.dependOn(&run_sample.step);
     }
+
+    // Make `zig build test` also compile every sample, so low-level
+    // type changes in win-sys (e.g. phase 6/U switching HANDLE from
+    // `isize` to `?*anyopaque`) can't break sample code silently. The
+    // samples step only installs artifacts; it doesn't run them, so
+    // this keeps `test` cross-platform-safe.
+    test_step.dependOn(samples_step);
 }
