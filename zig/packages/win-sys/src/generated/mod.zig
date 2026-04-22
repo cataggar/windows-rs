@@ -8,16 +8,24 @@
 //! namespace by hand.
 
 pub const structs = struct {
+    pub const @"Windows.Win32.Data.HtmlHelp" = @import("Windows.Win32.Data.HtmlHelp.structs.zig");
+    pub const @"Windows.Win32.Data.Xml.MsXml" = @import("Windows.Win32.Data.Xml.MsXml.structs.zig");
     pub const @"Windows.Win32.Data.Xml.XmlLite" = @import("Windows.Win32.Data.Xml.XmlLite.structs.zig");
+    pub const @"Windows.Win32.Devices.Beep" = @import("Windows.Win32.Devices.Beep.structs.zig");
     pub const @"Windows.Win32.Devices.Cdrom" = @import("Windows.Win32.Devices.Cdrom.structs.zig");
     pub const @"Windows.Win32.Devices.Communication" = @import("Windows.Win32.Devices.Communication.structs.zig");
     pub const @"Windows.Win32.Devices.DeviceAndDriverInstallation" = @import("Windows.Win32.Devices.DeviceAndDriverInstallation.structs.zig");
+    pub const @"Windows.Win32.Devices.DeviceQuery" = @import("Windows.Win32.Devices.DeviceQuery.structs.zig");
     pub const @"Windows.Win32.Devices.Display" = @import("Windows.Win32.Devices.Display.structs.zig");
     pub const @"Windows.Win32.Devices.Enumeration.Pnp" = @import("Windows.Win32.Devices.Enumeration.Pnp.structs.zig");
+    pub const @"Windows.Win32.Devices.Fax" = @import("Windows.Win32.Devices.Fax.structs.zig");
+    pub const @"Windows.Win32.Devices.FunctionDiscovery" = @import("Windows.Win32.Devices.FunctionDiscovery.structs.zig");
     pub const @"Windows.Win32.Devices.HumanInterfaceDevice" = @import("Windows.Win32.Devices.HumanInterfaceDevice.structs.zig");
+    pub const @"Windows.Win32.Devices.Properties" = @import("Windows.Win32.Devices.Properties.structs.zig");
     pub const @"Windows.Win32.Devices.SerialCommunication" = @import("Windows.Win32.Devices.SerialCommunication.structs.zig");
     pub const @"Windows.Win32.Devices.Usb" = @import("Windows.Win32.Devices.Usb.structs.zig");
     pub const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
+    pub const @"Windows.Win32.Foundation.Metadata" = @import("Windows.Win32.Foundation.Metadata.structs.zig");
     pub const @"Windows.Win32.Globalization" = @import("Windows.Win32.Globalization.structs.zig");
     pub const @"Windows.Win32.Graphics.Direct3D12" = @import("Windows.Win32.Graphics.Direct3D12.structs.zig");
     pub const @"Windows.Win32.Graphics.Dxgi.Common" = @import("Windows.Win32.Graphics.Dxgi.Common.structs.zig");
@@ -88,16 +96,24 @@ pub const structs = struct {
 };
 
 pub const index = struct {
+    pub const @"Windows.Win32.Data.HtmlHelp" = @import("Windows.Win32.Data.HtmlHelp.index.zig");
+    pub const @"Windows.Win32.Data.Xml.MsXml" = @import("Windows.Win32.Data.Xml.MsXml.index.zig");
     pub const @"Windows.Win32.Data.Xml.XmlLite" = @import("Windows.Win32.Data.Xml.XmlLite.index.zig");
+    pub const @"Windows.Win32.Devices.Beep" = @import("Windows.Win32.Devices.Beep.index.zig");
     pub const @"Windows.Win32.Devices.Cdrom" = @import("Windows.Win32.Devices.Cdrom.index.zig");
     pub const @"Windows.Win32.Devices.Communication" = @import("Windows.Win32.Devices.Communication.index.zig");
     pub const @"Windows.Win32.Devices.DeviceAndDriverInstallation" = @import("Windows.Win32.Devices.DeviceAndDriverInstallation.index.zig");
+    pub const @"Windows.Win32.Devices.DeviceQuery" = @import("Windows.Win32.Devices.DeviceQuery.index.zig");
     pub const @"Windows.Win32.Devices.Display" = @import("Windows.Win32.Devices.Display.index.zig");
     pub const @"Windows.Win32.Devices.Enumeration.Pnp" = @import("Windows.Win32.Devices.Enumeration.Pnp.index.zig");
+    pub const @"Windows.Win32.Devices.Fax" = @import("Windows.Win32.Devices.Fax.index.zig");
+    pub const @"Windows.Win32.Devices.FunctionDiscovery" = @import("Windows.Win32.Devices.FunctionDiscovery.index.zig");
     pub const @"Windows.Win32.Devices.HumanInterfaceDevice" = @import("Windows.Win32.Devices.HumanInterfaceDevice.index.zig");
+    pub const @"Windows.Win32.Devices.Properties" = @import("Windows.Win32.Devices.Properties.index.zig");
     pub const @"Windows.Win32.Devices.SerialCommunication" = @import("Windows.Win32.Devices.SerialCommunication.index.zig");
     pub const @"Windows.Win32.Devices.Usb" = @import("Windows.Win32.Devices.Usb.index.zig");
     pub const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.index.zig");
+    pub const @"Windows.Win32.Foundation.Metadata" = @import("Windows.Win32.Foundation.Metadata.index.zig");
     pub const @"Windows.Win32.Globalization" = @import("Windows.Win32.Globalization.index.zig");
     pub const @"Windows.Win32.Graphics.Direct3D12" = @import("Windows.Win32.Graphics.Direct3D12.index.zig");
     pub const @"Windows.Win32.Graphics.Dxgi.Common" = @import("Windows.Win32.Graphics.Dxgi.Common.index.zig");

@@ -223,15 +223,23 @@ pub fn build(b: *std.Build) void {
     // hence the hand-list. The `mod.zig` step downstream still
     // auto-discovers, so consumer `@import("win-sys")` doesn't care.
     const win32_namespaces = [_][]const u8{
+        "Windows.Win32.Data.HtmlHelp",
+        "Windows.Win32.Data.Xml.MsXml",
         "Windows.Win32.Data.Xml.XmlLite",
+        "Windows.Win32.Devices.Beep",
         "Windows.Win32.Devices.Cdrom",
         "Windows.Win32.Devices.Communication",
         "Windows.Win32.Devices.DeviceAndDriverInstallation",
+        "Windows.Win32.Devices.DeviceQuery",
         "Windows.Win32.Devices.Display",
         "Windows.Win32.Devices.Enumeration.Pnp",
+        "Windows.Win32.Devices.Fax",
+        "Windows.Win32.Devices.FunctionDiscovery",
         "Windows.Win32.Devices.HumanInterfaceDevice",
+        "Windows.Win32.Devices.Properties",
         "Windows.Win32.Devices.SerialCommunication",
         "Windows.Win32.Devices.Usb",
+        "Windows.Win32.Foundation.Metadata",
         "Windows.Win32.Foundation",
         "Windows.Win32.Globalization",
         "Windows.Win32.Graphics.Direct3D12",
