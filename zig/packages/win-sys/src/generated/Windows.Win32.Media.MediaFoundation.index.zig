@@ -1,0 +1,3853 @@
+const std = @import("std");
+
+pub const MethodRecord = struct {
+    library: []const u8,
+    import: []const u8,
+    signature: []const u8,
+};
+
+pub const TypeRefEntry = struct {
+    namespace: []const u8,
+    name: []const u8,
+};
+
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+    .{ "DXVAHD_CreateDevice", MethodRecord{ .library = "dxva2", .import = "DXVAHD_CreateDevice", .signature = "\x00\x05\x11\x79\x12\x94\xc5\x0f\x11\x94\xc9\x11\x94\xcd\x12\x94\xd1\x0f\x12\x94\xd5" } },
+    .{ "DXVA2CreateDirect3DDeviceManager9", MethodRecord{ .library = "dxva2", .import = "DXVA2CreateDirect3DDeviceManager9", .signature = "\x00\x02\x11\x79\x0f\x09\x0f\x12\x94\xd9" } },
+    .{ "DXVA2CreateVideoService", MethodRecord{ .library = "dxva2", .import = "DXVA2CreateVideoService", .signature = "\x00\x03\x11\x79\x12\x94\xdd\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "OPMGetVideoOutputsFromHMONITOR", MethodRecord{ .library = "dxva2", .import = "OPMGetVideoOutputsFromHMONITOR", .signature = "\x00\x04\x11\x79\x11\x8e\xed\x11\x94\xe1\x0f\x09\x0f\x0f\x12\x94\xe5" } },
+    .{ "OPMGetVideoOutputForTarget", MethodRecord{ .library = "dxva2", .import = "OPMGetVideoOutputForTarget", .signature = "\x00\x04\x11\x79\x0f\x11\x93\x69\x09\x11\x94\xe1\x0f\x12\x94\xe5" } },
+    .{ "OPMGetVideoOutputsFromIDirect3DDevice9Object", MethodRecord{ .library = "dxva2", .import = "OPMGetVideoOutputsFromIDirect3DDevice9Object", .signature = "\x00\x04\x11\x79\x12\x94\xdd\x11\x94\xe1\x0f\x09\x0f\x0f\x12\x94\xe5" } },
+    .{ "MFSerializeAttributesToStream", MethodRecord{ .library = "MFPlat", .import = "MFSerializeAttributesToStream", .signature = "\x00\x03\x11\x79\x12\x94\xe9\x09\x12\x83\x75" } },
+    .{ "MFDeserializeAttributesFromStream", MethodRecord{ .library = "MFPlat", .import = "MFDeserializeAttributesFromStream", .signature = "\x00\x03\x11\x79\x12\x94\xe9\x09\x12\x83\x75" } },
+    .{ "MFCreateTransformActivate", MethodRecord{ .library = "MFPlat", .import = "MFCreateTransformActivate", .signature = "\x00\x01\x11\x79\x0f\x12\x94\xed" } },
+    .{ "MFCreateMediaSession", MethodRecord{ .library = "MF", .import = "MFCreateMediaSession", .signature = "\x00\x02\x11\x79\x12\x94\xe9\x0f\x12\x94\xf1" } },
+    .{ "MFCreatePMPMediaSession", MethodRecord{ .library = "MF", .import = "MFCreatePMPMediaSession", .signature = "\x00\x04\x11\x79\x09\x12\x94\xe9\x0f\x12\x94\xf1\x0f\x12\x94\xed" } },
+    .{ "MFCreateSourceResolver", MethodRecord{ .library = "MFPlat", .import = "MFCreateSourceResolver", .signature = "\x00\x01\x11\x79\x0f\x12\x94\xf5" } },
+    .{ "CreatePropertyStore", MethodRecord{ .library = "MFPlat", .import = "CreatePropertyStore", .signature = "\x00\x01\x11\x79\x0f\x12\x94\xf9" } },
+    .{ "MFGetSupportedSchemes", MethodRecord{ .library = "MFPlat", .import = "MFGetSupportedSchemes", .signature = "\x00\x01\x11\x79\x0f\x11\x82\x01" } },
+    .{ "MFGetSupportedMimeTypes", MethodRecord{ .library = "MFPlat", .import = "MFGetSupportedMimeTypes", .signature = "\x00\x01\x11\x79\x0f\x11\x82\x01" } },
+    .{ "MFCreateTopology", MethodRecord{ .library = "MF", .import = "MFCreateTopology", .signature = "\x00\x01\x11\x79\x0f\x12\x94\xfd" } },
+    .{ "MFCreateTopologyNode", MethodRecord{ .library = "MF", .import = "MFCreateTopologyNode", .signature = "\x00\x02\x11\x79\x11\x95\x01\x0f\x12\x95\x05" } },
+    .{ "MFGetTopoNodeCurrentType", MethodRecord{ .library = "MF", .import = "MFGetTopoNodeCurrentType", .signature = "\x00\x04\x11\x79\x12\x95\x05\x09\x11\x59\x0f\x12\x95\x09" } },
+    .{ "MFGetService", MethodRecord{ .library = "MF", .import = "MFGetService", .signature = "\x00\x04\x11\x79\x12\x82\xb1\x0f\x11\x0d\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFGetSystemTime", MethodRecord{ .library = "MFPlat", .import = "MFGetSystemTime", .signature = "\x00\x00\x0a" } },
+    .{ "MFCreatePresentationClock", MethodRecord{ .library = "MF", .import = "MFCreatePresentationClock", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x0d" } },
+    .{ "MFCreateSystemTimeSource", MethodRecord{ .library = "MFPlat", .import = "MFCreateSystemTimeSource", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x11" } },
+    .{ "MFCreatePresentationDescriptor", MethodRecord{ .library = "MFPlat", .import = "MFCreatePresentationDescriptor", .signature = "\x00\x03\x11\x79\x09\x0f\x12\x95\x15\x0f\x12\x95\x19" } },
+    .{ "MFRequireProtectedEnvironment", MethodRecord{ .library = "MF", .import = "MFRequireProtectedEnvironment", .signature = "\x00\x01\x11\x79\x12\x95\x19" } },
+    .{ "MFSerializePresentationDescriptor", MethodRecord{ .library = "MFPlat", .import = "MFSerializePresentationDescriptor", .signature = "\x00\x03\x11\x79\x12\x95\x19\x0f\x09\x0f\x0f\x05" } },
+    .{ "MFDeserializePresentationDescriptor", MethodRecord{ .library = "MFPlat", .import = "MFDeserializePresentationDescriptor", .signature = "\x00\x03\x11\x79\x09\x0f\x05\x0f\x12\x95\x19" } },
+    .{ "MFCreateStreamDescriptor", MethodRecord{ .library = "MFPlat", .import = "MFCreateStreamDescriptor", .signature = "\x00\x04\x11\x79\x09\x09\x0f\x12\x95\x09\x0f\x12\x95\x15" } },
+    .{ "MFCreateSimpleTypeHandler", MethodRecord{ .library = "MF", .import = "MFCreateSimpleTypeHandler", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x1d" } },
+    .{ "MFShutdownObject", MethodRecord{ .library = "MF", .import = "MFShutdownObject", .signature = "\x00\x01\x11\x79\x12\x82\xb1" } },
+    .{ "MFCreateAudioRenderer", MethodRecord{ .library = "MF", .import = "MFCreateAudioRenderer", .signature = "\x00\x02\x11\x79\x12\x94\xe9\x0f\x12\x95\x21" } },
+    .{ "MFCreateAudioRendererActivate", MethodRecord{ .library = "MF", .import = "MFCreateAudioRendererActivate", .signature = "\x00\x01\x11\x79\x0f\x12\x94\xed" } },
+    .{ "MFCreateVideoRendererActivate", MethodRecord{ .library = "MF", .import = "MFCreateVideoRendererActivate", .signature = "\x00\x02\x11\x79\x11\x25\x0f\x12\x94\xed" } },
+    .{ "MFCreateMPEG4MediaSink", MethodRecord{ .library = "MF", .import = "MFCreateMPEG4MediaSink", .signature = "\x00\x04\x11\x79\x12\x95\x25\x12\x95\x09\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreate3GPMediaSink", MethodRecord{ .library = "MF", .import = "MFCreate3GPMediaSink", .signature = "\x00\x04\x11\x79\x12\x95\x25\x12\x95\x09\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreateMP3MediaSink", MethodRecord{ .library = "MF", .import = "MFCreateMP3MediaSink", .signature = "\x00\x02\x11\x79\x12\x95\x25\x0f\x12\x95\x21" } },
+    .{ "MFCreateAC3MediaSink", MethodRecord{ .library = "MF", .import = "MFCreateAC3MediaSink", .signature = "\x00\x03\x11\x79\x12\x95\x25\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreateADTSMediaSink", MethodRecord{ .library = "MF", .import = "MFCreateADTSMediaSink", .signature = "\x00\x03\x11\x79\x12\x95\x25\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreateMuxSink", MethodRecord{ .library = "MF", .import = "MFCreateMuxSink", .signature = "\x00\x04\x11\x79\x11\x0d\x12\x94\xe9\x12\x95\x25\x0f\x12\x95\x21" } },
+    .{ "MFCreateFMPEG4MediaSink", MethodRecord{ .library = "MF", .import = "MFCreateFMPEG4MediaSink", .signature = "\x00\x04\x11\x79\x12\x95\x25\x12\x95\x09\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreateAVIMediaSink", MethodRecord{ .library = "mfsrcsnk", .import = "MFCreateAVIMediaSink", .signature = "\x00\x04\x11\x79\x12\x95\x25\x12\x95\x09\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreateWAVEMediaSink", MethodRecord{ .library = "mfsrcsnk", .import = "MFCreateWAVEMediaSink", .signature = "\x00\x03\x11\x79\x12\x95\x25\x12\x95\x09\x0f\x12\x95\x21" } },
+    .{ "MFCreateTopoLoader", MethodRecord{ .library = "MF", .import = "MFCreateTopoLoader", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x29" } },
+    .{ "MFCreateSampleGrabberSinkActivate", MethodRecord{ .library = "MF", .import = "MFCreateSampleGrabberSinkActivate", .signature = "\x00\x03\x11\x79\x12\x95\x09\x12\x95\x2d\x0f\x12\x94\xed" } },
+    .{ "MFCreateStandardQualityManager", MethodRecord{ .library = "MF", .import = "MFCreateStandardQualityManager", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x31" } },
+    .{ "MFCreateSequencerSource", MethodRecord{ .library = "MF", .import = "MFCreateSequencerSource", .signature = "\x00\x02\x11\x79\x12\x82\xb1\x0f\x12\x95\x35" } },
+    .{ "MFCreateSequencerSegmentOffset", MethodRecord{ .library = "MF", .import = "MFCreateSequencerSegmentOffset", .signature = "\x00\x03\x11\x79\x09\x0a\x0f\x11\x82\x01" } },
+    .{ "MFCreateAggregateSource", MethodRecord{ .library = "MF", .import = "MFCreateAggregateSource", .signature = "\x00\x02\x11\x79\x12\x95\x39\x0f\x12\x95\x3d" } },
+    .{ "MFCreateCredentialCache", MethodRecord{ .library = "MF", .import = "MFCreateCredentialCache", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x41" } },
+    .{ "MFCreateProxyLocator", MethodRecord{ .library = "MF", .import = "MFCreateProxyLocator", .signature = "\x00\x03\x11\x79\x11\x05\x12\x94\xf9\x0f\x12\x95\x45" } },
+    .{ "MFCreateNetSchemePlugin", MethodRecord{ .library = "MF", .import = "MFCreateNetSchemePlugin", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreatePMPServer", MethodRecord{ .library = "MF", .import = "MFCreatePMPServer", .signature = "\x00\x02\x11\x79\x09\x0f\x12\x95\x49" } },
+    .{ "MFCreateRemoteDesktopPlugin", MethodRecord{ .library = "MF", .import = "MFCreateRemoteDesktopPlugin", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x4d" } },
+    .{ "CreateNamedPropertyStore", MethodRecord{ .library = "MF", .import = "CreateNamedPropertyStore", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x51" } },
+    .{ "MFCreateSampleCopierMFT", MethodRecord{ .library = "MF", .import = "MFCreateSampleCopierMFT", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x55" } },
+    .{ "MFCreateTranscodeProfile", MethodRecord{ .library = "MF", .import = "MFCreateTranscodeProfile", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x59" } },
+    .{ "MFCreateTranscodeTopology", MethodRecord{ .library = "MF", .import = "MFCreateTranscodeTopology", .signature = "\x00\x04\x11\x79\x12\x95\x3d\x11\x05\x12\x95\x59\x0f\x12\x94\xfd" } },
+    .{ "MFCreateTranscodeTopologyFromByteStream", MethodRecord{ .library = "MF", .import = "MFCreateTranscodeTopologyFromByteStream", .signature = "\x00\x04\x11\x79\x12\x95\x3d\x12\x95\x25\x12\x95\x59\x0f\x12\x94\xfd" } },
+    .{ "MFTranscodeGetAudioOutputAvailableTypes", MethodRecord{ .library = "MF", .import = "MFTranscodeGetAudioOutputAvailableTypes", .signature = "\x00\x04\x11\x79\x0f\x11\x0d\x09\x12\x94\xe9\x0f\x12\x95\x39" } },
+    .{ "MFCreateTranscodeSinkActivate", MethodRecord{ .library = "MF", .import = "MFCreateTranscodeSinkActivate", .signature = "\x00\x01\x11\x79\x0f\x12\x94\xed" } },
+    .{ "MFCreateTrackedSample", MethodRecord{ .library = "MFPlat", .import = "MFCreateTrackedSample", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x5d" } },
+    .{ "MFCreateMFByteStreamOnStream", MethodRecord{ .library = "MFPlat", .import = "MFCreateMFByteStreamOnStream", .signature = "\x00\x02\x11\x79\x12\x83\x75\x0f\x12\x95\x25" } },
+    .{ "MFCreateStreamOnMFByteStream", MethodRecord{ .library = "MFPlat", .import = "MFCreateStreamOnMFByteStream", .signature = "\x00\x02\x11\x79\x12\x95\x25\x0f\x12\x83\x75" } },
+    .{ "MFCreateMFByteStreamOnStreamEx", MethodRecord{ .library = "MFPlat", .import = "MFCreateMFByteStreamOnStreamEx", .signature = "\x00\x02\x11\x79\x12\x82\xb1\x0f\x12\x95\x25" } },
+    .{ "MFCreateStreamOnMFByteStreamEx", MethodRecord{ .library = "MFPlat", .import = "MFCreateStreamOnMFByteStreamEx", .signature = "\x00\x03\x11\x79\x12\x95\x25\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateMediaTypeFromProperties", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaTypeFromProperties", .signature = "\x00\x02\x11\x79\x12\x82\xb1\x0f\x12\x95\x09" } },
+    .{ "MFCreatePropertiesFromMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreatePropertiesFromMediaType", .signature = "\x00\x03\x11\x79\x12\x95\x09\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFEnumDeviceSources", MethodRecord{ .library = "MF", .import = "MFEnumDeviceSources", .signature = "\x00\x03\x11\x79\x12\x94\xe9\x0f\x0f\x12\x94\xed\x0f\x09" } },
+    .{ "MFCreateDeviceSource", MethodRecord{ .library = "MF", .import = "MFCreateDeviceSource", .signature = "\x00\x02\x11\x79\x12\x94\xe9\x0f\x12\x95\x3d" } },
+    .{ "MFCreateDeviceSourceActivate", MethodRecord{ .library = "MF", .import = "MFCreateDeviceSourceActivate", .signature = "\x00\x02\x11\x79\x12\x94\xe9\x0f\x12\x94\xed" } },
+    .{ "MFCreateProtectedEnvironmentAccess", MethodRecord{ .library = "MF", .import = "MFCreateProtectedEnvironmentAccess", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x61" } },
+    .{ "MFLoadSignedLibrary", MethodRecord{ .library = "MF", .import = "MFLoadSignedLibrary", .signature = "\x00\x02\x11\x79\x11\x05\x0f\x12\x95\x65" } },
+    .{ "MFGetSystemId", MethodRecord{ .library = "MF", .import = "MFGetSystemId", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x69" } },
+    .{ "MFGetLocalId", MethodRecord{ .library = "MF", .import = "MFGetLocalId", .signature = "\x00\x03\x11\x79\x0f\x05\x09\x0f\x11\x05" } },
+    .{ "MFCreateContentProtectionDevice", MethodRecord{ .library = "MFPlat", .import = "MFCreateContentProtectionDevice", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x12\x95\x6d" } },
+    .{ "MFIsContentProtectionDeviceSupported", MethodRecord{ .library = "MFPlat", .import = "MFIsContentProtectionDeviceSupported", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x11\x59" } },
+    .{ "MFCreateContentDecryptorContext", MethodRecord{ .library = "MFPlat", .import = "MFCreateContentDecryptorContext", .signature = "\x00\x04\x11\x79\x0f\x11\x0d\x12\x95\x71\x12\x95\x6d\x0f\x12\x95\x75" } },
+    .{ "MFCreateSensorGroup", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateSensorGroup", .signature = "\x00\x02\x11\x79\x11\x05\x0f\x12\x95\x79" } },
+    .{ "MFCreateSensorStream", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateSensorStream", .signature = "\x00\x04\x11\x79\x09\x12\x94\xe9\x12\x95\x39\x0f\x12\x95\x7d" } },
+    .{ "MFCreateSensorProfile", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateSensorProfile", .signature = "\x00\x04\x11\x79\x0f\x11\x0d\x09\x11\x05\x0f\x12\x95\x81" } },
+    .{ "MFCreateSensorProfileCollection", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateSensorProfileCollection", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x85" } },
+    .{ "MFCreateSensorActivityMonitor", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateSensorActivityMonitor", .signature = "\x00\x02\x11\x79\x12\x95\x89\x0f\x12\x95\x8d" } },
+    .{ "MFCreateExtendedCameraIntrinsics", MethodRecord{ .library = "MFCORE", .import = "MFCreateExtendedCameraIntrinsics", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x91" } },
+    .{ "MFCreateExtendedCameraIntrinsicModel", MethodRecord{ .library = "MFCORE", .import = "MFCreateExtendedCameraIntrinsicModel", .signature = "\x00\x02\x11\x79\x11\x95\x95\x0f\x12\x95\x99" } },
+    .{ "MFCreateRelativePanelWatcher", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateRelativePanelWatcher", .signature = "\x00\x03\x11\x79\x11\x05\x11\x05\x0f\x12\x95\x9d" } },
+    .{ "MFCreateCameraOcclusionStateMonitor", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateCameraOcclusionStateMonitor", .signature = "\x00\x03\x11\x79\x11\x05\x12\x95\xa1\x0f\x12\x95\xa5" } },
+    .{ "MFCreateCameraControlMonitor", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateCameraControlMonitor", .signature = "\x00\x03\x11\x79\x11\x05\x12\x95\xa9\x0f\x12\x95\xad" } },
+    .{ "MFCreateASFContentInfo", MethodRecord{ .library = "MF", .import = "MFCreateASFContentInfo", .signature = "\x00\x01\x11\x79\x0f\x12\x95\xb1" } },
+    .{ "MFCreateASFIndexer", MethodRecord{ .library = "MF", .import = "MFCreateASFIndexer", .signature = "\x00\x01\x11\x79\x0f\x12\x95\xb5" } },
+    .{ "MFCreateASFIndexerByteStream", MethodRecord{ .library = "MF", .import = "MFCreateASFIndexerByteStream", .signature = "\x00\x03\x11\x79\x12\x95\x25\x0b\x0f\x12\x95\x25" } },
+    .{ "MFCreateASFSplitter", MethodRecord{ .library = "MF", .import = "MFCreateASFSplitter", .signature = "\x00\x01\x11\x79\x0f\x12\x95\xb9" } },
+    .{ "MFCreateASFProfile", MethodRecord{ .library = "MF", .import = "MFCreateASFProfile", .signature = "\x00\x01\x11\x79\x0f\x12\x95\xbd" } },
+    .{ "MFCreateASFProfileFromPresentationDescriptor", MethodRecord{ .library = "MF", .import = "MFCreateASFProfileFromPresentationDescriptor", .signature = "\x00\x02\x11\x79\x12\x95\x19\x0f\x12\x95\xbd" } },
+    .{ "MFCreatePresentationDescriptorFromASFProfile", MethodRecord{ .library = "MF", .import = "MFCreatePresentationDescriptorFromASFProfile", .signature = "\x00\x02\x11\x79\x12\x95\xbd\x0f\x12\x95\x19" } },
+    .{ "MFCreateASFMultiplexer", MethodRecord{ .library = "MF", .import = "MFCreateASFMultiplexer", .signature = "\x00\x01\x11\x79\x0f\x12\x95\xc1" } },
+    .{ "MFCreateASFStreamSelector", MethodRecord{ .library = "MF", .import = "MFCreateASFStreamSelector", .signature = "\x00\x02\x11\x79\x12\x95\xbd\x0f\x12\x95\xc5" } },
+    .{ "MFCreateASFMediaSink", MethodRecord{ .library = "MF", .import = "MFCreateASFMediaSink", .signature = "\x00\x02\x11\x79\x12\x95\x25\x0f\x12\x95\x21" } },
+    .{ "MFCreateASFMediaSinkActivate", MethodRecord{ .library = "MF", .import = "MFCreateASFMediaSinkActivate", .signature = "\x00\x03\x11\x79\x11\x05\x12\x95\xb1\x0f\x12\x94\xed" } },
+    .{ "MFCreateWMVEncoderActivate", MethodRecord{ .library = "MF", .import = "MFCreateWMVEncoderActivate", .signature = "\x00\x03\x11\x79\x12\x95\x09\x12\x94\xf9\x0f\x12\x94\xed" } },
+    .{ "MFCreateWMAEncoderActivate", MethodRecord{ .library = "MF", .import = "MFCreateWMAEncoderActivate", .signature = "\x00\x03\x11\x79\x12\x95\x09\x12\x94\xf9\x0f\x12\x94\xed" } },
+    .{ "MFCreateASFStreamingMediaSink", MethodRecord{ .library = "MF", .import = "MFCreateASFStreamingMediaSink", .signature = "\x00\x02\x11\x79\x12\x95\x25\x0f\x12\x95\x21" } },
+    .{ "MFCreateASFStreamingMediaSinkActivate", MethodRecord{ .library = "MF", .import = "MFCreateASFStreamingMediaSinkActivate", .signature = "\x00\x03\x11\x79\x12\x94\xed\x12\x95\xb1\x0f\x12\x94\xed" } },
+    .{ "MFCreateD3D12SynchronizationObject", MethodRecord{ .library = "MFPlat", .import = "MFCreateD3D12SynchronizationObject", .signature = "\x00\x03\x11\x79\x12\x95\xc9\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFStartup", MethodRecord{ .library = "MFPlat", .import = "MFStartup", .signature = "\x00\x02\x11\x79\x09\x09" } },
+    .{ "MFShutdown", MethodRecord{ .library = "MFPlat", .import = "MFShutdown", .signature = "\x00\x00\x11\x79" } },
+    .{ "MFLockPlatform", MethodRecord{ .library = "MFPlat", .import = "MFLockPlatform", .signature = "\x00\x00\x11\x79" } },
+    .{ "MFUnlockPlatform", MethodRecord{ .library = "MFPlat", .import = "MFUnlockPlatform", .signature = "\x00\x00\x11\x79" } },
+    .{ "MFPutWorkItem", MethodRecord{ .library = "MFPlat", .import = "MFPutWorkItem", .signature = "\x00\x03\x11\x79\x09\x12\x95\xcd\x12\x82\xb1" } },
+    .{ "MFPutWorkItem2", MethodRecord{ .library = "MFPlat", .import = "MFPutWorkItem2", .signature = "\x00\x04\x11\x79\x09\x08\x12\x95\xcd\x12\x82\xb1" } },
+    .{ "MFPutWorkItemEx", MethodRecord{ .library = "MFPlat", .import = "MFPutWorkItemEx", .signature = "\x00\x02\x11\x79\x09\x12\x95\xd1" } },
+    .{ "MFPutWorkItemEx2", MethodRecord{ .library = "MFPlat", .import = "MFPutWorkItemEx2", .signature = "\x00\x03\x11\x79\x09\x08\x12\x95\xd1" } },
+    .{ "MFPutWaitingWorkItem", MethodRecord{ .library = "MFPlat", .import = "MFPutWaitingWorkItem", .signature = "\x00\x04\x11\x79\x11\x80\x85\x08\x12\x95\xd1\x0f\x0b" } },
+    .{ "MFAllocateSerialWorkQueue", MethodRecord{ .library = "MFPlat", .import = "MFAllocateSerialWorkQueue", .signature = "\x00\x02\x11\x79\x09\x0f\x09" } },
+    .{ "MFScheduleWorkItemEx", MethodRecord{ .library = "MFPlat", .import = "MFScheduleWorkItemEx", .signature = "\x00\x03\x11\x79\x12\x95\xd1\x0a\x0f\x0b" } },
+    .{ "MFScheduleWorkItem", MethodRecord{ .library = "MFPlat", .import = "MFScheduleWorkItem", .signature = "\x00\x04\x11\x79\x12\x95\xcd\x12\x82\xb1\x0a\x0f\x0b" } },
+    .{ "MFCancelWorkItem", MethodRecord{ .library = "MFPlat", .import = "MFCancelWorkItem", .signature = "\x00\x01\x11\x79\x0b" } },
+    .{ "MFGetTimerPeriodicity", MethodRecord{ .library = "MFPlat", .import = "MFGetTimerPeriodicity", .signature = "\x00\x01\x11\x79\x0f\x09" } },
+    .{ "MFAddPeriodicCallback", MethodRecord{ .library = "MFPlat", .import = "MFAddPeriodicCallback", .signature = "\x00\x03\x11\x79\x12\x95\xd5\x12\x82\xb1\x0f\x09" } },
+    .{ "MFRemovePeriodicCallback", MethodRecord{ .library = "MFPlat", .import = "MFRemovePeriodicCallback", .signature = "\x00\x01\x11\x79\x09" } },
+    .{ "MFAllocateWorkQueueEx", MethodRecord{ .library = "MFPlat", .import = "MFAllocateWorkQueueEx", .signature = "\x00\x02\x11\x79\x11\x95\xd9\x0f\x09" } },
+    .{ "MFAllocateWorkQueue", MethodRecord{ .library = "MFPlat", .import = "MFAllocateWorkQueue", .signature = "\x00\x01\x11\x79\x0f\x09" } },
+    .{ "MFLockWorkQueue", MethodRecord{ .library = "MFPlat", .import = "MFLockWorkQueue", .signature = "\x00\x01\x11\x79\x09" } },
+    .{ "MFUnlockWorkQueue", MethodRecord{ .library = "MFPlat", .import = "MFUnlockWorkQueue", .signature = "\x00\x01\x11\x79\x09" } },
+    .{ "MFBeginRegisterWorkQueueWithMMCSS", MethodRecord{ .library = "MFPlat", .import = "MFBeginRegisterWorkQueueWithMMCSS", .signature = "\x00\x05\x11\x79\x09\x11\x05\x09\x12\x95\xcd\x12\x82\xb1" } },
+    .{ "MFBeginRegisterWorkQueueWithMMCSSEx", MethodRecord{ .library = "MFPlat", .import = "MFBeginRegisterWorkQueueWithMMCSSEx", .signature = "\x00\x06\x11\x79\x09\x11\x05\x09\x08\x12\x95\xcd\x12\x82\xb1" } },
+    .{ "MFEndRegisterWorkQueueWithMMCSS", MethodRecord{ .library = "MFPlat", .import = "MFEndRegisterWorkQueueWithMMCSS", .signature = "\x00\x02\x11\x79\x12\x95\xd1\x0f\x09" } },
+    .{ "MFBeginUnregisterWorkQueueWithMMCSS", MethodRecord{ .library = "MFPlat", .import = "MFBeginUnregisterWorkQueueWithMMCSS", .signature = "\x00\x03\x11\x79\x09\x12\x95\xcd\x12\x82\xb1" } },
+    .{ "MFEndUnregisterWorkQueueWithMMCSS", MethodRecord{ .library = "MFPlat", .import = "MFEndUnregisterWorkQueueWithMMCSS", .signature = "\x00\x01\x11\x79\x12\x95\xd1" } },
+    .{ "MFGetWorkQueueMMCSSClass", MethodRecord{ .library = "MFPlat", .import = "MFGetWorkQueueMMCSSClass", .signature = "\x00\x03\x11\x79\x09\x11\x05\x0f\x09" } },
+    .{ "MFGetWorkQueueMMCSSTaskId", MethodRecord{ .library = "MFPlat", .import = "MFGetWorkQueueMMCSSTaskId", .signature = "\x00\x02\x11\x79\x09\x0f\x09" } },
+    .{ "MFRegisterPlatformWithMMCSS", MethodRecord{ .library = "MFPlat", .import = "MFRegisterPlatformWithMMCSS", .signature = "\x00\x03\x11\x79\x11\x05\x0f\x09\x08" } },
+    .{ "MFUnregisterPlatformFromMMCSS", MethodRecord{ .library = "MFPlat", .import = "MFUnregisterPlatformFromMMCSS", .signature = "\x00\x00\x11\x79" } },
+    .{ "MFLockSharedWorkQueue", MethodRecord{ .library = "MFPlat", .import = "MFLockSharedWorkQueue", .signature = "\x00\x04\x11\x79\x11\x05\x08\x0f\x09\x0f\x09" } },
+    .{ "MFGetWorkQueueMMCSSPriority", MethodRecord{ .library = "MFPlat", .import = "MFGetWorkQueueMMCSSPriority", .signature = "\x00\x02\x11\x79\x09\x0f\x08" } },
+    .{ "MFCreateAsyncResult", MethodRecord{ .library = "MFPlat", .import = "MFCreateAsyncResult", .signature = "\x00\x04\x11\x79\x12\x82\xb1\x12\x95\xcd\x12\x82\xb1\x0f\x12\x95\xd1" } },
+    .{ "MFInvokeCallback", MethodRecord{ .library = "MFPlat", .import = "MFInvokeCallback", .signature = "\x00\x01\x11\x79\x12\x95\xd1" } },
+    .{ "MFCreateFile", MethodRecord{ .library = "MFPlat", .import = "MFCreateFile", .signature = "\x00\x05\x11\x79\x11\x95\xdd\x11\x95\xe1\x11\x95\xe5\x11\x05\x0f\x12\x95\x25" } },
+    .{ "MFCreateTempFile", MethodRecord{ .library = "MFPlat", .import = "MFCreateTempFile", .signature = "\x00\x04\x11\x79\x11\x95\xdd\x11\x95\xe1\x11\x95\xe5\x0f\x12\x95\x25" } },
+    .{ "MFBeginCreateFile", MethodRecord{ .library = "MFPlat", .import = "MFBeginCreateFile", .signature = "\x00\x07\x11\x79\x11\x95\xdd\x11\x95\xe1\x11\x95\xe5\x11\x05\x12\x95\xcd\x12\x82\xb1\x0f\x12\x82\xb1" } },
+    .{ "MFEndCreateFile", MethodRecord{ .library = "MFPlat", .import = "MFEndCreateFile", .signature = "\x00\x02\x11\x79\x12\x95\xd1\x0f\x12\x95\x25" } },
+    .{ "MFCancelCreateFile", MethodRecord{ .library = "MFPlat", .import = "MFCancelCreateFile", .signature = "\x00\x01\x11\x79\x12\x82\xb1" } },
+    .{ "MFCreateMemoryBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateMemoryBuffer", .signature = "\x00\x02\x11\x79\x09\x0f\x12\x95\xe9" } },
+    .{ "MFCreateMediaBufferWrapper", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaBufferWrapper", .signature = "\x00\x04\x11\x79\x12\x95\xe9\x09\x09\x0f\x12\x95\xe9" } },
+    .{ "MFCreateLegacyMediaBufferOnMFMediaBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateLegacyMediaBufferOnMFMediaBuffer", .signature = "\x00\x04\x11\x79\x12\x95\xed\x12\x95\xe9\x09\x0f\x12\x95\xf1" } },
+    .{ "MFMapDX9FormatToDXGIFormat", MethodRecord{ .library = "MFPlat", .import = "MFMapDX9FormatToDXGIFormat", .signature = "\x00\x01\x11\x95\xf5\x09" } },
+    .{ "MFMapDXGIFormatToDX9Format", MethodRecord{ .library = "MFPlat", .import = "MFMapDXGIFormatToDX9Format", .signature = "\x00\x01\x09\x11\x95\xf5" } },
+    .{ "MFLockDXGIDeviceManager", MethodRecord{ .library = "MFPlat", .import = "MFLockDXGIDeviceManager", .signature = "\x00\x02\x11\x79\x0f\x09\x0f\x12\x95\x71" } },
+    .{ "MFUnlockDXGIDeviceManager", MethodRecord{ .library = "MFPlat", .import = "MFUnlockDXGIDeviceManager", .signature = "\x00\x00\x11\x79" } },
+    .{ "MFCreateDXSurfaceBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateDXSurfaceBuffer", .signature = "\x00\x04\x11\x79\x0f\x11\x0d\x12\x82\xb1\x11\x59\x0f\x12\x95\xe9" } },
+    .{ "MFCreateWICBitmapBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateWICBitmapBuffer", .signature = "\x00\x03\x11\x79\x0f\x11\x0d\x12\x82\xb1\x0f\x12\x95\xe9" } },
+    .{ "MFCreateDXGISurfaceBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateDXGISurfaceBuffer", .signature = "\x00\x05\x11\x79\x0f\x11\x0d\x12\x82\xb1\x09\x11\x59\x0f\x12\x95\xe9" } },
+    .{ "MFCreateDXGICrossAdapterBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateDXGICrossAdapterBuffer", .signature = "\x00\x05\x11\x79\x0f\x11\x0d\x12\x82\xb1\x12\x95\x09\x09\x0f\x12\x95\xe9" } },
+    .{ "MFCreateVideoSampleAllocatorEx", MethodRecord{ .library = "MFPlat", .import = "MFCreateVideoSampleAllocatorEx", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateDXGIDeviceManager", MethodRecord{ .library = "MFPlat", .import = "MFCreateDXGIDeviceManager", .signature = "\x00\x02\x11\x79\x0f\x09\x0f\x12\x95\x71" } },
+    .{ "MFGetDXGIDeviceManageMode", MethodRecord{ .library = "MFPlat", .import = "MFGetDXGIDeviceManageMode", .signature = "\x00\x02\x11\x79\x12\x82\xb1\x0f\x11\x95\xf9" } },
+    .{ "MFCreateAlignedMemoryBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreateAlignedMemoryBuffer", .signature = "\x00\x03\x11\x79\x09\x09\x0f\x12\x95\xe9" } },
+    .{ "MFCreateMediaEvent", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaEvent", .signature = "\x00\x05\x11\x79\x09\x0f\x11\x0d\x11\x79\x0f\x11\x82\x01\x0f\x12\x95\xfd" } },
+    .{ "MFCreateEventQueue", MethodRecord{ .library = "MFPlat", .import = "MFCreateEventQueue", .signature = "\x00\x01\x11\x79\x0f\x12\x96\x01" } },
+    .{ "MFCreateSample", MethodRecord{ .library = "MFPlat", .import = "MFCreateSample", .signature = "\x00\x01\x11\x79\x0f\x12\x95\xed" } },
+    .{ "MFCreateAttributes", MethodRecord{ .library = "MFPlat", .import = "MFCreateAttributes", .signature = "\x00\x02\x11\x79\x0f\x12\x94\xe9\x09" } },
+    .{ "MFInitAttributesFromBlob", MethodRecord{ .library = "MFPlat", .import = "MFInitAttributesFromBlob", .signature = "\x00\x03\x11\x79\x12\x94\xe9\x0f\x05\x09" } },
+    .{ "MFGetAttributesAsBlobSize", MethodRecord{ .library = "MFPlat", .import = "MFGetAttributesAsBlobSize", .signature = "\x00\x02\x11\x79\x12\x94\xe9\x0f\x09" } },
+    .{ "MFGetAttributesAsBlob", MethodRecord{ .library = "MFPlat", .import = "MFGetAttributesAsBlob", .signature = "\x00\x03\x11\x79\x12\x94\xe9\x0f\x05\x09" } },
+    .{ "MFTRegister", MethodRecord{ .library = "MFPlat", .import = "MFTRegister", .signature = "\x00\x09\x11\x79\x11\x0d\x11\x0d\x11\x05\x09\x09\x0f\x11\x96\x05\x09\x0f\x11\x96\x05\x12\x94\xe9" } },
+    .{ "MFTUnregister", MethodRecord{ .library = "MFPlat", .import = "MFTUnregister", .signature = "\x00\x01\x11\x79\x11\x0d" } },
+    .{ "MFTRegisterLocal", MethodRecord{ .library = "MFPlat", .import = "MFTRegisterLocal", .signature = "\x00\x08\x11\x79\x12\x96\x09\x0f\x11\x0d\x11\x05\x09\x09\x0f\x11\x96\x05\x09\x0f\x11\x96\x05" } },
+    .{ "MFTUnregisterLocal", MethodRecord{ .library = "MFPlat", .import = "MFTUnregisterLocal", .signature = "\x00\x01\x11\x79\x12\x96\x09" } },
+    .{ "MFTRegisterLocalByCLSID", MethodRecord{ .library = "MFPlat", .import = "MFTRegisterLocalByCLSID", .signature = "\x00\x08\x11\x79\x0f\x11\x0d\x0f\x11\x0d\x11\x05\x09\x09\x0f\x11\x96\x05\x09\x0f\x11\x96\x05" } },
+    .{ "MFTUnregisterLocalByCLSID", MethodRecord{ .library = "MFPlat", .import = "MFTUnregisterLocalByCLSID", .signature = "\x00\x01\x11\x79\x11\x0d" } },
+    .{ "MFTEnum", MethodRecord{ .library = "MFPlat", .import = "MFTEnum", .signature = "\x00\x07\x11\x79\x11\x0d\x09\x0f\x11\x96\x05\x0f\x11\x96\x05\x12\x94\xe9\x0f\x0f\x11\x0d\x0f\x09" } },
+    .{ "MFTEnumEx", MethodRecord{ .library = "MFPlat", .import = "MFTEnumEx", .signature = "\x00\x06\x11\x79\x11\x0d\x09\x0f\x11\x96\x05\x0f\x11\x96\x05\x0f\x0f\x12\x94\xed\x0f\x09" } },
+    .{ "MFTEnum2", MethodRecord{ .library = "MFPlat", .import = "MFTEnum2", .signature = "\x00\x07\x11\x79\x11\x0d\x09\x0f\x11\x96\x05\x0f\x11\x96\x05\x12\x94\xe9\x0f\x0f\x12\x94\xed\x0f\x09" } },
+    .{ "MFTGetInfo", MethodRecord{ .library = "MFPlat", .import = "MFTGetInfo", .signature = "\x00\x07\x11\x79\x11\x0d\x0f\x11\x05\x0f\x0f\x11\x96\x05\x0f\x09\x0f\x0f\x11\x96\x05\x0f\x09\x0f\x12\x94\xe9" } },
+    .{ "MFGetPluginControl", MethodRecord{ .library = "MFPlat", .import = "MFGetPluginControl", .signature = "\x00\x01\x11\x79\x0f\x12\x96\x0d" } },
+    .{ "MFGetMFTMerit", MethodRecord{ .library = "MFPlat", .import = "MFGetMFTMerit", .signature = "\x00\x04\x11\x79\x12\x82\xb1\x09\x0f\x05\x0f\x09" } },
+    .{ "MFRegisterLocalSchemeHandler", MethodRecord{ .library = "MFPlat", .import = "MFRegisterLocalSchemeHandler", .signature = "\x00\x02\x11\x79\x11\x05\x12\x94\xed" } },
+    .{ "MFRegisterLocalByteStreamHandler", MethodRecord{ .library = "MFPlat", .import = "MFRegisterLocalByteStreamHandler", .signature = "\x00\x03\x11\x79\x11\x05\x11\x05\x12\x94\xed" } },
+    .{ "MFCreateMFByteStreamWrapper", MethodRecord{ .library = "MFPlat", .import = "MFCreateMFByteStreamWrapper", .signature = "\x00\x02\x11\x79\x12\x95\x25\x0f\x12\x95\x25" } },
+    .{ "MFCreateMediaExtensionActivate", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaExtensionActivate", .signature = "\x00\x04\x11\x79\x11\x05\x12\x82\xb1\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateMuxStreamAttributes", MethodRecord{ .library = "MFPlat", .import = "MFCreateMuxStreamAttributes", .signature = "\x00\x02\x11\x79\x12\x95\x39\x0f\x12\x94\xe9" } },
+    .{ "MFCreateMuxStreamMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateMuxStreamMediaType", .signature = "\x00\x02\x11\x79\x12\x95\x39\x0f\x12\x95\x09" } },
+    .{ "MFCreateMuxStreamSample", MethodRecord{ .library = "MFPlat", .import = "MFCreateMuxStreamSample", .signature = "\x00\x02\x11\x79\x12\x95\x39\x0f\x12\x95\xed" } },
+    .{ "MFValidateMediaTypeSize", MethodRecord{ .library = "MFPlat", .import = "MFValidateMediaTypeSize", .signature = "\x00\x03\x11\x79\x11\x0d\x0f\x05\x09" } },
+    .{ "MFCreateMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaType", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x09" } },
+    .{ "MFCreateMFVideoFormatFromMFMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateMFVideoFormatFromMFMediaType", .signature = "\x00\x03\x11\x79\x12\x95\x09\x0f\x0f\x11\x96\x11\x0f\x09" } },
+    .{ "MFCreateWaveFormatExFromMFMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateWaveFormatExFromMFMediaType", .signature = "\x00\x04\x11\x79\x12\x95\x09\x0f\x0f\x11\x81\x95\x0f\x09\x09" } },
+    .{ "MFInitMediaTypeFromVideoInfoHeader", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromVideoInfoHeader", .signature = "\x00\x04\x11\x79\x12\x95\x09\x0f\x11\x96\x15\x09\x0f\x11\x0d" } },
+    .{ "MFInitMediaTypeFromVideoInfoHeader2", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromVideoInfoHeader2", .signature = "\x00\x04\x11\x79\x12\x95\x09\x0f\x11\x96\x19\x09\x0f\x11\x0d" } },
+    .{ "MFInitMediaTypeFromMPEG1VideoInfo", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromMPEG1VideoInfo", .signature = "\x00\x04\x11\x79\x12\x95\x09\x0f\x11\x96\x1d\x09\x0f\x11\x0d" } },
+    .{ "MFInitMediaTypeFromMPEG2VideoInfo", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromMPEG2VideoInfo", .signature = "\x00\x04\x11\x79\x12\x95\x09\x0f\x11\x96\x21\x09\x0f\x11\x0d" } },
+    .{ "MFCalculateBitmapImageSize", MethodRecord{ .library = "MFPlat", .import = "MFCalculateBitmapImageSize", .signature = "\x00\x04\x11\x79\x0f\x11\x8d\x89\x09\x0f\x09\x0f\x11\x59" } },
+    .{ "MFCalculateImageSize", MethodRecord{ .library = "MFPlat", .import = "MFCalculateImageSize", .signature = "\x00\x04\x11\x79\x0f\x11\x0d\x09\x09\x0f\x09" } },
+    .{ "MFFrameRateToAverageTimePerFrame", MethodRecord{ .library = "MFPlat", .import = "MFFrameRateToAverageTimePerFrame", .signature = "\x00\x03\x11\x79\x09\x09\x0f\x0b" } },
+    .{ "MFAverageTimePerFrameToFrameRate", MethodRecord{ .library = "MFPlat", .import = "MFAverageTimePerFrameToFrameRate", .signature = "\x00\x03\x11\x79\x0b\x0f\x09\x0f\x09" } },
+    .{ "MFInitMediaTypeFromWaveFormatEx", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromWaveFormatEx", .signature = "\x00\x03\x11\x79\x12\x95\x09\x0f\x11\x81\x95\x09" } },
+    .{ "MFInitMediaTypeFromMFVideoFormat", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromMFVideoFormat", .signature = "\x00\x03\x11\x79\x12\x95\x09\x0f\x11\x96\x11\x09" } },
+    .{ "MFInitMediaTypeFromAMMediaType", MethodRecord{ .library = "MFPlat", .import = "MFInitMediaTypeFromAMMediaType", .signature = "\x00\x02\x11\x79\x12\x95\x09\x0f\x11\x96\x25" } },
+    .{ "MFInitAMMediaTypeFromMFMediaType", MethodRecord{ .library = "MFPlat", .import = "MFInitAMMediaTypeFromMFMediaType", .signature = "\x00\x03\x11\x79\x12\x95\x09\x11\x0d\x0f\x11\x96\x25" } },
+    .{ "MFCreateAMMediaTypeFromMFMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateAMMediaTypeFromMFMediaType", .signature = "\x00\x03\x11\x79\x12\x95\x09\x11\x0d\x0f\x0f\x11\x96\x25" } },
+    .{ "MFCompareFullToPartialMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCompareFullToPartialMediaType", .signature = "\x00\x02\x11\x59\x12\x95\x09\x12\x95\x09" } },
+    .{ "MFWrapMediaType", MethodRecord{ .library = "MFPlat", .import = "MFWrapMediaType", .signature = "\x00\x04\x11\x79\x12\x95\x09\x0f\x11\x0d\x0f\x11\x0d\x0f\x12\x95\x09" } },
+    .{ "MFUnwrapMediaType", MethodRecord{ .library = "MFPlat", .import = "MFUnwrapMediaType", .signature = "\x00\x02\x11\x79\x12\x95\x09\x0f\x12\x95\x09" } },
+    .{ "MFGetStrideForBitmapInfoHeader", MethodRecord{ .library = "MFPlat", .import = "MFGetStrideForBitmapInfoHeader", .signature = "\x00\x03\x11\x79\x09\x09\x0f\x08" } },
+    .{ "MFCreateVideoMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateVideoMediaType", .signature = "\x00\x02\x11\x79\x0f\x11\x96\x11\x0f\x12\x96\x29" } },
+    .{ "MFCreateVideoMediaTypeFromSubtype", MethodRecord{ .library = "MFPlat", .import = "MFCreateVideoMediaTypeFromSubtype", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x12\x96\x29" } },
+    .{ "MFIsFormatYUV", MethodRecord{ .library = "EVR", .import = "MFIsFormatYUV", .signature = "\x00\x01\x11\x59\x09" } },
+    .{ "MFCreateVideoMediaTypeFromBitMapInfoHeader", MethodRecord{ .library = "MFPlat", .import = "MFCreateVideoMediaTypeFromBitMapInfoHeader", .signature = "\x00\x09\x11\x79\x0f\x11\x8d\x89\x09\x09\x11\x96\x2d\x0b\x0b\x0b\x09\x0f\x12\x96\x29" } },
+    .{ "MFGetPlaneSize", MethodRecord{ .library = "EVR", .import = "MFGetPlaneSize", .signature = "\x00\x04\x11\x79\x09\x09\x09\x0f\x09" } },
+    .{ "MFCreateVideoMediaTypeFromBitMapInfoHeaderEx", MethodRecord{ .library = "MFPlat", .import = "MFCreateVideoMediaTypeFromBitMapInfoHeaderEx", .signature = "\x00\x0a\x11\x79\x0f\x11\x8d\x89\x09\x09\x09\x11\x96\x2d\x0b\x09\x09\x09\x0f\x12\x96\x29" } },
+    .{ "MFCreateMediaTypeFromRepresentation", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaTypeFromRepresentation", .signature = "\x00\x03\x11\x79\x11\x0d\x0f\x01\x0f\x12\x95\x09" } },
+    .{ "MFCreateAudioMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateAudioMediaType", .signature = "\x00\x02\x11\x79\x0f\x11\x81\x95\x0f\x12\x96\x31" } },
+    .{ "MFGetUncompressedVideoFormat", MethodRecord{ .library = "MFPlat", .import = "MFGetUncompressedVideoFormat", .signature = "\x00\x01\x09\x0f\x11\x96\x11" } },
+    .{ "MFInitVideoFormat", MethodRecord{ .library = "MFPlat", .import = "MFInitVideoFormat", .signature = "\x00\x02\x11\x79\x0f\x11\x96\x11\x11\x96\x35" } },
+    .{ "MFInitVideoFormat_RGB", MethodRecord{ .library = "MFPlat", .import = "MFInitVideoFormat_RGB", .signature = "\x00\x04\x11\x79\x0f\x11\x96\x11\x09\x09\x09" } },
+    .{ "MFConvertColorInfoToDXVA", MethodRecord{ .library = "MFPlat", .import = "MFConvertColorInfoToDXVA", .signature = "\x00\x02\x11\x79\x0f\x09\x0f\x11\x96\x11" } },
+    .{ "MFConvertColorInfoFromDXVA", MethodRecord{ .library = "MFPlat", .import = "MFConvertColorInfoFromDXVA", .signature = "\x00\x02\x11\x79\x0f\x11\x96\x11\x09" } },
+    .{ "MFCopyImage", MethodRecord{ .library = "MFPlat", .import = "MFCopyImage", .signature = "\x00\x06\x11\x79\x0f\x05\x08\x0f\x05\x08\x09\x09" } },
+    .{ "MFConvertFromFP16Array", MethodRecord{ .library = "MFPlat", .import = "MFConvertFromFP16Array", .signature = "\x00\x03\x11\x79\x0f\x0c\x0f\x07\x09" } },
+    .{ "MFConvertToFP16Array", MethodRecord{ .library = "MFPlat", .import = "MFConvertToFP16Array", .signature = "\x00\x03\x11\x79\x0f\x07\x0f\x0c\x09" } },
+    .{ "MFCreate2DMediaBuffer", MethodRecord{ .library = "MFPlat", .import = "MFCreate2DMediaBuffer", .signature = "\x00\x05\x11\x79\x09\x09\x09\x11\x59\x0f\x12\x95\xe9" } },
+    .{ "MFCreateMediaBufferFromMediaType", MethodRecord{ .library = "MFPlat", .import = "MFCreateMediaBufferFromMediaType", .signature = "\x00\x05\x11\x79\x12\x95\x09\x0a\x09\x09\x0f\x12\x95\xe9" } },
+    .{ "MFCreateCollection", MethodRecord{ .library = "MFPlat", .import = "MFCreateCollection", .signature = "\x00\x01\x11\x79\x0f\x12\x95\x39" } },
+    .{ "MFHeapAlloc", MethodRecord{ .library = "MFPlat", .import = "MFHeapAlloc", .signature = "\x00\x05\x0f\x01\x19\x09\x11\x3d\x08\x11\x96\x39" } },
+    .{ "MFHeapFree", MethodRecord{ .library = "MFPlat", .import = "MFHeapFree", .signature = "\x00\x01\x01\x0f\x01" } },
+    .{ "MFllMulDiv", MethodRecord{ .library = "MFPlat", .import = "MFllMulDiv", .signature = "\x00\x04\x0a\x0a\x0a\x0a\x0a" } },
+    .{ "MFGetContentProtectionSystemCLSID", MethodRecord{ .library = "MFPlat", .import = "MFGetContentProtectionSystemCLSID", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x11\x0d" } },
+    .{ "MFCombineSamples", MethodRecord{ .library = "MFPlat", .import = "MFCombineSamples", .signature = "\x00\x04\x11\x79\x12\x95\xed\x12\x95\xed\x09\x0f\x11\x59" } },
+    .{ "MFSplitSample", MethodRecord{ .library = "MFPlat", .import = "MFSplitSample", .signature = "\x00\x04\x11\x79\x12\x95\xed\x0f\x12\x95\xed\x09\x0f\x09" } },
+    .{ "MFCreateSourceReaderFromURL", MethodRecord{ .library = "MFReadWrite", .import = "MFCreateSourceReaderFromURL", .signature = "\x00\x03\x11\x79\x11\x05\x12\x94\xe9\x0f\x12\x96\x3d" } },
+    .{ "MFCreateSourceReaderFromByteStream", MethodRecord{ .library = "MFReadWrite", .import = "MFCreateSourceReaderFromByteStream", .signature = "\x00\x03\x11\x79\x12\x95\x25\x12\x94\xe9\x0f\x12\x96\x3d" } },
+    .{ "MFCreateSourceReaderFromMediaSource", MethodRecord{ .library = "MFReadWrite", .import = "MFCreateSourceReaderFromMediaSource", .signature = "\x00\x03\x11\x79\x12\x95\x3d\x12\x94\xe9\x0f\x12\x96\x3d" } },
+    .{ "MFCreateSinkWriterFromURL", MethodRecord{ .library = "MFReadWrite", .import = "MFCreateSinkWriterFromURL", .signature = "\x00\x04\x11\x79\x11\x05\x12\x95\x25\x12\x94\xe9\x0f\x12\x96\x41" } },
+    .{ "MFCreateSinkWriterFromMediaSink", MethodRecord{ .library = "MFReadWrite", .import = "MFCreateSinkWriterFromMediaSink", .signature = "\x00\x03\x11\x79\x12\x95\x21\x12\x94\xe9\x0f\x12\x96\x41" } },
+    .{ "MFCreateVideoPresenter", MethodRecord{ .library = "EVR", .import = "MFCreateVideoPresenter", .signature = "\x00\x04\x11\x79\x12\x82\xb1\x0f\x11\x0d\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateVideoMixer", MethodRecord{ .library = "EVR", .import = "MFCreateVideoMixer", .signature = "\x00\x04\x11\x79\x12\x82\xb1\x0f\x11\x0d\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateVideoMixerAndPresenter", MethodRecord{ .library = "EVR", .import = "MFCreateVideoMixerAndPresenter", .signature = "\x00\x06\x11\x79\x12\x82\xb1\x12\x82\xb1\x0f\x11\x0d\x0f\x0f\x01\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateVideoRenderer", MethodRecord{ .library = "MF", .import = "MFCreateVideoRenderer", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFCreateVideoSampleFromSurface", MethodRecord{ .library = "EVR", .import = "MFCreateVideoSampleFromSurface", .signature = "\x00\x02\x11\x79\x12\x82\xb1\x0f\x12\x95\xed" } },
+    .{ "MFCreateVideoSampleAllocator", MethodRecord{ .library = "EVR", .import = "MFCreateVideoSampleAllocator", .signature = "\x00\x02\x11\x79\x0f\x11\x0d\x0f\x0f\x01" } },
+    .{ "MFPCreateMediaPlayer", MethodRecord{ .library = "MFPlay", .import = "MFPCreateMediaPlayer", .signature = "\x00\x06\x11\x79\x11\x05\x11\x59\x11\x96\x45\x12\x96\x49\x11\x25\x0f\x12\x96\x4d" } },
+    .{ "MFCreateEncryptedMediaExtensionsStoreActivate", MethodRecord{ .library = "MF", .import = "MFCreateEncryptedMediaExtensionsStoreActivate", .signature = "\x00\x04\x11\x79\x12\x96\x51\x12\x83\x75\x11\x05\x0f\x12\x94\xed" } },
+    .{ "MFCreateVirtualCamera", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFCreateVirtualCamera", .signature = "\x00\x08\x11\x79\x11\x96\x55\x11\x96\x59\x11\x96\x5d\x11\x05\x11\x05\x0f\x11\x0d\x09\x0f\x12\x96\x61" } },
+    .{ "MFIsVirtualCameraTypeSupported", MethodRecord{ .library = "MFSENSORGROUP", .import = "MFIsVirtualCameraTypeSupported", .signature = "\x00\x02\x11\x79\x11\x96\x55\x0f\x11\x59" } },
+    .{ "OPMXboxEnableHDCP", MethodRecord{ .library = "OPMXbox", .import = "OPMXboxEnableHDCP", .signature = "\x00\x01\x11\x79\x11\x96\x65" } },
+    .{ "OPMXboxGetHDCPStatus", MethodRecord{ .library = "OPMXbox", .import = "OPMXboxGetHDCPStatus", .signature = "\x00\x01\x11\x79\x0f\x11\x96\x69" } },
+    .{ "OPMXboxGetHDCPStatusAndType", MethodRecord{ .library = "OPMXbox", .import = "OPMXboxGetHDCPStatusAndType", .signature = "\x00\x02\x11\x79\x0f\x11\x96\x69\x0f\x11\x96\x65" } },
+});
+
+pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
+    return switch (coded) {
+        0x5 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "PWSTR" },
+        0xd => TypeRefEntry{ .namespace = "System", .name = "Guid" },
+        0x25 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HWND" },
+        0x3d => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "PSTR" },
+        0x59 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "BOOL" },
+        0x79 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HRESULT" },
+        0x85 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "HANDLE" },
+        0x195 => TypeRefEntry{ .namespace = "Windows.Win32.Media.Audio", .name = "WAVEFORMATEX" },
+        0x201 => TypeRefEntry{ .namespace = "Windows.Win32.System.Com.StructuredStorage", .name = "PROPVARIANT" },
+        0x2b1 => TypeRefEntry{ .namespace = "Windows.Win32.System.Com", .name = "IUnknown" },
+        0x375 => TypeRefEntry{ .namespace = "Windows.Win32.System.Com", .name = "IStream" },
+        0xd89 => TypeRefEntry{ .namespace = "Windows.Win32.Graphics.Gdi", .name = "BITMAPINFOHEADER" },
+        0xeed => TypeRefEntry{ .namespace = "Windows.Win32.Graphics.Gdi", .name = "HMONITOR" },
+        0x1369 => TypeRefEntry{ .namespace = "Windows.Win32.Foundation", .name = "LUID" },
+        0x14c5 => TypeRefEntry{ .namespace = "Windows.Win32.Graphics.Direct3D9", .name = "IDirect3DDevice9Ex" },
+        0x14c9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "DXVAHD_CONTENT_DESC" },
+        0x14cd => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "DXVAHD_DEVICE_USAGE" },
+        0x14d1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "PDXVAHDSW_Plugin" },
+        0x14d5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IDXVAHD_Device" },
+        0x14d9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IDirect3DDeviceManager9" },
+        0x14dd => TypeRefEntry{ .namespace = "Windows.Win32.Graphics.Direct3D9", .name = "IDirect3DDevice9" },
+        0x14e1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "OPM_VIDEO_OUTPUT_SEMANTICS" },
+        0x14e5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IOPMVideoOutput" },
+        0x14e9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFAttributes" },
+        0x14ed => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFActivate" },
+        0x14f1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaSession" },
+        0x14f5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSourceResolver" },
+        0x14f9 => TypeRefEntry{ .namespace = "Windows.Win32.UI.Shell.PropertiesSystem", .name = "IPropertyStore" },
+        0x14fd => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFTopology" },
+        0x1501 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MF_TOPOLOGY_TYPE" },
+        0x1505 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFTopologyNode" },
+        0x1509 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaType" },
+        0x150d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPresentationClock" },
+        0x1511 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPresentationTimeSource" },
+        0x1515 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFStreamDescriptor" },
+        0x1519 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPresentationDescriptor" },
+        0x151d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaTypeHandler" },
+        0x1521 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaSink" },
+        0x1525 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFByteStream" },
+        0x1529 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFTopoLoader" },
+        0x152d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSampleGrabberSinkCallback" },
+        0x1531 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFQualityManager" },
+        0x1535 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSequencerSource" },
+        0x1539 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFCollection" },
+        0x153d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaSource" },
+        0x1541 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFNetCredentialCache" },
+        0x1545 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFNetProxyLocator" },
+        0x1549 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPMPServer" },
+        0x154d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFRemoteDesktopPlugin" },
+        0x1551 => TypeRefEntry{ .namespace = "Windows.Win32.UI.Shell.PropertiesSystem", .name = "INamedPropertyStore" },
+        0x1555 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFTransform" },
+        0x1559 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFTranscodeProfile" },
+        0x155d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFTrackedSample" },
+        0x1561 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFProtectedEnvironmentAccess" },
+        0x1565 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSignedLibrary" },
+        0x1569 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSystemId" },
+        0x156d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFContentProtectionDevice" },
+        0x1571 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFDXGIDeviceManager" },
+        0x1575 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFContentDecryptorContext" },
+        0x1579 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSensorGroup" },
+        0x157d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSensorStream" },
+        0x1581 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSensorProfile" },
+        0x1585 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSensorProfileCollection" },
+        0x1589 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSensorActivitiesReportCallback" },
+        0x158d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSensorActivityMonitor" },
+        0x1591 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFExtendedCameraIntrinsics" },
+        0x1595 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFCameraIntrinsic_DistortionModelType" },
+        0x1599 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFExtendedCameraIntrinsicModel" },
+        0x159d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFRelativePanelWatcher" },
+        0x15a1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFCameraOcclusionStateReportCallback" },
+        0x15a5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFCameraOcclusionStateMonitor" },
+        0x15a9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFCameraControlNotify" },
+        0x15ad => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFCameraControlMonitor" },
+        0x15b1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFASFContentInfo" },
+        0x15b5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFASFIndexer" },
+        0x15b9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFASFSplitter" },
+        0x15bd => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFASFProfile" },
+        0x15c1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFASFMultiplexer" },
+        0x15c5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFASFStreamSelector" },
+        0x15c9 => TypeRefEntry{ .namespace = "Windows.Win32.Graphics.Direct3D12", .name = "ID3D12Device" },
+        0x15cd => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFAsyncCallback" },
+        0x15d1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFAsyncResult" },
+        0x15d5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFPERIODICCALLBACK" },
+        0x15d9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFASYNC_WORKQUEUE_TYPE" },
+        0x15dd => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MF_FILE_ACCESSMODE" },
+        0x15e1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MF_FILE_OPENMODE" },
+        0x15e5 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MF_FILE_FLAGS" },
+        0x15e9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaBuffer" },
+        0x15ed => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSample" },
+        0x15f1 => TypeRefEntry{ .namespace = "Windows.Win32.Media.DxMediaObjects", .name = "IMediaBuffer" },
+        0x15f5 => TypeRefEntry{ .namespace = "Windows.Win32.Graphics.Dxgi.Common", .name = "DXGI_FORMAT" },
+        0x15f9 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MF_DXGI_DEVICE_MANAGER_MODE" },
+        0x15fd => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaEvent" },
+        0x1601 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFMediaEventQueue" },
+        0x1605 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFT_REGISTER_TYPE_INFO" },
+        0x1609 => TypeRefEntry{ .namespace = "Windows.Win32.System.Com", .name = "IClassFactory" },
+        0x160d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPluginControl" },
+        0x1611 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFVIDEOFORMAT" },
+        0x1615 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "VIDEOINFOHEADER" },
+        0x1619 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "VIDEOINFOHEADER2" },
+        0x161d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MPEG1VIDEOINFO" },
+        0x1621 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MPEG2VIDEOINFO" },
+        0x1625 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "AM_MEDIA_TYPE" },
+        0x1629 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFVideoMediaType" },
+        0x162d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFVideoInterlaceMode" },
+        0x1631 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFAudioMediaType" },
+        0x1635 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFStandardVideoFormat" },
+        0x1639 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "EAllocationType" },
+        0x163d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSourceReader" },
+        0x1641 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFSinkWriter" },
+        0x1645 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFP_CREATION_OPTIONS" },
+        0x1649 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPMediaPlayerCallback" },
+        0x164d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPMediaPlayer" },
+        0x1651 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFPMPHostApp" },
+        0x1655 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFVirtualCameraType" },
+        0x1659 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFVirtualCameraLifetime" },
+        0x165d => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "MFVirtualCameraAccess" },
+        0x1661 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "IMFVirtualCamera" },
+        0x1665 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "OPM_HDCP_TYPE" },
+        0x1669 => TypeRefEntry{ .namespace = "Windows.Win32.Media.MediaFoundation", .name = "OPM_HDCP_STATUS" },
+        else => null,
+    };
+}
+
+pub const MF_EVENT_FLAG_NONE = 0;
+pub const MF_EVENT_FLAG_NO_WAIT = 1;
+pub const AMMPEG2_DoPanScan = 1;
+pub const AMMPEG2_DVDLine21Field1 = 2;
+pub const AMMPEG2_DVDLine21Field2 = 4;
+pub const AMMPEG2_SourceIsLetterboxed = 8;
+pub const AMMPEG2_FilmCameraMode = 16;
+pub const AMMPEG2_LetterboxAnalogOut = 32;
+pub const AMMPEG2_DSS_UserData = 64;
+pub const AMMPEG2_DVB_UserData = 128;
+pub const AMMPEG2_27MhzTimebase = 256;
+pub const AMMPEG2_WidescreenAnalogOut = 512;
+pub const MF_VERSION = 131184;
+pub const AVENC_H263V_LEVELCOUNT = 8;
+pub const AVENC_H264V_LEVELCOUNT = 16;
+pub const AVENC_H264V_MAX_MBBITS = 3200;
+pub const DXVA2_E_NOT_INITIALIZED = -2147217408;
+pub const DXVA2_E_NEW_VIDEO_DEVICE = -2147217407;
+pub const DXVA2_E_VIDEO_DEVICE_LOCKED = -2147217406;
+pub const DXVA2_E_NOT_AVAILABLE = -2147217405;
+pub const MAX_SUBSTREAMS = 15;
+pub const DXVA2_DECODE_GET_DRIVER_HANDLE = 1829;
+pub const DXVA2_DECODE_SPECIFY_ENCRYPTED_BLOCKS = 1828;
+pub const MFEVRDLL = 0;
+pub const MF_SDK_VERSION = 2;
+pub const MF_API_VERSION = 112;
+pub const MFSTARTUP_NOSOCKET = 1;
+pub const MFSTARTUP_LITE = 1;
+pub const MFSTARTUP_FULL = 0;
+pub const MF_E_DXGI_DEVICE_NOT_INITIALIZED = -2147217408;
+pub const MF_E_DXGI_NEW_VIDEO_DEVICE = -2147217407;
+pub const MF_E_DXGI_VIDEO_DEVICE_LOCKED = -2147217406;
+pub const MF_1_BYTE_ALIGNMENT = 0;
+pub const MF_2_BYTE_ALIGNMENT = 1;
+pub const MF_4_BYTE_ALIGNMENT = 3;
+pub const MF_8_BYTE_ALIGNMENT = 7;
+pub const MF_16_BYTE_ALIGNMENT = 15;
+pub const MF_32_BYTE_ALIGNMENT = 31;
+pub const MF_64_BYTE_ALIGNMENT = 63;
+pub const MF_128_BYTE_ALIGNMENT = 127;
+pub const MF_256_BYTE_ALIGNMENT = 255;
+pub const MF_512_BYTE_ALIGNMENT = 511;
+pub const MF_1024_BYTE_ALIGNMENT = 1023;
+pub const MF_2048_BYTE_ALIGNMENT = 2047;
+pub const MF_4096_BYTE_ALIGNMENT = 4095;
+pub const MF_8192_BYTE_ALIGNMENT = 8191;
+pub const MFSESSIONCAP_START = 1;
+pub const MFSESSIONCAP_SEEK = 2;
+pub const MFSESSIONCAP_PAUSE = 4;
+pub const MFSESSIONCAP_RATE_FORWARD = 16;
+pub const MFSESSIONCAP_RATE_REVERSE = 32;
+pub const MFSESSIONCAP_DOES_NOT_USE_NETWORK = 64;
+pub const MFSampleExtension_ClosedCaption_CEA708_MAX_SIZE = 256;
+pub const MACROBLOCK_FLAG_SKIP = 1;
+pub const MACROBLOCK_FLAG_DIRTY = 2;
+pub const MACROBLOCK_FLAG_MOTION = 4;
+pub const MACROBLOCK_FLAG_VIDEO = 8;
+pub const MACROBLOCK_FLAG_HAS_MOTION_VECTOR = 16;
+pub const MACROBLOCK_FLAG_HAS_QP = 32;
+pub const MFCAPTURE_METADATA_SCAN_RIGHT_LEFT = 1;
+pub const MFCAPTURE_METADATA_SCAN_BOTTOM_TOP = 2;
+pub const MFCAPTURE_METADATA_SCANLINE_VERTICAL = 4;
+pub const MF_METADATAFACIALEXPRESSION_SMILE = 1;
+pub const MF_METADATATIMESTAMPS_DEVICE = 1;
+pub const MF_METADATATIMESTAMPS_PRESENTATION = 2;
+pub const MF_HISTOGRAM_CHANNEL_Y = 1;
+pub const MF_HISTOGRAM_CHANNEL_R = 2;
+pub const MF_HISTOGRAM_CHANNEL_G = 4;
+pub const MF_HISTOGRAM_CHANNEL_B = 8;
+pub const MF_HISTOGRAM_CHANNEL_Cb = 16;
+pub const MF_HISTOGRAM_CHANNEL_Cr = 32;
+pub const LOCAL_D3DFMT_DEFINES = 1;
+pub const MEDIASINK_FIXED_STREAMS = 1;
+pub const MEDIASINK_CANNOT_MATCH_CLOCK = 2;
+pub const MEDIASINK_RATELESS = 4;
+pub const MEDIASINK_CLOCK_REQUIRED = 8;
+pub const MEDIASINK_CAN_PREROLL = 16;
+pub const MEDIASINK_REQUIRE_REFERENCE_MEDIATYPE = 32;
+pub const MFCLOCK_FREQUENCY_HNS = 10000000;
+pub const MFCLOCK_TOLERANCE_UNKNOWN = 50000;
+pub const MFCLOCK_JITTER_ISR = 1000;
+pub const MFCLOCK_JITTER_DPC = 4000;
+pub const MFCLOCK_JITTER_PASSIVE = 10000;
+pub const PRESENTATION_CURRENT_POSITION = 9223372036854775807;
+pub const MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_CROSSPROCESS = 1;
+pub const MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_NOPERSIST = 2;
+pub const MF_AUDIO_RENDERER_ATTRIBUTE_FLAGS_DONT_ALLOW_FORMAT_CHANGES = 4;
+pub const MFRR_INFO_VERSION = 0;
+pub const MF_USER_MODE_COMPONENT_LOAD = 1;
+pub const MF_KERNEL_MODE_COMPONENT_LOAD = 2;
+pub const MF_GRL_LOAD_FAILED = 16;
+pub const MF_INVALID_GRL_SIGNATURE = 32;
+pub const MF_GRL_ABSENT = 4096;
+pub const MF_COMPONENT_REVOKED = 8192;
+pub const MF_COMPONENT_INVALID_EKU = 16384;
+pub const MF_COMPONENT_CERT_REVOKED = 32768;
+pub const MF_COMPONENT_INVALID_ROOT = 65536;
+pub const MF_COMPONENT_HS_CERT_REVOKED = 131072;
+pub const MF_COMPONENT_LS_CERT_REVOKED = 262144;
+pub const MF_BOOT_DRIVER_VERIFICATION_FAILED = 1048576;
+pub const MF_TEST_SIGNED_COMPONENT_LOADING = 16777216;
+pub const MF_MINCRYPT_FAILURE = 268435456;
+pub const SHA_HASH_LEN = 20;
+pub const MFSEQUENCER_INVALID_ELEMENT_ID = 4294967295;
+pub const MFCONTENTPROTECTIONDEVICE_FUNCTIONID_START = 67108864;
+pub const MFCONTENTPROTECTIONDEVICE_REALTIMECLIENT_DATA_FUNCTIONID = 67108864;
+pub const MF_UNKNOWN_DURATION = 0;
+pub const MF_INVALID_PRESENTATION_TIME = 9223372036854775808;
+pub const MF_MEDIATYPE_EQUAL_MAJOR_TYPES = 1;
+pub const MF_MEDIATYPE_EQUAL_FORMAT_TYPES = 2;
+pub const MF_MEDIATYPE_EQUAL_FORMAT_DATA = 4;
+pub const MF_MEDIATYPE_EQUAL_FORMAT_USER_DATA = 8;
+pub const MFASYNC_FAST_IO_PROCESSING_CALLBACK = 1;
+pub const MFASYNC_SIGNAL_CALLBACK = 2;
+pub const MFASYNC_BLOCKING_CALLBACK = 4;
+pub const MFASYNC_REPLY_CALLBACK = 8;
+pub const MFASYNC_LOCALIZE_REMOTE_CALLBACK = 16;
+pub const MFASYNC_CALLBACK_QUEUE_UNDEFINED = 0;
+pub const MFASYNC_CALLBACK_QUEUE_STANDARD = 1;
+pub const MFASYNC_CALLBACK_QUEUE_RT = 2;
+pub const MFASYNC_CALLBACK_QUEUE_IO = 3;
+pub const MFASYNC_CALLBACK_QUEUE_TIMER = 4;
+pub const MFASYNC_CALLBACK_QUEUE_MULTITHREADED = 5;
+pub const MFASYNC_CALLBACK_QUEUE_LONG_FUNCTION = 7;
+pub const MFASYNC_CALLBACK_QUEUE_PRIVATE_MASK = 4294901760;
+pub const MFASYNC_CALLBACK_QUEUE_ALL = 4294967295;
+pub const MFBYTESTREAM_IS_READABLE = 1;
+pub const MFBYTESTREAM_IS_WRITABLE = 2;
+pub const MFBYTESTREAM_IS_SEEKABLE = 4;
+pub const MFBYTESTREAM_IS_REMOTE = 8;
+pub const MFBYTESTREAM_IS_DIRECTORY = 128;
+pub const MFBYTESTREAM_HAS_SLOW_SEEK = 256;
+pub const MFBYTESTREAM_IS_PARTIALLY_DOWNLOADED = 512;
+pub const MFBYTESTREAM_SHARE_WRITE = 1024;
+pub const MFBYTESTREAM_DOES_NOT_USE_NETWORK = 2048;
+pub const MFBYTESTREAM_SEEK_FLAG_CANCEL_PENDING_IO = 1;
+pub const MFT_STREAMS_UNLIMITED = 4294967295;
+pub const MFT_OUTPUT_BOUND_UPPER_UNBOUNDED = 9223372036854775807;
+pub const WM_CODEC_ONEPASS_CBR = 1;
+pub const WM_CODEC_ONEPASS_VBR = 2;
+pub const WM_CODEC_TWOPASS_CBR = 4;
+pub const WM_CODEC_TWOPASS_VBR_UNCONSTRAINED = 8;
+pub const WM_CODEC_TWOPASS_VBR_PEAKCONSTRAINED = 16;
+pub const SYSFXUI_DONOTSHOW_LOUDNESSEQUALIZATION = 1;
+pub const SYSFXUI_DONOTSHOW_ROOMCORRECTION = 2;
+pub const SYSFXUI_DONOTSHOW_BASSMANAGEMENT = 4;
+pub const SYSFXUI_DONOTSHOW_BASSBOOST = 8;
+pub const SYSFXUI_DONOTSHOW_HEADPHONEVIRTUALIZATION = 16;
+pub const SYSFXUI_DONOTSHOW_VIRTUALSURROUND = 32;
+pub const SYSFXUI_DONOTSHOW_SPEAKERFILLING = 64;
+pub const SYSFXUI_DONOTSHOW_CHANNELPHANTOMING = 128;
+pub const AEC_MAX_SYSTEM_MODES = 6;
+pub const WMAAECMA_E_NO_ACTIVE_RENDER_STREAM = 2278293514;
+pub const E_TOCPARSER_INVALIDASFFILE = -1728053247;
+pub const E_TOCPARSER_INVALIDRIFFFILE = -1728053246;
+pub const TOC_MAX_DESCRIPTION_SIZE = 65535;
+pub const TOC_ENTRY_MAX_TITLE_SIZE = 65535;
+pub const MFASFINDEXER_PER_ENTRY_BYTES_DYNAMIC = 65535;
+pub const MFASFINDEXER_NO_FIXED_INTERVAL = 4294967295;
+pub const MFASFINDEXER_READ_FOR_REVERSEPLAYBACK_OUTOFDATASEGMENT = 18446744073709551615;
+pub const MFASFINDEXER_APPROX_SEEK_TIME_UNKNOWN = 18446744073709551615;
+pub const MFASF_MAX_STREAM_NUMBER = 127;
+pub const MFASF_INVALID_STREAM_NUMBER = 128;
+pub const MFASF_PAYLOADEXTENSION_MAX_SIZE = 255;
+pub const MFASF_PAYLOADEXTENSION_VARIABLE_SIZE = 65535;
+pub const MFASF_DEFAULT_BUFFER_WINDOW_MS = 3000;
+pub const FACILITY_MF = 13;
+pub const FACILITY_MF_WIN32 = 7;
+pub const MF_E_PLATFORM_NOT_INITIALIZED = -1072875856;
+pub const MF_E_BUFFERTOOSMALL = -1072875855;
+pub const MF_E_INVALIDREQUEST = -1072875854;
+pub const MF_E_INVALIDSTREAMNUMBER = -1072875853;
+pub const MF_E_INVALIDMEDIATYPE = -1072875852;
+pub const MF_E_NOTACCEPTING = -1072875851;
+pub const MF_E_NOT_INITIALIZED = -1072875850;
+pub const MF_E_UNSUPPORTED_REPRESENTATION = -1072875849;
+pub const MF_E_NO_MORE_TYPES = -1072875847;
+pub const MF_E_UNSUPPORTED_SERVICE = -1072875846;
+pub const MF_E_UNEXPECTED = -1072875845;
+pub const MF_E_INVALIDNAME = -1072875844;
+pub const MF_E_INVALIDTYPE = -1072875843;
+pub const MF_E_INVALID_FILE_FORMAT = -1072875842;
+pub const MF_E_INVALIDINDEX = -1072875841;
+pub const MF_E_INVALID_TIMESTAMP = -1072875840;
+pub const MF_E_UNSUPPORTED_SCHEME = -1072875837;
+pub const MF_E_UNSUPPORTED_BYTESTREAM_TYPE = -1072875836;
+pub const MF_E_UNSUPPORTED_TIME_FORMAT = -1072875835;
+pub const MF_E_NO_SAMPLE_TIMESTAMP = -1072875832;
+pub const MF_E_NO_SAMPLE_DURATION = -1072875831;
+pub const MF_E_INVALID_STREAM_DATA = -1072875829;
+pub const MF_E_RT_UNAVAILABLE = -1072875825;
+pub const MF_E_UNSUPPORTED_RATE = -1072875824;
+pub const MF_E_THINNING_UNSUPPORTED = -1072875823;
+pub const MF_E_REVERSE_UNSUPPORTED = -1072875822;
+pub const MF_E_UNSUPPORTED_RATE_TRANSITION = -1072875821;
+pub const MF_E_RATE_CHANGE_PREEMPTED = -1072875820;
+pub const MF_E_NOT_FOUND = -1072875819;
+pub const MF_E_NOT_AVAILABLE = -1072875818;
+pub const MF_E_NO_CLOCK = -1072875817;
+pub const MF_S_MULTIPLE_BEGIN = 866008;
+pub const MF_E_MULTIPLE_BEGIN = -1072875815;
+pub const MF_E_MULTIPLE_SUBSCRIBERS = -1072875814;
+pub const MF_E_TIMER_ORPHANED = -1072875813;
+pub const MF_E_STATE_TRANSITION_PENDING = -1072875812;
+pub const MF_E_UNSUPPORTED_STATE_TRANSITION = -1072875811;
+pub const MF_E_UNRECOVERABLE_ERROR_OCCURRED = -1072875810;
+pub const MF_E_SAMPLE_HAS_TOO_MANY_BUFFERS = -1072875809;
+pub const MF_E_SAMPLE_NOT_WRITABLE = -1072875808;
+pub const MF_E_INVALID_KEY = -1072875806;
+pub const MF_E_BAD_STARTUP_VERSION = -1072875805;
+pub const MF_E_UNSUPPORTED_CAPTION = -1072875804;
+pub const MF_E_INVALID_POSITION = -1072875803;
+pub const MF_E_ATTRIBUTENOTFOUND = -1072875802;
+pub const MF_E_PROPERTY_TYPE_NOT_ALLOWED = -1072875801;
+pub const MF_E_PROPERTY_TYPE_NOT_SUPPORTED = -1072875800;
+pub const MF_E_PROPERTY_EMPTY = -1072875799;
+pub const MF_E_PROPERTY_NOT_EMPTY = -1072875798;
+pub const MF_E_PROPERTY_VECTOR_NOT_ALLOWED = -1072875797;
+pub const MF_E_PROPERTY_VECTOR_REQUIRED = -1072875796;
+pub const MF_E_OPERATION_CANCELLED = -1072875795;
+pub const MF_E_BYTESTREAM_NOT_SEEKABLE = -1072875794;
+pub const MF_E_DISABLED_IN_SAFEMODE = -1072875793;
+pub const MF_E_CANNOT_PARSE_BYTESTREAM = -1072875792;
+pub const MF_E_SOURCERESOLVER_MUTUALLY_EXCLUSIVE_FLAGS = -1072875791;
+pub const MF_E_MEDIAPROC_WRONGSTATE = -1072875790;
+pub const MF_E_RT_THROUGHPUT_NOT_AVAILABLE = -1072875789;
+pub const MF_E_RT_TOO_MANY_CLASSES = -1072875788;
+pub const MF_E_RT_WOULDBLOCK = -1072875787;
+pub const MF_E_NO_BITPUMP = -1072875786;
+pub const MF_E_RT_OUTOFMEMORY = -1072875785;
+pub const MF_E_RT_WORKQUEUE_CLASS_NOT_SPECIFIED = -1072875784;
+pub const MF_E_INSUFFICIENT_BUFFER = -1072860816;
+pub const MF_E_CANNOT_CREATE_SINK = -1072875782;
+pub const MF_E_BYTESTREAM_UNKNOWN_LENGTH = -1072875781;
+pub const MF_E_SESSION_PAUSEWHILESTOPPED = -1072875780;
+pub const MF_S_ACTIVATE_REPLACED = 866045;
+pub const MF_E_FORMAT_CHANGE_NOT_SUPPORTED = -1072875778;
+pub const MF_E_INVALID_WORKQUEUE = -1072875777;
+pub const MF_E_DRM_UNSUPPORTED = -1072875776;
+pub const MF_E_UNAUTHORIZED = -1072875775;
+pub const MF_E_OUT_OF_RANGE = -1072875774;
+pub const MF_E_INVALID_CODEC_MERIT = -1072875773;
+pub const MF_E_HW_MFT_FAILED_START_STREAMING = -1072875772;
+pub const MF_E_OPERATION_IN_PROGRESS = -1072875771;
+pub const MF_E_HARDWARE_DRM_UNSUPPORTED = -1072875770;
+pub const MF_E_DURATION_TOO_LONG = -1072875769;
+pub const MF_E_OPERATION_UNSUPPORTED_AT_D3D_FEATURE_LEVEL = -1072875768;
+pub const MF_E_UNSUPPORTED_MEDIATYPE_AT_D3D_FEATURE_LEVEL = -1072875767;
+pub const MF_S_ASF_PARSEINPROGRESS = 1074608792;
+pub const MF_E_ASF_PARSINGINCOMPLETE = -1072874856;
+pub const MF_E_ASF_MISSINGDATA = -1072874855;
+pub const MF_E_ASF_INVALIDDATA = -1072874854;
+pub const MF_E_ASF_OPAQUEPACKET = -1072874853;
+pub const MF_E_ASF_NOINDEX = -1072874852;
+pub const MF_E_ASF_OUTOFRANGE = -1072874851;
+pub const MF_E_ASF_INDEXNOTLOADED = -1072874850;
+pub const MF_E_ASF_TOO_MANY_PAYLOADS = -1072874849;
+pub const MF_E_ASF_UNSUPPORTED_STREAM_TYPE = -1072874848;
+pub const MF_E_ASF_DROPPED_PACKET = -1072874847;
+pub const MF_E_NO_EVENTS_AVAILABLE = -1072873856;
+pub const MF_E_INVALID_STATE_TRANSITION = -1072873854;
+pub const MF_E_END_OF_STREAM = -1072873852;
+pub const MF_E_SHUTDOWN = -1072873851;
+pub const MF_E_MP3_NOTFOUND = -1072873850;
+pub const MF_E_MP3_OUTOFDATA = -1072873849;
+pub const MF_E_MP3_NOTMP3 = -1072873848;
+pub const MF_E_MP3_NOTSUPPORTED = -1072873847;
+pub const MF_E_NO_DURATION = -1072873846;
+pub const MF_E_INVALID_FORMAT = -1072873844;
+pub const MF_E_PROPERTY_NOT_FOUND = -1072873843;
+pub const MF_E_PROPERTY_READ_ONLY = -1072873842;
+pub const MF_E_PROPERTY_NOT_ALLOWED = -1072873841;
+pub const MF_E_MEDIA_SOURCE_NOT_STARTED = -1072873839;
+pub const MF_E_UNSUPPORTED_FORMAT = -1072873832;
+pub const MF_E_MP3_BAD_CRC = -1072873831;
+pub const MF_E_NOT_PROTECTED = -1072873830;
+pub const MF_E_MEDIA_SOURCE_WRONGSTATE = -1072873829;
+pub const MF_E_MEDIA_SOURCE_NO_STREAMS_SELECTED = -1072873828;
+pub const MF_E_CANNOT_FIND_KEYFRAME_SAMPLE = -1072873827;
+pub const MF_E_UNSUPPORTED_CHARACTERISTICS = -1072873826;
+pub const MF_E_NO_AUDIO_RECORDING_DEVICE = -1072873825;
+pub const MF_E_AUDIO_RECORDING_DEVICE_IN_USE = -1072873824;
+pub const MF_E_AUDIO_RECORDING_DEVICE_INVALIDATED = -1072873823;
+pub const MF_E_VIDEO_RECORDING_DEVICE_INVALIDATED = -1072873822;
+pub const MF_E_VIDEO_RECORDING_DEVICE_PREEMPTED = -1072873821;
+pub const MF_E_NETWORK_RESOURCE_FAILURE = -1072872856;
+pub const MF_E_NET_WRITE = -1072872855;
+pub const MF_E_NET_READ = -1072872854;
+pub const MF_E_NET_REQUIRE_NETWORK = -1072872853;
+pub const MF_E_NET_REQUIRE_ASYNC = -1072872852;
+pub const MF_E_NET_BWLEVEL_NOT_SUPPORTED = -1072872851;
+pub const MF_E_NET_STREAMGROUPS_NOT_SUPPORTED = -1072872850;
+pub const MF_E_NET_MANUALSS_NOT_SUPPORTED = -1072872849;
+pub const MF_E_NET_INVALID_PRESENTATION_DESCRIPTOR = -1072872848;
+pub const MF_E_NET_CACHESTREAM_NOT_FOUND = -1072872847;
+pub const MF_I_MANUAL_PROXY = 1074610802;
+pub const MF_E_NET_REQUIRE_INPUT = -1072872844;
+pub const MF_E_NET_REDIRECT = -1072872843;
+pub const MF_E_NET_REDIRECT_TO_PROXY = -1072872842;
+pub const MF_E_NET_TOO_MANY_REDIRECTS = -1072872841;
+pub const MF_E_NET_TIMEOUT = -1072872840;
+pub const MF_E_NET_CLIENT_CLOSE = -1072872839;
+pub const MF_E_NET_BAD_CONTROL_DATA = -1072872838;
+pub const MF_E_NET_INCOMPATIBLE_SERVER = -1072872837;
+pub const MF_E_NET_UNSAFE_URL = -1072872836;
+pub const MF_E_NET_CACHE_NO_DATA = -1072872835;
+pub const MF_E_NET_EOL = -1072872834;
+pub const MF_E_NET_BAD_REQUEST = -1072872833;
+pub const MF_E_NET_INTERNAL_SERVER_ERROR = -1072872832;
+pub const MF_E_NET_SESSION_NOT_FOUND = -1072872831;
+pub const MF_E_NET_NOCONNECTION = -1072872830;
+pub const MF_E_NET_CONNECTION_FAILURE = -1072872829;
+pub const MF_E_NET_INCOMPATIBLE_PUSHSERVER = -1072872828;
+pub const MF_E_NET_SERVER_ACCESSDENIED = -1072872827;
+pub const MF_E_NET_PROXY_ACCESSDENIED = -1072872826;
+pub const MF_E_NET_CANNOTCONNECT = -1072872825;
+pub const MF_E_NET_INVALID_PUSH_TEMPLATE = -1072872824;
+pub const MF_E_NET_INVALID_PUSH_PUBLISHING_POINT = -1072872823;
+pub const MF_E_NET_BUSY = -1072872822;
+pub const MF_E_NET_RESOURCE_GONE = -1072872821;
+pub const MF_E_NET_ERROR_FROM_PROXY = -1072872820;
+pub const MF_E_NET_PROXY_TIMEOUT = -1072872819;
+pub const MF_E_NET_SERVER_UNAVAILABLE = -1072872818;
+pub const MF_E_NET_TOO_MUCH_DATA = -1072872817;
+pub const MF_E_NET_SESSION_INVALID = -1072872816;
+pub const MF_E_OFFLINE_MODE = -1072872815;
+pub const MF_E_NET_UDP_BLOCKED = -1072872814;
+pub const MF_E_NET_UNSUPPORTED_CONFIGURATION = -1072872813;
+pub const MF_E_NET_PROTOCOL_DISABLED = -1072872812;
+pub const MF_E_NET_COMPANION_DRIVER_DISCONNECT = -1072872811;
+pub const MF_E_ALREADY_INITIALIZED = -1072871856;
+pub const MF_E_BANDWIDTH_OVERRUN = -1072871855;
+pub const MF_E_LATE_SAMPLE = -1072871854;
+pub const MF_E_FLUSH_NEEDED = -1072871853;
+pub const MF_E_INVALID_PROFILE = -1072871852;
+pub const MF_E_INDEX_NOT_COMMITTED = -1072871851;
+pub const MF_E_NO_INDEX = -1072871850;
+pub const MF_E_CANNOT_INDEX_IN_PLACE = -1072871849;
+pub const MF_E_MISSING_ASF_LEAKYBUCKET = -1072871848;
+pub const MF_E_INVALID_ASF_STREAMID = -1072871847;
+pub const MF_E_STREAMSINK_REMOVED = -1072870856;
+pub const MF_E_STREAMSINKS_OUT_OF_SYNC = -1072870854;
+pub const MF_E_STREAMSINKS_FIXED = -1072870853;
+pub const MF_E_STREAMSINK_EXISTS = -1072870852;
+pub const MF_E_SAMPLEALLOCATOR_CANCELED = -1072870851;
+pub const MF_E_SAMPLEALLOCATOR_EMPTY = -1072870850;
+pub const MF_E_SINK_ALREADYSTOPPED = -1072870849;
+pub const MF_E_ASF_FILESINK_BITRATE_UNKNOWN = -1072870848;
+pub const MF_E_SINK_NO_STREAMS = -1072870847;
+pub const MF_S_SINK_NOT_FINALIZED = 870978;
+pub const MF_E_METADATA_TOO_LONG = -1072870845;
+pub const MF_E_SINK_NO_SAMPLES_PROCESSED = -1072870844;
+pub const MF_E_SINK_HEADERS_NOT_FOUND = -1072870843;
+pub const MF_E_VIDEO_REN_NO_PROCAMP_HW = -1072869856;
+pub const MF_E_VIDEO_REN_NO_DEINTERLACE_HW = -1072869855;
+pub const MF_E_VIDEO_REN_COPYPROT_FAILED = -1072869854;
+pub const MF_E_VIDEO_REN_SURFACE_NOT_SHARED = -1072869853;
+pub const MF_E_VIDEO_DEVICE_LOCKED = -1072869852;
+pub const MF_E_NEW_VIDEO_DEVICE = -1072869851;
+pub const MF_E_NO_VIDEO_SAMPLE_AVAILABLE = -1072869850;
+pub const MF_E_NO_AUDIO_PLAYBACK_DEVICE = -1072869756;
+pub const MF_E_AUDIO_PLAYBACK_DEVICE_IN_USE = -1072869755;
+pub const MF_E_AUDIO_PLAYBACK_DEVICE_INVALIDATED = -1072869754;
+pub const MF_E_AUDIO_SERVICE_NOT_RUNNING = -1072869753;
+pub const MF_E_AUDIO_BUFFER_SIZE_ERROR = -1072869752;
+pub const MF_E_AUDIO_CLIENT_WRAPPER_SPOOF_ERROR = -1072869751;
+pub const MF_E_TOPO_INVALID_OPTIONAL_NODE = -1072868850;
+pub const MF_E_TOPO_CANNOT_FIND_DECRYPTOR = -1072868847;
+pub const MF_E_TOPO_CODEC_NOT_FOUND = -1072868846;
+pub const MF_E_TOPO_CANNOT_CONNECT = -1072868845;
+pub const MF_E_TOPO_UNSUPPORTED = -1072868844;
+pub const MF_E_TOPO_INVALID_TIME_ATTRIBUTES = -1072868843;
+pub const MF_E_TOPO_LOOPS_IN_TOPOLOGY = -1072868842;
+pub const MF_E_TOPO_MISSING_PRESENTATION_DESCRIPTOR = -1072868841;
+pub const MF_E_TOPO_MISSING_STREAM_DESCRIPTOR = -1072868840;
+pub const MF_E_TOPO_STREAM_DESCRIPTOR_NOT_SELECTED = -1072868839;
+pub const MF_E_TOPO_MISSING_SOURCE = -1072868838;
+pub const MF_E_TOPO_SINK_ACTIVATES_UNSUPPORTED = -1072868837;
+pub const MF_E_SEQUENCER_UNKNOWN_SEGMENT_ID = -1072864852;
+pub const MF_S_SEQUENCER_CONTEXT_CANCELED = 876973;
+pub const MF_E_NO_SOURCE_IN_CACHE = -1072864850;
+pub const MF_S_SEQUENCER_SEGMENT_AT_END_OF_STREAM = 876975;
+pub const MF_E_TRANSFORM_TYPE_NOT_SET = -1072861856;
+pub const MF_E_TRANSFORM_STREAM_CHANGE = -1072861855;
+pub const MF_E_TRANSFORM_INPUT_REMAINING = -1072861854;
+pub const MF_E_TRANSFORM_PROFILE_MISSING = -1072861853;
+pub const MF_E_TRANSFORM_PROFILE_INVALID_OR_CORRUPT = -1072861852;
+pub const MF_E_TRANSFORM_PROFILE_TRUNCATED = -1072861851;
+pub const MF_E_TRANSFORM_PROPERTY_PID_NOT_RECOGNIZED = -1072861850;
+pub const MF_E_TRANSFORM_PROPERTY_VARIANT_TYPE_WRONG = -1072861849;
+pub const MF_E_TRANSFORM_PROPERTY_NOT_WRITEABLE = -1072861848;
+pub const MF_E_TRANSFORM_PROPERTY_ARRAY_VALUE_WRONG_NUM_DIM = -1072861847;
+pub const MF_E_TRANSFORM_PROPERTY_VALUE_SIZE_WRONG = -1072861846;
+pub const MF_E_TRANSFORM_PROPERTY_VALUE_OUT_OF_RANGE = -1072861845;
+pub const MF_E_TRANSFORM_PROPERTY_VALUE_INCOMPATIBLE = -1072861844;
+pub const MF_E_TRANSFORM_NOT_POSSIBLE_FOR_CURRENT_OUTPUT_MEDIATYPE = -1072861843;
+pub const MF_E_TRANSFORM_NOT_POSSIBLE_FOR_CURRENT_INPUT_MEDIATYPE = -1072861842;
+pub const MF_E_TRANSFORM_NOT_POSSIBLE_FOR_CURRENT_MEDIATYPE_COMBINATION = -1072861841;
+pub const MF_E_TRANSFORM_CONFLICTS_WITH_OTHER_CURRENTLY_ENABLED_FEATURES = -1072861840;
+pub const MF_E_TRANSFORM_NEED_MORE_INPUT = -1072861838;
+pub const MF_E_TRANSFORM_NOT_POSSIBLE_FOR_CURRENT_SPKR_CONFIG = -1072861837;
+pub const MF_E_TRANSFORM_CANNOT_CHANGE_MEDIATYPE_WHILE_PROCESSING = -1072861836;
+pub const MF_S_TRANSFORM_DO_NOT_PROPAGATE_EVENT = 879989;
+pub const MF_E_UNSUPPORTED_D3D_TYPE = -1072861834;
+pub const MF_E_TRANSFORM_ASYNC_LOCKED = -1072861833;
+pub const MF_E_TRANSFORM_CANNOT_INITIALIZE_ACM_DRIVER = -1072861832;
+pub const MF_E_TRANSFORM_STREAM_INVALID_RESOLUTION = -1072861831;
+pub const MF_E_TRANSFORM_ASYNC_MFT_NOT_SUPPORTED = -1072861830;
+pub const MF_E_TRANSFORM_EXATTRIBUTE_NOT_SUPPORTED = -1072861828;
+pub const MF_E_LICENSE_INCORRECT_RIGHTS = -1072860856;
+pub const MF_E_LICENSE_OUTOFDATE = -1072860855;
+pub const MF_E_LICENSE_REQUIRED = -1072860854;
+pub const MF_E_DRM_HARDWARE_INCONSISTENT = -1072860853;
+pub const MF_E_NO_CONTENT_PROTECTION_MANAGER = -1072860852;
+pub const MF_E_LICENSE_RESTORE_NO_RIGHTS = -1072860851;
+pub const MF_E_BACKUP_RESTRICTED_LICENSE = -1072860850;
+pub const MF_E_LICENSE_RESTORE_NEEDS_INDIVIDUALIZATION = -1072860849;
+pub const MF_S_PROTECTION_NOT_REQUIRED = 880976;
+pub const MF_E_COMPONENT_REVOKED = -1072860847;
+pub const MF_E_TRUST_DISABLED = -1072860846;
+pub const MF_E_WMDRMOTA_NO_ACTION = -1072860845;
+pub const MF_E_WMDRMOTA_ACTION_ALREADY_SET = -1072860844;
+pub const MF_E_WMDRMOTA_DRM_HEADER_NOT_AVAILABLE = -1072860843;
+pub const MF_E_WMDRMOTA_DRM_ENCRYPTION_SCHEME_NOT_SUPPORTED = -1072860842;
+pub const MF_E_WMDRMOTA_ACTION_MISMATCH = -1072860841;
+pub const MF_E_WMDRMOTA_INVALID_POLICY = -1072860840;
+pub const MF_E_POLICY_UNSUPPORTED = -1072860839;
+pub const MF_E_OPL_NOT_SUPPORTED = -1072860838;
+pub const MF_E_TOPOLOGY_VERIFICATION_FAILED = -1072860837;
+pub const MF_E_SIGNATURE_VERIFICATION_FAILED = -1072860836;
+pub const MF_E_DEBUGGING_NOT_ALLOWED = -1072860835;
+pub const MF_E_CODE_EXPIRED = -1072860834;
+pub const MF_E_GRL_VERSION_TOO_LOW = -1072860833;
+pub const MF_E_GRL_RENEWAL_NOT_FOUND = -1072860832;
+pub const MF_E_GRL_EXTENSIBLE_ENTRY_NOT_FOUND = -1072860831;
+pub const MF_E_KERNEL_UNTRUSTED = -1072860830;
+pub const MF_E_PEAUTH_UNTRUSTED = -1072860829;
+pub const MF_E_NON_PE_PROCESS = -1072860827;
+pub const MF_E_REBOOT_REQUIRED = -1072860825;
+pub const MF_S_WAIT_FOR_POLICY_SET = 881000;
+pub const MF_S_VIDEO_DISABLED_WITH_UNKNOWN_SOFTWARE_OUTPUT = 881001;
+pub const MF_E_GRL_INVALID_FORMAT = -1072860822;
+pub const MF_E_GRL_UNRECOGNIZED_FORMAT = -1072860821;
+pub const MF_E_ALL_PROCESS_RESTART_REQUIRED = -1072860820;
+pub const MF_E_PROCESS_RESTART_REQUIRED = -1072860819;
+pub const MF_E_USERMODE_UNTRUSTED = -1072860818;
+pub const MF_E_PEAUTH_SESSION_NOT_STARTED = -1072860817;
+pub const MF_E_PEAUTH_PUBLICKEY_REVOKED = -1072860815;
+pub const MF_E_GRL_ABSENT = -1072860814;
+pub const MF_S_PE_TRUSTED = 881011;
+pub const MF_E_PE_UNTRUSTED = -1072860812;
+pub const MF_E_PEAUTH_NOT_STARTED = -1072860811;
+pub const MF_E_INCOMPATIBLE_SAMPLE_PROTECTION = -1072860810;
+pub const MF_E_PE_SESSIONS_MAXED = -1072860809;
+pub const MF_E_HIGH_SECURITY_LEVEL_CONTENT_NOT_ALLOWED = -1072860808;
+pub const MF_E_TEST_SIGNED_COMPONENTS_NOT_ALLOWED = -1072860807;
+pub const MF_E_ITA_UNSUPPORTED_ACTION = -1072860806;
+pub const MF_E_ITA_ERROR_PARSING_SAP_PARAMETERS = -1072860805;
+pub const MF_E_POLICY_MGR_ACTION_OUTOFBOUNDS = -1072860804;
+pub const MF_E_BAD_OPL_STRUCTURE_FORMAT = -1072860803;
+pub const MF_E_ITA_UNRECOGNIZED_ANALOG_VIDEO_PROTECTION_GUID = -1072860802;
+pub const MF_E_NO_PMP_HOST = -1072860801;
+pub const MF_E_ITA_OPL_DATA_NOT_INITIALIZED = -1072860800;
+pub const MF_E_ITA_UNRECOGNIZED_ANALOG_VIDEO_OUTPUT = -1072860799;
+pub const MF_E_ITA_UNRECOGNIZED_DIGITAL_VIDEO_OUTPUT = -1072860798;
+pub const MF_E_RESOLUTION_REQUIRES_PMP_CREATION_CALLBACK = -1072860797;
+pub const MF_E_INVALID_AKE_CHANNEL_PARAMETERS = -1072860796;
+pub const MF_E_CONTENT_PROTECTION_SYSTEM_NOT_ENABLED = -1072860795;
+pub const MF_E_UNSUPPORTED_CONTENT_PROTECTION_SYSTEM = -1072860794;
+pub const MF_E_DRM_MIGRATION_NOT_SUPPORTED = -1072860793;
+pub const MF_E_HDCP_AUTHENTICATION_FAILURE = -1072860792;
+pub const MF_E_HDCP_LINK_FAILURE = -1072860791;
+pub const MF_E_CLOCK_INVALID_CONTINUITY_KEY = -1072849856;
+pub const MF_E_CLOCK_NO_TIME_SOURCE = -1072849855;
+pub const MF_E_CLOCK_STATE_ALREADY_SET = -1072849854;
+pub const MF_E_CLOCK_NOT_SIMPLE = -1072849853;
+pub const MF_S_CLOCK_STOPPED = 891972;
+pub const MF_E_CLOCK_AUDIO_DEVICE_POSITION_UNEXPECTED = 891973;
+pub const MF_E_CLOCK_AUDIO_RENDER_POSITION_UNEXPECTED = 891974;
+pub const MF_E_CLOCK_AUDIO_RENDER_TIME_UNEXPECTED = 891975;
+pub const MF_E_NO_MORE_DROP_MODES = -1072848856;
+pub const MF_E_NO_MORE_QUALITY_LEVELS = -1072848855;
+pub const MF_E_DROPTIME_NOT_SUPPORTED = -1072848854;
+pub const MF_E_QUALITYKNOB_WAIT_LONGER = -1072848853;
+pub const MF_E_QM_INVALIDSTATE = -1072848852;
+pub const MF_E_TRANSCODE_NO_CONTAINERTYPE = -1072847856;
+pub const MF_E_TRANSCODE_PROFILE_NO_MATCHING_STREAMS = -1072847855;
+pub const MF_E_TRANSCODE_NO_MATCHING_ENCODER = -1072847854;
+pub const MF_E_TRANSCODE_INVALID_PROFILE = -1072847853;
+pub const MF_E_ALLOCATOR_NOT_INITIALIZED = -1072846856;
+pub const MF_E_ALLOCATOR_NOT_COMMITED = -1072846855;
+pub const MF_E_ALLOCATOR_ALREADY_COMMITED = -1072846854;
+pub const MF_E_STREAM_ERROR = -1072846853;
+pub const MF_E_INVALID_STREAM_STATE = -1072846852;
+pub const MF_E_HW_STREAM_NOT_CONNECTED = -1072846851;
+pub const MF_E_NO_CAPTURE_DEVICES_AVAILABLE = -1072845856;
+pub const MF_E_CAPTURE_SINK_OUTPUT_NOT_SET = -1072845855;
+pub const MF_E_CAPTURE_SINK_MIRROR_ERROR = -1072845854;
+pub const MF_E_CAPTURE_SINK_ROTATE_ERROR = -1072845853;
+pub const MF_E_CAPTURE_ENGINE_INVALID_OP = -1072845852;
+pub const MF_E_CAPTURE_ENGINE_ALL_EFFECTS_REMOVED = -1072845851;
+pub const MF_E_CAPTURE_SOURCE_NO_INDEPENDENT_PHOTO_STREAM_PRESENT = -1072845850;
+pub const MF_E_CAPTURE_SOURCE_NO_VIDEO_STREAM_PRESENT = -1072845849;
+pub const MF_E_CAPTURE_SOURCE_NO_AUDIO_STREAM_PRESENT = -1072845848;
+pub const MF_E_CAPTURE_SOURCE_DEVICE_EXTENDEDPROP_OP_IN_PROGRESS = -1072845847;
+pub const MF_E_CAPTURE_PROPERTY_SET_DURING_PHOTO = -1072845846;
+pub const MF_E_CAPTURE_NO_SAMPLES_IN_QUEUE = -1072845845;
+pub const MF_E_HW_ACCELERATED_THUMBNAIL_NOT_SUPPORTED = -1072845844;
+pub const MF_E_UNSUPPORTED_CAPTURE_DEVICE_PRESENT = -1072845843;
+pub const MF_E_TIMELINECONTROLLER_UNSUPPORTED_SOURCE_TYPE = -1072844856;
+pub const MF_E_TIMELINECONTROLLER_NOT_ALLOWED = -1072844855;
+pub const MF_E_TIMELINECONTROLLER_CANNOT_ATTACH = -1072844854;
+pub const MF_E_MEDIA_EXTENSION_APPSERVICE_CONNECTION_FAILED = -1072843856;
+pub const MF_E_MEDIA_EXTENSION_APPSERVICE_REQUEST_FAILED = -1072843855;
+pub const MF_E_MEDIA_EXTENSION_PACKAGE_INTEGRITY_CHECK_FAILED = -1072843854;
+pub const MF_E_MEDIA_EXTENSION_PACKAGE_LICENSE_INVALID = -1072843853;
+pub const MF_E_MEDIA_EXTENSION_PACKAGE_BAD_STATUS = -1072843852;
+pub const MF_E_CAMERA_PRIVACY_NOT_ALLOWED = -1072842856;
+pub const MF_E_CAMERA_FSPROFILE_INVALID = -1072842854;
+pub const MF_INDEX_SIZE_ERR = 2154823681;
+pub const MF_NOT_FOUND_ERR = 2154823688;
+pub const MF_NOT_SUPPORTED_ERR = 2154823689;
+pub const MF_INVALID_STATE_ERR = 2154823691;
+pub const MF_SYNTAX_ERR = 2154823692;
+pub const MF_INVALID_ACCESS_ERR = 2154823695;
+pub const MF_QUOTA_EXCEEDED_ERR = 2154823702;
+pub const MF_PARSE_ERR = 2154823761;
+pub const MF_TYPE_ERR = 2154840069;
+pub const COPP_ProtectionType_Unknown = -2147483648;
+pub const COPP_ProtectionType_None = 0;
+pub const COPP_ProtectionType_HDCP = 1;
+pub const COPP_ProtectionType_ACP = 2;
+pub const COPP_ProtectionType_CGMSA = 4;
+pub const COPP_ProtectionType_Mask = -2147483641;
+pub const COPP_ProtectionType_Reserved = 2147483640;
+pub const MF_Plugin_Type_MFT = 0;
+pub const MF_Plugin_Type_MediaSource = 1;
+pub const MF_Plugin_Type_MFT_MatchOutputType = 2;
+pub const MF_Plugin_Type_Other = -1;
+pub const D3D12_VIDEO_FIELD_TYPE_NONE = 0;
+pub const D3D12_VIDEO_FIELD_TYPE_INTERLACED_TOP_FIELD_FIRST = 1;
+pub const D3D12_VIDEO_FIELD_TYPE_INTERLACED_BOTTOM_FIELD_FIRST = 2;
+pub const D3D12_VIDEO_FRAME_STEREO_FORMAT_NONE = 0;
+pub const D3D12_VIDEO_FRAME_STEREO_FORMAT_MONO = 1;
+pub const D3D12_VIDEO_FRAME_STEREO_FORMAT_HORIZONTAL = 2;
+pub const D3D12_VIDEO_FRAME_STEREO_FORMAT_VERTICAL = 3;
+pub const D3D12_VIDEO_FRAME_STEREO_FORMAT_SEPARATE = 4;
+pub const D3D12_VIDEO_FRAME_CODED_INTERLACE_TYPE_NONE = 0;
+pub const D3D12_VIDEO_FRAME_CODED_INTERLACE_TYPE_FIELD_BASED = 1;
+pub const D3D12_FEATURE_VIDEO_DECODE_SUPPORT = 0;
+pub const D3D12_FEATURE_VIDEO_DECODE_PROFILES = 1;
+pub const D3D12_FEATURE_VIDEO_DECODE_FORMATS = 2;
+pub const D3D12_FEATURE_VIDEO_DECODE_CONVERSION_SUPPORT = 3;
+pub const D3D12_FEATURE_VIDEO_PROCESS_SUPPORT = 5;
+pub const D3D12_FEATURE_VIDEO_PROCESS_MAX_INPUT_STREAMS = 6;
+pub const D3D12_FEATURE_VIDEO_PROCESS_REFERENCE_INFO = 7;
+pub const D3D12_FEATURE_VIDEO_DECODER_HEAP_SIZE = 8;
+pub const D3D12_FEATURE_VIDEO_PROCESSOR_SIZE = 9;
+pub const D3D12_FEATURE_VIDEO_DECODE_PROFILE_COUNT = 10;
+pub const D3D12_FEATURE_VIDEO_DECODE_FORMAT_COUNT = 11;
+pub const D3D12_FEATURE_VIDEO_ARCHITECTURE = 17;
+pub const D3D12_FEATURE_VIDEO_DECODE_HISTOGRAM = 18;
+pub const D3D12_FEATURE_VIDEO_FEATURE_AREA_SUPPORT = 19;
+pub const D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR = 20;
+pub const D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR_SIZE = 21;
+pub const D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_COUNT = 22;
+pub const D3D12_FEATURE_VIDEO_EXTENSION_COMMANDS = 23;
+pub const D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_PARAMETER_COUNT = 24;
+pub const D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_PARAMETERS = 25;
+pub const D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_SUPPORT = 26;
+pub const D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_SIZE = 27;
+pub const D3D12_FEATURE_VIDEO_DECODE_PROTECTED_RESOURCES = 28;
+pub const D3D12_FEATURE_VIDEO_PROCESS_PROTECTED_RESOURCES = 29;
+pub const D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR_PROTECTED_RESOURCES = 30;
+pub const D3D12_FEATURE_VIDEO_DECODER_HEAP_SIZE1 = 31;
+pub const D3D12_FEATURE_VIDEO_PROCESSOR_SIZE1 = 32;
+pub const D3D12_FEATURE_VIDEO_ENCODER_CODEC = 33;
+pub const D3D12_FEATURE_VIDEO_ENCODER_PROFILE_LEVEL = 34;
+pub const D3D12_FEATURE_VIDEO_ENCODER_OUTPUT_RESOLUTION_RATIOS_COUNT = 35;
+pub const D3D12_FEATURE_VIDEO_ENCODER_OUTPUT_RESOLUTION = 36;
+pub const D3D12_FEATURE_VIDEO_ENCODER_INPUT_FORMAT = 37;
+pub const D3D12_FEATURE_VIDEO_ENCODER_RATE_CONTROL_MODE = 38;
+pub const D3D12_FEATURE_VIDEO_ENCODER_INTRA_REFRESH_MODE = 39;
+pub const D3D12_FEATURE_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE = 40;
+pub const D3D12_FEATURE_VIDEO_ENCODER_HEAP_SIZE = 41;
+pub const D3D12_FEATURE_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT = 42;
+pub const D3D12_FEATURE_VIDEO_ENCODER_SUPPORT = 43;
+pub const D3D12_FEATURE_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT = 44;
+pub const D3D12_FEATURE_VIDEO_ENCODER_RESOURCE_REQUIREMENTS = 45;
+pub const D3D12_FEATURE_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_CONFIG = 46;
+pub const D3D12_FEATURE_VIDEO_ENCODER_SUPPORT1 = 47;
+pub const D3D12_FEATURE_VIDEO_ENCODER_RESOURCE_REQUIREMENTS1 = 48;
+pub const D3D12_FEATURE_VIDEO_ENCODER_RESOLVE_INPUT_PARAM_LAYOUT = 49;
+pub const D3D12_FEATURE_VIDEO_ENCODER_QPMAP_INPUT = 50;
+pub const D3D12_FEATURE_VIDEO_ENCODER_DIRTY_REGIONS = 51;
+pub const D3D12_FEATURE_VIDEO_ENCODER_MOTION_SEARCH = 52;
+pub const D3D12_FEATURE_VIDEO_ENCODER_SUPPORT2 = 55;
+pub const D3D12_FEATURE_VIDEO_ENCODER_HEAP_SIZE1 = 56;
+pub const D3D12_FEATURE_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS = 57;
+pub const D3D12_BITSTREAM_ENCRYPTION_TYPE_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_FILTER_BRIGHTNESS = 0;
+pub const D3D12_VIDEO_PROCESS_FILTER_CONTRAST = 1;
+pub const D3D12_VIDEO_PROCESS_FILTER_HUE = 2;
+pub const D3D12_VIDEO_PROCESS_FILTER_SATURATION = 3;
+pub const D3D12_VIDEO_PROCESS_FILTER_NOISE_REDUCTION = 4;
+pub const D3D12_VIDEO_PROCESS_FILTER_EDGE_ENHANCEMENT = 5;
+pub const D3D12_VIDEO_PROCESS_FILTER_ANAMORPHIC_SCALING = 6;
+pub const D3D12_VIDEO_PROCESS_FILTER_STEREO_ADJUSTMENT = 7;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_BRIGHTNESS = 1;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_CONTRAST = 2;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_HUE = 4;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_SATURATION = 8;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_NOISE_REDUCTION = 16;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_EDGE_ENHANCEMENT = 32;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_ANAMORPHIC_SCALING = 64;
+pub const D3D12_VIDEO_PROCESS_FILTER_FLAG_STEREO_ADJUSTMENT = 128;
+pub const D3D12_VIDEO_PROCESS_DEINTERLACE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_DEINTERLACE_FLAG_BOB = 1;
+pub const D3D12_VIDEO_PROCESS_DEINTERLACE_FLAG_CUSTOM = 2147483648;
+pub const D3D12_VIDEO_PROCESS_ALPHA_FILL_MODE_OPAQUE = 0;
+pub const D3D12_VIDEO_PROCESS_ALPHA_FILL_MODE_BACKGROUND = 1;
+pub const D3D12_VIDEO_PROCESS_ALPHA_FILL_MODE_DESTINATION = 2;
+pub const D3D12_VIDEO_PROCESS_ALPHA_FILL_MODE_SOURCE_STREAM = 3;
+pub const D3D12_VIDEO_DECODE_TIER_NOT_SUPPORTED = 0;
+pub const D3D12_VIDEO_DECODE_TIER_1 = 1;
+pub const D3D12_VIDEO_DECODE_TIER_2 = 2;
+pub const D3D12_VIDEO_DECODE_TIER_3 = 3;
+pub const D3D12_VIDEO_DECODE_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_DECODE_SUPPORT_FLAG_SUPPORTED = 1;
+pub const D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_NONE = 0;
+pub const D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_HEIGHT_ALIGNMENT_MULTIPLE_32_REQUIRED = 1;
+pub const D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_POST_PROCESSING_SUPPORTED = 2;
+pub const D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_REFERENCE_ONLY_ALLOCATIONS_REQUIRED = 4;
+pub const D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_ALLOW_RESOLUTION_CHANGE_ON_NON_KEY_FRAME = 8;
+pub const D3D12_VIDEO_DECODE_STATUS_OK = 0;
+pub const D3D12_VIDEO_DECODE_STATUS_CONTINUE = 1;
+pub const D3D12_VIDEO_DECODE_STATUS_CONTINUE_SKIP_DISPLAY = 2;
+pub const D3D12_VIDEO_DECODE_STATUS_RESTART = 3;
+pub const D3D12_VIDEO_DECODE_STATUS_RATE_EXCEEDED = 4;
+pub const D3D12_VIDEO_DECODE_ARGUMENT_TYPE_PICTURE_PARAMETERS = 0;
+pub const D3D12_VIDEO_DECODE_ARGUMENT_TYPE_INVERSE_QUANTIZATION_MATRIX = 1;
+pub const D3D12_VIDEO_DECODE_ARGUMENT_TYPE_SLICE_CONTROL = 2;
+pub const D3D12_VIDEO_DECODE_ARGUMENT_TYPE_HUFFMAN_TABLE = 3;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_Y = 0;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_U = 1;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_V = 2;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_R = 0;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_G = 1;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_B = 2;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_A = 3;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_Y = 1;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_U = 2;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_V = 4;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_R = 1;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_G = 2;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_B = 4;
+pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_A = 8;
+pub const D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAG_SUPPORTED = 1;
+pub const D3D12_VIDEO_SCALE_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_SCALE_SUPPORT_FLAG_POW2_ONLY = 1;
+pub const D3D12_VIDEO_SCALE_SUPPORT_FLAG_EVEN_DIMENSIONS_ONLY = 2;
+pub const D3D12_VIDEO_SCALE_SUPPORT_FLAG_DPB_ENCODER_RESOURCES = 4;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_ALPHA_FILL = 1;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_LUMA_KEY = 2;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_STEREO = 4;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_ROTATION = 8;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_FLIP = 16;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_ALPHA_BLENDING = 32;
+pub const D3D12_VIDEO_PROCESS_FEATURE_FLAG_PIXEL_ASPECT_RATIO = 64;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_DENOISE = 1;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_DERINGING = 2;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_EDGE_ENHANCEMENT = 4;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_COLOR_CORRECTION = 8;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_FLESH_TONE_MAPPING = 16;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_IMAGE_STABILIZATION = 32;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_SUPER_RESOLUTION = 64;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_ANAMORPHIC_SCALING = 128;
+pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAG_CUSTOM = 2147483648;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_DEFAULT = 0;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_FLIP_HORIZONTAL = 1;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_CLOCKWISE_90 = 2;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_CLOCKWISE_90_FLIP_HORIZONTAL = 3;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_CLOCKWISE_180 = 4;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_FLIP_VERTICAL = 5;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_CLOCKWISE_270 = 6;
+pub const D3D12_VIDEO_PROCESS_ORIENTATION_CLOCKWISE_270_FLIP_HORIZONTAL = 7;
+pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAG_FRAME_DISCONTINUITY = 1;
+pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAG_FRAME_REPEAT = 2;
+pub const D3D12_VIDEO_PROCESS_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROCESS_SUPPORT_FLAG_SUPPORTED = 1;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_8X8 = 0;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_16X16 = 1;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAG_8X8 = 1;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAG_16X16 = 2;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_QUARTER_PEL = 0;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAG_NONE = 0;
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAG_QUARTER_PEL = 1;
+pub const D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAG_SUPPORTED = 1;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_CREATION = 0;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_INITIALIZATION = 1;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_EXECUTION = 2;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_CAPS_INPUT = 3;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_CAPS_OUTPUT = 4;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_DEVICE_EXECUTE_INPUT = 5;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE_DEVICE_EXECUTE_OUTPUT = 6;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_UINT8 = 0;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_UINT16 = 1;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_UINT32 = 2;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_UINT64 = 3;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_SINT8 = 4;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_SINT16 = 5;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_SINT32 = 6;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_SINT64 = 7;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_FLOAT = 8;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_DOUBLE = 9;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_RESOURCE = 10;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAG_NONE = 0;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAG_READ = 1;
+pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAG_WRITE = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_PROFILE_MAIN = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_PROFILE_HIGH = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_PROFILE_PROFESSIONAL = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_2_0 = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_2_1 = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_2_2 = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_2_3 = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_3_0 = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_3_1 = 5;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_3_2 = 6;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_3_3 = 7;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_4_0 = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_4_1 = 9;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_4_2 = 10;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_4_3 = 11;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_5_0 = 12;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_5_1 = 13;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_5_2 = 14;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_5_3 = 15;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_6_0 = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_6_1 = 17;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_6_2 = 18;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_6_3 = 19;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_7_0 = 20;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_7_1 = 21;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_7_2 = 22;
+pub const D3D12_VIDEO_ENCODER_AV1_LEVELS_7_3 = 23;
+pub const D3D12_VIDEO_ENCODER_AV1_TIER_MAIN = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_TIER_HIGH = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_128x128_SUPERBLOCK = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FILTER_INTRA = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_INTRA_EDGE_FILTER = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_INTERINTRA_COMPOUND = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_MASKED_COMPOUND = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_WARPED_MOTION = 32;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_DUAL_FILTER = 64;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_JNT_COMP = 128;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FORCED_INTEGER_MOTION_VECTORS = 256;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_SUPER_RESOLUTION = 512;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_LOOP_RESTORATION_FILTER = 1024;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_PALETTE_ENCODING = 2048;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_CDEF_FILTERING = 4096;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_INTRA_BLOCK_COPY = 8192;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_FRAME_REFERENCE_MOTION_VECTORS = 16384;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_ORDER_HINT_TOOLS = 32768;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_AUTO_SEGMENTATION = 65536;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_CUSTOM_SEGMENTATION = 131072;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_LOOP_FILTER_DELTAS = 262144;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_QUANTIZATION_DELTAS = 524288;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_QUANTIZATION_MATRIX = 1048576;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_REDUCED_TX_SET = 2097152;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_MOTION_MODE_SWITCHABLE = 4194304;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_ALLOW_HIGH_PRECISION_MV = 8388608;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_SKIP_MODE_PRESENT = 16777216;
+pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAG_DELTA_LF_PARAMS = 33554432;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_ONLY4x4 = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_LARGEST = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_SELECT = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_FLAG_ONLY4x4 = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_FLAG_LARGEST = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_FLAG_SELECT = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_EIGHTTAP = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_EIGHTTAP_SMOOTH = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_EIGHTTAP_SHARP = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_BILINEAR = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_SWITCHABLE = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAG_EIGHTTAP = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAG_EIGHTTAP_SMOOTH = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAG_EIGHTTAP_SHARP = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAG_BILINEAR = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAG_SWITCHABLE = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_BLOCK_SIZE_4x4 = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_BLOCK_SIZE_8x8 = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_BLOCK_SIZE_16x16 = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_BLOCK_SIZE_32x32 = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_BLOCK_SIZE_64x64 = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_DISABLED = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_Q = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_LF_Y_V = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_LF_Y_H = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_LF_U = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_LF_V = 5;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_REF_FRAME = 6;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_SKIP = 7;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_ALT_GLOBALMV = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_DISABLED = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_Q = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_LF_Y_V = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_LF_Y_H = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_LF_U = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_LF_V = 32;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_REF_FRAME = 64;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_SKIP = 128;
+pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAG_ALT_GLOBALMV = 256;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TYPE_DISABLED = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TYPE_SWITCHABLE = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TYPE_WIENER = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TYPE_SGRPROJ = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TILESIZE_DISABLED = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TILESIZE_32x32 = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TILESIZE_64x64 = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TILESIZE_128x128 = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TILESIZE_256x256 = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_SUPPORT_FLAG_NOT_SUPPORTED = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_SUPPORT_FLAG_32x32 = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_SUPPORT_FLAG_64x64 = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_SUPPORT_FLAG_128x128 = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_SUPPORT_FLAG_256x256 = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_IDENTITY = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_TRANSLATION = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_ROTZOOM = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_AFFINE = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_FLAG_IDENTITY = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_FLAG_TRANSLATION = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_FLAG_ROTZOOM = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_FLAG_AFFINE = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_QUANTIZATION = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_QUANTIZATION_DELTA = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_LOOP_FILTER = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_LOOP_FILTER_DELTA = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_CDEF_DATA = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_CONTEXT_UPDATE_TILE_ID = 32;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_COMPOUND_PREDICTION_MODE = 64;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_PRIMARY_REF_FRAME = 128;
+pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAG_REFERENCE_INDICES = 256;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_KEY_FRAME = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_INTER_FRAME = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_INTRA_ONLY_FRAME = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_SWITCH_FRAME = 3;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_FLAG_KEY_FRAME = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_FLAG_INTER_FRAME = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_FLAG_INTRA_ONLY_FRAME = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_FLAG_SWITCH_FRAME = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_COMP_PREDICTION_TYPE_SINGLE_REFERENCE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_COMP_PREDICTION_TYPE_COMPOUND_REFERENCE = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_ERROR_RESILIENT_MODE = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_DISABLE_CDF_UPDATE = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_PALETTE_ENCODING = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_SKIP_MODE = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_FRAME_REFERENCE_MOTION_VECTORS = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_FORCE_INTEGER_MOTION_VECTORS = 32;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ALLOW_INTRA_BLOCK_COPY = 64;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_USE_SUPER_RESOLUTION = 128;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_DISABLE_FRAME_END_UPDATE_CDF = 256;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_FRAME_SEGMENTATION_AUTO = 512;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_FRAME_SEGMENTATION_CUSTOM = 1024;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ENABLE_WARPED_MOTION = 2048;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_REDUCED_TX_SET = 4096;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_MOTION_MODE_SWITCHABLE = 8192;
+pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAG_ALLOW_HIGH_PRECISION_MV = 16384;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE_ABSOLUTE_QP_MAP = 0;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE_CQP = 1;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE_CBR = 2;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE_VBR = 3;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE_QVBR = 4;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_DELTA_QP = 1;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_FRAME_ANALYSIS = 2;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_QP_RANGE = 4;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_INITIAL_QP = 8;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_MAX_FRAME_SIZE = 16;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_VBV_SIZES = 32;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_EXTENSION1_SUPPORT = 64;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_QUALITY_VS_SPEED = 128;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_SPATIAL_ADAPTIVE_QP = 256;
+pub const D3D12_VIDEO_ENCODER_CODEC_H264 = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_HEVC = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_AV1 = 2;
+pub const D3D12_VIDEO_ENCODER_PROFILE_H264_MAIN = 0;
+pub const D3D12_VIDEO_ENCODER_PROFILE_H264_HIGH = 1;
+pub const D3D12_VIDEO_ENCODER_PROFILE_H264_HIGH_10 = 2;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN = 0;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN10 = 1;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN12 = 2;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN10_422 = 3;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN12_422 = 4;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN_444 = 5;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN10_444 = 6;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN12_444 = 7;
+pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC_MAIN16_444 = 8;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_1 = 0;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_1b = 1;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_11 = 2;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_12 = 3;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_13 = 4;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_2 = 5;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_21 = 6;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_22 = 7;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_3 = 8;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_31 = 9;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_32 = 10;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_4 = 11;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_41 = 12;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_42 = 13;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_5 = 14;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_51 = 15;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_52 = 16;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_6 = 17;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_61 = 18;
+pub const D3D12_VIDEO_ENCODER_LEVELS_H264_62 = 19;
+pub const D3D12_VIDEO_ENCODER_TIER_HEVC_MAIN = 0;
+pub const D3D12_VIDEO_ENCODER_TIER_HEVC_HIGH = 1;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_1 = 0;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_2 = 1;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_21 = 2;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_3 = 3;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_31 = 4;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_4 = 5;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_41 = 6;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_5 = 7;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_51 = 8;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_52 = 9;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_6 = 10;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_61 = 11;
+pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC_62 = 12;
+pub const D3D12_VIDEO_ENCODER_INTRA_REFRESH_MODE_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_INTRA_REFRESH_MODE_ROW_BASED = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_FULL_FRAME = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_BYTES_PER_SUBREGION = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_SQUARE_UNITS_PER_SUBREGION_ROW_UNALIGNED = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_UNIFORM_PARTITIONING_ROWS_PER_SUBREGION = 3;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_UNIFORM_PARTITIONING_SUBREGIONS_PER_FRAME = 4;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_UNIFORM_GRID_PARTITION = 5;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_CONFIGURABLE_GRID_PARTITION = 6;
+pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE_AUTO = 7;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_NOT_SPECIFIED = 1;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_CODEC_CONSTRAINT = 2;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_HARDWARE_CONSTRAINT = 4;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_ROWS_COUNT = 8;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_COLS_COUNT = 16;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_WIDTH = 32;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_AREA = 64;
+pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAG_TOTAL_TILES = 128;
+pub const D3D12_VIDEO_ENCODER_HEAP_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_HEAP_FLAG_ALLOW_SUBREGION_NOTIFICATION_ARRAY_OF_BUFFERS = 1;
+pub const D3D12_VIDEO_ENCODER_HEAP_FLAG_ALLOW_SUBREGION_NOTIFICATION_SINGLE_BUFFER = 2;
+pub const D3D12_VIDEO_ENCODER_HEAP_FLAG_ALLOW_DIRTY_REGIONS = 4;
+pub const D3D12_VIDEO_ENCODER_HEAP_FLAG_ALLOW_RATE_CONTROL_FRAME_ANALYSIS = 8;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_CABAC_ENCODING_SUPPORT = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_INTRA_SLICE_CONSTRAINED_ENCODING_SUPPORT = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_BFRAME_LTR_COMBINED_SUPPORT = 4;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_ADAPTIVE_8x8_TRANSFORM_ENCODING_SUPPORT = 8;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_DIRECT_SPATIAL_ENCODING_SUPPORT = 16;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_DIRECT_TEMPORAL_ENCODING_SUPPORT = 32;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_CONSTRAINED_INTRAPREDICTION_SUPPORT = 64;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_NUM_REF_IDX_ACTIVE_OVERRIDE_FLAG_SLICE_SUPPORT = 128;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_0_ALL_LUMA_CHROMA_SLICE_BLOCK_EDGES_ALWAYS_FILTERED = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_1_DISABLE_ALL_SLICE_BLOCK_EDGES = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_2_DISABLE_SLICE_BOUNDARIES_BLOCKS = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_3_USE_TWO_STAGE_DEBLOCKING = 3;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_4_DISABLE_CHROMA_BLOCK_EDGES = 4;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_5_DISABLE_CHROMA_BLOCK_EDGES_AND_LUMA_BOUNDARIES = 5;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_6_DISABLE_CHROMA_BLOCK_EDGES_AND_USE_LUMA_TWO_STAGE_DEBLOCKING = 6;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_0_ALL_LUMA_CHROMA_SLICE_BLOCK_EDGES_ALWAYS_FILTERED = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_1_DISABLE_ALL_SLICE_BLOCK_EDGES = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_2_DISABLE_SLICE_BOUNDARIES_BLOCKS = 4;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_3_USE_TWO_STAGE_DEBLOCKING = 8;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_4_DISABLE_CHROMA_BLOCK_EDGES = 16;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_5_DISABLE_CHROMA_BLOCK_EDGES_AND_LUMA_BOUNDARIES = 32;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_6_DISABLE_CHROMA_BLOCK_EDGES_AND_USE_LUMA_TWO_STAGE_DEBLOCKING = 64;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_BFRAME_LTR_COMBINED_SUPPORT = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_INTRA_SLICE_CONSTRAINED_ENCODING_SUPPORT = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CONSTRAINED_INTRAPREDICTION_SUPPORT = 4;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_SAO_FILTER_SUPPORT = 8;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_ASYMETRIC_MOTION_PARTITION_SUPPORT = 16;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_ASYMETRIC_MOTION_PARTITION_REQUIRED = 32;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_TRANSFORM_SKIP_SUPPORT = 64;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_DISABLING_LOOP_FILTER_ACROSS_SLICES_SUPPORT = 128;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_P_FRAMES_IMPLEMENTED_AS_LOW_DELAY_B_FRAMES = 256;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_NUM_REF_IDX_ACTIVE_OVERRIDE_FLAG_SLICE_SUPPORT = 512;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_TRANSFORM_SKIP_ROTATION_ENABLED_SUPPORT = 1024;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_TRANSFORM_SKIP_ROTATION_ENABLED_REQUIRED = 2048;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_TRANSFORM_SKIP_CONTEXT_ENABLED_SUPPORT = 4096;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_TRANSFORM_SKIP_CONTEXT_ENABLED_REQUIRED = 8192;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_IMPLICIT_RDPCM_ENABLED_SUPPORT = 16384;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_IMPLICIT_RDPCM_ENABLED_REQUIRED = 32768;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_EXPLICIT_RDPCM_ENABLED_SUPPORT = 65536;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_EXPLICIT_RDPCM_ENABLED_REQUIRED = 131072;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_EXTENDED_PRECISION_PROCESSING_SUPPORT = 262144;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_EXTENDED_PRECISION_PROCESSING_REQUIRED = 524288;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_INTRA_SMOOTHING_DISABLED_SUPPORT = 1048576;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_INTRA_SMOOTHING_DISABLED_REQUIRED = 2097152;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_HIGH_PRECISION_OFFSETS_ENABLED_SUPPORT = 4194304;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_HIGH_PRECISION_OFFSETS_ENABLED_REQUIRED = 8388608;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_PERSISTENT_RICE_ADAPTATION_ENABLED_SUPPORT = 16777216;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_PERSISTENT_RICE_ADAPTATION_ENABLED_REQUIRED = 33554432;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CABAC_BYPASS_ALIGNMENT_ENABLED_SUPPORT = 67108864;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CABAC_BYPASS_ALIGNMENT_ENABLED_REQUIRED = 134217728;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CROSS_COMPONENT_PREDICTION_ENABLED_FLAG_SUPPORT = 268435456;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CROSS_COMPONENT_PREDICTION_ENABLED_FLAG_REQUIRED = 536870912;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CHROMA_QP_OFFSET_LIST_ENABLED_FLAG_SUPPORT = 1073741824;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_CHROMA_QP_OFFSET_LIST_ENABLED_FLAG_REQUIRED = -2147483648;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_CUSIZE_8x8 = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_CUSIZE_16x16 = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_CUSIZE_32x32 = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_CUSIZE_64x64 = 3;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_TUSIZE_4x4 = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_TUSIZE_8x8 = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_TUSIZE_16x16 = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_TUSIZE_32x32 = 3;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG1_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG1_SEPARATE_COLOUR_PLANE_SUPPORT = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG1_SEPARATE_COLOUR_PLANE_REQUIRED = 2;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_GENERAL_SUPPORT_OK = 1;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_RECONFIGURATION_AVAILABLE = 2;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RESOLUTION_RECONFIGURATION_AVAILABLE = 4;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_VBV_SIZE_CONFIG_AVAILABLE = 8;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_FRAME_ANALYSIS_AVAILABLE = 16;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RECONSTRUCTED_FRAMES_REQUIRE_TEXTURE_ARRAYS = 32;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_DELTA_QP_AVAILABLE = 64;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_SUBREGION_LAYOUT_RECONFIGURATION_AVAILABLE = 128;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_ADJUSTABLE_QP_RANGE_AVAILABLE = 256;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_INITIAL_QP_AVAILABLE = 512;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_MAX_FRAME_SIZE_AVAILABLE = 1024;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_SEQUENCE_GOP_RECONFIGURATION_AVAILABLE = 2048;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_MOTION_ESTIMATION_PRECISION_MODE_LIMIT_AVAILABLE = 4096;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_EXTENSION1_SUPPORT = 8192;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_QUALITY_VS_SPEED_AVAILABLE = 16384;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_READABLE_RECONSTRUCTED_PICTURE_LAYOUT_AVAILABLE = 32768;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_PER_BLOCK_QP_MAP_METADATA_AVAILABLE = 65536;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_PER_BLOCK_SATD_MAP_METADATA_AVAILABLE = 131072;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_PER_BLOCK_RC_BIT_ALLOCATION_MAP_METADATA_AVAILABLE = 262144;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_SUBREGION_NOTIFICATION_ARRAY_OF_BUFFERS_AVAILABLE = 524288;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_SUBREGION_NOTIFICATION_SINGLE_BUFFER_AVAILABLE = 1048576;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_FRAME_PSNR_METADATA_AVAILABLE = 2097152;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_SUBREGIONS_PSNR_METADATA_AVAILABLE = 4194304;
+pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAG_RATE_CONTROL_SPATIAL_ADAPTIVE_QP_AVAILABLE = 8388608;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_USE_CONSTRAINED_INTRAPREDICTION = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_USE_ADAPTIVE_8x8_TRANSFORM = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_ENABLE_CABAC_ENCODING = 4;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_ALLOW_REQUEST_INTRA_CONSTRAINED_SLICES = 8;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_DIRECT_MODES_DISABLED = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_DIRECT_MODES_TEMPORAL = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_DIRECT_MODES_SPATIAL = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_DISABLE_LOOP_FILTER_ACROSS_SLICES = 1;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_ALLOW_REQUEST_INTRA_CONSTRAINED_SLICES = 2;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_ENABLE_SAO_FILTER = 4;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_ENABLE_LONG_TERM_REFERENCES = 8;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_USE_ASYMETRIC_MOTION_PARTITION = 16;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_ENABLE_TRANSFORM_SKIPPING = 32;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_USE_CONSTRAINED_INTRAPREDICTION = 64;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_TRANSFORM_SKIP_ROTATION = 128;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_TRANSFORM_SKIP_CONTEXT = 256;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_IMPLICIT_RDPCM = 512;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_EXPLICIT_RDPCM = 1024;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_EXTENDED_PRECISION_PROCESSING = 2048;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_INTRA_SMOOTHING_DISABLED = 4096;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_HIGH_PRECISION_OFFSETS = 8192;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_PERSISTENT_RICE_ADAPTATION = 16384;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_CABAC_BYPASS_ALIGNMENT = 32768;
+pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_SEPARATE_COLOUR_PLANE = 65536;
+pub const D3D12_VIDEO_ENCODER_MOTION_ESTIMATION_PRECISION_MODE_MAXIMUM = 0;
+pub const D3D12_VIDEO_ENCODER_MOTION_ESTIMATION_PRECISION_MODE_FULL_PIXEL = 1;
+pub const D3D12_VIDEO_ENCODER_MOTION_ESTIMATION_PRECISION_MODE_HALF_PIXEL = 2;
+pub const D3D12_VIDEO_ENCODER_MOTION_ESTIMATION_PRECISION_MODE_QUARTER_PIXEL = 3;
+pub const D3D12_VIDEO_ENCODER_MOTION_ESTIMATION_PRECISION_MODE_EIGHTH_PIXEL = 4;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_CODEC_NOT_SUPPORTED = 1;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_INPUT_FORMAT_NOT_SUPPORTED = 8;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_CODEC_CONFIGURATION_NOT_SUPPORTED = 16;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_RATE_CONTROL_MODE_NOT_SUPPORTED = 32;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_RATE_CONTROL_CONFIGURATION_NOT_SUPPORTED = 64;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_INTRA_REFRESH_MODE_NOT_SUPPORTED = 128;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_SUBREGION_LAYOUT_MODE_NOT_SUPPORTED = 256;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_RESOLUTION_NOT_SUPPORTED_IN_LIST = 512;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_GOP_STRUCTURE_NOT_SUPPORTED = 2048;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_SUBREGION_LAYOUT_DATA_NOT_SUPPORTED = 4096;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_QPMAP_NOT_SUPPORTED = 8192;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_DIRTY_REGIONS_NOT_SUPPORTED = 16384;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_MOTION_SEARCH_NOT_SUPPORTED = 32768;
+pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAG_FRAME_ANALYSIS_NOT_SUPPORTED = 65536;
+pub const D3D12_VIDEO_ENCODER_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_H264_I_FRAME = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_H264_P_FRAME = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_H264_B_FRAME = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_H264_IDR_FRAME = 3;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAG_REQUEST_INTRA_CONSTRAINED_SLICES = 1;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAG_REQUEST_NUM_REF_IDX_ACTIVE_OVERRIDE_FLAG_SLICE = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_HEVC_I_FRAME = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_HEVC_P_FRAME = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_HEVC_B_FRAME = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_HEVC_IDR_FRAME = 3;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_REQUEST_INTRA_CONSTRAINED_SLICES = 1;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_REQUEST_NUM_REF_IDX_ACTIVE_OVERRIDE_FLAG_SLICE = 2;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_CROSS_COMPONENT_PREDICTION = 4;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_CHROMA_QP_OFFSET_LIST = 8;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_USED_AS_REFERENCE_PICTURE = 1;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_ENABLE_QUANTIZATION_MATRIX_INPUT = 2;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_ENABLE_DIRTY_REGIONS_INPUT = 4;
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_ENABLE_MOTION_VECTORS_INPUT = 8;
+pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_RESOLUTION_CHANGE = 1;
+pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_RATE_CONTROL_CHANGE = 2;
+pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_SUBREGION_LAYOUT_CHANGE = 4;
+pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_REQUEST_INTRA_REFRESH = 8;
+pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_GOP_SEQUENCE_CHANGE = 16;
+pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_NO_ERROR = 0;
+pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_CODEC_PICTURE_CONTROL_NOT_SUPPORTED = 1;
+pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_SUBREGION_LAYOUT_CONFIGURATION_NOT_SUPPORTED = 2;
+pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_INVALID_REFERENCE_PICTURES = 4;
+pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_RECONFIGURATION_REQUEST_NOT_SUPPORTED = 8;
+pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_INVALID_METADATA_BUFFER_SOURCE = 16;
+pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAG_QP_MAP = 1;
+pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAG_SATD_MAP = 2;
+pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAG_RC_BIT_ALLOCATION_MAP = 4;
+pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAG_FRAME_PSNR = 8;
+pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAG_SUBREGIONS_PSNR = 16;
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_SOURCE_CPU_BUFFER = 0;
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_SOURCE_GPU_TEXTURE = 1;
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_MAP_VALUES_MODE_DIRTY = 0;
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_MAP_VALUES_MODE_SKIP = 1;
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_TYPE_QUANTIZATION_MATRIX = 0;
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_TYPE_DIRTY_REGIONS = 1;
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_TYPE_MOTION_VECTORS = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_MOTION_SEARCH_MODE_FULL_SEARCH = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_MOTION_SEARCH_MODE_START_HINT = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_MOTION_SEARCH_MODE_START_HINT_LIMITED_DISTANCE = 2;
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_SUPPORT_FLAG_REPEAT_FRAME = 1;
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_SUPPORT_FLAG_DIRTY_REGIONS = 2;
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_SUPPORT_FLAG_DIRTY_REGIONS_REQUIRE_FULL_ROW = 4;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_FULL_PIXEL = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_HALF_PIXEL = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_QUARTER_PIXEL = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_SUPPORT_FLAG_FULL_PIXEL = 1;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_SUPPORT_FLAG_HALF_PIXEL = 2;
+pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_SUPPORT_FLAG_QUARTER_PIXEL = 4;
+pub const D3D12_VIDEO_ENCODER_MOTION_SEARCH_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_MOTION_SEARCH_SUPPORT_FLAG_SUPPORTED = 1;
+pub const D3D12_VIDEO_ENCODER_MOTION_SEARCH_SUPPORT_FLAG_MULTIPLE_HINTS = 2;
+pub const D3D12_VIDEO_ENCODER_MOTION_SEARCH_SUPPORT_FLAG_GPU_TEXTURE_MULTIPLE_REFERENCES = 4;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_INTRACODED_FRAME_SUPPORTED = 1;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_UNIDIR_INTER_FRAME_SUPPORTED = 2;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_BIDIR_INTER_FRAME_SUPPORTED = 4;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_EXTERNAL_DPB_DOWNSCALING = 8;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_DYNAMIC_1ST_PASS_SKIP = 16;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_DYNAMIC_DOWNSCALE_FACTOR_CHANGE_KEY_FRAME = 32;
+pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAG_SUPPORTED = 7;
+pub const D3D12_VIDEO_ENCODER_MOVEREGION_INFO_FLAG_NONE = 0;
+pub const D3D12_VIDEO_ENCODER_MOVEREGION_INFO_FLAG_MULTIPLE_HINTS = 1;
+pub const D3D12_VIDEO_ENCODER_SUBREGION_COMPRESSED_BITSTREAM_BUFFER_MODE_ARRAY_OF_BUFFERS = 0;
+pub const D3D12_VIDEO_ENCODER_SUBREGION_COMPRESSED_BITSTREAM_BUFFER_MODE_SINGLE_BUFFER = 1;
+pub const D3D12_VIDEO_ENCODER_COMPRESSED_BITSTREAM_NOTIFICATION_MODE_FULL_FRAME = 0;
+pub const D3D12_VIDEO_ENCODER_COMPRESSED_BITSTREAM_NOTIFICATION_MODE_SUBREGIONS = 1;
+pub const WMT_PROP_TYPE_DWORD = 0;
+pub const WMT_PROP_TYPE_STRING = 1;
+pub const WMT_PROP_TYPE_BINARY = 2;
+pub const WMT_PROP_TYPE_BOOL = 3;
+pub const WMT_PROP_TYPE_QWORD = 4;
+pub const WMT_PROP_TYPE_WORD = 5;
+pub const WMT_PROP_TYPE_GUID = 6;
+pub const WMV_DYNAMIC_BITRATE = 1;
+pub const WMV_DYNAMIC_RESOLUTION = 2;
+pub const WMV_DYNAMIC_COMPLEXITY = 4;
+pub const VRHP_SMALLROOM = 0;
+pub const VRHP_MEDIUMROOM = 1;
+pub const VRHP_BIGROOM = 2;
+pub const VRHP_CUSTUMIZEDROOM = 3;
+pub const SINGLE_CHANNEL_AEC = 0;
+pub const ADAPTIVE_ARRAY_ONLY = 1;
+pub const OPTIBEAM_ARRAY_ONLY = 2;
+pub const ADAPTIVE_ARRAY_AND_AEC = 3;
+pub const OPTIBEAM_ARRAY_AND_AEC = 4;
+pub const SINGLE_CHANNEL_NSAGC = 5;
+pub const MODE_NOT_SET = 6;
+pub const AEC_VAD_DISABLED = 0;
+pub const AEC_VAD_NORMAL = 1;
+pub const AEC_VAD_FOR_AGC = 2;
+pub const AEC_VAD_FOR_SILENCE_SUPPRESSION = 3;
+pub const AEC_CAPTURE_STREAM = 0;
+pub const AEC_REFERENCE_STREAM = 1;
+pub const MICARRAY_SINGLE_CHAN = 0;
+pub const MICARRAY_SIMPLE_SUM = 256;
+pub const MICARRAY_SINGLE_BEAM = 512;
+pub const MICARRAY_FIXED_BEAM = 1024;
+pub const MICARRAY_EXTERN_BEAM = 2048;
+pub const MFVideoDSPMode_Passthrough = 1;
+pub const MFVideoDSPMode_Stabilization = 4;
+pub const TOC_POS_INHEADER = 0;
+pub const TOC_POS_TOPLEVELOBJECT = 1;
+pub const OPENMODE_FAIL_IF_NOT_EXIST = 0;
+pub const OPENMODE_FAIL_IF_EXIST = 1;
+pub const OPENMODE_RESET_IF_EXIST = 2;
+pub const OPENMODE_APPEND_IF_EXIST = 3;
+pub const OPENMODE_DELETE_IF_EXIST = 4;
+pub const _msoBegin = 0;
+pub const _msoCurrent = 1;
+pub const ACCESSMODE_READ = 1;
+pub const ACCESSMODE_WRITE = 2;
+pub const ACCESSMODE_READWRITE = 3;
+pub const ACCESSMODE_WRITE_EXCLUSIVE = 4;
+pub const DXVA_SampleFormatMask = 255;
+pub const DXVA_SampleUnknown = 0;
+pub const DXVA_SamplePreviousFrame = 1;
+pub const DXVA_SampleProgressiveFrame = 2;
+pub const DXVA_SampleFieldInterleavedEvenFirst = 3;
+pub const DXVA_SampleFieldInterleavedOddFirst = 4;
+pub const DXVA_SampleFieldSingleEven = 5;
+pub const DXVA_SampleFieldSingleOdd = 6;
+pub const DXVA_SampleSubStream = 7;
+pub const DXVA_VideoTransFuncShift = 27;
+pub const DXVA_VideoTransFuncMask = -134217728;
+pub const DXVA_VideoTransFunc_Unknown = 0;
+pub const DXVA_VideoTransFunc_10 = 1;
+pub const DXVA_VideoTransFunc_18 = 2;
+pub const DXVA_VideoTransFunc_20 = 3;
+pub const DXVA_VideoTransFunc_22 = 4;
+pub const DXVA_VideoTransFunc_22_709 = 5;
+pub const DXVA_VideoTransFunc_22_240M = 6;
+pub const DXVA_VideoTransFunc_22_8bit_sRGB = 7;
+pub const DXVA_VideoTransFunc_28 = 8;
+pub const DXVA_VideoPrimariesShift = 22;
+pub const DXVA_VideoPrimariesMask = 130023424;
+pub const DXVA_VideoPrimaries_Unknown = 0;
+pub const DXVA_VideoPrimaries_reserved = 1;
+pub const DXVA_VideoPrimaries_BT709 = 2;
+pub const DXVA_VideoPrimaries_BT470_2_SysM = 3;
+pub const DXVA_VideoPrimaries_BT470_2_SysBG = 4;
+pub const DXVA_VideoPrimaries_SMPTE170M = 5;
+pub const DXVA_VideoPrimaries_SMPTE240M = 6;
+pub const DXVA_VideoPrimaries_EBU3213 = 7;
+pub const DXVA_VideoPrimaries_SMPTE_C = 8;
+pub const DXVA_VideoLightingShift = 18;
+pub const DXVA_VideoLightingMask = 3932160;
+pub const DXVA_VideoLighting_Unknown = 0;
+pub const DXVA_VideoLighting_bright = 1;
+pub const DXVA_VideoLighting_office = 2;
+pub const DXVA_VideoLighting_dim = 3;
+pub const DXVA_VideoLighting_dark = 4;
+pub const DXVA_VideoTransferMatrixShift = 15;
+pub const DXVA_VideoTransferMatrixMask = 229376;
+pub const DXVA_VideoTransferMatrix_Unknown = 0;
+pub const DXVA_VideoTransferMatrix_BT709 = 1;
+pub const DXVA_VideoTransferMatrix_BT601 = 2;
+pub const DXVA_VideoTransferMatrix_SMPTE240M = 3;
+pub const DXVA_NominalRangeShift = 12;
+pub const DXVA_NominalRangeMask = 28672;
+pub const DXVA_NominalRange_Unknown = 0;
+pub const DXVA_NominalRange_Normal = 1;
+pub const DXVA_NominalRange_Wide = 2;
+pub const DXVA_NominalRange_0_255 = 1;
+pub const DXVA_NominalRange_16_235 = 2;
+pub const DXVA_NominalRange_48_208 = 3;
+pub const DXVA_VideoChromaSubsamplingShift = 8;
+pub const DXVA_VideoChromaSubsamplingMask = 3840;
+pub const DXVA_VideoChromaSubsampling_Unknown = 0;
+pub const DXVA_VideoChromaSubsampling_ProgressiveChroma = 8;
+pub const DXVA_VideoChromaSubsampling_Horizontally_Cosited = 4;
+pub const DXVA_VideoChromaSubsampling_Vertically_Cosited = 2;
+pub const DXVA_VideoChromaSubsampling_Vertically_AlignedChromaPlanes = 1;
+pub const DXVA_VideoChromaSubsampling_MPEG2 = 5;
+pub const DXVA_VideoChromaSubsampling_MPEG1 = 1;
+pub const DXVA_VideoChromaSubsampling_DV_PAL = 6;
+pub const DXVA_VideoChromaSubsampling_Cosited = 7;
+pub const DXVA_VideoProcess_None = 0;
+pub const DXVA_VideoProcess_YUV2RGB = 1;
+pub const DXVA_VideoProcess_StretchX = 2;
+pub const DXVA_VideoProcess_StretchY = 4;
+pub const DXVA_VideoProcess_AlphaBlend = 8;
+pub const DXVA_VideoProcess_SubRects = 16;
+pub const DXVA_VideoProcess_SubStreams = 32;
+pub const DXVA_VideoProcess_SubStreamsExtended = 64;
+pub const DXVA_VideoProcess_YUV2RGBExtended = 128;
+pub const DXVA_VideoProcess_AlphaBlendExtended = 256;
+pub const DXVA_DeinterlaceTech_Unknown = 0;
+pub const DXVA_DeinterlaceTech_BOBLineReplicate = 1;
+pub const DXVA_DeinterlaceTech_BOBVerticalStretch = 2;
+pub const DXVA_DeinterlaceTech_BOBVerticalStretch4Tap = 256;
+pub const DXVA_DeinterlaceTech_MedianFiltering = 4;
+pub const DXVA_DeinterlaceTech_EdgeFiltering = 16;
+pub const DXVA_DeinterlaceTech_FieldAdaptive = 32;
+pub const DXVA_DeinterlaceTech_PixelAdaptive = 64;
+pub const DXVA_DeinterlaceTech_MotionVectorSteered = 128;
+pub const DXVA_SampleFlagsMask = 15;
+pub const DXVA_SampleFlag_Palette_Changed = 1;
+pub const DXVA_SampleFlag_SrcRect_Changed = 2;
+pub const DXVA_SampleFlag_DstRect_Changed = 4;
+pub const DXVA_SampleFlag_ColorData_Changed = 8;
+pub const DXVA_DestinationFlagMask = 15;
+pub const DXVA_DestinationFlag_Background_Changed = 1;
+pub const DXVA_DestinationFlag_TargetRect_Changed = 2;
+pub const DXVA_DestinationFlag_ColorData_Changed = 4;
+pub const DXVA_DestinationFlag_Alpha_Changed = 8;
+pub const DXVA_ProcAmp_None = 0;
+pub const DXVA_ProcAmp_Brightness = 1;
+pub const DXVA_ProcAmp_Contrast = 2;
+pub const DXVA_ProcAmp_Hue = 4;
+pub const DXVA_ProcAmp_Saturation = 8;
+pub const eAVEncCommonRateControlMode_CBR = 0;
+pub const eAVEncCommonRateControlMode_PeakConstrainedVBR = 1;
+pub const eAVEncCommonRateControlMode_UnconstrainedVBR = 2;
+pub const eAVEncCommonRateControlMode_Quality = 3;
+pub const eAVEncCommonRateControlMode_LowDelayVBR = 4;
+pub const eAVEncCommonRateControlMode_GlobalVBR = 5;
+pub const eAVEncCommonRateControlMode_GlobalLowDelayVBR = 6;
+pub const eAVEncCommonStreamEndHandling_DiscardPartial = 0;
+pub const eAVEncCommonStreamEndHandling_EnsureComplete = 1;
+pub const eAVEncVideoOutputFrameRateConversion_Disable = 0;
+pub const eAVEncVideoOutputFrameRateConversion_Enable = 1;
+pub const eAVEncVideoOutputFrameRateConversion_Alias = 2;
+pub const eAVDecVideoSoftwareDeinterlaceMode_NoDeinterlacing = 0;
+pub const eAVDecVideoSoftwareDeinterlaceMode_ProgressiveDeinterlacing = 1;
+pub const eAVDecVideoSoftwareDeinterlaceMode_BOBDeinterlacing = 2;
+pub const eAVDecVideoSoftwareDeinterlaceMode_SmartBOBDeinterlacing = 3;
+pub const eVideoDecodeCompliant = 0;
+pub const eVideoDecodeOptimalLF = 1;
+pub const eVideoDecodeDisableLF = 2;
+pub const eVideoDecodeFastest = 32;
+pub const eErrorConcealmentTypeDrop = 0;
+pub const eErrorConcealmentTypeBasic = 1;
+pub const eErrorConcealmentTypeAdvanced = 2;
+pub const eErrorConcealmentTypeDXVASetBlack = 3;
+pub const eErrorConcealmentOff = 0;
+pub const eErrorConcealmentOn = 1;
+pub const eAVDecVideoCodecType_NOTPLAYING = 0;
+pub const eAVDecVideoCodecType_MPEG2 = 1;
+pub const eAVDecVideoCodecType_H264 = 2;
+pub const eAVDecVideoDXVAMode_NOTPLAYING = 0;
+pub const eAVDecVideoDXVAMode_SW = 1;
+pub const eAVDecVideoDXVAMode_MC = 2;
+pub const eAVDecVideoDXVAMode_IDCT = 3;
+pub const eAVDecVideoDXVAMode_VLD = 4;
+pub const eAVDecVideoDXVABusEncryption_NONE = 0;
+pub const eAVDecVideoDXVABusEncryption_PRIVATE = 1;
+pub const eAVDecVideoDXVABusEncryption_AES = 2;
+pub const eAVEncVideoSourceScan_Automatic = 0;
+pub const eAVEncVideoSourceScan_Interlaced = 1;
+pub const eAVEncVideoSourceScan_Progressive = 2;
+pub const eAVEncVideoOutputScan_Progressive = 0;
+pub const eAVEncVideoOutputScan_Interlaced = 1;
+pub const eAVEncVideoOutputScan_SameAsInput = 2;
+pub const eAVEncVideoOutputScan_Automatic = 3;
+pub const eAVEncVideoFilmContent_VideoOnly = 0;
+pub const eAVEncVideoFilmContent_FilmOnly = 1;
+pub const eAVEncVideoFilmContent_Mixed = 2;
+pub const eAVEncVideoChromaResolution_SameAsSource = 0;
+pub const eAVEncVideoChromaResolution_444 = 1;
+pub const eAVEncVideoChromaResolution_422 = 2;
+pub const eAVEncVideoChromaResolution_420 = 3;
+pub const eAVEncVideoChromaResolution_411 = 4;
+pub const eAVEncVideoChromaSubsamplingFormat_SameAsSource = 0;
+pub const eAVEncVideoChromaSubsamplingFormat_ProgressiveChroma = 8;
+pub const eAVEncVideoChromaSubsamplingFormat_Horizontally_Cosited = 4;
+pub const eAVEncVideoChromaSubsamplingFormat_Vertically_Cosited = 2;
+pub const eAVEncVideoChromaSubsamplingFormat_Vertically_AlignedChromaPlanes = 1;
+pub const eAVEncVideoColorPrimaries_SameAsSource = 0;
+pub const eAVEncVideoColorPrimaries_Reserved = 1;
+pub const eAVEncVideoColorPrimaries_BT709 = 2;
+pub const eAVEncVideoColorPrimaries_BT470_2_SysM = 3;
+pub const eAVEncVideoColorPrimaries_BT470_2_SysBG = 4;
+pub const eAVEncVideoColorPrimaries_SMPTE170M = 5;
+pub const eAVEncVideoColorPrimaries_SMPTE240M = 6;
+pub const eAVEncVideoColorPrimaries_EBU3231 = 7;
+pub const eAVEncVideoColorPrimaries_SMPTE_C = 8;
+pub const eAVEncVideoColorTransferFunction_SameAsSource = 0;
+pub const eAVEncVideoColorTransferFunction_10 = 1;
+pub const eAVEncVideoColorTransferFunction_18 = 2;
+pub const eAVEncVideoColorTransferFunction_20 = 3;
+pub const eAVEncVideoColorTransferFunction_22 = 4;
+pub const eAVEncVideoColorTransferFunction_22_709 = 5;
+pub const eAVEncVideoColorTransferFunction_22_240M = 6;
+pub const eAVEncVideoColorTransferFunction_22_8bit_sRGB = 7;
+pub const eAVEncVideoColorTransferFunction_28 = 8;
+pub const eAVEncVideoColorTransferMatrix_SameAsSource = 0;
+pub const eAVEncVideoColorTransferMatrix_BT709 = 1;
+pub const eAVEncVideoColorTransferMatrix_BT601 = 2;
+pub const eAVEncVideoColorTransferMatrix_SMPTE240M = 3;
+pub const eAVEncVideoColorLighting_SameAsSource = 0;
+pub const eAVEncVideoColorLighting_Unknown = 1;
+pub const eAVEncVideoColorLighting_Bright = 2;
+pub const eAVEncVideoColorLighting_Office = 3;
+pub const eAVEncVideoColorLighting_Dim = 4;
+pub const eAVEncVideoColorLighting_Dark = 5;
+pub const eAVEncVideoColorNominalRange_SameAsSource = 0;
+pub const eAVEncVideoColorNominalRange_0_255 = 1;
+pub const eAVEncVideoColorNominalRange_16_235 = 2;
+pub const eAVEncVideoColorNominalRange_48_208 = 3;
+pub const eAVEncInputVideoSystem_Unspecified = 0;
+pub const eAVEncInputVideoSystem_PAL = 1;
+pub const eAVEncInputVideoSystem_NTSC = 2;
+pub const eAVEncInputVideoSystem_SECAM = 3;
+pub const eAVEncInputVideoSystem_MAC = 4;
+pub const eAVEncInputVideoSystem_HDV = 5;
+pub const eAVEncInputVideoSystem_Component = 6;
+pub const eAVEncVideoContentType_Unknown = 0;
+pub const eAVEncVideoContentType_FixedCameraAngle = 1;
+pub const eAVEncAdaptiveMode_None = 0;
+pub const eAVEncAdaptiveMode_Resolution = 1;
+pub const eAVEncAdaptiveMode_FrameRate = 2;
+pub const eAVScenarioInfo_Unknown = 0;
+pub const eAVScenarioInfo_DisplayRemoting = 1;
+pub const eAVScenarioInfo_VideoConference = 2;
+pub const eAVScenarioInfo_Archive = 3;
+pub const eAVScenarioInfo_LiveStreaming = 4;
+pub const eAVScenarioInfo_CameraRecord = 5;
+pub const eAVScenarioInfo_DisplayRemotingWithFeatureMap = 6;
+pub const eVideoEncoderDisplayContent_Unknown = 0;
+pub const eVideoEncoderDisplayContent_FullScreenVideo = 1;
+pub const eAVEncMuxOutputAuto = 0;
+pub const eAVEncMuxOutputPS = 1;
+pub const eAVEncMuxOutputTS = 2;
+pub const eAVEncAudioDualMono_SameAsInput = 0;
+pub const eAVEncAudioDualMono_Off = 1;
+pub const eAVEncAudioDualMono_On = 2;
+pub const AVEncAudioInputContent_Unknown = 0;
+pub const AVEncAudioInputContent_Voice = 1;
+pub const AVEncAudioInputContent_Music = 2;
+pub const eAVEncMPVProfile_unknown = 0;
+pub const eAVEncMPVProfile_Simple = 1;
+pub const eAVEncMPVProfile_Main = 2;
+pub const eAVEncMPVProfile_High = 3;
+pub const eAVEncMPVProfile_422 = 4;
+pub const eAVEncMPVLevel_Low = 1;
+pub const eAVEncMPVLevel_Main = 2;
+pub const eAVEncMPVLevel_High1440 = 3;
+pub const eAVEncMPVLevel_High = 4;
+pub const eAVEncH263VProfile_Base = 0;
+pub const eAVEncH263VProfile_CompatibilityV2 = 1;
+pub const eAVEncH263VProfile_CompatibilityV1 = 2;
+pub const eAVEncH263VProfile_WirelessV2 = 3;
+pub const eAVEncH263VProfile_WirelessV3 = 4;
+pub const eAVEncH263VProfile_HighCompression = 5;
+pub const eAVEncH263VProfile_Internet = 6;
+pub const eAVEncH263VProfile_Interlace = 7;
+pub const eAVEncH263VProfile_HighLatency = 8;
+pub const eAVEncH264VProfile_unknown = 0;
+pub const eAVEncH264VProfile_Simple = 66;
+pub const eAVEncH264VProfile_Base = 66;
+pub const eAVEncH264VProfile_Main = 77;
+pub const eAVEncH264VProfile_High = 100;
+pub const eAVEncH264VProfile_422 = 122;
+pub const eAVEncH264VProfile_High10 = 110;
+pub const eAVEncH264VProfile_444 = 244;
+pub const eAVEncH264VProfile_Extended = 88;
+pub const eAVEncH264VProfile_ScalableBase = 83;
+pub const eAVEncH264VProfile_ScalableHigh = 86;
+pub const eAVEncH264VProfile_MultiviewHigh = 118;
+pub const eAVEncH264VProfile_StereoHigh = 128;
+pub const eAVEncH264VProfile_ConstrainedBase = 256;
+pub const eAVEncH264VProfile_UCConstrainedHigh = 257;
+pub const eAVEncH264VProfile_UCScalableConstrainedBase = 258;
+pub const eAVEncH264VProfile_UCScalableConstrainedHigh = 259;
+pub const eAVEncH265VProfile_unknown = 0;
+pub const eAVEncH265VProfile_Main_420_8 = 1;
+pub const eAVEncH265VProfile_Main_420_10 = 2;
+pub const eAVEncH265VProfile_Main_420_12 = 3;
+pub const eAVEncH265VProfile_Main_422_10 = 4;
+pub const eAVEncH265VProfile_Main_422_12 = 5;
+pub const eAVEncH265VProfile_Main_444_8 = 6;
+pub const eAVEncH265VProfile_Main_444_10 = 7;
+pub const eAVEncH265VProfile_Main_444_12 = 8;
+pub const eAVEncH265VProfile_Monochrome_12 = 9;
+pub const eAVEncH265VProfile_Monochrome_16 = 10;
+pub const eAVEncH265VProfile_MainIntra_420_8 = 11;
+pub const eAVEncH265VProfile_MainIntra_420_10 = 12;
+pub const eAVEncH265VProfile_MainIntra_420_12 = 13;
+pub const eAVEncH265VProfile_MainIntra_422_10 = 14;
+pub const eAVEncH265VProfile_MainIntra_422_12 = 15;
+pub const eAVEncH265VProfile_MainIntra_444_8 = 16;
+pub const eAVEncH265VProfile_MainIntra_444_10 = 17;
+pub const eAVEncH265VProfile_MainIntra_444_12 = 18;
+pub const eAVEncH265VProfile_MainIntra_444_16 = 19;
+pub const eAVEncH265VProfile_MainStill_420_8 = 20;
+pub const eAVEncH265VProfile_MainStill_444_8 = 21;
+pub const eAVEncH265VProfile_MainStill_444_16 = 22;
+pub const eAVEncVP9VProfile_unknown = 0;
+pub const eAVEncVP9VProfile_420_8 = 1;
+pub const eAVEncVP9VProfile_420_10 = 2;
+pub const eAVEncVP9VProfile_420_12 = 3;
+pub const eAVEncAV1VProfile_unknown = 0;
+pub const eAVEncAV1VProfile_Main_420_8 = 1;
+pub const eAVEncAV1VProfile_Main_420_10 = 2;
+pub const eAVEncAV1VProfile_Main_400_8 = 3;
+pub const eAVEncAV1VProfile_Main_400_10 = 4;
+pub const eAVEncAV1VProfile_High_444_8 = 5;
+pub const eAVEncAV1VProfile_High_444_10 = 6;
+pub const eAVEncAV1VProfile_Professional_420_12 = 7;
+pub const eAVEncAV1VProfile_Professional_400_12 = 8;
+pub const eAVEncAV1VProfile_Professional_444_12 = 9;
+pub const eAVEncAV1VProfile_Professional_422_8 = 10;
+pub const eAVEncAV1VProfile_Professional_422_10 = 11;
+pub const eAVEncAV1VProfile_Professional_422_12 = 12;
+pub const eAVEncH263PictureType_I = 0;
+pub const eAVEncH263PictureType_P = 1;
+pub const eAVEncH263PictureType_B = 2;
+pub const eAVEncH264PictureType_IDR = 0;
+pub const eAVEncH264PictureType_P = 1;
+pub const eAVEncH264PictureType_B = 2;
+pub const eAVEncAV1PictureType_Key = 0;
+pub const eAVEncAV1PictureType_Intra_Only = 1;
+pub const eAVEncAV1PictureType_Inter = 2;
+pub const eAVEncAV1PictureType_Switch = 3;
+pub const eAVEncH263VLevel1 = 10;
+pub const eAVEncH263VLevel2 = 20;
+pub const eAVEncH263VLevel3 = 30;
+pub const eAVEncH263VLevel4 = 40;
+pub const eAVEncH263VLevel4_5 = 45;
+pub const eAVEncH263VLevel5 = 50;
+pub const eAVEncH263VLevel6 = 60;
+pub const eAVEncH263VLevel7 = 70;
+pub const eAVEncH264VLevel1 = 10;
+pub const eAVEncH264VLevel1_b = 11;
+pub const eAVEncH264VLevel1_1 = 11;
+pub const eAVEncH264VLevel1_2 = 12;
+pub const eAVEncH264VLevel1_3 = 13;
+pub const eAVEncH264VLevel2 = 20;
+pub const eAVEncH264VLevel2_1 = 21;
+pub const eAVEncH264VLevel2_2 = 22;
+pub const eAVEncH264VLevel3 = 30;
+pub const eAVEncH264VLevel3_1 = 31;
+pub const eAVEncH264VLevel3_2 = 32;
+pub const eAVEncH264VLevel4 = 40;
+pub const eAVEncH264VLevel4_1 = 41;
+pub const eAVEncH264VLevel4_2 = 42;
+pub const eAVEncH264VLevel5 = 50;
+pub const eAVEncH264VLevel5_1 = 51;
+pub const eAVEncH264VLevel5_2 = 52;
+pub const eAVEncH264VLevel6 = 60;
+pub const eAVEncH264VLevel6_1 = 61;
+pub const eAVEncH264VLevel6_2 = 62;
+pub const eAVEncH265VLevel1 = 30;
+pub const eAVEncH265VLevel2 = 60;
+pub const eAVEncH265VLevel2_1 = 63;
+pub const eAVEncH265VLevel3 = 90;
+pub const eAVEncH265VLevel3_1 = 93;
+pub const eAVEncH265VLevel4 = 120;
+pub const eAVEncH265VLevel4_1 = 123;
+pub const eAVEncH265VLevel5 = 150;
+pub const eAVEncH265VLevel5_1 = 153;
+pub const eAVEncH265VLevel5_2 = 156;
+pub const eAVEncH265VLevel6 = 180;
+pub const eAVEncH265VLevel6_1 = 183;
+pub const eAVEncH265VLevel6_2 = 186;
+pub const eAVEncAV1VLevel2 = 0;
+pub const eAVEncAV1VLevel2_1 = 1;
+pub const eAVEncAV1VLevel3 = 4;
+pub const eAVEncAV1VLevel3_1 = 5;
+pub const eAVEncAV1VLevel4 = 8;
+pub const eAVEncAV1VLevel4_1 = 9;
+pub const eAVEncAV1VLevel5 = 12;
+pub const eAVEncAV1VLevel5_1 = 13;
+pub const eAVEncAV1VLevel5_2 = 14;
+pub const eAVEncAV1VLevel5_3 = 15;
+pub const eAVEncAV1VLevel6 = 16;
+pub const eAVEncAV1VLevel6_1 = 17;
+pub const eAVEncAV1VLevel6_2 = 18;
+pub const eAVEncAV1VLevel6_3 = 19;
+pub const eAVEncMPVFrameFieldMode_FieldMode = 0;
+pub const eAVEncMPVFrameFieldMode_FrameMode = 1;
+pub const eAVEncMPVSceneDetection_None = 0;
+pub const eAVEncMPVSceneDetection_InsertIPicture = 1;
+pub const eAVEncMPVSceneDetection_StartNewGOP = 2;
+pub const eAVEncMPVSceneDetection_StartNewLocatableGOP = 3;
+pub const eAVEncMPVScanPattern_Auto = 0;
+pub const eAVEncMPVScanPattern_ZigZagScan = 1;
+pub const eAVEncMPVScanPattern_AlternateScan = 2;
+pub const eAVEncMPVQScaleType_Auto = 0;
+pub const eAVEncMPVQScaleType_Linear = 1;
+pub const eAVEncMPVQScaleType_NonLinear = 2;
+pub const eAVEncMPVIntraVLCTable_Auto = 0;
+pub const eAVEncMPVIntraVLCTable_MPEG1 = 1;
+pub const eAVEncMPVIntraVLCTable_Alternate = 2;
+pub const eAVEncMPALayer_1 = 1;
+pub const eAVEncMPALayer_2 = 2;
+pub const eAVEncMPALayer_3 = 3;
+pub const eAVEncMPACodingMode_Mono = 0;
+pub const eAVEncMPACodingMode_Stereo = 1;
+pub const eAVEncMPACodingMode_DualChannel = 2;
+pub const eAVEncMPACodingMode_JointStereo = 3;
+pub const eAVEncMPACodingMode_Surround = 4;
+pub const eAVEncMPAEmphasisType_None = 0;
+pub const eAVEncMPAEmphasisType_50_15 = 1;
+pub const eAVEncMPAEmphasisType_Reserved = 2;
+pub const eAVEncMPAEmphasisType_CCITT_J17 = 3;
+pub const eAVEncDDService_CM = 0;
+pub const eAVEncDDService_ME = 1;
+pub const eAVEncDDService_VI = 2;
+pub const eAVEncDDService_HI = 3;
+pub const eAVEncDDService_D = 4;
+pub const eAVEncDDService_C = 5;
+pub const eAVEncDDService_E = 6;
+pub const eAVEncDDService_VO = 7;
+pub const eAVEncDDProductionRoomType_NotIndicated = 0;
+pub const eAVEncDDProductionRoomType_Large = 1;
+pub const eAVEncDDProductionRoomType_Small = 2;
+pub const eAVEncDDDynamicRangeCompressionControl_None = 0;
+pub const eAVEncDDDynamicRangeCompressionControl_FilmStandard = 1;
+pub const eAVEncDDDynamicRangeCompressionControl_FilmLight = 2;
+pub const eAVEncDDDynamicRangeCompressionControl_MusicStandard = 3;
+pub const eAVEncDDDynamicRangeCompressionControl_MusicLight = 4;
+pub const eAVEncDDDynamicRangeCompressionControl_Speech = 5;
+pub const eAVEncDDSurroundExMode_NotIndicated = 0;
+pub const eAVEncDDSurroundExMode_No = 1;
+pub const eAVEncDDSurroundExMode_Yes = 2;
+pub const eAVEncDDPreferredStereoDownMixMode_LtRt = 0;
+pub const eAVEncDDPreferredStereoDownMixMode_LoRo = 1;
+pub const eAVEncDDAtoDConverterType_Standard = 0;
+pub const eAVEncDDAtoDConverterType_HDCD = 1;
+pub const eAVEncDDHeadphoneMode_NotIndicated = 0;
+pub const eAVEncDDHeadphoneMode_NotEncoded = 1;
+pub const eAVEncDDHeadphoneMode_Encoded = 2;
+pub const eAVDecVideoInputScan_Unknown = 0;
+pub const eAVDecVideoInputScan_Progressive = 1;
+pub const eAVDecVideoInputScan_Interlaced_UpperFieldFirst = 2;
+pub const eAVDecVideoInputScan_Interlaced_LowerFieldFirst = 3;
+pub const eAVDecVideoSWPowerLevel_BatteryLife = 0;
+pub const eAVDecVideoSWPowerLevel_Balanced = 50;
+pub const eAVDecVideoSWPowerLevel_VideoQuality = 100;
+pub const eAVDecAACUseISODownmix = 0;
+pub const eAVDecAACUseARIBDownmix = 1;
+pub const eAVDecHEAACDynamicRangeControl_OFF = 0;
+pub const eAVDecHEAACDynamicRangeControl_ON = 1;
+pub const eAVDecAudioDualMono_IsNotDualMono = 0;
+pub const eAVDecAudioDualMono_IsDualMono = 1;
+pub const eAVDecAudioDualMono_UnSpecified = 2;
+pub const eAVDecAudioDualMonoReproMode_STEREO = 0;
+pub const eAVDecAudioDualMonoReproMode_LEFT_MONO = 1;
+pub const eAVDecAudioDualMonoReproMode_RIGHT_MONO = 2;
+pub const eAVDecAudioDualMonoReproMode_MIX_MONO = 3;
+pub const eAVAudioChannelConfig_FRONT_LEFT = 1;
+pub const eAVAudioChannelConfig_FRONT_RIGHT = 2;
+pub const eAVAudioChannelConfig_FRONT_CENTER = 4;
+pub const eAVAudioChannelConfig_LOW_FREQUENCY = 8;
+pub const eAVAudioChannelConfig_BACK_LEFT = 16;
+pub const eAVAudioChannelConfig_BACK_RIGHT = 32;
+pub const eAVAudioChannelConfig_FRONT_LEFT_OF_CENTER = 64;
+pub const eAVAudioChannelConfig_FRONT_RIGHT_OF_CENTER = 128;
+pub const eAVAudioChannelConfig_BACK_CENTER = 256;
+pub const eAVAudioChannelConfig_SIDE_LEFT = 512;
+pub const eAVAudioChannelConfig_SIDE_RIGHT = 1024;
+pub const eAVAudioChannelConfig_TOP_CENTER = 2048;
+pub const eAVAudioChannelConfig_TOP_FRONT_LEFT = 4096;
+pub const eAVAudioChannelConfig_TOP_FRONT_CENTER = 8192;
+pub const eAVAudioChannelConfig_TOP_FRONT_RIGHT = 16384;
+pub const eAVAudioChannelConfig_TOP_BACK_LEFT = 32768;
+pub const eAVAudioChannelConfig_TOP_BACK_CENTER = 65536;
+pub const eAVAudioChannelConfig_TOP_BACK_RIGHT = 131072;
+pub const eAVDDSurroundMode_NotIndicated = 0;
+pub const eAVDDSurroundMode_No = 1;
+pub const eAVDDSurroundMode_Yes = 2;
+pub const eAVDecDDOperationalMode_NONE = 0;
+pub const eAVDecDDOperationalMode_LINE = 1;
+pub const eAVDecDDOperationalMode_RF = 2;
+pub const eAVDecDDOperationalMode_CUSTOM0 = 3;
+pub const eAVDecDDOperationalMode_CUSTOM1 = 4;
+pub const eAVDecDDOperationalMode_PORTABLE8 = 5;
+pub const eAVDecDDOperationalMode_PORTABLE11 = 6;
+pub const eAVDecDDOperationalMode_PORTABLE14 = 7;
+pub const eAVDecDDMatrixDecodingMode_OFF = 0;
+pub const eAVDecDDMatrixDecodingMode_ON = 1;
+pub const eAVDecDDMatrixDecodingMode_AUTO = 2;
+pub const eAVDecDDStereoDownMixMode_Auto = 0;
+pub const eAVDecDDStereoDownMixMode_LtRt = 1;
+pub const eAVDecDDStereoDownMixMode_LoRo = 2;
+pub const eAVDSPLoudnessEqualization_OFF = 0;
+pub const eAVDSPLoudnessEqualization_ON = 1;
+pub const eAVDSPLoudnessEqualization_AUTO = 2;
+pub const eAVDSPSpeakerFill_OFF = 0;
+pub const eAVDSPSpeakerFill_ON = 1;
+pub const eAVDSPSpeakerFill_AUTO = 2;
+pub const eAVEncChromaEncodeMode_420 = 0;
+pub const eAVEncChromaEncodeMode_444 = 1;
+pub const eAVEncChromaEncodeMode_444_v2 = 2;
+pub const DXVAHD_FRAME_FORMAT_PROGRESSIVE = 0;
+pub const DXVAHD_FRAME_FORMAT_INTERLACED_TOP_FIELD_FIRST = 1;
+pub const DXVAHD_FRAME_FORMAT_INTERLACED_BOTTOM_FIELD_FIRST = 2;
+pub const DXVAHD_DEVICE_USAGE_PLAYBACK_NORMAL = 0;
+pub const DXVAHD_DEVICE_USAGE_OPTIMAL_SPEED = 1;
+pub const DXVAHD_DEVICE_USAGE_OPTIMAL_QUALITY = 2;
+pub const DXVAHD_SURFACE_TYPE_VIDEO_INPUT = 0;
+pub const DXVAHD_SURFACE_TYPE_VIDEO_INPUT_PRIVATE = 1;
+pub const DXVAHD_SURFACE_TYPE_VIDEO_OUTPUT = 2;
+pub const DXVAHD_DEVICE_TYPE_HARDWARE = 0;
+pub const DXVAHD_DEVICE_TYPE_SOFTWARE = 1;
+pub const DXVAHD_DEVICE_TYPE_REFERENCE = 2;
+pub const DXVAHD_DEVICE_TYPE_OTHER = 3;
+pub const DXVAHD_DEVICE_CAPS_LINEAR_SPACE = 1;
+pub const DXVAHD_DEVICE_CAPS_xvYCC = 2;
+pub const DXVAHD_DEVICE_CAPS_RGB_RANGE_CONVERSION = 4;
+pub const DXVAHD_DEVICE_CAPS_YCbCr_MATRIX_CONVERSION = 8;
+pub const DXVAHD_FEATURE_CAPS_ALPHA_FILL = 1;
+pub const DXVAHD_FEATURE_CAPS_CONSTRICTION = 2;
+pub const DXVAHD_FEATURE_CAPS_LUMA_KEY = 4;
+pub const DXVAHD_FEATURE_CAPS_ALPHA_PALETTE = 8;
+pub const DXVAHD_FILTER_CAPS_BRIGHTNESS = 1;
+pub const DXVAHD_FILTER_CAPS_CONTRAST = 2;
+pub const DXVAHD_FILTER_CAPS_HUE = 4;
+pub const DXVAHD_FILTER_CAPS_SATURATION = 8;
+pub const DXVAHD_FILTER_CAPS_NOISE_REDUCTION = 16;
+pub const DXVAHD_FILTER_CAPS_EDGE_ENHANCEMENT = 32;
+pub const DXVAHD_FILTER_CAPS_ANAMORPHIC_SCALING = 64;
+pub const DXVAHD_INPUT_FORMAT_CAPS_RGB_INTERLACED = 1;
+pub const DXVAHD_INPUT_FORMAT_CAPS_RGB_PROCAMP = 2;
+pub const DXVAHD_INPUT_FORMAT_CAPS_RGB_LUMA_KEY = 4;
+pub const DXVAHD_INPUT_FORMAT_CAPS_PALETTE_INTERLACED = 8;
+pub const DXVAHD_PROCESSOR_CAPS_DEINTERLACE_BLEND = 1;
+pub const DXVAHD_PROCESSOR_CAPS_DEINTERLACE_BOB = 2;
+pub const DXVAHD_PROCESSOR_CAPS_DEINTERLACE_ADAPTIVE = 4;
+pub const DXVAHD_PROCESSOR_CAPS_DEINTERLACE_MOTION_COMPENSATION = 8;
+pub const DXVAHD_PROCESSOR_CAPS_INVERSE_TELECINE = 16;
+pub const DXVAHD_PROCESSOR_CAPS_FRAME_RATE_CONVERSION = 32;
+pub const DXVAHD_ITELECINE_CAPS_32 = 1;
+pub const DXVAHD_ITELECINE_CAPS_22 = 2;
+pub const DXVAHD_ITELECINE_CAPS_2224 = 4;
+pub const DXVAHD_ITELECINE_CAPS_2332 = 8;
+pub const DXVAHD_ITELECINE_CAPS_32322 = 16;
+pub const DXVAHD_ITELECINE_CAPS_55 = 32;
+pub const DXVAHD_ITELECINE_CAPS_64 = 64;
+pub const DXVAHD_ITELECINE_CAPS_87 = 128;
+pub const DXVAHD_ITELECINE_CAPS_222222222223 = 256;
+pub const DXVAHD_ITELECINE_CAPS_OTHER = -2147483648;
+pub const DXVAHD_FILTER_BRIGHTNESS = 0;
+pub const DXVAHD_FILTER_CONTRAST = 1;
+pub const DXVAHD_FILTER_HUE = 2;
+pub const DXVAHD_FILTER_SATURATION = 3;
+pub const DXVAHD_FILTER_NOISE_REDUCTION = 4;
+pub const DXVAHD_FILTER_EDGE_ENHANCEMENT = 5;
+pub const DXVAHD_FILTER_ANAMORPHIC_SCALING = 6;
+pub const DXVAHD_BLT_STATE_TARGET_RECT = 0;
+pub const DXVAHD_BLT_STATE_BACKGROUND_COLOR = 1;
+pub const DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE = 2;
+pub const DXVAHD_BLT_STATE_ALPHA_FILL = 3;
+pub const DXVAHD_BLT_STATE_CONSTRICTION = 4;
+pub const DXVAHD_BLT_STATE_PRIVATE = 1000;
+pub const DXVAHD_ALPHA_FILL_MODE_OPAQUE = 0;
+pub const DXVAHD_ALPHA_FILL_MODE_BACKGROUND = 1;
+pub const DXVAHD_ALPHA_FILL_MODE_DESTINATION = 2;
+pub const DXVAHD_ALPHA_FILL_MODE_SOURCE_STREAM = 3;
+pub const DXVAHD_STREAM_STATE_D3DFORMAT = 0;
+pub const DXVAHD_STREAM_STATE_FRAME_FORMAT = 1;
+pub const DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE = 2;
+pub const DXVAHD_STREAM_STATE_OUTPUT_RATE = 3;
+pub const DXVAHD_STREAM_STATE_SOURCE_RECT = 4;
+pub const DXVAHD_STREAM_STATE_DESTINATION_RECT = 5;
+pub const DXVAHD_STREAM_STATE_ALPHA = 6;
+pub const DXVAHD_STREAM_STATE_PALETTE = 7;
+pub const DXVAHD_STREAM_STATE_LUMA_KEY = 8;
+pub const DXVAHD_STREAM_STATE_ASPECT_RATIO = 9;
+pub const DXVAHD_STREAM_STATE_FILTER_BRIGHTNESS = 100;
+pub const DXVAHD_STREAM_STATE_FILTER_CONTRAST = 101;
+pub const DXVAHD_STREAM_STATE_FILTER_HUE = 102;
+pub const DXVAHD_STREAM_STATE_FILTER_SATURATION = 103;
+pub const DXVAHD_STREAM_STATE_FILTER_NOISE_REDUCTION = 104;
+pub const DXVAHD_STREAM_STATE_FILTER_EDGE_ENHANCEMENT = 105;
+pub const DXVAHD_STREAM_STATE_FILTER_ANAMORPHIC_SCALING = 106;
+pub const DXVAHD_STREAM_STATE_PRIVATE = 1000;
+pub const DXVAHD_OUTPUT_RATE_NORMAL = 0;
+pub const DXVAHD_OUTPUT_RATE_HALF = 1;
+pub const DXVAHD_OUTPUT_RATE_CUSTOM = 2;
+pub const DXVA2_SampleFormatMask = 255;
+pub const DXVA2_SampleUnknown = 0;
+pub const DXVA2_SampleProgressiveFrame = 2;
+pub const DXVA2_SampleFieldInterleavedEvenFirst = 3;
+pub const DXVA2_SampleFieldInterleavedOddFirst = 4;
+pub const DXVA2_SampleFieldSingleEven = 5;
+pub const DXVA2_SampleFieldSingleOdd = 6;
+pub const DXVA2_SampleSubStream = 7;
+pub const DXVA2_VideoChromaSubsamplingMask = 15;
+pub const DXVA2_VideoChromaSubsampling_Unknown = 0;
+pub const DXVA2_VideoChromaSubsampling_ProgressiveChroma = 8;
+pub const DXVA2_VideoChromaSubsampling_Horizontally_Cosited = 4;
+pub const DXVA2_VideoChromaSubsampling_Vertically_Cosited = 2;
+pub const DXVA2_VideoChromaSubsampling_Vertically_AlignedChromaPlanes = 1;
+pub const DXVA2_VideoChromaSubsampling_MPEG2 = 5;
+pub const DXVA2_VideoChromaSubsampling_MPEG1 = 1;
+pub const DXVA2_VideoChromaSubsampling_DV_PAL = 6;
+pub const DXVA2_VideoChromaSubsampling_Cosited = 7;
+pub const DXVA2_NominalRangeMask = 7;
+pub const DXVA2_NominalRange_Unknown = 0;
+pub const DXVA2_NominalRange_Normal = 1;
+pub const DXVA2_NominalRange_Wide = 2;
+pub const DXVA2_NominalRange_0_255 = 1;
+pub const DXVA2_NominalRange_16_235 = 2;
+pub const DXVA2_NominalRange_48_208 = 3;
+pub const DXVA2_VideoTransferMatrixMask = 7;
+pub const DXVA2_VideoTransferMatrix_Unknown = 0;
+pub const DXVA2_VideoTransferMatrix_BT709 = 1;
+pub const DXVA2_VideoTransferMatrix_BT601 = 2;
+pub const DXVA2_VideoTransferMatrix_SMPTE240M = 3;
+pub const DXVA2_VideoLightingMask = 15;
+pub const DXVA2_VideoLighting_Unknown = 0;
+pub const DXVA2_VideoLighting_bright = 1;
+pub const DXVA2_VideoLighting_office = 2;
+pub const DXVA2_VideoLighting_dim = 3;
+pub const DXVA2_VideoLighting_dark = 4;
+pub const DXVA2_VideoPrimariesMask = 31;
+pub const DXVA2_VideoPrimaries_Unknown = 0;
+pub const DXVA2_VideoPrimaries_reserved = 1;
+pub const DXVA2_VideoPrimaries_BT709 = 2;
+pub const DXVA2_VideoPrimaries_BT470_2_SysM = 3;
+pub const DXVA2_VideoPrimaries_BT470_2_SysBG = 4;
+pub const DXVA2_VideoPrimaries_SMPTE170M = 5;
+pub const DXVA2_VideoPrimaries_SMPTE240M = 6;
+pub const DXVA2_VideoPrimaries_EBU3213 = 7;
+pub const DXVA2_VideoPrimaries_SMPTE_C = 8;
+pub const DXVA2_VideoTransFuncMask = 31;
+pub const DXVA2_VideoTransFunc_Unknown = 0;
+pub const DXVA2_VideoTransFunc_10 = 1;
+pub const DXVA2_VideoTransFunc_18 = 2;
+pub const DXVA2_VideoTransFunc_20 = 3;
+pub const DXVA2_VideoTransFunc_22 = 4;
+pub const DXVA2_VideoTransFunc_709 = 5;
+pub const DXVA2_VideoTransFunc_240M = 6;
+pub const DXVA2_VideoTransFunc_sRGB = 7;
+pub const DXVA2_VideoTransFunc_28 = 8;
+pub const DXVA2_DeinterlaceTech_Unknown = 0;
+pub const DXVA2_DeinterlaceTech_BOBLineReplicate = 1;
+pub const DXVA2_DeinterlaceTech_BOBVerticalStretch = 2;
+pub const DXVA2_DeinterlaceTech_BOBVerticalStretch4Tap = 4;
+pub const DXVA2_DeinterlaceTech_MedianFiltering = 8;
+pub const DXVA2_DeinterlaceTech_EdgeFiltering = 16;
+pub const DXVA2_DeinterlaceTech_FieldAdaptive = 32;
+pub const DXVA2_DeinterlaceTech_PixelAdaptive = 64;
+pub const DXVA2_DeinterlaceTech_MotionVectorSteered = 128;
+pub const DXVA2_DeinterlaceTech_InverseTelecine = 256;
+pub const DXVA2_DeinterlaceTech_Mask = 511;
+pub const DXVA2_NoiseFilterLumaLevel = 1;
+pub const DXVA2_NoiseFilterLumaThreshold = 2;
+pub const DXVA2_NoiseFilterLumaRadius = 3;
+pub const DXVA2_NoiseFilterChromaLevel = 4;
+pub const DXVA2_NoiseFilterChromaThreshold = 5;
+pub const DXVA2_NoiseFilterChromaRadius = 6;
+pub const DXVA2_DetailFilterLumaLevel = 7;
+pub const DXVA2_DetailFilterLumaThreshold = 8;
+pub const DXVA2_DetailFilterLumaRadius = 9;
+pub const DXVA2_DetailFilterChromaLevel = 10;
+pub const DXVA2_DetailFilterChromaThreshold = 11;
+pub const DXVA2_DetailFilterChromaRadius = 12;
+pub const DXVA2_NoiseFilterTech_Unsupported = 0;
+pub const DXVA2_NoiseFilterTech_Unknown = 1;
+pub const DXVA2_NoiseFilterTech_Median = 2;
+pub const DXVA2_NoiseFilterTech_Temporal = 4;
+pub const DXVA2_NoiseFilterTech_BlockNoise = 8;
+pub const DXVA2_NoiseFilterTech_MosquitoNoise = 16;
+pub const DXVA2_NoiseFilterTech_Mask = 31;
+pub const DXVA2_DetailFilterTech_Unsupported = 0;
+pub const DXVA2_DetailFilterTech_Unknown = 1;
+pub const DXVA2_DetailFilterTech_Edge = 2;
+pub const DXVA2_DetailFilterTech_Sharpening = 4;
+pub const DXVA2_DetailFilterTech_Mask = 7;
+pub const DXVA2_ProcAmp_None = 0;
+pub const DXVA2_ProcAmp_Brightness = 1;
+pub const DXVA2_ProcAmp_Contrast = 2;
+pub const DXVA2_ProcAmp_Hue = 4;
+pub const DXVA2_ProcAmp_Saturation = 8;
+pub const DXVA2_ProcAmp_Mask = 15;
+pub const DXVA2_VideoProcess_None = 0;
+pub const DXVA2_VideoProcess_YUV2RGB = 1;
+pub const DXVA2_VideoProcess_StretchX = 2;
+pub const DXVA2_VideoProcess_StretchY = 4;
+pub const DXVA2_VideoProcess_AlphaBlend = 8;
+pub const DXVA2_VideoProcess_SubRects = 16;
+pub const DXVA2_VideoProcess_SubStreams = 32;
+pub const DXVA2_VideoProcess_SubStreamsExtended = 64;
+pub const DXVA2_VideoProcess_YUV2RGBExtended = 128;
+pub const DXVA2_VideoProcess_AlphaBlendExtended = 256;
+pub const DXVA2_VideoProcess_Constriction = 512;
+pub const DXVA2_VideoProcess_NoiseFilter = 1024;
+pub const DXVA2_VideoProcess_DetailFilter = 2048;
+pub const DXVA2_VideoProcess_PlanarAlpha = 4096;
+pub const DXVA2_VideoProcess_LinearScaling = 8192;
+pub const DXVA2_VideoProcess_GammaCompensated = 16384;
+pub const DXVA2_VideoProcess_MaintainsOriginalFieldData = 32768;
+pub const DXVA2_VideoProcess_Mask = 65535;
+pub const DXVA2_VPDev_HardwareDevice = 1;
+pub const DXVA2_VPDev_EmulatedDXVA1 = 2;
+pub const DXVA2_VPDev_SoftwareDevice = 4;
+pub const DXVA2_VPDev_Mask = 7;
+pub const DXVA2_SampleData_RFF = 1;
+pub const DXVA2_SampleData_TFF = 2;
+pub const DXVA2_SampleData_RFF_TFF_Present = 4;
+pub const DXVA2_SampleData_Mask = 65535;
+pub const DXVA2_DestData_RFF = 1;
+pub const DXVA2_DestData_TFF = 2;
+pub const DXVA2_DestData_RFF_TFF_Present = 4;
+pub const DXVA2_DestData_Mask = 65535;
+pub const DXVA2_PictureParametersBufferType = 0;
+pub const DXVA2_MacroBlockControlBufferType = 1;
+pub const DXVA2_ResidualDifferenceBufferType = 2;
+pub const DXVA2_DeblockingControlBufferType = 3;
+pub const DXVA2_InverseQuantizationMatrixBufferType = 4;
+pub const DXVA2_SliceControlBufferType = 5;
+pub const DXVA2_BitStreamDateBufferType = 6;
+pub const DXVA2_MotionVectorBuffer = 7;
+pub const DXVA2_FilmGrainBuffer = 8;
+pub const DXVA2_VideoDecoderRenderTarget = 0;
+pub const DXVA2_VideoProcessorRenderTarget = 1;
+pub const DXVA2_VideoSoftwareRenderTarget = 2;
+pub const DXVA2_SurfaceType_DecoderRenderTarget = 0;
+pub const DXVA2_SurfaceType_ProcessorRenderTarget = 1;
+pub const DXVA2_SurfaceType_D3DRenderTargetTexture = 2;
+pub const OPM_OMAC_SIZE = 16;
+pub const OPM_128_BIT_RANDOM_NUMBER_SIZE = 16;
+pub const OPM_ENCRYPTED_INITIALIZATION_PARAMETERS_SIZE = 256;
+pub const OPM_CONFIGURE_SETTING_DATA_SIZE = 4056;
+pub const OPM_GET_INFORMATION_PARAMETERS_SIZE = 4056;
+pub const OPM_REQUESTED_INFORMATION_SIZE = 4076;
+pub const OPM_HDCP_KEY_SELECTION_VECTOR_SIZE = 5;
+pub const OPM_PROTECTION_TYPE_SIZE = 4;
+pub const OPM_BUS_TYPE_MASK = 65535;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_MASK = 32767;
+pub const OPM_VOS_COPP_SEMANTICS = 0;
+pub const OPM_VOS_OPM_SEMANTICS = 1;
+pub const OPM_VOS_OPM_INDIRECT_DISPLAY = 2;
+pub const OPM_HDCP_FLAG_NONE = 0;
+pub const OPM_HDCP_FLAG_REPEATER = 1;
+pub const OPM_STATUS_NORMAL = 0;
+pub const OPM_STATUS_LINK_LOST = 1;
+pub const OPM_STATUS_RENEGOTIATION_REQUIRED = 2;
+pub const OPM_STATUS_TAMPERING_DETECTED = 4;
+pub const OPM_STATUS_REVOKED_HDCP_DEVICE_ATTACHED = 8;
+pub const OPM_CONNECTOR_TYPE_OTHER = -1;
+pub const OPM_CONNECTOR_TYPE_VGA = 0;
+pub const OPM_CONNECTOR_TYPE_SVIDEO = 1;
+pub const OPM_CONNECTOR_TYPE_COMPOSITE_VIDEO = 2;
+pub const OPM_CONNECTOR_TYPE_COMPONENT_VIDEO = 3;
+pub const OPM_CONNECTOR_TYPE_DVI = 4;
+pub const OPM_CONNECTOR_TYPE_HDMI = 5;
+pub const OPM_CONNECTOR_TYPE_LVDS = 6;
+pub const OPM_CONNECTOR_TYPE_D_JPN = 8;
+pub const OPM_CONNECTOR_TYPE_SDI = 9;
+pub const OPM_CONNECTOR_TYPE_DISPLAYPORT_EXTERNAL = 10;
+pub const OPM_CONNECTOR_TYPE_DISPLAYPORT_EMBEDDED = 11;
+pub const OPM_CONNECTOR_TYPE_UDI_EXTERNAL = 12;
+pub const OPM_CONNECTOR_TYPE_UDI_EMBEDDED = 13;
+pub const OPM_CONNECTOR_TYPE_RESERVED = 14;
+pub const OPM_CONNECTOR_TYPE_MIRACAST = 15;
+pub const OPM_CONNECTOR_TYPE_TRANSPORT_AGNOSTIC_DIGITAL_MODE_A = 16;
+pub const OPM_CONNECTOR_TYPE_TRANSPORT_AGNOSTIC_DIGITAL_MODE_B = 17;
+pub const OPM_COPP_COMPATIBLE_CONNECTOR_TYPE_INTERNAL = -2147483648;
+pub const OPM_DVI_CHARACTERISTIC_1_0 = 1;
+pub const OPM_DVI_CHARACTERISTIC_1_1_OR_ABOVE = 2;
+pub const OPM_OUTPUT_HARDWARE_PROTECTION_NOT_SUPPORTED = 0;
+pub const OPM_OUTPUT_HARDWARE_PROTECTION_SUPPORTED = 1;
+pub const OPM_BUS_TYPE_OTHER = 0;
+pub const OPM_BUS_TYPE_PCI = 1;
+pub const OPM_BUS_TYPE_PCIX = 2;
+pub const OPM_BUS_TYPE_PCIEXPRESS = 3;
+pub const OPM_BUS_TYPE_AGP = 4;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_INSIDE_OF_CHIPSET = 65536;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_TRACKS_ON_MOTHER_BOARD_TO_CHIP = 131072;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_TRACKS_ON_MOTHER_BOARD_TO_SOCKET = 196608;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_DAUGHTER_BOARD_CONNECTOR = 262144;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_DAUGHTER_BOARD_CONNECTOR_INSIDE_OF_NUAE = 327680;
+pub const OPM_BUS_IMPLEMENTATION_MODIFIER_NON_STANDARD = -2147483648;
+pub const OPM_COPP_COMPATIBLE_BUS_TYPE_INTEGRATED = -2147483648;
+pub const OPM_DPCP_OFF = 0;
+pub const OPM_DPCP_ON = 1;
+pub const OPM_HDCP_OFF = 0;
+pub const OPM_HDCP_ON = 1;
+pub const OPM_TYPE_ENFORCEMENT_HDCP_OFF = 0;
+pub const OPM_TYPE_ENFORCEMENT_HDCP_ON_WITH_NO_TYPE_RESTRICTION = 1;
+pub const OPM_TYPE_ENFORCEMENT_HDCP_ON_WITH_TYPE1_RESTRICTION = 2;
+pub const OPM_CGMSA_OFF = 0;
+pub const OPM_CGMSA_COPY_FREELY = 1;
+pub const OPM_CGMSA_COPY_NO_MORE = 2;
+pub const OPM_CGMSA_COPY_ONE_GENERATION = 3;
+pub const OPM_CGMSA_COPY_NEVER = 4;
+pub const OPM_CGMSA_REDISTRIBUTION_CONTROL_REQUIRED = 8;
+pub const OPM_ACP_OFF = 0;
+pub const OPM_ACP_LEVEL_ONE = 1;
+pub const OPM_ACP_LEVEL_TWO = 2;
+pub const OPM_ACP_LEVEL_THREE = 3;
+pub const OPM_PROTECTION_TYPE_OTHER = -2147483648;
+pub const OPM_PROTECTION_TYPE_NONE = 0;
+pub const OPM_PROTECTION_TYPE_COPP_COMPATIBLE_HDCP = 1;
+pub const OPM_PROTECTION_TYPE_ACP = 2;
+pub const OPM_PROTECTION_TYPE_CGMSA = 4;
+pub const OPM_PROTECTION_TYPE_HDCP = 8;
+pub const OPM_PROTECTION_TYPE_DPCP = 16;
+pub const OPM_PROTECTION_TYPE_TYPE_ENFORCEMENT_HDCP = 32;
+pub const OPM_PROTECTION_STANDARD_OTHER = 2147483648;
+pub const OPM_PROTECTION_STANDARD_NONE = 0;
+pub const OPM_PROTECTION_STANDARD_IEC61880_525I = 1;
+pub const OPM_PROTECTION_STANDARD_IEC61880_2_525I = 2;
+pub const OPM_PROTECTION_STANDARD_IEC62375_625P = 4;
+pub const OPM_PROTECTION_STANDARD_EIA608B_525 = 8;
+pub const OPM_PROTECTION_STANDARD_EN300294_625I = 16;
+pub const OPM_PROTECTION_STANDARD_CEA805A_TYPEA_525P = 32;
+pub const OPM_PROTECTION_STANDARD_CEA805A_TYPEA_750P = 64;
+pub const OPM_PROTECTION_STANDARD_CEA805A_TYPEA_1125I = 128;
+pub const OPM_PROTECTION_STANDARD_CEA805A_TYPEB_525P = 256;
+pub const OPM_PROTECTION_STANDARD_CEA805A_TYPEB_750P = 512;
+pub const OPM_PROTECTION_STANDARD_CEA805A_TYPEB_1125I = 1024;
+pub const OPM_PROTECTION_STANDARD_ARIBTRB15_525I = 2048;
+pub const OPM_PROTECTION_STANDARD_ARIBTRB15_525P = 4096;
+pub const OPM_PROTECTION_STANDARD_ARIBTRB15_750P = 8192;
+pub const OPM_PROTECTION_STANDARD_ARIBTRB15_1125I = 16384;
+pub const OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_4_BY_3 = 0;
+pub const OPM_ASPECT_RATIO_EN300294_BOX_14_BY_9_CENTER = 1;
+pub const OPM_ASPECT_RATIO_EN300294_BOX_14_BY_9_TOP = 2;
+pub const OPM_ASPECT_RATIO_EN300294_BOX_16_BY_9_CENTER = 3;
+pub const OPM_ASPECT_RATIO_EN300294_BOX_16_BY_9_TOP = 4;
+pub const OPM_ASPECT_RATIO_EN300294_BOX_GT_16_BY_9_CENTER = 5;
+pub const OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_4_BY_3_PROTECTED_CENTER = 6;
+pub const OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_16_BY_9_ANAMORPHIC = 7;
+pub const KSMETHOD_OPMVIDEOOUTPUT_STARTINITIALIZATION = 0;
+pub const KSMETHOD_OPMVIDEOOUTPUT_FINISHINITIALIZATION = 1;
+pub const KSMETHOD_OPMVIDEOOUTPUT_GETINFORMATION = 2;
+pub const MF_ATTRIBUTE_UINT32 = 19;
+pub const MF_ATTRIBUTE_UINT64 = 21;
+pub const MF_ATTRIBUTE_DOUBLE = 5;
+pub const MF_ATTRIBUTE_GUID = 72;
+pub const MF_ATTRIBUTE_STRING = 31;
+pub const MF_ATTRIBUTE_BLOB = 4113;
+pub const MF_ATTRIBUTE_IUNKNOWN = 13;
+pub const MF_ATTRIBUTES_MATCH_OUR_ITEMS = 0;
+pub const MF_ATTRIBUTES_MATCH_THEIR_ITEMS = 1;
+pub const MF_ATTRIBUTES_MATCH_ALL_ITEMS = 2;
+pub const MF_ATTRIBUTES_MATCH_INTERSECTION = 3;
+pub const MF_ATTRIBUTES_MATCH_SMALLER = 4;
+pub const MF_ATTRIBUTE_SERIALIZE_UNKNOWN_BYREF = 1;
+pub const MF2DBuffer_LockFlags_LockTypeMask = 3;
+pub const MF2DBuffer_LockFlags_Read = 1;
+pub const MF2DBuffer_LockFlags_Write = 2;
+pub const MF2DBuffer_LockFlags_ReadWrite = 3;
+pub const MF2DBuffer_LockFlags_ForceDWORD = 2147483647;
+pub const MFVideoInterlace_Unknown = 0;
+pub const MFVideoInterlace_Progressive = 2;
+pub const MFVideoInterlace_FieldInterleavedUpperFirst = 3;
+pub const MFVideoInterlace_FieldInterleavedLowerFirst = 4;
+pub const MFVideoInterlace_FieldSingleUpper = 5;
+pub const MFVideoInterlace_FieldSingleLower = 6;
+pub const MFVideoInterlace_MixedInterlaceOrProgressive = 7;
+pub const MFVideoInterlace_Last = 8;
+pub const MFVideoInterlace_ForceDWORD = 2147483647;
+pub const MFVideoTransFunc_Unknown = 0;
+pub const MFVideoTransFunc_10 = 1;
+pub const MFVideoTransFunc_18 = 2;
+pub const MFVideoTransFunc_20 = 3;
+pub const MFVideoTransFunc_22 = 4;
+pub const MFVideoTransFunc_709 = 5;
+pub const MFVideoTransFunc_240M = 6;
+pub const MFVideoTransFunc_sRGB = 7;
+pub const MFVideoTransFunc_28 = 8;
+pub const MFVideoTransFunc_Log_100 = 9;
+pub const MFVideoTransFunc_Log_316 = 10;
+pub const MFVideoTransFunc_709_sym = 11;
+pub const MFVideoTransFunc_2020_const = 12;
+pub const MFVideoTransFunc_2020 = 13;
+pub const MFVideoTransFunc_26 = 14;
+pub const MFVideoTransFunc_2084 = 15;
+pub const MFVideoTransFunc_HLG = 16;
+pub const MFVideoTransFunc_10_rel = 17;
+pub const MFVideoTransFunc_BT1361_ECG = 18;
+pub const MFVideoTransFunc_SMPTE428 = 19;
+pub const MFVideoTransFunc_Last = 20;
+pub const MFVideoTransFunc_ForceDWORD = 2147483647;
+pub const MFVideoPrimaries_Unknown = 0;
+pub const MFVideoPrimaries_reserved = 1;
+pub const MFVideoPrimaries_BT709 = 2;
+pub const MFVideoPrimaries_BT470_2_SysM = 3;
+pub const MFVideoPrimaries_BT470_2_SysBG = 4;
+pub const MFVideoPrimaries_SMPTE170M = 5;
+pub const MFVideoPrimaries_SMPTE240M = 6;
+pub const MFVideoPrimaries_EBU3213 = 7;
+pub const MFVideoPrimaries_SMPTE_C = 8;
+pub const MFVideoPrimaries_BT2020 = 9;
+pub const MFVideoPrimaries_XYZ = 10;
+pub const MFVideoPrimaries_DCI_P3 = 11;
+pub const MFVideoPrimaries_ACES = 12;
+pub const MFVideoPrimaries_Display_P3 = 13;
+pub const MFVideoPrimaries_Last = 14;
+pub const MFVideoPrimaries_ForceDWORD = 2147483647;
+pub const MFVideoLighting_Unknown = 0;
+pub const MFVideoLighting_bright = 1;
+pub const MFVideoLighting_office = 2;
+pub const MFVideoLighting_dim = 3;
+pub const MFVideoLighting_dark = 4;
+pub const MFVideoLighting_Last = 5;
+pub const MFVideoLighting_ForceDWORD = 2147483647;
+pub const MFVideoTransferMatrix_Unknown = 0;
+pub const MFVideoTransferMatrix_BT709 = 1;
+pub const MFVideoTransferMatrix_BT601 = 2;
+pub const MFVideoTransferMatrix_SMPTE240M = 3;
+pub const MFVideoTransferMatrix_BT2020_10 = 4;
+pub const MFVideoTransferMatrix_BT2020_12 = 5;
+pub const MFVideoTransferMatrix_Identity = 6;
+pub const MFVideoTransferMatrix_FCC47 = 7;
+pub const MFVideoTransferMatrix_YCgCo = 8;
+pub const MFVideoTransferMatrix_SMPTE2085 = 9;
+pub const MFVideoTransferMatrix_Chroma = 10;
+pub const MFVideoTransferMatrix_Chroma_const = 11;
+pub const MFVideoTransferMatrix_ICtCp = 12;
+pub const MFVideoTransferMatrix_Last = 13;
+pub const MFVideoTransferMatrix_ForceDWORD = 2147483647;
+pub const MFVideoChromaSubsampling_Unknown = 0;
+pub const MFVideoChromaSubsampling_ProgressiveChroma = 8;
+pub const MFVideoChromaSubsampling_Horizontally_Cosited = 4;
+pub const MFVideoChromaSubsampling_Vertically_Cosited = 2;
+pub const MFVideoChromaSubsampling_Vertically_AlignedChromaPlanes = 1;
+pub const MFVideoChromaSubsampling_MPEG2 = 5;
+pub const MFVideoChromaSubsampling_MPEG1 = 1;
+pub const MFVideoChromaSubsampling_DV_PAL = 6;
+pub const MFVideoChromaSubsampling_Cosited = 7;
+pub const MFVideoChromaSubsampling_Last = 8;
+pub const MFVideoChromaSubsampling_ForceDWORD = 2147483647;
+pub const MFNominalRange_Unknown = 0;
+pub const MFNominalRange_Normal = 1;
+pub const MFNominalRange_Wide = 2;
+pub const MFNominalRange_0_255 = 1;
+pub const MFNominalRange_16_235 = 2;
+pub const MFNominalRange_48_208 = 3;
+pub const MFNominalRange_64_127 = 4;
+pub const MFNominalRange_Last = 5;
+pub const MFNominalRange_ForceDWORD = 2147483647;
+pub const MFVideoFlag_PAD_TO_Mask = 3;
+pub const MFVideoFlag_PAD_TO_None = 0;
+pub const MFVideoFlag_PAD_TO_4x3 = 1;
+pub const MFVideoFlag_PAD_TO_16x9 = 2;
+pub const MFVideoFlag_SrcContentHintMask = 28;
+pub const MFVideoFlag_SrcContentHintNone = 0;
+pub const MFVideoFlag_SrcContentHint16x9 = 4;
+pub const MFVideoFlag_SrcContentHint235_1 = 8;
+pub const MFVideoFlag_AnalogProtected = 32;
+pub const MFVideoFlag_DigitallyProtected = 64;
+pub const MFVideoFlag_ProgressiveContent = 128;
+pub const MFVideoFlag_FieldRepeatCountMask = 1792;
+pub const MFVideoFlag_FieldRepeatCountShift = 8;
+pub const MFVideoFlag_ProgressiveSeqReset = 2048;
+pub const MFVideoFlag_PanScanEnabled = 131072;
+pub const MFVideoFlag_LowerFieldFirst = 262144;
+pub const MFVideoFlag_BottomUpLinearRep = 524288;
+pub const MFVideoFlags_DXVASurface = 1048576;
+pub const MFVideoFlags_RenderTargetSurface = 4194304;
+pub const MFVideoFlags_ForceQWORD = 2147483647;
+pub const MFStdVideoFormat_reserved = 0;
+pub const MFStdVideoFormat_NTSC = 1;
+pub const MFStdVideoFormat_PAL = 2;
+pub const MFStdVideoFormat_DVD_NTSC = 3;
+pub const MFStdVideoFormat_DVD_PAL = 4;
+pub const MFStdVideoFormat_DV_PAL = 5;
+pub const MFStdVideoFormat_DV_NTSC = 6;
+pub const MFStdVideoFormat_ATSC_SD480i = 7;
+pub const MFStdVideoFormat_ATSC_HD1080i = 8;
+pub const MFStdVideoFormat_ATSC_HD720p = 9;
+pub const MEUnknown = 0;
+pub const MEError = 1;
+pub const MEExtendedType = 2;
+pub const MENonFatalError = 3;
+pub const MEGenericV1Anchor = 3;
+pub const MESessionUnknown = 100;
+pub const MESessionTopologySet = 101;
+pub const MESessionTopologiesCleared = 102;
+pub const MESessionStarted = 103;
+pub const MESessionPaused = 104;
+pub const MESessionStopped = 105;
+pub const MESessionClosed = 106;
+pub const MESessionEnded = 107;
+pub const MESessionRateChanged = 108;
+pub const MESessionScrubSampleComplete = 109;
+pub const MESessionCapabilitiesChanged = 110;
+pub const MESessionTopologyStatus = 111;
+pub const MESessionNotifyPresentationTime = 112;
+pub const MENewPresentation = 113;
+pub const MELicenseAcquisitionStart = 114;
+pub const MELicenseAcquisitionCompleted = 115;
+pub const MEIndividualizationStart = 116;
+pub const MEIndividualizationCompleted = 117;
+pub const MEEnablerProgress = 118;
+pub const MEEnablerCompleted = 119;
+pub const MEPolicyError = 120;
+pub const MEPolicyReport = 121;
+pub const MEBufferingStarted = 122;
+pub const MEBufferingStopped = 123;
+pub const MEConnectStart = 124;
+pub const MEConnectEnd = 125;
+pub const MEReconnectStart = 126;
+pub const MEReconnectEnd = 127;
+pub const MERendererEvent = 128;
+pub const MESessionStreamSinkFormatChanged = 129;
+pub const MESessionV1Anchor = 129;
+pub const MESourceUnknown = 200;
+pub const MESourceStarted = 201;
+pub const MEStreamStarted = 202;
+pub const MESourceSeeked = 203;
+pub const MEStreamSeeked = 204;
+pub const MENewStream = 205;
+pub const MEUpdatedStream = 206;
+pub const MESourceStopped = 207;
+pub const MEStreamStopped = 208;
+pub const MESourcePaused = 209;
+pub const MEStreamPaused = 210;
+pub const MEEndOfPresentation = 211;
+pub const MEEndOfStream = 212;
+pub const MEMediaSample = 213;
+pub const MEStreamTick = 214;
+pub const MEStreamThinMode = 215;
+pub const MEStreamFormatChanged = 216;
+pub const MESourceRateChanged = 217;
+pub const MEEndOfPresentationSegment = 218;
+pub const MESourceCharacteristicsChanged = 219;
+pub const MESourceRateChangeRequested = 220;
+pub const MESourceMetadataChanged = 221;
+pub const MESequencerSourceTopologyUpdated = 222;
+pub const MESourceV1Anchor = 222;
+pub const MESinkUnknown = 300;
+pub const MEStreamSinkStarted = 301;
+pub const MEStreamSinkStopped = 302;
+pub const MEStreamSinkPaused = 303;
+pub const MEStreamSinkRateChanged = 304;
+pub const MEStreamSinkRequestSample = 305;
+pub const MEStreamSinkMarker = 306;
+pub const MEStreamSinkPrerolled = 307;
+pub const MEStreamSinkScrubSampleComplete = 308;
+pub const MEStreamSinkFormatChanged = 309;
+pub const MEStreamSinkDeviceChanged = 310;
+pub const MEQualityNotify = 311;
+pub const MESinkInvalidated = 312;
+pub const MEAudioSessionNameChanged = 313;
+pub const MEAudioSessionVolumeChanged = 314;
+pub const MEAudioSessionDeviceRemoved = 315;
+pub const MEAudioSessionServerShutdown = 316;
+pub const MEAudioSessionGroupingParamChanged = 317;
+pub const MEAudioSessionIconChanged = 318;
+pub const MEAudioSessionFormatChanged = 319;
+pub const MEAudioSessionDisconnected = 320;
+pub const MEAudioSessionExclusiveModeOverride = 321;
+pub const MESinkV1Anchor = 321;
+pub const MECaptureAudioSessionVolumeChanged = 322;
+pub const MECaptureAudioSessionDeviceRemoved = 323;
+pub const MECaptureAudioSessionFormatChanged = 324;
+pub const MECaptureAudioSessionDisconnected = 325;
+pub const MECaptureAudioSessionExclusiveModeOverride = 326;
+pub const MECaptureAudioSessionServerShutdown = 327;
+pub const MESinkV2Anchor = 327;
+pub const METrustUnknown = 400;
+pub const MEPolicyChanged = 401;
+pub const MEContentProtectionMessage = 402;
+pub const MEPolicySet = 403;
+pub const METrustV1Anchor = 403;
+pub const MEWMDRMLicenseBackupCompleted = 500;
+pub const MEWMDRMLicenseBackupProgress = 501;
+pub const MEWMDRMLicenseRestoreCompleted = 502;
+pub const MEWMDRMLicenseRestoreProgress = 503;
+pub const MEWMDRMLicenseAcquisitionCompleted = 506;
+pub const MEWMDRMIndividualizationCompleted = 508;
+pub const MEWMDRMIndividualizationProgress = 513;
+pub const MEWMDRMProximityCompleted = 514;
+pub const MEWMDRMLicenseStoreCleaned = 515;
+pub const MEWMDRMRevocationDownloadCompleted = 516;
+pub const MEWMDRMV1Anchor = 516;
+pub const METransformUnknown = 600;
+pub const METransformNeedInput = 601;
+pub const METransformHaveOutput = 602;
+pub const METransformDrainComplete = 603;
+pub const METransformMarker = 604;
+pub const METransformInputStreamStateChanged = 605;
+pub const MEByteStreamCharacteristicsChanged = 700;
+pub const MEVideoCaptureDeviceRemoved = 800;
+pub const MEVideoCaptureDevicePreempted = 801;
+pub const MEStreamSinkFormatInvalidated = 802;
+pub const MEEncodingParameters = 803;
+pub const MEContentProtectionMetadata = 900;
+pub const MEDeviceThermalStateChanged = 950;
+pub const MEReservedMax = 10000;
+pub const msoBegin = 0;
+pub const msoCurrent = 1;
+pub const MF_ACCESSMODE_READ = 1;
+pub const MF_ACCESSMODE_WRITE = 2;
+pub const MF_ACCESSMODE_READWRITE = 3;
+pub const MF_OPENMODE_FAIL_IF_NOT_EXIST = 0;
+pub const MF_OPENMODE_FAIL_IF_EXIST = 1;
+pub const MF_OPENMODE_RESET_IF_EXIST = 2;
+pub const MF_OPENMODE_APPEND_IF_EXIST = 3;
+pub const MF_OPENMODE_DELETE_IF_EXIST = 4;
+pub const MF_FILEFLAGS_NONE = 0;
+pub const MF_FILEFLAGS_NOBUFFERING = 1;
+pub const MF_FILEFLAGS_ALLOW_WRITE_SHARING = 2;
+pub const MF_PLUGIN_CONTROL_POLICY_USE_ALL_PLUGINS = 0;
+pub const MF_PLUGIN_CONTROL_POLICY_USE_APPROVED_PLUGINS = 1;
+pub const MF_PLUGIN_CONTROL_POLICY_USE_WEB_PLUGINS = 2;
+pub const MF_PLUGIN_CONTROL_POLICY_USE_WEB_PLUGINS_EDGEMODE = 3;
+pub const MF_DXGI_DEVICE_MANAGER_MODE_INVALID = 0;
+pub const MF_DXGI_DEVICE_MANAGER_MODE_D3D11 = 1;
+pub const MF_DXGI_DEVICE_MANAGER_MODE_D3D12 = 2;
+pub const MF_STREAM_STATE_STOPPED = 0;
+pub const MF_STREAM_STATE_PAUSED = 1;
+pub const MF_STREAM_STATE_RUNNING = 2;
+pub const MFT_INPUT_DATA_BUFFER_PLACEHOLDER = -1;
+pub const MFT_OUTPUT_DATA_BUFFER_INCOMPLETE = 16777216;
+pub const MFT_OUTPUT_DATA_BUFFER_FORMAT_CHANGE = 256;
+pub const MFT_OUTPUT_DATA_BUFFER_STREAM_END = 512;
+pub const MFT_OUTPUT_DATA_BUFFER_NO_SAMPLE = 768;
+pub const MFT_INPUT_STATUS_ACCEPT_DATA = 1;
+pub const MFT_OUTPUT_STATUS_SAMPLE_READY = 1;
+pub const MFT_INPUT_STREAM_WHOLE_SAMPLES = 1;
+pub const MFT_INPUT_STREAM_SINGLE_SAMPLE_PER_BUFFER = 2;
+pub const MFT_INPUT_STREAM_FIXED_SAMPLE_SIZE = 4;
+pub const MFT_INPUT_STREAM_HOLDS_BUFFERS = 8;
+pub const MFT_INPUT_STREAM_DOES_NOT_ADDREF = 256;
+pub const MFT_INPUT_STREAM_REMOVABLE = 512;
+pub const MFT_INPUT_STREAM_OPTIONAL = 1024;
+pub const MFT_INPUT_STREAM_PROCESSES_IN_PLACE = 2048;
+pub const MFT_OUTPUT_STREAM_WHOLE_SAMPLES = 1;
+pub const MFT_OUTPUT_STREAM_SINGLE_SAMPLE_PER_BUFFER = 2;
+pub const MFT_OUTPUT_STREAM_FIXED_SAMPLE_SIZE = 4;
+pub const MFT_OUTPUT_STREAM_DISCARDABLE = 8;
+pub const MFT_OUTPUT_STREAM_OPTIONAL = 16;
+pub const MFT_OUTPUT_STREAM_PROVIDES_SAMPLES = 256;
+pub const MFT_OUTPUT_STREAM_CAN_PROVIDE_SAMPLES = 512;
+pub const MFT_OUTPUT_STREAM_LAZY_READ = 1024;
+pub const MFT_OUTPUT_STREAM_REMOVABLE = 2048;
+pub const MFT_SET_TYPE_TEST_ONLY = 1;
+pub const MFT_PROCESS_OUTPUT_DISCARD_WHEN_NO_BUFFER = 1;
+pub const MFT_PROCESS_OUTPUT_REGENERATE_LAST_OUTPUT = 2;
+pub const MFT_PROCESS_OUTPUT_STATUS_NEW_STREAMS = 256;
+pub const MFT_DRAIN_PRODUCE_TAILS = 0;
+pub const MFT_DRAIN_NO_TAILS = 1;
+pub const MFT_MESSAGE_COMMAND_FLUSH = 0;
+pub const MFT_MESSAGE_COMMAND_DRAIN = 1;
+pub const MFT_MESSAGE_SET_D3D_MANAGER = 2;
+pub const MFT_MESSAGE_DROP_SAMPLES = 3;
+pub const MFT_MESSAGE_COMMAND_TICK = 4;
+pub const MFT_MESSAGE_NOTIFY_BEGIN_STREAMING = 268435456;
+pub const MFT_MESSAGE_NOTIFY_END_STREAMING = 268435457;
+pub const MFT_MESSAGE_NOTIFY_END_OF_STREAM = 268435458;
+pub const MFT_MESSAGE_NOTIFY_START_OF_STREAM = 268435459;
+pub const MFT_MESSAGE_NOTIFY_RELEASE_RESOURCES = 268435460;
+pub const MFT_MESSAGE_NOTIFY_REACQUIRE_RESOURCES = 268435461;
+pub const MFT_MESSAGE_NOTIFY_EVENT = 268435462;
+pub const MFT_MESSAGE_COMMAND_SET_OUTPUT_STREAM_STATE = 268435463;
+pub const MFT_MESSAGE_COMMAND_FLUSH_OUTPUT_STREAM = 268435464;
+pub const MFT_MESSAGE_COMMAND_MARKER = 536870912;
+pub const DeviceStreamState_Stop = 0;
+pub const DeviceStreamState_Pause = 1;
+pub const DeviceStreamState_Run = 2;
+pub const DeviceStreamState_Disabled = 3;
+pub const MF3DVideoOutputType_BaseView = 0;
+pub const MF3DVideoOutputType_Stereo = 1;
+pub const MFT_AUDIO_DECODER_DEGRADATION_REASON_NONE = 0;
+pub const MFT_AUDIO_DECODER_DEGRADATION_REASON_LICENSING_REQUIREMENT = 1;
+pub const MFT_AUDIO_DECODER_DEGRADATION_TYPE_NONE = 0;
+pub const MFT_AUDIO_DECODER_DEGRADATION_TYPE_DOWNMIX2CHANNEL = 1;
+pub const MFT_AUDIO_DECODER_DEGRADATION_TYPE_DOWNMIX6CHANNEL = 2;
+pub const MFT_AUDIO_DECODER_DEGRADATION_TYPE_DOWNMIX8CHANNEL = 3;
+pub const MFSESSION_SETTOPOLOGY_IMMEDIATE = 1;
+pub const MFSESSION_SETTOPOLOGY_NORESOLUTION = 2;
+pub const MFSESSION_SETTOPOLOGY_CLEAR_CURRENT = 4;
+pub const MFSESSION_GETFULLTOPOLOGY_CURRENT = 1;
+pub const MFPMPSESSION_UNPROTECTED_PROCESS = 1;
+pub const MFPMPSESSION_IN_PROCESS = 2;
+pub const MF_OBJECT_MEDIASOURCE = 0;
+pub const MF_OBJECT_BYTESTREAM = 1;
+pub const MF_OBJECT_INVALID = 2;
+pub const MF_RESOLUTION_MEDIASOURCE = 1;
+pub const MF_RESOLUTION_BYTESTREAM = 2;
+pub const MF_RESOLUTION_CONTENT_DOES_NOT_HAVE_TO_MATCH_EXTENSION_OR_MIME_TYPE = 16;
+pub const MF_RESOLUTION_KEEP_BYTE_STREAM_ALIVE_ON_FAIL = 32;
+pub const MF_RESOLUTION_DISABLE_LOCAL_PLUGINS = 64;
+pub const MF_RESOLUTION_PLUGIN_CONTROL_POLICY_APPROVED_ONLY = 128;
+pub const MF_RESOLUTION_PLUGIN_CONTROL_POLICY_WEB_ONLY = 256;
+pub const MF_RESOLUTION_PLUGIN_CONTROL_POLICY_WEB_ONLY_EDGEMODE = 512;
+pub const MF_RESOLUTION_ENABLE_STORE_PLUGINS = 1024;
+pub const MF_RESOLUTION_READ = 65536;
+pub const MF_RESOLUTION_WRITE = 131072;
+pub const MF_CONNECT_DIRECT = 0;
+pub const MF_CONNECT_ALLOW_CONVERTER = 1;
+pub const MF_CONNECT_ALLOW_DECODER = 3;
+pub const MF_CONNECT_RESOLVE_INDEPENDENT_OUTPUTTYPES = 4;
+pub const MF_CONNECT_AS_OPTIONAL = 65536;
+pub const MF_CONNECT_AS_OPTIONAL_BRANCH = 131072;
+pub const MF_TOPOLOGY_RESOLUTION_SUCCEEDED = 0;
+pub const MF_OPTIONAL_NODE_REJECTED_MEDIA_TYPE = 1;
+pub const MF_OPTIONAL_NODE_REJECTED_PROTECTED_PROCESS = 2;
+pub const MFMEDIASOURCE_IS_LIVE = 1;
+pub const MFMEDIASOURCE_CAN_SEEK = 2;
+pub const MFMEDIASOURCE_CAN_PAUSE = 4;
+pub const MFMEDIASOURCE_HAS_SLOW_SEEK = 8;
+pub const MFMEDIASOURCE_HAS_MULTIPLE_PRESENTATIONS = 16;
+pub const MFMEDIASOURCE_CAN_SKIPFORWARD = 32;
+pub const MFMEDIASOURCE_CAN_SKIPBACKWARD = 64;
+pub const MFMEDIASOURCE_DOES_NOT_USE_NETWORK = 128;
+pub const MFSTREAMSINK_MARKER_DEFAULT = 0;
+pub const MFSTREAMSINK_MARKER_ENDOFSEGMENT = 1;
+pub const MFSTREAMSINK_MARKER_TICK = 2;
+pub const MFSTREAMSINK_MARKER_EVENT = 3;
+pub const ROTATION_NONE = 0;
+pub const ROTATION_NORMAL = 1;
+pub const MIRROR_NONE = 0;
+pub const MIRROR_HORIZONTAL = 1;
+pub const MIRROR_VERTICAL = 2;
+pub const MFVideoSphericalFormat_Unsupported = 0;
+pub const MFVideoSphericalFormat_Equirectangular = 1;
+pub const MFVideoSphericalFormat_CubeMap = 2;
+pub const MFVideoSphericalFormat_3DMesh = 3;
+pub const MFVideoSphericalProjectionMode_Spherical = 0;
+pub const MFVideoSphericalProjectionMode_Flat = 1;
+pub const MFTOPOLOGY_DXVA_DEFAULT = 0;
+pub const MFTOPOLOGY_DXVA_NONE = 1;
+pub const MFTOPOLOGY_DXVA_FULL = 2;
+pub const MFTOPOLOGY_HWMODE_SOFTWARE_ONLY = 0;
+pub const MFTOPOLOGY_HWMODE_USE_HARDWARE = 1;
+pub const MFTOPOLOGY_HWMODE_USE_ONLY_HARDWARE = 2;
+pub const MF_TOPOLOGY_OUTPUT_NODE = 0;
+pub const MF_TOPOLOGY_SOURCESTREAM_NODE = 1;
+pub const MF_TOPOLOGY_TRANSFORM_NODE = 2;
+pub const MF_TOPOLOGY_TEE_NODE = 3;
+pub const MF_TOPOLOGY_MAX = -1;
+pub const MF_TOPONODE_FLUSH_ALWAYS = 0;
+pub const MF_TOPONODE_FLUSH_SEEK = 1;
+pub const MF_TOPONODE_FLUSH_NEVER = 2;
+pub const MF_TOPONODE_DRAIN_DEFAULT = 0;
+pub const MF_TOPONODE_DRAIN_ALWAYS = 1;
+pub const MF_TOPONODE_DRAIN_NEVER = 2;
+pub const MFCLOCK_CHARACTERISTICS_FLAG_FREQUENCY_10MHZ = 2;
+pub const MFCLOCK_CHARACTERISTICS_FLAG_ALWAYS_RUNNING = 4;
+pub const MFCLOCK_CHARACTERISTICS_FLAG_IS_SYSTEM_CLOCK = 8;
+pub const MFCLOCK_STATE_INVALID = 0;
+pub const MFCLOCK_STATE_RUNNING = 1;
+pub const MFCLOCK_STATE_STOPPED = 2;
+pub const MFCLOCK_STATE_PAUSED = 3;
+pub const MFCLOCK_RELATIONAL_FLAG_JITTER_NEVER_AHEAD = 1;
+pub const MFTIMER_RELATIVE = 1;
+pub const MF_ACTIVATE_CUSTOM_MIXER_ALLOWFAIL = 1;
+pub const MF_ACTIVATE_CUSTOM_PRESENTER_ALLOWFAIL = 1;
+pub const MFSHUTDOWN_INITIATED = 0;
+pub const MFSHUTDOWN_COMPLETED = 1;
+pub const MF_LICENSE_URL_UNTRUSTED = 0;
+pub const MF_LICENSE_URL_TRUSTED = 1;
+pub const MF_LICENSE_URL_TAMPERED = 2;
+pub const MFRATE_FORWARD = 0;
+pub const MFRATE_REVERSE = 1;
+pub const MF_DROP_MODE_NONE = 0;
+pub const MF_DROP_MODE_1 = 1;
+pub const MF_DROP_MODE_2 = 2;
+pub const MF_DROP_MODE_3 = 3;
+pub const MF_DROP_MODE_4 = 4;
+pub const MF_DROP_MODE_5 = 5;
+pub const MF_NUM_DROP_MODES = 6;
+pub const MF_QUALITY_NORMAL = 0;
+pub const MF_QUALITY_NORMAL_MINUS_1 = 1;
+pub const MF_QUALITY_NORMAL_MINUS_2 = 2;
+pub const MF_QUALITY_NORMAL_MINUS_3 = 3;
+pub const MF_QUALITY_NORMAL_MINUS_4 = 4;
+pub const MF_QUALITY_NORMAL_MINUS_5 = 5;
+pub const MF_NUM_QUALITY_LEVELS = 6;
+pub const MF_QUALITY_CANNOT_KEEP_UP = 1;
+pub const SequencerTopologyFlags_Last = 1;
+pub const REQUIRE_PROMPT = 1;
+pub const REQUIRE_SAVE_SELECTED = 2;
+pub const MFNET_CREDENTIAL_SAVE = 1;
+pub const MFNET_CREDENTIAL_DONT_CACHE = 2;
+pub const MFNET_CREDENTIAL_ALLOW_CLEAR_TEXT = 4;
+pub const MFNET_AUTHENTICATION_PROXY = 1;
+pub const MFNET_AUTHENTICATION_CLEAR_TEXT = 2;
+pub const MFNET_AUTHENTICATION_LOGGED_ON_USER = 4;
+pub const MFNETSOURCE_UNDEFINED = 0;
+pub const MFNETSOURCE_HTTP = 1;
+pub const MFNETSOURCE_RTSP = 2;
+pub const MFNETSOURCE_FILE = 3;
+pub const MFNETSOURCE_MULTICAST = 4;
+pub const MFNETSOURCE_UDP = 0;
+pub const MFNETSOURCE_TCP = 1;
+pub const MFNETSOURCE_CACHE_UNAVAILABLE = 0;
+pub const MFNETSOURCE_CACHE_ACTIVE_WRITING = 1;
+pub const MFNETSOURCE_CACHE_ACTIVE_COMPLETE = 2;
+pub const MFNETSOURCE_RECVPACKETS_ID = 0;
+pub const MFNETSOURCE_LOSTPACKETS_ID = 1;
+pub const MFNETSOURCE_RESENDSREQUESTED_ID = 2;
+pub const MFNETSOURCE_RESENDSRECEIVED_ID = 3;
+pub const MFNETSOURCE_RECOVEREDBYECCPACKETS_ID = 4;
+pub const MFNETSOURCE_RECOVEREDBYRTXPACKETS_ID = 5;
+pub const MFNETSOURCE_OUTPACKETS_ID = 6;
+pub const MFNETSOURCE_RECVRATE_ID = 7;
+pub const MFNETSOURCE_AVGBANDWIDTHBPS_ID = 8;
+pub const MFNETSOURCE_BYTESRECEIVED_ID = 9;
+pub const MFNETSOURCE_PROTOCOL_ID = 10;
+pub const MFNETSOURCE_TRANSPORT_ID = 11;
+pub const MFNETSOURCE_CACHE_STATE_ID = 12;
+pub const MFNETSOURCE_LINKBANDWIDTH_ID = 13;
+pub const MFNETSOURCE_CONTENTBITRATE_ID = 14;
+pub const MFNETSOURCE_SPEEDFACTOR_ID = 15;
+pub const MFNETSOURCE_BUFFERSIZE_ID = 16;
+pub const MFNETSOURCE_BUFFERPROGRESS_ID = 17;
+pub const MFNETSOURCE_LASTBWSWITCHTS_ID = 18;
+pub const MFNETSOURCE_SEEKRANGESTART_ID = 19;
+pub const MFNETSOURCE_SEEKRANGEEND_ID = 20;
+pub const MFNETSOURCE_BUFFERINGCOUNT_ID = 21;
+pub const MFNETSOURCE_INCORRECTLYSIGNEDPACKETS_ID = 22;
+pub const MFNETSOURCE_SIGNEDSESSION_ID = 23;
+pub const MFNETSOURCE_MAXBITRATE_ID = 24;
+pub const MFNETSOURCE_RECEPTION_QUALITY_ID = 25;
+pub const MFNETSOURCE_RECOVEREDPACKETS_ID = 26;
+pub const MFNETSOURCE_VBR_ID = 27;
+pub const MFNETSOURCE_DOWNLOADPROGRESS_ID = 28;
+pub const MFNETSOURCE_UNPREDEFINEDPROTOCOLNAME_ID = 29;
+pub const MFNET_PROXYSETTING_NONE = 0;
+pub const MFNET_PROXYSETTING_MANUAL = 1;
+pub const MFNET_PROXYSETTING_AUTO = 2;
+pub const MFNET_PROXYSETTING_BROWSER = 3;
+pub const PEACTION_NO = 0;
+pub const PEACTION_PLAY = 1;
+pub const PEACTION_COPY = 2;
+pub const PEACTION_EXPORT = 3;
+pub const PEACTION_EXTRACT = 4;
+pub const PEACTION_RESERVED1 = 5;
+pub const PEACTION_RESERVED2 = 6;
+pub const PEACTION_RESERVED3 = 7;
+pub const PEACTION_LAST = 7;
+pub const MF_OPM_CGMSA_OFF = 0;
+pub const MF_OPM_CGMSA_COPY_FREELY = 1;
+pub const MF_OPM_CGMSA_COPY_NO_MORE = 2;
+pub const MF_OPM_CGMSA_COPY_ONE_GENERATION = 3;
+pub const MF_OPM_CGMSA_COPY_NEVER = 4;
+pub const MF_OPM_CGMSA_REDISTRIBUTION_CONTROL_REQUIRED = 8;
+pub const MF_OPM_ACP_OFF = 0;
+pub const MF_OPM_ACP_LEVEL_ONE = 1;
+pub const MF_OPM_ACP_LEVEL_TWO = 2;
+pub const MF_OPM_ACP_LEVEL_THREE = 3;
+pub const MFaudioConstrictionOff = 0;
+pub const MFaudioConstriction48_16 = 1;
+pub const MFaudioConstriction44_16 = 2;
+pub const MFaudioConstriction14_14 = 3;
+pub const MFaudioConstrictionMute = 4;
+pub const SAMPLE_PROTECTION_VERSION_NO = 0;
+pub const SAMPLE_PROTECTION_VERSION_BASIC_LOKI = 1;
+pub const SAMPLE_PROTECTION_VERSION_SCATTER = 2;
+pub const SAMPLE_PROTECTION_VERSION_RC4 = 3;
+pub const SAMPLE_PROTECTION_VERSION_AES128CTR = 4;
+pub const MF_TRANSCODE_TOPOLOGYMODE_SOFTWARE_ONLY = 0;
+pub const MF_TRANSCODE_TOPOLOGYMODE_HARDWARE_ALLOWED = 1;
+pub const MF_TRANSCODE_ADJUST_PROFILE_DEFAULT = 0;
+pub const MF_TRANSCODE_ADJUST_PROFILE_USE_SOURCE_ATTRIBUTES = 1;
+pub const MF_VIDEO_PROCESSOR_ALGORITHM_DEFAULT = 0;
+pub const MF_VIDEO_PROCESSOR_ALGORITHM_MRF_CRF_444 = 1;
+pub const MF_MEDIAKEYSESSION_TYPE_TEMPORARY = 0;
+pub const MF_MEDIAKEYSESSION_TYPE_PERSISTENT_LICENSE = 1;
+pub const MF_MEDIAKEYSESSION_TYPE_PERSISTENT_RELEASE_MESSAGE = 2;
+pub const MF_MEDIAKEYSESSION_TYPE_PERSISTENT_USAGE_RECORD = 3;
+pub const MF_MEDIAKEY_STATUS_USABLE = 0;
+pub const MF_MEDIAKEY_STATUS_EXPIRED = 1;
+pub const MF_MEDIAKEY_STATUS_OUTPUT_DOWNSCALED = 2;
+pub const MF_MEDIAKEY_STATUS_OUTPUT_NOT_ALLOWED = 3;
+pub const MF_MEDIAKEY_STATUS_STATUS_PENDING = 4;
+pub const MF_MEDIAKEY_STATUS_INTERNAL_ERROR = 5;
+pub const MF_MEDIAKEY_STATUS_RELEASED = 6;
+pub const MF_MEDIAKEY_STATUS_OUTPUT_RESTRICTED = 7;
+pub const MF_MEDIAKEYSESSION_MESSAGETYPE_LICENSE_REQUEST = 0;
+pub const MF_MEDIAKEYSESSION_MESSAGETYPE_LICENSE_RENEWAL = 1;
+pub const MF_MEDIAKEYSESSION_MESSAGETYPE_LICENSE_RELEASE = 2;
+pub const MF_MEDIAKEYSESSION_MESSAGETYPE_INDIVIDUALIZATION_REQUEST = 3;
+pub const MF_CROSS_ORIGIN_POLICY_NONE = 0;
+pub const MF_CROSS_ORIGIN_POLICY_ANONYMOUS = 1;
+pub const MF_CROSS_ORIGIN_POLICY_USE_CREDENTIALS = 2;
+pub const MFSensorDeviceType_Unknown = 0;
+pub const MFSensorDeviceType_Device = 1;
+pub const MFSensorDeviceType_MediaSource = 2;
+pub const MFSensorDeviceType_FrameProvider = 3;
+pub const MFSensorDeviceType_SensorTransform = 4;
+pub const MFSensorStreamType_Unknown = 0;
+pub const MFSensorStreamType_Input = 1;
+pub const MFSensorStreamType_Output = 2;
+pub const MFSensorDeviceMode_Controller = 0;
+pub const MFSensorDeviceMode_Shared = 1;
+pub const MFCameraIntrinsic_DistortionModelType_6KT = 0;
+pub const MFCameraIntrinsic_DistortionModelType_ArcTan = 1;
+pub const MFSampleAllocatorUsage_UsesProvidedAllocator = 0;
+pub const MFSampleAllocatorUsage_UsesCustomAllocator = 1;
+pub const MFSampleAllocatorUsage_DoesNotAllocate = 2;
+pub const MFCameraOcclusionState_Open = 0;
+pub const MFCameraOcclusionState_OccludedByLid = 1;
+pub const MFCameraOcclusionState_OccludedByCameraHardware = 2;
+pub const MF_CAMERA_CONTROL_CONFIGURATION_TYPE_PRESTART = 0;
+pub const MF_CAMERA_CONTROL_CONFIGURATION_TYPE_POSTSTART = 1;
+pub const MFASF_INDEXER_WRITE_NEW_INDEX = 1;
+pub const MFASF_INDEXER_READ_FOR_REVERSEPLAYBACK = 2;
+pub const MFASF_INDEXER_WRITE_FOR_LIVEREAD = 4;
+pub const MFASF_SPLITTER_REVERSE = 1;
+pub const MFASF_SPLITTER_WMDRM = 2;
+pub const ASF_STATUSFLAGS_INCOMPLETE = 1;
+pub const ASF_STATUSFLAGS_NONFATAL_ERROR = 2;
+pub const MFASF_MULTIPLEXER_AUTOADJUST_BITRATE = 1;
+pub const MFASF_STREAMSELECTOR_DISABLE_THINNING = 1;
+pub const MFASF_STREAMSELECTOR_USE_AVERAGE_BITRATE = 2;
+pub const ASF_STATUS_NOTSELECTED = 0;
+pub const ASF_STATUS_CLEANPOINTSONLY = 1;
+pub const ASF_STATUS_ALLDATAUNITS = 2;
+pub const MFSINK_WMDRMACTION_UNDEFINED = 0;
+pub const MFSINK_WMDRMACTION_ENCODE = 1;
+pub const MFSINK_WMDRMACTION_TRANSCODE = 2;
+pub const MFSINK_WMDRMACTION_TRANSCRYPT = 3;
+pub const MFSINK_WMDRMACTION_LAST = 3;
+pub const MF_CAPTURE_ENGINE_DEVICE_TYPE_AUDIO = 0;
+pub const MF_CAPTURE_ENGINE_DEVICE_TYPE_VIDEO = 1;
+pub const MF_CAPTURE_ENGINE_SINK_TYPE_RECORD = 0;
+pub const MF_CAPTURE_ENGINE_SINK_TYPE_PREVIEW = 1;
+pub const MF_CAPTURE_ENGINE_SINK_TYPE_PHOTO = 2;
+pub const MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_VIDEO_PREVIEW = 4294967290;
+pub const MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_VIDEO_RECORD = 4294967289;
+pub const MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_PHOTO = 4294967288;
+pub const MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_AUDIO = 4294967287;
+pub const MF_CAPTURE_ENGINE_PREFERRED_SOURCE_STREAM_FOR_METADATA = 4294967286;
+pub const MF_CAPTURE_ENGINE_MEDIASOURCE = 4294967295;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_VIDEO_PREVIEW = 0;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_VIDEO_CAPTURE = 1;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_PHOTO_INDEPENDENT = 2;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_PHOTO_DEPENDENT = 3;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_AUDIO = 4;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_UNSUPPORTED = 5;
+pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY_METADATA = 6;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_OTHER = 0;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_COMMUNICATIONS = 1;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_MEDIA = 2;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_GAMECHAT = 3;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_SPEECH = 4;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_FARFIELDSPEECH = 5;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_UNIFORMSPEECH = 6;
+pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE_VOICETYPING = 7;
+pub const MF_CAPTURE_ENGINE_AUDIO_PROCESSING_DEFAULT = 0;
+pub const MF_CAPTURE_ENGINE_AUDIO_PROCESSING_RAW = 1;
+pub const MF_D3D11_RESOURCE = 0;
+pub const MF_D3D12_RESOURCE = 1;
+pub const MF_STANDARD_WORKQUEUE = 0;
+pub const MF_WINDOW_WORKQUEUE = 1;
+pub const MF_MULTITHREADED_WORKQUEUE = 2;
+pub const MF_TOPOSTATUS_INVALID = 0;
+pub const MF_TOPOSTATUS_READY = 100;
+pub const MF_TOPOSTATUS_STARTED_SOURCE = 200;
+pub const MF_TOPOSTATUS_DYNAMIC_CHANGED = 210;
+pub const MF_TOPOSTATUS_SINK_SWITCHED = 300;
+pub const MF_TOPOSTATUS_ENDED = 400;
+pub const MF_SAMPLE_ENCRYPTION_PROTECTION_SCHEME_NONE = 0;
+pub const MF_SAMPLE_ENCRYPTION_PROTECTION_SCHEME_AES_CTR = 1;
+pub const MF_SAMPLE_ENCRYPTION_PROTECTION_SCHEME_AES_CBC = 2;
+pub const CODEC_API_QP_MAP_INT8 = 0;
+pub const CODEC_API_QP_MAP_INT16 = 1;
+pub const CODEC_API_QP_MAP_INT32 = 2;
+pub const CODEC_API_QP_MAP_UINT8 = -2147483648;
+pub const CODEC_API_QP_MAP_UINT16 = -2147483647;
+pub const CODEC_API_QP_MAP_UINT32 = -2147483646;
+pub const MFT_ENUM_FLAG_SYNCMFT = 1;
+pub const MFT_ENUM_FLAG_ASYNCMFT = 2;
+pub const MFT_ENUM_FLAG_HARDWARE = 4;
+pub const MFT_ENUM_FLAG_FIELDOFUSE = 8;
+pub const MFT_ENUM_FLAG_LOCALMFT = 16;
+pub const MFT_ENUM_FLAG_TRANSCODE_ONLY = 32;
+pub const MFT_ENUM_FLAG_SORTANDFILTER = 64;
+pub const MFT_ENUM_FLAG_SORTANDFILTER_APPROVED_ONLY = 192;
+pub const MFT_ENUM_FLAG_SORTANDFILTER_WEB_ONLY = 320;
+pub const MFT_ENUM_FLAG_SORTANDFILTER_WEB_ONLY_EDGEMODE = 576;
+pub const MFT_ENUM_FLAG_UNTRUSTED_STOREMFT = 1024;
+pub const MFT_ENUM_FLAG_ALL = 63;
+pub const MFFrameSourceTypes_Color = 1;
+pub const MFFrameSourceTypes_Infrared = 2;
+pub const MFFrameSourceTypes_Depth = 4;
+pub const MFFrameSourceTypes_Image = 8;
+pub const MFFrameSourceTypes_Custom = 128;
+pub const MFVideo3DSampleFormat_BaseView = 0;
+pub const MFVideo3DSampleFormat_MultiView = 1;
+pub const MFVideo3DSampleFormat_Packed_LeftRight = 2;
+pub const MFVideo3DSampleFormat_Packed_TopBottom = 3;
+pub const MFSampleExtension_3DVideo_MultiView = 1;
+pub const MFSampleExtension_3DVideo_Packed = 0;
+pub const MFVideoRotationFormat_0 = 0;
+pub const MFVideoRotationFormat_90 = 90;
+pub const MFVideoRotationFormat_180 = 180;
+pub const MFVideoRotationFormat_270 = 270;
+pub const DistanceToFocalPlane = 0;
+pub const DistanceToOpticalCenter = 1;
+pub const MF_DECODE_UNIT_NAL = 0;
+pub const MF_DECODE_UNIT_SEI = 1;
+pub const MFVideoDRMFlag_None = 0;
+pub const MFVideoDRMFlag_AnalogProtected = 1;
+pub const MFVideoDRMFlag_DigitallyProtected = 2;
+pub const MFVideoPadFlag_PAD_TO_None = 0;
+pub const MFVideoPadFlag_PAD_TO_4x3 = 1;
+pub const MFVideoPadFlag_PAD_TO_16x9 = 2;
+pub const MFVideoSrcContentHintFlag_None = 0;
+pub const MFVideoSrcContentHintFlag_16x9 = 1;
+pub const MFVideoSrcContentHintFlag_235_1 = 2;
+pub const MFWaveFormatExConvertFlag_Normal = 0;
+pub const MFWaveFormatExConvertFlag_ForceExtensible = 1;
+pub const eAllocationTypeDynamic = 0;
+pub const eAllocationTypeRT = 1;
+pub const eAllocationTypePageable = 2;
+pub const eAllocationTypeIgnore = 3;
+pub const MF_MEDIA_ENGINE_ERR_NOERROR = 0;
+pub const MF_MEDIA_ENGINE_ERR_ABORTED = 1;
+pub const MF_MEDIA_ENGINE_ERR_NETWORK = 2;
+pub const MF_MEDIA_ENGINE_ERR_DECODE = 3;
+pub const MF_MEDIA_ENGINE_ERR_SRC_NOT_SUPPORTED = 4;
+pub const MF_MEDIA_ENGINE_ERR_ENCRYPTED = 5;
+pub const MF_MEDIA_ENGINE_EVENT_LOADSTART = 1;
+pub const MF_MEDIA_ENGINE_EVENT_PROGRESS = 2;
+pub const MF_MEDIA_ENGINE_EVENT_SUSPEND = 3;
+pub const MF_MEDIA_ENGINE_EVENT_ABORT = 4;
+pub const MF_MEDIA_ENGINE_EVENT_ERROR = 5;
+pub const MF_MEDIA_ENGINE_EVENT_EMPTIED = 6;
+pub const MF_MEDIA_ENGINE_EVENT_STALLED = 7;
+pub const MF_MEDIA_ENGINE_EVENT_PLAY = 8;
+pub const MF_MEDIA_ENGINE_EVENT_PAUSE = 9;
+pub const MF_MEDIA_ENGINE_EVENT_LOADEDMETADATA = 10;
+pub const MF_MEDIA_ENGINE_EVENT_LOADEDDATA = 11;
+pub const MF_MEDIA_ENGINE_EVENT_WAITING = 12;
+pub const MF_MEDIA_ENGINE_EVENT_PLAYING = 13;
+pub const MF_MEDIA_ENGINE_EVENT_CANPLAY = 14;
+pub const MF_MEDIA_ENGINE_EVENT_CANPLAYTHROUGH = 15;
+pub const MF_MEDIA_ENGINE_EVENT_SEEKING = 16;
+pub const MF_MEDIA_ENGINE_EVENT_SEEKED = 17;
+pub const MF_MEDIA_ENGINE_EVENT_TIMEUPDATE = 18;
+pub const MF_MEDIA_ENGINE_EVENT_ENDED = 19;
+pub const MF_MEDIA_ENGINE_EVENT_RATECHANGE = 20;
+pub const MF_MEDIA_ENGINE_EVENT_DURATIONCHANGE = 21;
+pub const MF_MEDIA_ENGINE_EVENT_VOLUMECHANGE = 22;
+pub const MF_MEDIA_ENGINE_EVENT_FORMATCHANGE = 1000;
+pub const MF_MEDIA_ENGINE_EVENT_PURGEQUEUEDEVENTS = 1001;
+pub const MF_MEDIA_ENGINE_EVENT_TIMELINE_MARKER = 1002;
+pub const MF_MEDIA_ENGINE_EVENT_BALANCECHANGE = 1003;
+pub const MF_MEDIA_ENGINE_EVENT_DOWNLOADCOMPLETE = 1004;
+pub const MF_MEDIA_ENGINE_EVENT_BUFFERINGSTARTED = 1005;
+pub const MF_MEDIA_ENGINE_EVENT_BUFFERINGENDED = 1006;
+pub const MF_MEDIA_ENGINE_EVENT_FRAMESTEPCOMPLETED = 1007;
+pub const MF_MEDIA_ENGINE_EVENT_NOTIFYSTABLESTATE = 1008;
+pub const MF_MEDIA_ENGINE_EVENT_FIRSTFRAMEREADY = 1009;
+pub const MF_MEDIA_ENGINE_EVENT_TRACKSCHANGE = 1010;
+pub const MF_MEDIA_ENGINE_EVENT_OPMINFO = 1011;
+pub const MF_MEDIA_ENGINE_EVENT_RESOURCELOST = 1012;
+pub const MF_MEDIA_ENGINE_EVENT_DELAYLOADEVENT_CHANGED = 1013;
+pub const MF_MEDIA_ENGINE_EVENT_STREAMRENDERINGERROR = 1014;
+pub const MF_MEDIA_ENGINE_EVENT_SUPPORTEDRATES_CHANGED = 1015;
+pub const MF_MEDIA_ENGINE_EVENT_AUDIOENDPOINTCHANGE = 1016;
+pub const MF_MEDIA_ENGINE_NETWORK_EMPTY = 0;
+pub const MF_MEDIA_ENGINE_NETWORK_IDLE = 1;
+pub const MF_MEDIA_ENGINE_NETWORK_LOADING = 2;
+pub const MF_MEDIA_ENGINE_NETWORK_NO_SOURCE = 3;
+pub const MF_MEDIA_ENGINE_READY_HAVE_NOTHING = 0;
+pub const MF_MEDIA_ENGINE_READY_HAVE_METADATA = 1;
+pub const MF_MEDIA_ENGINE_READY_HAVE_CURRENT_DATA = 2;
+pub const MF_MEDIA_ENGINE_READY_HAVE_FUTURE_DATA = 3;
+pub const MF_MEDIA_ENGINE_READY_HAVE_ENOUGH_DATA = 4;
+pub const MF_MEDIA_ENGINE_CANPLAY_NOT_SUPPORTED = 0;
+pub const MF_MEDIA_ENGINE_CANPLAY_MAYBE = 1;
+pub const MF_MEDIA_ENGINE_CANPLAY_PROBABLY = 2;
+pub const MF_MEDIA_ENGINE_PRELOAD_MISSING = 0;
+pub const MF_MEDIA_ENGINE_PRELOAD_EMPTY = 1;
+pub const MF_MEDIA_ENGINE_PRELOAD_NONE = 2;
+pub const MF_MEDIA_ENGINE_PRELOAD_METADATA = 3;
+pub const MF_MEDIA_ENGINE_PRELOAD_AUTOMATIC = 4;
+pub const MF_MEDIA_ENGINE_S3D_PACKING_MODE_NONE = 0;
+pub const MF_MEDIA_ENGINE_S3D_PACKING_MODE_SIDE_BY_SIDE = 1;
+pub const MF_MEDIA_ENGINE_S3D_PACKING_MODE_TOP_BOTTOM = 2;
+pub const MF_MEDIA_ENGINE_STATISTIC_FRAMES_RENDERED = 0;
+pub const MF_MEDIA_ENGINE_STATISTIC_FRAMES_DROPPED = 1;
+pub const MF_MEDIA_ENGINE_STATISTIC_BYTES_DOWNLOADED = 2;
+pub const MF_MEDIA_ENGINE_STATISTIC_BUFFER_PROGRESS = 3;
+pub const MF_MEDIA_ENGINE_STATISTIC_FRAMES_PER_SECOND = 4;
+pub const MF_MEDIA_ENGINE_STATISTIC_PLAYBACK_JITTER = 5;
+pub const MF_MEDIA_ENGINE_STATISTIC_FRAMES_CORRUPTED = 6;
+pub const MF_MEDIA_ENGINE_STATISTIC_TOTAL_FRAME_DELAY = 7;
+pub const MF_MEDIA_ENGINE_SEEK_MODE_NORMAL = 0;
+pub const MF_MEDIA_ENGINE_SEEK_MODE_APPROXIMATE = 1;
+pub const MF_MEDIA_ENGINE_EXTENSION_TYPE_MEDIASOURCE = 0;
+pub const MF_MEDIA_ENGINE_EXTENSION_TYPE_BYTESTREAM = 1;
+pub const MF_MEDIA_ENGINE_FRAME_PROTECTION_FLAG_PROTECTED = 1;
+pub const MF_MEDIA_ENGINE_FRAME_PROTECTION_FLAG_REQUIRES_SURFACE_PROTECTION = 2;
+pub const MF_MEDIA_ENGINE_FRAME_PROTECTION_FLAG_REQUIRES_ANTI_SCREEN_SCRAPE_PROTECTION = 4;
+pub const MF_MSE_VP9_SUPPORT_DEFAULT = 0;
+pub const MF_MSE_VP9_SUPPORT_ON = 1;
+pub const MF_MSE_VP9_SUPPORT_OFF = 2;
+pub const MF_MSE_OPUS_SUPPORT_ON = 0;
+pub const MF_MSE_OPUS_SUPPORT_OFF = 1;
+pub const MF_MSE_APPEND_MODE_SEGMENTS = 0;
+pub const MF_MSE_APPEND_MODE_SEQUENCE = 1;
+pub const MF_MSE_READY_CLOSED = 1;
+pub const MF_MSE_READY_OPEN = 2;
+pub const MF_MSE_READY_ENDED = 3;
+pub const MF_MSE_ERROR_NOERROR = 0;
+pub const MF_MSE_ERROR_NETWORK = 1;
+pub const MF_MSE_ERROR_DECODE = 2;
+pub const MF_MSE_ERROR_UNKNOWN_ERROR = 3;
+pub const MF_MEDIAENGINE_KEYERR_UNKNOWN = 1;
+pub const MF_MEDIAENGINE_KEYERR_CLIENT = 2;
+pub const MF_MEDIAENGINE_KEYERR_SERVICE = 3;
+pub const MF_MEDIAENGINE_KEYERR_OUTPUT = 4;
+pub const MF_MEDIAENGINE_KEYERR_HARDWARECHANGE = 5;
+pub const MF_MEDIAENGINE_KEYERR_DOMAIN = 6;
+pub const MF_HDCP_STATUS_ON = 0;
+pub const MF_HDCP_STATUS_OFF = 1;
+pub const MF_HDCP_STATUS_ON_WITH_TYPE_ENFORCEMENT = 2;
+pub const MF_MEDIA_ENGINE_OPM_NOT_REQUESTED = 0;
+pub const MF_MEDIA_ENGINE_OPM_ESTABLISHED = 1;
+pub const MF_MEDIA_ENGINE_OPM_FAILED_VM = 2;
+pub const MF_MEDIA_ENGINE_OPM_FAILED_BDA = 3;
+pub const MF_MEDIA_ENGINE_OPM_FAILED_UNSIGNED_DRIVER = 4;
+pub const MF_MEDIA_ENGINE_OPM_FAILED = 5;
+pub const MF_MEDIA_ENGINE_AUDIOONLY = 1;
+pub const MF_MEDIA_ENGINE_WAITFORSTABLE_STATE = 2;
+pub const MF_MEDIA_ENGINE_FORCEMUTE = 4;
+pub const MF_MEDIA_ENGINE_REAL_TIME_MODE = 8;
+pub const MF_MEDIA_ENGINE_DISABLE_LOCAL_PLUGINS = 16;
+pub const MF_MEDIA_ENGINE_CREATEFLAGS_MASK = 31;
+pub const MF_MEDIA_ENGINE_ENABLE_PROTECTED_CONTENT = 1;
+pub const MF_MEDIA_ENGINE_USE_PMP_FOR_ALL_CONTENT = 2;
+pub const MF_MEDIA_ENGINE_USE_UNPROTECTED_PMP = 4;
+pub const MF_TIMED_TEXT_TRACK_KIND_UNKNOWN = 0;
+pub const MF_TIMED_TEXT_TRACK_KIND_SUBTITLES = 1;
+pub const MF_TIMED_TEXT_TRACK_KIND_CAPTIONS = 2;
+pub const MF_TIMED_TEXT_TRACK_KIND_METADATA = 3;
+pub const MF_TIMED_TEXT_UNIT_TYPE_PIXELS = 0;
+pub const MF_TIMED_TEXT_UNIT_TYPE_PERCENTAGE = 1;
+pub const MF_TIMED_TEXT_FONT_STYLE_NORMAL = 0;
+pub const MF_TIMED_TEXT_FONT_STYLE_OBLIQUE = 1;
+pub const MF_TIMED_TEXT_FONT_STYLE_ITALIC = 2;
+pub const MF_TIMED_TEXT_ALIGNMENT_START = 0;
+pub const MF_TIMED_TEXT_ALIGNMENT_END = 1;
+pub const MF_TIMED_TEXT_ALIGNMENT_CENTER = 2;
+pub const MF_TIMED_TEXT_DISPLAY_ALIGNMENT_BEFORE = 0;
+pub const MF_TIMED_TEXT_DISPLAY_ALIGNMENT_AFTER = 1;
+pub const MF_TIMED_TEXT_DISPLAY_ALIGNMENT_CENTER = 2;
+pub const MF_TIMED_TEXT_DECORATION_NONE = 0;
+pub const MF_TIMED_TEXT_DECORATION_UNDERLINE = 1;
+pub const MF_TIMED_TEXT_DECORATION_LINE_THROUGH = 2;
+pub const MF_TIMED_TEXT_DECORATION_OVERLINE = 4;
+pub const MF_TIMED_TEXT_WRITING_MODE_LRTB = 0;
+pub const MF_TIMED_TEXT_WRITING_MODE_RLTB = 1;
+pub const MF_TIMED_TEXT_WRITING_MODE_TBRL = 2;
+pub const MF_TIMED_TEXT_WRITING_MODE_TBLR = 3;
+pub const MF_TIMED_TEXT_WRITING_MODE_LR = 4;
+pub const MF_TIMED_TEXT_WRITING_MODE_RL = 5;
+pub const MF_TIMED_TEXT_WRITING_MODE_TB = 6;
+pub const MF_TIMED_TEXT_SCROLL_MODE_POP_ON = 0;
+pub const MF_TIMED_TEXT_SCROLL_MODE_ROLL_UP = 1;
+pub const MF_TIMED_TEXT_ERROR_CODE_NOERROR = 0;
+pub const MF_TIMED_TEXT_ERROR_CODE_FATAL = 1;
+pub const MF_TIMED_TEXT_ERROR_CODE_DATA_FORMAT = 2;
+pub const MF_TIMED_TEXT_ERROR_CODE_NETWORK = 3;
+pub const MF_TIMED_TEXT_ERROR_CODE_INTERNAL = 4;
+pub const MF_TIMED_TEXT_CUE_EVENT_ACTIVE = 0;
+pub const MF_TIMED_TEXT_CUE_EVENT_INACTIVE = 1;
+pub const MF_TIMED_TEXT_CUE_EVENT_CLEAR = 2;
+pub const MF_TIMED_TEXT_TRACK_READY_STATE_NONE = 0;
+pub const MF_TIMED_TEXT_TRACK_READY_STATE_LOADING = 1;
+pub const MF_TIMED_TEXT_TRACK_READY_STATE_LOADED = 2;
+pub const MF_TIMED_TEXT_TRACK_READY_STATE_ERROR = 3;
+pub const MF_TIMED_TEXT_RUBY_POSITION_BEFORE = 0;
+pub const MF_TIMED_TEXT_RUBY_POSITION_AFTER = 1;
+pub const MF_TIMED_TEXT_RUBY_POSITION_OUTSIDE = 2;
+pub const MF_TIMED_TEXT_RUBY_ALIGN_CENTER = 0;
+pub const MF_TIMED_TEXT_RUBY_ALIGN_START = 1;
+pub const MF_TIMED_TEXT_RUBY_ALIGN_END = 2;
+pub const MF_TIMED_TEXT_RUBY_ALIGN_SPACEAROUND = 3;
+pub const MF_TIMED_TEXT_RUBY_ALIGN_SPACEBETWEEN = 4;
+pub const MF_TIMED_TEXT_RUBY_ALIGN_WITHBASE = 5;
+pub const MF_TIMED_TEXT_RUBY_RESERVE_NONE = 0;
+pub const MF_TIMED_TEXT_RUBY_RESERVE_BEFORE = 1;
+pub const MF_TIMED_TEXT_RUBY_RESERVE_AFTER = 2;
+pub const MF_TIMED_TEXT_RUBY_RESERVE_BOTH = 3;
+pub const MF_TIMED_TEXT_RUBY_RESERVE_OUTSIDE = 4;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_NONE = 0;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_AUTO = 1;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_FILLEDCIRCLE = 2;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_OPENCIRCLE = 3;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_FILLEDDOT = 4;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_OPENDOT = 5;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_FILLEDSESAME = 6;
+pub const MF_TIMED_TEXT_BOUTEN_TYPE_OPENSESAME = 7;
+pub const MF_TIMED_TEXT_BOUTEN_POSITION_BEFORE = 0;
+pub const MF_TIMED_TEXT_BOUTEN_POSITION_AFTER = 1;
+pub const MF_TIMED_TEXT_BOUTEN_POSITION_OUTSIDE = 2;
+pub const MF_MEDIA_ENGINE_STREAMTYPE_FAILED_UNKNOWN = 0;
+pub const MF_MEDIA_ENGINE_STREAMTYPE_FAILED_AUDIO = 1;
+pub const MF_MEDIA_ENGINE_STREAMTYPE_FAILED_VIDEO = 2;
+pub const MF_MEDIAKEYS_REQUIREMENT_REQUIRED = 1;
+pub const MF_MEDIAKEYS_REQUIREMENT_OPTIONAL = 2;
+pub const MF_MEDIAKEYS_REQUIREMENT_NOT_ALLOWED = 3;
+pub const MF_SOURCE_READERF_ERROR = 1;
+pub const MF_SOURCE_READERF_ENDOFSTREAM = 2;
+pub const MF_SOURCE_READERF_NEWSTREAM = 4;
+pub const MF_SOURCE_READERF_NATIVEMEDIATYPECHANGED = 16;
+pub const MF_SOURCE_READERF_CURRENTMEDIATYPECHANGED = 32;
+pub const MF_SOURCE_READERF_STREAMTICK = 256;
+pub const MF_SOURCE_READERF_ALLEFFECTSREMOVED = 512;
+pub const MF_SOURCE_READER_CONTROLF_DRAIN = 1;
+pub const MF_SOURCE_READER_INVALID_STREAM_INDEX = -1;
+pub const MF_SOURCE_READER_ALL_STREAMS = -2;
+pub const MF_SOURCE_READER_ANY_STREAM = -2;
+pub const MF_SOURCE_READER_FIRST_AUDIO_STREAM = -3;
+pub const MF_SOURCE_READER_FIRST_VIDEO_STREAM = -4;
+pub const MF_SOURCE_READER_MEDIASOURCE = -1;
+pub const MF_SOURCE_READER_CURRENT_TYPE_INDEX = -1;
+pub const MF_SINK_WRITER_INVALID_STREAM_INDEX = 4294967295;
+pub const MF_SINK_WRITER_ALL_STREAMS = 4294967294;
+pub const MF_SINK_WRITER_MEDIASINK = 4294967295;
+pub const MFVideoARMode_None = 0;
+pub const MFVideoARMode_PreservePicture = 1;
+pub const MFVideoARMode_PreservePixel = 2;
+pub const MFVideoARMode_NonLinearStretch = 4;
+pub const MFVideoARMode_Mask = 7;
+pub const MFVideoRenderPrefs_DoNotRenderBorder = 1;
+pub const MFVideoRenderPrefs_DoNotClipToDevice = 2;
+pub const MFVideoRenderPrefs_AllowOutputThrottling = 4;
+pub const MFVideoRenderPrefs_ForceOutputThrottling = 8;
+pub const MFVideoRenderPrefs_ForceBatching = 16;
+pub const MFVideoRenderPrefs_AllowBatching = 32;
+pub const MFVideoRenderPrefs_ForceScaling = 64;
+pub const MFVideoRenderPrefs_AllowScaling = 128;
+pub const MFVideoRenderPrefs_DoNotRepaintOnStop = 256;
+pub const MFVideoRenderPrefs_Mask = 511;
+pub const MFVP_MESSAGE_FLUSH = 0;
+pub const MFVP_MESSAGE_INVALIDATEMEDIATYPE = 1;
+pub const MFVP_MESSAGE_PROCESSINPUTNOTIFY = 2;
+pub const MFVP_MESSAGE_BEGINSTREAMING = 3;
+pub const MFVP_MESSAGE_ENDSTREAMING = 4;
+pub const MFVP_MESSAGE_ENDOFSTREAM = 5;
+pub const MFVP_MESSAGE_STEP = 6;
+pub const MFVP_MESSAGE_CANCELSTEP = 7;
+pub const MFVideoMixPrefs_ForceHalfInterlace = 1;
+pub const MFVideoMixPrefs_AllowDropToHalfInterlace = 2;
+pub const MFVideoMixPrefs_AllowDropToBob = 4;
+pub const MFVideoMixPrefs_ForceBob = 8;
+pub const MFVideoMixPrefs_EnableRotation = 16;
+pub const MFVideoMixPrefs_Mask = 31;
+pub const EVRFilterConfigPrefs_EnableQoS = 1;
+pub const EVRFilterConfigPrefs_Mask = 1;
+pub const MF_SERVICE_LOOKUP_UPSTREAM = 0;
+pub const MF_SERVICE_LOOKUP_UPSTREAM_DIRECT = 1;
+pub const MF_SERVICE_LOOKUP_DOWNSTREAM = 2;
+pub const MF_SERVICE_LOOKUP_DOWNSTREAM_DIRECT = 3;
+pub const MF_SERVICE_LOOKUP_ALL = 4;
+pub const MF_SERVICE_LOOKUP_GLOBAL = 5;
+pub const MFP_OPTION_NONE = 0;
+pub const MFP_OPTION_FREE_THREADED_CALLBACK = 1;
+pub const MFP_OPTION_NO_MMCSS = 2;
+pub const MFP_OPTION_NO_REMOTE_DESKTOP_OPTIMIZATION = 4;
+pub const MFP_MEDIAPLAYER_STATE_EMPTY = 0;
+pub const MFP_MEDIAPLAYER_STATE_STOPPED = 1;
+pub const MFP_MEDIAPLAYER_STATE_PLAYING = 2;
+pub const MFP_MEDIAPLAYER_STATE_PAUSED = 3;
+pub const MFP_MEDIAPLAYER_STATE_SHUTDOWN = 4;
+pub const MFP_MEDIAITEM_IS_LIVE = 1;
+pub const MFP_MEDIAITEM_CAN_SEEK = 2;
+pub const MFP_MEDIAITEM_CAN_PAUSE = 4;
+pub const MFP_MEDIAITEM_HAS_SLOW_SEEK = 8;
+pub const MFP_CREDENTIAL_PROMPT = 1;
+pub const MFP_CREDENTIAL_SAVE = 2;
+pub const MFP_CREDENTIAL_DO_NOT_CACHE = 4;
+pub const MFP_CREDENTIAL_CLEAR_TEXT = 8;
+pub const MFP_CREDENTIAL_PROXY = 16;
+pub const MFP_CREDENTIAL_LOGGED_ON_USER = 32;
+pub const MFP_EVENT_TYPE_PLAY = 0;
+pub const MFP_EVENT_TYPE_PAUSE = 1;
+pub const MFP_EVENT_TYPE_STOP = 2;
+pub const MFP_EVENT_TYPE_POSITION_SET = 3;
+pub const MFP_EVENT_TYPE_RATE_SET = 4;
+pub const MFP_EVENT_TYPE_MEDIAITEM_CREATED = 5;
+pub const MFP_EVENT_TYPE_MEDIAITEM_SET = 6;
+pub const MFP_EVENT_TYPE_FRAME_STEP = 7;
+pub const MFP_EVENT_TYPE_MEDIAITEM_CLEARED = 8;
+pub const MFP_EVENT_TYPE_MF = 9;
+pub const MFP_EVENT_TYPE_ERROR = 10;
+pub const MFP_EVENT_TYPE_PLAYBACK_ENDED = 11;
+pub const MFP_EVENT_TYPE_ACQUIRE_USER_CREDENTIAL = 12;
+pub const MF_SHARING_ENGINE_EVENT_DISCONNECT = 2000;
+pub const MF_SHARING_ENGINE_EVENT_LOCALRENDERINGSTARTED = 2001;
+pub const MF_SHARING_ENGINE_EVENT_LOCALRENDERINGENDED = 2002;
+pub const MF_SHARING_ENGINE_EVENT_STOPPED = 2003;
+pub const MF_SHARING_ENGINE_EVENT_ERROR = 2501;
+pub const MF_MEDIA_SHARING_ENGINE_EVENT_DISCONNECT = 2000;
+pub const PLAYTO_SOURCE_NONE = 0;
+pub const PLAYTO_SOURCE_IMAGE = 1;
+pub const PLAYTO_SOURCE_AUDIO = 2;
+pub const PLAYTO_SOURCE_VIDEO = 4;
+pub const PLAYTO_SOURCE_PROTECTED = 8;
+pub const MFVideoAlphaBitmap_EntireDDS = 1;
+pub const MFVideoAlphaBitmap_SrcColorKey = 2;
+pub const MFVideoAlphaBitmap_SrcRect = 4;
+pub const MFVideoAlphaBitmap_DestRect = 8;
+pub const MFVideoAlphaBitmap_FilterMode = 16;
+pub const MFVideoAlphaBitmap_Alpha = 32;
+pub const MFVideoAlphaBitmap_BitMask = 63;
+pub const MFVirtualCameraType_SoftwareCameraSource = 0;
+pub const MFVirtualCameraLifetime_Session = 0;
+pub const MFVirtualCameraLifetime_System = 1;
+pub const MFVirtualCameraAccess_CurrentUser = 0;
+pub const MFVirtualCameraAccess_AllUsers = 1;
+pub const OPM_HDCP_TYPE_0 = 0;
+pub const OPM_HDCP_TYPE_1 = 1;
+pub const OPM_HDCP_STATUS_ON = 0;
+pub const OPM_HDCP_STATUS_OFF = 1;
+
+pub const aliases = struct {
+    pub const MEDIA_EVENT_GENERATOR_GET_EVENT_FLAGS = u32;
+    pub const MPEG2VIDEOINFO_FLAGS = u32;
+    pub const MF_Plugin_Type = i32;
+    pub const D3D12_VIDEO_FIELD_TYPE = i32;
+    pub const D3D12_VIDEO_FRAME_STEREO_FORMAT = i32;
+    pub const D3D12_VIDEO_FRAME_CODED_INTERLACE_TYPE = i32;
+    pub const D3D12_FEATURE_VIDEO = i32;
+    pub const D3D12_BITSTREAM_ENCRYPTION_TYPE = i32;
+    pub const D3D12_VIDEO_PROCESS_FILTER = i32;
+    pub const D3D12_VIDEO_PROCESS_FILTER_FLAGS = i32;
+    pub const D3D12_VIDEO_PROCESS_DEINTERLACE_FLAGS = u32;
+    pub const D3D12_VIDEO_PROCESS_ALPHA_FILL_MODE = i32;
+    pub const D3D12_VIDEO_DECODE_TIER = i32;
+    pub const D3D12_VIDEO_DECODE_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_DECODE_CONFIGURATION_FLAGS = i32;
+    pub const D3D12_VIDEO_DECODE_STATUS = i32;
+    pub const D3D12_VIDEO_DECODE_ARGUMENT_TYPE = i32;
+    pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT = i32;
+    pub const D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAGS = i32;
+    pub const D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_SCALE_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_PROCESS_FEATURE_FLAGS = i32;
+    pub const D3D12_VIDEO_PROCESS_AUTO_PROCESSING_FLAGS = u32;
+    pub const D3D12_VIDEO_PROCESS_ORIENTATION = i32;
+    pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAGS = i32;
+    pub const D3D12_VIDEO_PROCESS_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE = i32;
+    pub const D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAGS = i32;
+    pub const D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION = i32;
+    pub const D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS = i32;
+    pub const D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_STAGE = i32;
+    pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE = i32;
+    pub const D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_PROFILE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_LEVELS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_TIER = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_FEATURE_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_TX_MODE_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_INTERPOLATION_FILTERS_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_BLOCK_SIZE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_SEGMENTATION_MODE_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TYPE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_TILESIZE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_RESTORATION_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_REFERENCE_WARPED_MOTION_TRANSFORMATION_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_POST_ENCODE_VALUES_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_FRAME_TYPE_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_COMP_PREDICTION_TYPE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC = i32;
+    pub const D3D12_VIDEO_ENCODER_PROFILE_H264 = i32;
+    pub const D3D12_VIDEO_ENCODER_PROFILE_HEVC = i32;
+    pub const D3D12_VIDEO_ENCODER_LEVELS_H264 = i32;
+    pub const D3D12_VIDEO_ENCODER_TIER_HEVC = i32;
+    pub const D3D12_VIDEO_ENCODER_LEVELS_HEVC = i32;
+    pub const D3D12_VIDEO_ENCODER_INTRA_REFRESH_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_VALIDATION_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_HEAP_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODES = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_CUSIZE = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_TUSIZE = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAGS1 = i32;
+    pub const D3D12_VIDEO_ENCODER_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_DIRECT_MODES = i32;
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_MOTION_ESTIMATION_PRECISION_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_VALIDATION_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_H264 = i32;
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_FRAME_TYPE_HEVC = i32;
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_OPTIONAL_METADATA_ENABLE_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_INPUT_MAP_SOURCE = i32;
+    pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_MAP_VALUES_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_INPUT_MAP_TYPE = i32;
+    pub const D3D12_VIDEO_ENCODER_FRAME_MOTION_SEARCH_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION = i32;
+    pub const D3D12_VIDEO_ENCODER_FRAME_INPUT_MOTION_UNIT_PRECISION_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_MOTION_SEARCH_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_FRAME_ANALYSIS_SUPPORT_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_MOVEREGION_INFO_FLAGS = i32;
+    pub const D3D12_VIDEO_ENCODER_SUBREGION_COMPRESSED_BITSTREAM_BUFFER_MODE = i32;
+    pub const D3D12_VIDEO_ENCODER_COMPRESSED_BITSTREAM_NOTIFICATION_MODE = i32;
+    pub const WMT_PROP_DATATYPE = i32;
+    pub const WMV_DYNAMIC_FLAGS = i32;
+    pub const MF_AUVRHP_ROOMMODEL = i32;
+    pub const AEC_SYSTEM_MODE = i32;
+    pub const AEC_VAD_MODE = i32;
+    pub const AEC_INPUT_STREAM = i32;
+    pub const MIC_ARRAY_MODE = i32;
+    pub const MFVideoDSPMode = i32;
+    pub const TOC_POS_TYPE = i32;
+    pub const FILE_OPENMODE = i32;
+    pub const SEEK_ORIGIN = i32;
+    pub const FILE_ACCESSMODE = i32;
+    pub const DXVA_SampleFormat = i32;
+    pub const DXVA_VideoTransferFunction = i32;
+    pub const DXVA_VideoPrimaries = i32;
+    pub const DXVA_VideoLighting = i32;
+    pub const DXVA_VideoTransferMatrix = i32;
+    pub const DXVA_NominalRange = i32;
+    pub const DXVA_VideoChromaSubsampling = i32;
+    pub const DXVA_VideoProcessCaps = i32;
+    pub const DXVA_DeinterlaceTech = i32;
+    pub const DXVA_SampleFlags = i32;
+    pub const DXVA_DestinationFlags = i32;
+    pub const DXVA_ProcAmpControlProp = i32;
+    pub const eAVEncCommonRateControlMode = i32;
+    pub const eAVEncCommonStreamEndHandling = i32;
+    pub const eAVEncVideoOutputFrameRateConversion = i32;
+    pub const eAVDecVideoSoftwareDeinterlaceMode = i32;
+    pub const eAVFastDecodeMode = i32;
+    pub const eAVDecVideoH264ErrorConcealment = i32;
+    pub const eAVDecVideoMPEG2ErrorConcealment = i32;
+    pub const eAVDecVideoCodecType = i32;
+    pub const eAVDecVideoDXVAMode = i32;
+    pub const eAVDecVideoDXVABusEncryption = i32;
+    pub const eAVEncVideoSourceScanType = i32;
+    pub const eAVEncVideoOutputScanType = i32;
+    pub const eAVEncVideoFilmContent = i32;
+    pub const eAVEncVideoChromaResolution = i32;
+    pub const eAVEncVideoChromaSubsampling = i32;
+    pub const eAVEncVideoColorPrimaries = i32;
+    pub const eAVEncVideoColorTransferFunction = i32;
+    pub const eAVEncVideoColorTransferMatrix = i32;
+    pub const eAVEncVideoColorLighting = i32;
+    pub const eAVEncVideoColorNominalRange = i32;
+    pub const eAVEncInputVideoSystem = i32;
+    pub const eAVEncVideoContentType = i32;
+    pub const eAVEncAdaptiveMode = i32;
+    pub const eAVScenarioInfo = i32;
+    pub const eVideoEncoderDisplayContentType = i32;
+    pub const eAVEncMuxOutput = i32;
+    pub const eAVEncAudioDualMono = i32;
+    pub const eAVEncAudioInputContent = i32;
+    pub const eAVEncMPVProfile = i32;
+    pub const eAVEncMPVLevel = i32;
+    pub const eAVEncH263VProfile = i32;
+    pub const eAVEncH264VProfile = i32;
+    pub const eAVEncH265VProfile = i32;
+    pub const eAVEncVP9VProfile = i32;
+    pub const eAVEncAV1VProfile = i32;
+    pub const eAVEncH263PictureType = i32;
+    pub const eAVEncH264PictureType = i32;
+    pub const eAVEncAV1PictureType = i32;
+    pub const eAVEncH263VLevel = i32;
+    pub const eAVEncH264VLevel = i32;
+    pub const eAVEncH265VLevel = i32;
+    pub const eAVEncAV1VLevel = i32;
+    pub const eAVEncMPVFrameFieldMode = i32;
+    pub const eAVEncMPVSceneDetection = i32;
+    pub const eAVEncMPVScanPattern = i32;
+    pub const eAVEncMPVQScaleType = i32;
+    pub const eAVEncMPVIntraVLCTable = i32;
+    pub const eAVEncMPALayer = i32;
+    pub const eAVEncMPACodingMode = i32;
+    pub const eAVEncMPAEmphasisType = i32;
+    pub const eAVEncDDService = i32;
+    pub const eAVEncDDProductionRoomType = i32;
+    pub const eAVEncDDDynamicRangeCompressionControl = i32;
+    pub const eAVEncDDSurroundExMode = i32;
+    pub const eAVEncDDPreferredStereoDownMixMode = i32;
+    pub const eAVEncDDAtoDConverterType = i32;
+    pub const eAVEncDDHeadphoneMode = i32;
+    pub const eAVDecVideoInputScanType = i32;
+    pub const eAVDecVideoSWPowerLevel = i32;
+    pub const eAVDecAACDownmixMode = i32;
+    pub const eAVDecHEAACDynamicRangeControl = i32;
+    pub const eAVDecAudioDualMono = i32;
+    pub const eAVDecAudioDualMonoReproMode = i32;
+    pub const eAVAudioChannelConfig = i32;
+    pub const eAVDDSurroundMode = i32;
+    pub const eAVDecDDOperationalMode = i32;
+    pub const eAVDecDDMatrixDecodingMode = i32;
+    pub const eAVDecDDStereoDownMixMode = i32;
+    pub const eAVDSPLoudnessEqualization = i32;
+    pub const eAVDSPSpeakerFill = i32;
+    pub const eAVEncChromaEncodeMode = i32;
+    pub const DXVAHD_FRAME_FORMAT = i32;
+    pub const DXVAHD_DEVICE_USAGE = i32;
+    pub const DXVAHD_SURFACE_TYPE = i32;
+    pub const DXVAHD_DEVICE_TYPE = i32;
+    pub const DXVAHD_DEVICE_CAPS = i32;
+    pub const DXVAHD_FEATURE_CAPS = i32;
+    pub const DXVAHD_FILTER_CAPS = i32;
+    pub const DXVAHD_INPUT_FORMAT_CAPS = i32;
+    pub const DXVAHD_PROCESSOR_CAPS = i32;
+    pub const DXVAHD_ITELECINE_CAPS = i32;
+    pub const DXVAHD_FILTER = i32;
+    pub const DXVAHD_BLT_STATE = i32;
+    pub const DXVAHD_ALPHA_FILL_MODE = i32;
+    pub const DXVAHD_STREAM_STATE = i32;
+    pub const DXVAHD_OUTPUT_RATE = i32;
+    pub const DXVA2_SampleFormat = i32;
+    pub const DXVA2_VideoChromaSubSampling = i32;
+    pub const DXVA2_NominalRange = i32;
+    pub const DXVA2_VideoTransferMatrix = i32;
+    pub const DXVA2_VideoLighting = i32;
+    pub const DXVA2_VideoPrimaries = i32;
+    pub const DXVA2_VideoTransferFunction = i32;
+    pub const DXVA2_DeinterlaceTech = i32;
+    pub const DXVA2_FilterType = i32;
+    pub const DXVA2_NoiseFilterTech = i32;
+    pub const DXVA2_DetailFilterTech = i32;
+    pub const DXVA2_ProcAmp = i32;
+    pub const DXVA2_VideoProcess = i32;
+    pub const DXVA2_VPDev = i32;
+    pub const DXVA2_SampleData = i32;
+    pub const DXVA2_DestData = i32;
+    pub const DXVA2_BufferfType = i32;
+    pub const DXVA2_VideoRenderTargetType = i32;
+    pub const DXVA2_SurfaceType = i32;
+    pub const OPM_TYPE = i32;
+    pub const OPM_VIDEO_OUTPUT_SEMANTICS = i32;
+    pub const OPM_HDCP_FLAGS = i32;
+    pub const OPM_STATUS = i32;
+    pub const OPM_CONNECTOR_TYPE = i32;
+    pub const OPM_DVI_CHARACTERISTIC = i32;
+    pub const OPM_OUTPUT_HARDWARE_PROTECTION = i32;
+    pub const OPM_BUS_TYPE = i32;
+    pub const OPM_DPCP_PROTECTION_LEVEL = i32;
+    pub const OPM_HDCP_PROTECTION_LEVEL = i32;
+    pub const OPM_TYPE_ENFORCEMENT_HDCP_PROTECTION_LEVEL = i32;
+    pub const OPM_CGMSA = i32;
+    pub const OPM_ACP_PROTECTION_LEVEL = i32;
+    pub const OPM_PROTECTION_TYPE = i32;
+    pub const OPM_PROTECTION_STANDARD_TYPE = u32;
+    pub const OPM_IMAGE_ASPECT_RATIO_EN300294 = i32;
+    pub const KSMETHOD_OPMVIDEOOUTPUT = i32;
+    pub const MF_ATTRIBUTE_TYPE = i32;
+    pub const MF_ATTRIBUTES_MATCH_TYPE = i32;
+    pub const MF_ATTRIBUTE_SERIALIZE_OPTIONS = i32;
+    pub const MF2DBuffer_LockFlags = i32;
+    pub const MFVideoInterlaceMode = i32;
+    pub const MFVideoTransferFunction = i32;
+    pub const MFVideoPrimaries = i32;
+    pub const MFVideoLighting = i32;
+    pub const MFVideoTransferMatrix = i32;
+    pub const MFVideoChromaSubsampling = i32;
+    pub const MFNominalRange = i32;
+    pub const MFVideoFlags = i32;
+    pub const MFStandardVideoFormat = i32;
+    pub const __MIDL___MIDL_itf_mfobjects_0000_0013_0001 = i32;
+    pub const MFBYTESTREAM_SEEK_ORIGIN = i32;
+    pub const MF_FILE_ACCESSMODE = i32;
+    pub const MF_FILE_OPENMODE = i32;
+    pub const MF_FILE_FLAGS = i32;
+    pub const MF_PLUGIN_CONTROL_POLICY = i32;
+    pub const MF_DXGI_DEVICE_MANAGER_MODE = i32;
+    pub const MF_STREAM_STATE = i32;
+    pub const _MFT_INPUT_DATA_BUFFER_FLAGS = i32;
+    pub const _MFT_OUTPUT_DATA_BUFFER_FLAGS = i32;
+    pub const _MFT_INPUT_STATUS_FLAGS = i32;
+    pub const _MFT_OUTPUT_STATUS_FLAGS = i32;
+    pub const _MFT_INPUT_STREAM_INFO_FLAGS = i32;
+    pub const _MFT_OUTPUT_STREAM_INFO_FLAGS = i32;
+    pub const _MFT_SET_TYPE_FLAGS = i32;
+    pub const _MFT_PROCESS_OUTPUT_FLAGS = i32;
+    pub const _MFT_PROCESS_OUTPUT_STATUS = i32;
+    pub const MFT_DRAIN_TYPE = i32;
+    pub const MFT_MESSAGE_TYPE = i32;
+    pub const DeviceStreamState = i32;
+    pub const MF3DVideoOutputType = i32;
+    pub const MFT_AUDIO_DECODER_DEGRADATION_REASON = i32;
+    pub const MFT_AUDIO_DECODER_DEGRADATION_TYPE = i32;
+    pub const MFSESSION_SETTOPOLOGY_FLAGS = i32;
+    pub const MFSESSION_GETFULLTOPOLOGY_FLAGS = i32;
+    pub const MFPMPSESSION_CREATION_FLAGS = i32;
+    pub const MF_OBJECT_TYPE = i32;
+    pub const MF_RESOLUTION_FLAGS = i32;
+    pub const MF_CONNECT_METHOD = i32;
+    pub const MF_TOPOLOGY_RESOLUTION_STATUS_FLAGS = i32;
+    pub const MFMEDIASOURCE_CHARACTERISTICS = i32;
+    pub const MFSTREAMSINK_MARKER_TYPE = i32;
+    pub const MF_VIDEO_PROCESSOR_ROTATION = i32;
+    pub const MF_VIDEO_PROCESSOR_MIRROR = i32;
+    pub const MFVideoSphericalFormat = i32;
+    pub const MFVideoSphericalProjectionMode = i32;
+    pub const MFTOPOLOGY_DXVA_MODE = i32;
+    pub const MFTOPOLOGY_HARDWARE_MODE = i32;
+    pub const MF_TOPOLOGY_TYPE = i32;
+    pub const MF_TOPONODE_FLUSH_MODE = i32;
+    pub const MF_TOPONODE_DRAIN_MODE = i32;
+    pub const MFCLOCK_CHARACTERISTICS_FLAGS = i32;
+    pub const MFCLOCK_STATE = i32;
+    pub const MFCLOCK_RELATIONAL_FLAGS = i32;
+    pub const MFTIMER_FLAGS = i32;
+    pub const MF_ACTIVATE_CUSTOM_MIXER = i32;
+    pub const MF_ACTIVATE_CUSTOM_PRESENTER = i32;
+    pub const MFSHUTDOWN_STATUS = i32;
+    pub const MF_URL_TRUST_STATUS = i32;
+    pub const MFRATE_DIRECTION = i32;
+    pub const MF_QUALITY_DROP_MODE = i32;
+    pub const MF_QUALITY_LEVEL = i32;
+    pub const MF_QUALITY_ADVISE_FLAGS = i32;
+    pub const MFSequencerTopologyFlags = i32;
+    pub const MFNetCredentialRequirements = i32;
+    pub const MFNetCredentialOptions = i32;
+    pub const MFNetAuthenticationFlags = i32;
+    pub const MFNETSOURCE_PROTOCOL_TYPE = i32;
+    pub const MFNETSOURCE_TRANSPORT_TYPE = i32;
+    pub const MFNETSOURCE_CACHE_STATE = i32;
+    pub const MFNETSOURCE_STATISTICS_IDS = i32;
+    pub const MFNET_PROXYSETTINGS = i32;
+    pub const MFPOLICYMANAGER_ACTION = i32;
+    pub const MF_OPM_CGMSA_PROTECTION_LEVEL = i32;
+    pub const MF_OPM_ACP_PROTECTION_LEVEL = i32;
+    pub const MFAudioConstriction = i32;
+    pub const SAMPLE_PROTECTION_VERSION = i32;
+    pub const MF_TRANSCODE_TOPOLOGYMODE_FLAGS = i32;
+    pub const MF_TRANSCODE_ADJUST_PROFILE_FLAGS = i32;
+    pub const MF_VIDEO_PROCESSOR_ALGORITHM_TYPE = i32;
+    pub const MF_MEDIAKEYSESSION_TYPE = i32;
+    pub const MF_MEDIAKEY_STATUS = i32;
+    pub const MF_MEDIAKEYSESSION_MESSAGETYPE = i32;
+    pub const MF_CROSS_ORIGIN_POLICY = i32;
+    pub const MFSensorDeviceType = i32;
+    pub const MFSensorStreamType = i32;
+    pub const MFSensorDeviceMode = i32;
+    pub const MFCameraIntrinsic_DistortionModelType = i32;
+    pub const MFSampleAllocatorUsage = i32;
+    pub const MFCameraOcclusionState = i32;
+    pub const MF_CAMERA_CONTROL_CONFIGURATION_TYPE = i32;
+    pub const MFASF_INDEXER_FLAGS = i32;
+    pub const MFASF_SPLITTERFLAGS = i32;
+    pub const ASF_STATUSFLAGS = i32;
+    pub const MFASF_MULTIPLEXERFLAGS = i32;
+    pub const MFASF_STREAMSELECTOR_FLAGS = i32;
+    pub const ASF_SELECTION_STATUS = i32;
+    pub const MFSINK_WMDRMACTION = i32;
+    pub const MF_CAPTURE_ENGINE_DEVICE_TYPE = i32;
+    pub const MF_CAPTURE_ENGINE_SINK_TYPE = i32;
+    pub const MF_CAPTURE_ENGINE_SOURCE = u32;
+    pub const MF_CAPTURE_ENGINE_STREAM_CATEGORY = i32;
+    pub const MF_CAPTURE_ENGINE_MEDIA_CATEGORY_TYPE = i32;
+    pub const MF_CAPTURE_ENGINE_AUDIO_PROCESSING_MODE = i32;
+    pub const MF_MT_D3D_RESOURCE_VERSION_ENUM = i32;
+    pub const MFASYNC_WORKQUEUE_TYPE = i32;
+    pub const MF_TOPOSTATUS = i32;
+    pub const MFSampleEncryptionProtectionScheme = i32;
+    pub const eAVEncVideoQPMapElementDataType = i32;
+    pub const MFT_ENUM_FLAG = i32;
+    pub const MFFrameSourceTypes = i32;
+    pub const MFVideo3DFormat = i32;
+    pub const MFVideo3DSampleFormat = i32;
+    pub const MFVideoRotationFormat = i32;
+    pub const MFDepthMeasurement = i32;
+    pub const MF_CUSTOM_DECODE_UNIT_TYPE = i32;
+    pub const MFVideoDRMFlags = i32;
+    pub const MFVideoPadFlags = i32;
+    pub const MFVideoSrcContentHintFlags = i32;
+    pub const MFWaveFormatExConvertFlags = i32;
+    pub const EAllocationType = i32;
+    pub const MF_MEDIA_ENGINE_ERR = i32;
+    pub const MF_MEDIA_ENGINE_EVENT = i32;
+    pub const MF_MEDIA_ENGINE_NETWORK = i32;
+    pub const MF_MEDIA_ENGINE_READY = i32;
+    pub const MF_MEDIA_ENGINE_CANPLAY = i32;
+    pub const MF_MEDIA_ENGINE_PRELOAD = i32;
+    pub const MF_MEDIA_ENGINE_S3D_PACKING_MODE = i32;
+    pub const MF_MEDIA_ENGINE_STATISTIC = i32;
+    pub const MF_MEDIA_ENGINE_SEEK_MODE = i32;
+    pub const MF_MEDIA_ENGINE_EXTENSION_TYPE = i32;
+    pub const MF_MEDIA_ENGINE_FRAME_PROTECTION_FLAGS = i32;
+    pub const MF_MSE_VP9_SUPPORT_TYPE = i32;
+    pub const MF_MSE_OPUS_SUPPORT_TYPE = i32;
+    pub const MF_MSE_APPEND_MODE = i32;
+    pub const MF_MSE_READY = i32;
+    pub const MF_MSE_ERROR = i32;
+    pub const MF_MEDIA_ENGINE_KEYERR = i32;
+    pub const MF_HDCP_STATUS = i32;
+    pub const MF_MEDIA_ENGINE_OPM_STATUS = i32;
+    pub const MF_MEDIA_ENGINE_CREATEFLAGS = i32;
+    pub const MF_MEDIA_ENGINE_PROTECTION_FLAGS = i32;
+    pub const MF_TIMED_TEXT_TRACK_KIND = i32;
+    pub const MF_TIMED_TEXT_UNIT_TYPE = i32;
+    pub const MF_TIMED_TEXT_FONT_STYLE = i32;
+    pub const MF_TIMED_TEXT_ALIGNMENT = i32;
+    pub const MF_TIMED_TEXT_DISPLAY_ALIGNMENT = i32;
+    pub const MF_TIMED_TEXT_DECORATION = i32;
+    pub const MF_TIMED_TEXT_WRITING_MODE = i32;
+    pub const MF_TIMED_TEXT_SCROLL_MODE = i32;
+    pub const MF_TIMED_TEXT_ERROR_CODE = i32;
+    pub const MF_TIMED_TEXT_CUE_EVENT = i32;
+    pub const MF_TIMED_TEXT_TRACK_READY_STATE = i32;
+    pub const MF_TIMED_TEXT_RUBY_POSITION = i32;
+    pub const MF_TIMED_TEXT_RUBY_ALIGN = i32;
+    pub const MF_TIMED_TEXT_RUBY_RESERVE = i32;
+    pub const MF_TIMED_TEXT_BOUTEN_TYPE = i32;
+    pub const MF_TIMED_TEXT_BOUTEN_POSITION = i32;
+    pub const MF_MEDIA_ENGINE_STREAMTYPE_FAILED = i32;
+    pub const MF_MEDIAKEYS_REQUIREMENT = i32;
+    pub const MF_SOURCE_READER_FLAG = i32;
+    pub const MF_SOURCE_READER_CONTROL_FLAG = i32;
+    pub const MF_SOURCE_READER_CONSTANTS = i32;
+    pub const MF_SOURCE_READER_CURRENT_TYPE_CONSTANTS = i32;
+    pub const MF_SINK_WRITER_CONSTANTS = u32;
+    pub const MFVideoAspectRatioMode = i32;
+    pub const MFVideoRenderPrefs = i32;
+    pub const MFVP_MESSAGE_TYPE = i32;
+    pub const MFVideoMixPrefs = i32;
+    pub const EVRFilterConfigPrefs = i32;
+    pub const MF_SERVICE_LOOKUP_TYPE = i32;
+    pub const MFP_CREATION_OPTIONS = i32;
+    pub const MFP_MEDIAPLAYER_STATE = i32;
+    pub const _MFP_MEDIAITEM_CHARACTERISTICS = i32;
+    pub const _MFP_CREDENTIAL_FLAGS = i32;
+    pub const MFP_EVENT_TYPE = i32;
+    pub const MF_SHARING_ENGINE_EVENT = i32;
+    pub const MF_MEDIA_SHARING_ENGINE_EVENT = i32;
+    pub const PLAYTO_SOURCE_CREATEFLAGS = i32;
+    pub const MFVideoAlphaBitmapFlags = i32;
+    pub const MFVirtualCameraType = i32;
+    pub const MFVirtualCameraLifetime = i32;
+    pub const MFVirtualCameraAccess = i32;
+    pub const OPM_HDCP_TYPE = i32;
+    pub const OPM_HDCP_STATUS = i32;
+};
