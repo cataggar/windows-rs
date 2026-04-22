@@ -1,0 +1,78 @@
+const std = @import("std");
+
+pub const MethodRecord = struct {
+    library: []const u8,
+    import: []const u8,
+    signature: []const u8,
+};
+
+pub const TypeRefEntry = struct {
+    namespace: []const u8,
+    name: []const u8,
+};
+
+pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{
+});
+
+pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
+    return switch (coded) {
+        else => null,
+    };
+}
+
+pub const NLM_MAX_ADDRESS_LIST_SIZE = 10;
+pub const NLM_UNKNOWN_DATAPLAN_STATUS = 4294967295;
+pub const NLM_CONNECTION_COST_UNKNOWN = 0;
+pub const NLM_CONNECTION_COST_UNRESTRICTED = 1;
+pub const NLM_CONNECTION_COST_FIXED = 2;
+pub const NLM_CONNECTION_COST_VARIABLE = 4;
+pub const NLM_CONNECTION_COST_OVERDATALIMIT = 65536;
+pub const NLM_CONNECTION_COST_CONGESTED = 131072;
+pub const NLM_CONNECTION_COST_ROAMING = 262144;
+pub const NLM_CONNECTION_COST_APPROACHINGDATALIMIT = 524288;
+pub const NLM_NETWORK_IDENTIFYING = 1;
+pub const NLM_NETWORK_IDENTIFIED = 2;
+pub const NLM_NETWORK_UNIDENTIFIED = 3;
+pub const NLM_INTERNET_CONNECTIVITY_WEBHIJACK = 1;
+pub const NLM_INTERNET_CONNECTIVITY_PROXIED = 2;
+pub const NLM_INTERNET_CONNECTIVITY_CORPORATE = 4;
+pub const NLM_CONNECTIVITY_DISCONNECTED = 0;
+pub const NLM_CONNECTIVITY_IPV4_NOTRAFFIC = 1;
+pub const NLM_CONNECTIVITY_IPV6_NOTRAFFIC = 2;
+pub const NLM_CONNECTIVITY_IPV4_SUBNET = 16;
+pub const NLM_CONNECTIVITY_IPV4_LOCALNETWORK = 32;
+pub const NLM_CONNECTIVITY_IPV4_INTERNET = 64;
+pub const NLM_CONNECTIVITY_IPV6_SUBNET = 256;
+pub const NLM_CONNECTIVITY_IPV6_LOCALNETWORK = 512;
+pub const NLM_CONNECTIVITY_IPV6_INTERNET = 1024;
+pub const NLM_DOMAIN_TYPE_NON_DOMAIN_NETWORK = 0;
+pub const NLM_DOMAIN_TYPE_DOMAIN_NETWORK = 1;
+pub const NLM_DOMAIN_TYPE_DOMAIN_AUTHENTICATED = 2;
+pub const NLM_DOMAIN_AUTHENTICATION_KIND_NONE = 0;
+pub const NLM_DOMAIN_AUTHENTICATION_KIND_LDAP = 1;
+pub const NLM_DOMAIN_AUTHENTICATION_KIND_TLS = 2;
+pub const NLM_ENUM_NETWORK_CONNECTED = 1;
+pub const NLM_ENUM_NETWORK_DISCONNECTED = 2;
+pub const NLM_ENUM_NETWORK_ALL = 3;
+pub const NLM_NETWORK_CATEGORY_PUBLIC = 0;
+pub const NLM_NETWORK_CATEGORY_PRIVATE = 1;
+pub const NLM_NETWORK_CATEGORY_DOMAIN_AUTHENTICATED = 2;
+pub const NLM_NETWORK_PROPERTY_CHANGE_CONNECTION = 1;
+pub const NLM_NETWORK_PROPERTY_CHANGE_DESCRIPTION = 2;
+pub const NLM_NETWORK_PROPERTY_CHANGE_NAME = 4;
+pub const NLM_NETWORK_PROPERTY_CHANGE_ICON = 8;
+pub const NLM_NETWORK_PROPERTY_CHANGE_CATEGORY_VALUE = 16;
+pub const NLM_CONNECTION_PROPERTY_CHANGE_AUTHENTICATION = 1;
+
+pub const aliases = struct {
+    pub const NLM_CONNECTION_COST = i32;
+    pub const NLM_NETWORK_CLASS = i32;
+    pub const NLM_INTERNET_CONNECTIVITY = i32;
+    pub const NLM_CONNECTIVITY = i32;
+    pub const NLM_DOMAIN_TYPE = i32;
+    pub const NLM_DOMAIN_AUTHENTICATION_KIND = i32;
+    pub const NLM_ENUM_NETWORK = i32;
+    pub const NLM_NETWORK_CATEGORY = i32;
+    pub const NLM_NETWORK_PROPERTY_CHANGE = i32;
+    pub const NLM_CONNECTION_PROPERTY_CHANGE = i32;
+};
