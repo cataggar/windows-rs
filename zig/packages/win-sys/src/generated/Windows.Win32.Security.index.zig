@@ -549,4 +549,9 @@ pub const aliases = struct {
     pub const TOKEN_ELEVATION_TYPE = i32;
     pub const TOKEN_INFORMATION_CLASS = i32;
     pub const MANDATORY_LEVEL = i32;
+    pub const PSID = ?*anyopaque;
+    pub const NCRYPT_DESCRIPTOR_HANDLE = ?*anyopaque;
+    pub const NCRYPT_STREAM_HANDLE = ?*anyopaque;
+    pub const SAFER_LEVEL_HANDLE = ?*anyopaque;
+    pub const PSECURITY_DESCRIPTOR = ?*anyopaque;
 };

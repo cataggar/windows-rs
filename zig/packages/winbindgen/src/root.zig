@@ -717,16 +717,21 @@ pub fn emitMethodIndex(
     }
 
     // Fourth pass: emit `pub const aliases = struct { ... };` —
-    // a per-namespace lookup from enum TypeDef name to the Zig
-    // integer type that backs its `value__` field. Lets `project()`
-    // auto-project TypeRefs like `BOOL`, `HRESULT`, `WIN32_ERROR`,
-    // etc. without a hand-maintained switch in `project.zig`.
+    // a per-namespace lookup from TypeRef name to the Zig type that
+    // backs it. Lets `project()` auto-project TypeRefs like `BOOL`,
+    // `HRESULT`, `WIN32_ERROR`, `HANDLE`, etc. without a
+    // hand-maintained switch in `project.zig`.
     //
-    // Only `System.Enum`-extending TypeDefs are surfaced here;
-    // `NativeTypedefAttribute` markers for handles/strings still
-    // require the hand-list (they project to pointer-shaped types,
-    // not primitives, and the shape isn't mechanically derivable
-    // from a single field sig yet).
+    // Two shapes are surfaced here:
+    //  1. `System.Enum`-extending TypeDefs → emit `NAME = <repr>;`
+    //     where `<repr>` is the underlying integer type.
+    //  2. `NativeTypedefAttribute`-decorated TypeDefs (exactly one
+    //     field) → emit `NAME = <zig-of-field-type>;` for the cases
+    //     we know how to project (primitives, pointer-to-char for
+    //     strings, pointer-to-void for opaque pointers). Function
+    //     pointers (FARPROC) are *not* handled here — their field
+    //     type is a FNPTR and the caller-facing shape depends on
+    //     the target signature; those stay in `fnTypeForAlias`.
     var any_alias = false;
     row = 0;
     while (row < rows) : (row += 1) {
@@ -745,7 +750,83 @@ pub fn emitMethodIndex(
         }
         try writer.print("    pub const {s} = {s};\n", .{ type_name, repr });
     }
+
+    // Fifth pass (folded into the same `aliases` block): surface
+    // every single-field struct whose sole field projects to a
+    // concrete Zig type — these are the "Win32 typedef wrappers"
+    // (HANDLE, BOOL, HRESULT, PWSTR, PSID, ...). We accept them on
+    // one of two signals, matching `windows-bindgen`'s two paths:
+    //   (a) `NativeTypedefAttribute` is present, OR
+    //   (b) the struct has exactly one field named "Value" whose
+    //       type is a primitive (the handle convention).
+    // Case (b) is how all `H*` handles land — they lack the
+    // attribute in the current winmd but are projected by Rust
+    // bindgen as typedef aliases via the "Value" heuristic.
+    // Unsupported field shapes are silently skipped and continue
+    // to rely on `fnTypeForAlias`'s hand-list.
+    row = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), namespace)) continue;
+
+        // NativeTypedefAttribute wrappers are single-field structs;
+        // if the shape differs (defensive — no known exception in
+        // the current winmds), leave it to the hand-list.
+        const fields = file.list(.type_def, row, 4, .field);
+        if (fields.len() != 1) continue;
+
+        const has_attr = winmd.hasAttribute(file, .type_def, row, "NativeTypedefAttribute");
+        const has_value_field = std.mem.eql(u8, file.str(.field, fields.start, 1), "Value");
+        if (!has_attr and !has_value_field) continue;
+
+        const sig = file.blob(.field, fields.start, 2);
+        const ty = winmd.readFieldSignature(gpa, file, sig) catch continue;
+        const zig = nativeTypedefZigType(ty) orelse continue;
+        const type_name = file.str(.type_def, row, 1);
+        if (!any_alias) {
+            try writer.writeAll("\npub const aliases = struct {\n");
+            any_alias = true;
+        }
+        try writer.print("    pub const {s} = {s};\n", .{ type_name, zig });
+    }
     if (any_alias) try writer.writeAll("};\n");
+}
+
+/// Map the sole field of a `NativeTypedefAttribute`-decorated struct
+/// to a Zig type string. Returns null for shapes we don't yet
+/// project — the generator's caller falls back to `fnTypeForAlias`'s
+/// hand-list for those.
+fn nativeTypedefZigType(ty: winmd.Ty) ?[]const u8 {
+    return switch (ty) {
+        .i8 => "i8",
+        .u8 => "u8",
+        .i16 => "i16",
+        .u16 => "u16",
+        .i32 => "i32",
+        .u32 => "u32",
+        .i64 => "i64",
+        .u64 => "u64",
+        .isize => "isize",
+        .usize => "usize",
+        // Pointer-to-char: project as a null-terminated many-item
+        // pointer matching the Win32 convention. `ptr_const` and
+        // `ptr_mut` both land here — winmd distinguishes them but
+        // the generated Zig alias is identical (the const-ness at
+        // the API boundary is re-expressed via `[*:0]`-shape on
+        // the parameter, not the alias itself).
+        .ptr_mut => |p| if (p.depth == 1) switch (p.inner.*) {
+            .u8 => "?[*:0]u8",
+            .u16, .char => "?[*:0]u16",
+            .void => "?*anyopaque",
+            else => null,
+        } else null,
+        .ptr_const => |p| if (p.depth == 1) switch (p.inner.*) {
+            .u8 => "?[*:0]u8",
+            .u16, .char => "?[*:0]u16",
+            .void => "?*anyopaque",
+            else => null,
+        } else null,
+        else => null,
+    };
 }
 
 /// Walk a MethodDef signature blob and record every TypeDefOrRef
@@ -3327,10 +3408,21 @@ test "emitMethodIndex emits aliases block for enum TypeDefs" {
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_ERROR = u32;") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const WAIT_EVENT = u32;") != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "pub const HANDLE_FLAGS = u32;") != null);
-    // BOOL and HRESULT are NativeTypedefAttribute wrappers, not
-    // `System.Enum` subclasses — they must *not* be emitted here.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL =") == null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT =") == null);
+    // BOOL, HRESULT, NTSTATUS are NativeTypedefAttribute wrappers
+    // around a single `i32` field — they land in the same aliases
+    // block via the second pass.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = i32;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = i32;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NTSTATUS = i32;") != null);
+    // HANDLE and friends wrap a `*void` field (Win32 convention);
+    // the "Value"-heuristic path picks them up and projects them
+    // as null-able anyopaque pointers.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HANDLE = ?*anyopaque;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HMODULE = ?*anyopaque;") != null);
+    // PWSTR wraps `*u16`; projects to a null-terminated many-item
+    // pointer at the alias boundary.
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const PWSTR = ?[*:0]u16;") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "pub const PSTR = ?[*:0]u8;") != null);
 }
 
 test "emitStructs renames MIDL anon nested types to <outer>_<index>" {

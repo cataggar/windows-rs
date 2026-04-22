@@ -264,4 +264,8 @@ pub const aliases = struct {
     pub const DDE_CLIENT_TRANSACTION_TYPE = u32;
     pub const CONVINFO_CONVERSATION_STATE = u32;
     pub const CONVINFO_STATUS = u32;
+    pub const HSZ = ?*anyopaque;
+    pub const HCONV = ?*anyopaque;
+    pub const HCONVLIST = ?*anyopaque;
+    pub const HDDEDATA = ?*anyopaque;
 };

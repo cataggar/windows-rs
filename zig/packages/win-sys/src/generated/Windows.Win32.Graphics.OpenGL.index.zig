@@ -1178,4 +1178,8 @@ pub const aliases = struct {
     pub const PFD_PIXEL_TYPE = u8;
     pub const PFD_LAYER_TYPE = i8;
     pub const PFD_FLAGS = u32;
+    pub const HGLRC = ?*anyopaque;
+    pub const GLUnurbs = isize;
+    pub const GLUquadric = isize;
+    pub const GLUtesselator = isize;
 };

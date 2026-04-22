@@ -1104,4 +1104,9 @@ pub const aliases = struct {
     pub const AutomationIdentifierType = i32;
     pub const EventArgsType = i32;
     pub const AsyncContentLoadedState = i32;
+    pub const HWINEVENTHOOK = ?*anyopaque;
+    pub const HUIANODE = ?*anyopaque;
+    pub const HUIAPATTERNOBJECT = ?*anyopaque;
+    pub const HUIATEXTRANGE = ?*anyopaque;
+    pub const HUIAEVENT = ?*anyopaque;
 };

@@ -72,4 +72,6 @@ pub const aliases = struct {
     pub const TOUCHINPUTMASKF_MASK = u32;
     pub const REGISTER_TOUCH_WINDOW_FLAGS = u32;
     pub const MANIPULATION_PROCESSOR_MANIPULATIONS = i32;
+    pub const HGESTUREINFO = ?*anyopaque;
+    pub const HTOUCHINPUT = ?*anyopaque;
 };

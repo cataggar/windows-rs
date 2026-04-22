@@ -1976,4 +1976,6 @@ pub const aliases = struct {
     pub const PNP_VETO_TYPE = i32;
     pub const CM_NOTIFY_FILTER_TYPE = i32;
     pub const CM_NOTIFY_ACTION = i32;
+    pub const HDEVINFO = isize;
+    pub const HCMNOTIFICATION = ?*anyopaque;
 };

@@ -2208,4 +2208,6 @@ pub const aliases = struct {
     pub const SL_ACTIVATION_TYPE = i32;
     pub const SLREFERRALTYPE = i32;
     pub const SL_GENUINE_STATE = i32;
+    pub const LSA_HANDLE = isize;
+    pub const _HMAPPER = isize;
 };

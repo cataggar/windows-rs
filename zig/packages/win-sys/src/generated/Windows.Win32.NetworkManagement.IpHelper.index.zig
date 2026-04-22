@@ -987,4 +987,5 @@ pub const aliases = struct {
     pub const PFFORWARD_ACTION = i32;
     pub const PFADDRESSTYPE = i32;
     pub const PFFRAMETYPE = i32;
+    pub const HIFTIMESTAMPCHANGE = ?*anyopaque;
 };

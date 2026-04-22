@@ -805,4 +805,6 @@ pub const aliases = struct {
     pub const USB4_STATUS = i32;
     pub const PIPE_TYPE = i32;
     pub const RAW_PIPE_TYPE = i32;
+    pub const WINUSB_INTERFACE_HANDLE = ?*anyopaque;
+    pub const USB_CHANGE_REGISTRATION_HANDLE = ?*anyopaque;
 };

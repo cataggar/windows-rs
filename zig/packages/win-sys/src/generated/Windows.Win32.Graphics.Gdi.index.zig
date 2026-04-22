@@ -2320,4 +2320,15 @@ pub const aliases = struct {
     pub const DISPLAY_DEVICE_STATE_FLAGS = u32;
     pub const DISPLAYCONFIG_COLOR_ENCODING = i32;
     pub const DISPLAYCONFIG_ADVANCED_COLOR_MODE = i32;
+    pub const HBITMAP = ?*anyopaque;
+    pub const HRGN = ?*anyopaque;
+    pub const HPEN = ?*anyopaque;
+    pub const HBRUSH = ?*anyopaque;
+    pub const HFONT = ?*anyopaque;
+    pub const HMETAFILE = ?*anyopaque;
+    pub const HENHMETAFILE = ?*anyopaque;
+    pub const HPALETTE = ?*anyopaque;
+    pub const HDC = ?*anyopaque;
+    pub const HGDIOBJ = ?*anyopaque;
+    pub const HMONITOR = ?*anyopaque;
 };

@@ -1643,4 +1643,5 @@ pub const aliases = struct {
     pub const COPYFILE2_COPY_PHASE = i32;
     pub const PRIORITY_HINT = i32;
     pub const FILE_ID_TYPE = i32;
+    pub const HIORING = ?*anyopaque;
 };

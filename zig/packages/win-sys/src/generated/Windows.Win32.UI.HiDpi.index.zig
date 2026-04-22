@@ -102,4 +102,5 @@ pub const aliases = struct {
     pub const DIALOG_DPI_CHANGE_BEHAVIORS = i32;
     pub const PROCESS_DPI_AWARENESS = i32;
     pub const MONITOR_DPI_TYPE = i32;
+    pub const DPI_AWARENESS_CONTEXT = ?*anyopaque;
 };

@@ -1453,4 +1453,5 @@ pub const aliases = struct {
     pub const HTTP_POLICY_EXTENSION_TYPE = i32;
     pub const HTTP_POLICY_EXTENSION_VERSION = i32;
     pub const PROOF_OF_POSSESSION_FLAGS = u32;
+    pub const HTTP_PUSH_WAIT_HANDLE = ?*anyopaque;
 };

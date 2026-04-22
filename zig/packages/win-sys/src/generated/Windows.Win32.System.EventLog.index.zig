@@ -312,4 +312,5 @@ pub const aliases = struct {
     pub const EVT_EVENT_METADATA_PROPERTY_ID = i32;
     pub const EVT_QUERY_PROPERTY_ID = i32;
     pub const EVT_EVENT_PROPERTY_ID = i32;
+    pub const EVT_HANDLE = isize;
 };

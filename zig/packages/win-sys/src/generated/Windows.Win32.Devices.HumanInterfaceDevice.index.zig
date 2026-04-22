@@ -4694,4 +4694,5 @@ pub const aliases = struct {
     pub const HIDP_REPORT_TYPE = i32;
     pub const HIDP_KEYBOARD_DIRECTION = i32;
     pub const GPIOBUTTONS_BUTTON_TYPE = i32;
+    pub const PHIDP_PREPARSED_DATA = isize;
 };

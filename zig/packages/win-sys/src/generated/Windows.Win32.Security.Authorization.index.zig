@@ -522,4 +522,11 @@ pub const aliases = struct {
     pub const AUTHZ_CONTEXT_INFORMATION_CLASS = i32;
     pub const AUTHZ_AUDIT_EVENT_INFORMATION_CLASS = i32;
     pub const AZ_PROP_CONSTANTS = i32;
+    pub const AUTHZ_ACCESS_CHECK_RESULTS_HANDLE = ?*anyopaque;
+    pub const AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE = ?*anyopaque;
+    pub const AUTHZ_CLIENT_CONTEXT_HANDLE = ?*anyopaque;
+    pub const AUTHZ_RESOURCE_MANAGER_HANDLE = ?*anyopaque;
+    pub const AUTHZ_AUDIT_EVENT_HANDLE = ?*anyopaque;
+    pub const AUTHZ_AUDIT_EVENT_TYPE_HANDLE = ?*anyopaque;
+    pub const AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE = ?*anyopaque;
 };

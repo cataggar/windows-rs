@@ -235,4 +235,6 @@ pub const aliases = struct {
     pub const WER_DUMP_TYPE = i32;
     pub const REPORT_STORE_TYPES = i32;
     pub const EFaultRepRetVal = i32;
+    pub const HREPORT = ?*anyopaque;
+    pub const HREPORTSTORE = ?*anyopaque;
 };

@@ -1779,4 +1779,6 @@ pub const aliases = struct {
     pub const XPSRAS_PIXEL_FORMAT = i32;
     pub const XPSRAS_BACKGROUND_COLOR = i32;
     pub const PageCountType = i32;
+    pub const PRINTER_HANDLE = ?*anyopaque;
+    pub const FINDPRINTERCHANGENOTIFICATION_HANDLE = ?*anyopaque;
 };

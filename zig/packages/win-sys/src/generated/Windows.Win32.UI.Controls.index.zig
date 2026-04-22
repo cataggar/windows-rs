@@ -4669,4 +4669,10 @@ pub const aliases = struct {
     pub const MENUBANDPARTS = i32;
     pub const MENUBANDSTATES = i32;
     pub const FEEDBACK_TYPE = i32;
+    pub const HPROPSHEETPAGE = ?*anyopaque;
+    pub const HIMAGELIST = isize;
+    pub const HTHEME = isize;
+    pub const HTREEITEM = isize;
+    pub const HDSA = isize;
+    pub const HDPA = isize;
 };

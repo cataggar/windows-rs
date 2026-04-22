@@ -2910,4 +2910,11 @@ pub const aliases = struct {
     pub const MrmDumpType = i32;
     pub const MrmResourceIndexerMessageSeverity = i32;
     pub const MrmIndexerFlags = i32;
+    pub const HHOOK = ?*anyopaque;
+    pub const HICON = ?*anyopaque;
+    pub const HMENU = ?*anyopaque;
+    pub const HCURSOR = ?*anyopaque;
+    pub const HACCEL = ?*anyopaque;
+    pub const HDEVNOTIFY = ?*anyopaque;
+    pub const HDWP = ?*anyopaque;
 };

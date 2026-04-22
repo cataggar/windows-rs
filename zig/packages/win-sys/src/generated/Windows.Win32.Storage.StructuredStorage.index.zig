@@ -20,3 +20,9 @@ pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     };
 }
 
+
+pub const aliases = struct {
+    pub const JET_HANDLE = usize;
+    pub const JET_TABLEID = usize;
+    pub const JET_API_PTR = usize;
+};

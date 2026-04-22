@@ -116,4 +116,5 @@ pub const aliases = struct {
     pub const POINTER_FEEDBACK_MODE = i32;
     pub const POINTER_DEVICE_TYPE = i32;
     pub const POINTER_DEVICE_CURSOR_TYPE = i32;
+    pub const HSYNTHETICPOINTERDEVICE = ?*anyopaque;
 };

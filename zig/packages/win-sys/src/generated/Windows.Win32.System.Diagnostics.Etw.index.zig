@@ -885,4 +885,9 @@ pub const aliases = struct {
     pub const PAYLOAD_OPERATOR = i32;
     pub const EVENT_FIELD_TYPE = i32;
     pub const TDH_CONTEXT_TYPE = i32;
+    pub const TDH_HANDLE = isize;
+    pub const PROCESSTRACE_HANDLE = u64;
+    pub const REGHANDLE = i64;
+    pub const CONTROLTRACE_HANDLE = u64;
+    pub const RELOGSTREAM_HANDLE = u64;
 };

@@ -192,4 +192,6 @@ pub const aliases = struct {
     pub const FILTER_INFORMATION_CLASS = i32;
     pub const FILTER_VOLUME_INFORMATION_CLASS = i32;
     pub const INSTANCE_INFORMATION_CLASS = i32;
+    pub const HFILTER = isize;
+    pub const HFILTER_INSTANCE = isize;
 };

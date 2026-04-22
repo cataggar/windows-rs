@@ -1953,4 +1953,10 @@ pub const aliases = struct {
     pub const TUNNEL_SUB_TYPE = i32;
     pub const NPI_MODULEID_TYPE = i32;
     pub const FALLBACK_INDEX = i32;
+    pub const WSAEVENT = isize;
+    pub const SOCKET = usize;
+    pub const socklen_t = i32;
+    pub const RIO_BUFFERID = isize;
+    pub const RIO_CQ = isize;
+    pub const RIO_RQ = isize;
 };

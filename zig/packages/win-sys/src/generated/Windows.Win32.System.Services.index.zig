@@ -330,4 +330,7 @@ pub const aliases = struct {
     pub const SERVICE_DIRECTORY_TYPE = i32;
     pub const SERVICE_SHARED_REGISTRY_STATE_TYPE = i32;
     pub const SERVICE_SHARED_DIRECTORY_TYPE = i32;
+    pub const SC_HANDLE = ?*anyopaque;
+    pub const SERVICE_STATUS_HANDLE = ?*anyopaque;
+    pub const PSC_NOTIFICATION_REGISTRATION = isize;
 };

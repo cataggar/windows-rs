@@ -1034,4 +1034,15 @@ pub const aliases = struct {
     pub const UMS_THREAD_INFO_CLASS = i32;
     pub const TP_CALLBACK_PRIORITY = i32;
     pub const PROC_THREAD_ATTRIBUTE_NUM = u32;
+    pub const PTP_POOL = isize;
+    pub const PTP_CLEANUP_GROUP = isize;
+    pub const AVRT_TASK_HANDLE = ?*anyopaque;
+    pub const AVRT_THREAD_ORDERING_GROUP_HANDLE = ?*anyopaque;
+    pub const LPPROC_THREAD_ATTRIBUTE_LIST = ?*anyopaque;
+    pub const PTP_IO = isize;
+    pub const PTP_TIMER = isize;
+    pub const PTP_WAIT = isize;
+    pub const PTP_WORK = isize;
+    pub const PTP_CALLBACK_INSTANCE = isize;
+    pub const OVERRIDE_PREFETCH_PARAMETER = u32;
 };

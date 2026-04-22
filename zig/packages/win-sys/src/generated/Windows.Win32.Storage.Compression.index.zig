@@ -53,4 +53,6 @@ pub const COMPRESS_INFORMATION_CLASS_LEVEL = 2;
 pub const aliases = struct {
     pub const COMPRESS_ALGORITHM = u32;
     pub const COMPRESS_INFORMATION_CLASS = i32;
+    pub const COMPRESSOR_HANDLE = ?*anyopaque;
+    pub const DECOMPRESSOR_HANDLE = ?*anyopaque;
 };

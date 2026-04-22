@@ -695,4 +695,7 @@ pub const aliases = struct {
     pub const VARFLAGS = u16;
     pub const DESCKIND = i32;
     pub const SYSKIND = i32;
+    pub const CO_MTA_USAGE_COOKIE = ?*anyopaque;
+    pub const CO_DEVICE_CATALOG_COOKIE = ?*anyopaque;
+    pub const MachineGlobalObjectTableRegistrationToken = ?*anyopaque;
 };

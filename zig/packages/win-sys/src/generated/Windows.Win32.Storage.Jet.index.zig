@@ -1305,4 +1305,8 @@ pub const aliases = struct {
     pub const JET_RELOP = i32;
     pub const JET_ERRCAT = i32;
     pub const JET_INDEXCHECKING = i32;
+    pub const JET_INSTANCE = usize;
+    pub const JET_SESID = usize;
+    pub const JET_OSSNAPID = usize;
+    pub const JET_LS = usize;
 };

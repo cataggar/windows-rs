@@ -1655,4 +1655,5 @@ pub const aliases = struct {
     pub const OLECMDID_WINDOWSTATE_FLAG = i32;
     pub const OLECMDID_VIEWPORT_MODE_FLAG = i32;
     pub const OLEUIPASTEFLAG = i32;
+    pub const OLE_HANDLE = u32;
 };

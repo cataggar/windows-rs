@@ -937,4 +937,6 @@ pub const aliases = struct {
     pub const WLDP_EXECUTION_POLICY = i32;
     pub const WLDP_EXECUTION_EVALUATION_OPTIONS = i32;
     pub const WLDP_SECURE_SETTING_VALUE_TYPE = i32;
+    pub const HWINWATCH = ?*anyopaque;
+    pub const FEATURE_STATE_CHANGE_SUBSCRIPTION = ?*anyopaque;
 };

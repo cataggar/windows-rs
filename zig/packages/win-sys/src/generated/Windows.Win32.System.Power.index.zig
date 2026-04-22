@@ -642,4 +642,5 @@ pub const aliases = struct {
     pub const SYSTEM_POWER_CONDITION = i32;
     pub const POWER_PLATFORM_ROLE = i32;
     pub const POWER_SETTING_ALTITUDE = i32;
+    pub const HPOWERNOTIFY = isize;
 };

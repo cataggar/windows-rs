@@ -1095,4 +1095,9 @@ pub const aliases = struct {
     pub const MIDL_ES_CODE = i32;
     pub const MIDL_ES_HANDLE_STYLE = i32;
     pub const EXPR_TOKEN = i32;
+    pub const PNDR_ASYNC_MESSAGE = isize;
+    pub const PNDR_CORRELATION_INFO = isize;
+    pub const _NDR_PROC_CONTEXT = isize;
+    pub const NDR_ALLOC_ALL_NODES_CONTEXT = isize;
+    pub const NDR_POINTER_QUEUE_STATE = isize;
 };

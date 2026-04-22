@@ -324,4 +324,6 @@ pub const aliases = struct {
     pub const MEM_DEDICATED_ATTRIBUTE_TYPE = i32;
     pub const MEM_SECTION_EXTENDED_PARAMETER_TYPE = i32;
     pub const HEAP_INFORMATION_CLASS = i32;
+    pub const MEMORY_MAPPED_VIEW_ADDRESS = ?*anyopaque;
+    pub const AtlThunkData_t = isize;
 };

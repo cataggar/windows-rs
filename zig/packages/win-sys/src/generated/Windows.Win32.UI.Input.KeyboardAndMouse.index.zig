@@ -509,4 +509,5 @@ pub const aliases = struct {
     pub const TRACKMOUSEEVENT_FLAGS = u32;
     pub const VIRTUAL_KEY = u16;
     pub const MAP_VIRTUAL_KEY_TYPE = u32;
+    pub const HKL = ?*anyopaque;
 };

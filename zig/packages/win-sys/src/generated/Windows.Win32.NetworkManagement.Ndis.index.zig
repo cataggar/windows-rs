@@ -2024,4 +2024,5 @@ pub const aliases = struct {
     pub const NDIS_NETWORK_CHANGE_TYPE = i32;
     pub const NDIS_PROCESSOR_VENDOR = i32;
     pub const NDK_RDMA_TECHNOLOGY = i32;
+    pub const NET_IF_COMPARTMENT_ID = u32;
 };

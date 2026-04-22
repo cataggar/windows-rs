@@ -338,4 +338,5 @@ pub const aliases = struct {
     pub const ALLOC_CONSOLE_MODE = i32;
     pub const ALLOC_CONSOLE_RESULT = i32;
     pub const CONSOLECONTROL = i32;
+    pub const HPCON = isize;
 };

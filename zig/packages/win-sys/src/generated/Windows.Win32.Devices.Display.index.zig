@@ -1167,4 +1167,12 @@ pub const aliases = struct {
     pub const DSI_CONTROL_TRANSMISSION_MODE = i32;
     pub const AR_STATE = i32;
     pub const ORIENTATION_PREFERENCE = i32;
+    pub const HSEMAPHORE = ?*anyopaque;
+    pub const HSURF = ?*anyopaque;
+    pub const HFASTMUTEX = ?*anyopaque;
+    pub const HDRVOBJ = ?*anyopaque;
+    pub const HDEV = ?*anyopaque;
+    pub const HBM = ?*anyopaque;
+    pub const DHSURF = ?*anyopaque;
+    pub const DHPDEV = ?*anyopaque;
 };

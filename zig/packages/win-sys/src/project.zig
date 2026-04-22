@@ -67,27 +67,10 @@ fn winmdAlias(comptime ns: []const u8, comptime name: []const u8) ?type {
 /// `fnTypeForAlias`. This keeps the alias list in one place and
 /// compile-checks every name at comptime.
 fn fnTypeForAlias(comptime name: []const u8) ?type {
-    // NativeTypedefAttribute wrappers — these aren't `System.Enum`-
-    // extending TypeDefs, so the generator's `aliases` block
-    // doesn't cover them. Hand-listed until the generator learns
-    // to read NativeTypedefAttribute.
-    if (std.mem.eql(u8, name, "BOOL")) return i32;
-    if (std.mem.eql(u8, name, "HRESULT")) return i32;
-    if (std.mem.eql(u8, name, "NTSTATUS")) return i32;
+    // PSID lacks NativeTypedefAttribute in the current winmd and its
+    // sole field isn't named "Value", so the generator's auto-alias
+    // pass doesn't pick it up. Hand-listed until that's relaxed.
     if (std.mem.eql(u8, name, "PSID")) return ?*anyopaque;
-
-    // Handles (NativeTypedefAttribute over an `isize` field).
-    if (std.mem.eql(u8, name, "HANDLE")) return isize;
-    if (std.mem.eql(u8, name, "HWND")) return isize;
-    if (std.mem.eql(u8, name, "HMODULE")) return isize;
-    if (std.mem.eql(u8, name, "HGLOBAL")) return isize;
-    if (std.mem.eql(u8, name, "HLOCAL")) return isize;
-    if (std.mem.eql(u8, name, "HRSRC")) return isize;
-
-    // String types — NativeTypedefAttribute over char-pointer fields.
-    if (std.mem.eql(u8, name, "BSTR")) return ?[*:0]u16;
-    if (std.mem.eql(u8, name, "PWSTR")) return ?[*:0]u16;
-    if (std.mem.eql(u8, name, "PSTR")) return ?[*:0]u8;
 
     // FARPROC and friends are raw function pointers; project()
     // surfaces them as opaque so callers @ptrCast to the concrete
@@ -408,21 +391,21 @@ test "project: LibraryLoader { GetModuleHandleW, GetProcAddress, LoadLibraryW } 
     // GetModuleHandleW(PCWSTR) -> HMODULE
     const GetModuleHandleWT = @TypeOf(win.GetModuleHandleW);
     try std.testing.expectEqual(
-        @as(type, *const fn (?[*:0]u16) callconv(.winapi) isize),
+        @as(type, *const fn (?[*:0]u16) callconv(.winapi) ?*anyopaque),
         GetModuleHandleWT,
     );
 
     // GetProcAddress(HMODULE, PCSTR) -> FARPROC (opaque fn ptr)
     const GetProcAddressT = @TypeOf(win.GetProcAddress);
     try std.testing.expectEqual(
-        @as(type, *const fn (isize, ?[*:0]u8) callconv(.winapi) ?*const anyopaque),
+        @as(type, *const fn (?*anyopaque, ?[*:0]u8) callconv(.winapi) ?*const anyopaque),
         GetProcAddressT,
     );
 
     // LoadLibraryW(PCWSTR) -> HMODULE
     const LoadLibraryWT = @TypeOf(win.LoadLibraryW);
     try std.testing.expectEqual(
-        @as(type, *const fn (?[*:0]u16) callconv(.winapi) isize),
+        @as(type, *const fn (?[*:0]u16) callconv(.winapi) ?*anyopaque),
         LoadLibraryWT,
     );
 }
@@ -462,7 +445,7 @@ test "project: Console { GetStdHandle, GetConsoleCP } type-checks" {
 
     // GetStdHandle(STD_HANDLE) -> HANDLE
     try std.testing.expectEqual(
-        @as(type, *const fn (u32) callconv(.winapi) isize),
+        @as(type, *const fn (u32) callconv(.winapi) ?*anyopaque),
         @TypeOf(win.GetStdHandle),
     );
 
@@ -482,11 +465,11 @@ test "project: WindowsAndMessaging { GetDesktopWindow, IsWindow } type-checks" {
     });
 
     try std.testing.expectEqual(
-        @as(type, *const fn () callconv(.winapi) isize),
+        @as(type, *const fn () callconv(.winapi) ?*anyopaque),
         @TypeOf(win.GetDesktopWindow),
     );
     try std.testing.expectEqual(
-        @as(type, *const fn (isize) callconv(.winapi) i32),
+        @as(type, *const fn (?*anyopaque) callconv(.winapi) i32),
         @TypeOf(win.IsWindow),
     );
 }
@@ -505,7 +488,7 @@ test "project: WindowsAndMessaging { MessageBoxW } type-checks" {
     try std.testing.expectEqual(
         @as(
             type,
-            *const fn (isize, ?[*:0]u16, ?[*:0]u16, u32) callconv(.winapi) i32,
+            *const fn (?*anyopaque, ?[*:0]u16, ?[*:0]u16, u32) callconv(.winapi) i32,
         ),
         @TypeOf(win.MessageBoxW),
     );
@@ -535,14 +518,14 @@ test "project: Storage.FileSystem { CreateFileW, WriteFile, DeleteFileW } type-c
     try std.testing.expectEqual(
         @as(
             type,
-            *const fn (?[*:0]u16, u32, u32, ?*anyopaque, u32, u32, isize) callconv(.winapi) isize,
+            *const fn (?[*:0]u16, u32, u32, ?*anyopaque, u32, u32, ?*anyopaque) callconv(.winapi) ?*anyopaque,
         ),
         @TypeOf(win.CreateFileW),
     );
     try std.testing.expectEqual(
         @as(
             type,
-            *const fn (isize, ?*u8, u32, ?*u32, ?*anyopaque) callconv(.winapi) i32,
+            *const fn (?*anyopaque, ?*u8, u32, ?*u32, ?*anyopaque) callconv(.winapi) i32,
         ),
         @TypeOf(win.WriteFile),
     );

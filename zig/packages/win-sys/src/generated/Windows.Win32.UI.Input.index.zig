@@ -82,4 +82,5 @@ pub const aliases = struct {
     pub const MOUSE_STATE = u16;
     pub const INPUT_MESSAGE_DEVICE_TYPE = i32;
     pub const INPUT_MESSAGE_ORIGIN_ID = i32;
+    pub const HRAWINPUT = ?*anyopaque;
 };

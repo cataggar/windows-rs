@@ -551,4 +551,7 @@ pub const aliases = struct {
     pub const SysmonFileType = i32;
     pub const SysmonDataType = i32;
     pub const SysmonBatchReason = i32;
+    pub const PDH_HLOG = ?*anyopaque;
+    pub const PDH_HQUERY = ?*anyopaque;
+    pub const PDH_HCOUNTER = ?*anyopaque;
 };

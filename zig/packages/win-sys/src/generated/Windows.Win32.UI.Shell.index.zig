@@ -4388,4 +4388,8 @@ pub const aliases = struct {
     pub const TRANSLATEURL_IN_FLAGS = i32;
     pub const URLASSOCIATIONDIALOG_IN_FLAGS = i32;
     pub const MIMEASSOCIATIONDIALOG_IN_FLAGS = i32;
+    pub const HDROP = ?*anyopaque;
+    pub const HPSXA = ?*anyopaque;
+    pub const PAPPCONSTRAIN_REGISTRATION = isize;
+    pub const PAPPSTATE_REGISTRATION = isize;
 };
