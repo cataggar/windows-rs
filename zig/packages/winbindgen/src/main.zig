@@ -85,6 +85,7 @@ pub fn main(init: std.process.Init) !void {
     var index_only = false;
     var structs_only = false;
     var closure_only = false;
+    var ns_closure_only = false;
     var namespace_arg: ?[]const u8 = null;
     var seed_args = try std.ArrayList([]const u8).initCapacity(init.arena.allocator(), 0);
     {
@@ -110,6 +111,8 @@ pub fn main(init: std.process.Init) !void {
                 index_only = true;
             } else if (std.mem.eql(u8, a, "--structs")) {
                 structs_only = true;
+            } else if (std.mem.eql(u8, a, "--namespace-closure")) {
+                ns_closure_only = true;
             } else if (std.mem.eql(u8, a, "--structs-closure")) {
                 closure_only = true;
             } else if (namespace_arg == null) {
@@ -168,6 +171,18 @@ pub fn main(init: std.process.Init) !void {
             init.arena.allocator(),
             &file,
             namespace,
+            arch,
+        );
+        for (closure) |ns| try buf.writer.print("{s}\n", .{ns});
+    } else if (ns_closure_only) {
+        // `--namespace-closure` prints (one per line, sorted) every
+        // namespace transitively needed for `<namespace>.zig` to
+        // compile — walks the full emitter path and follows cross-ns
+        // `@import` references. Includes the root namespace itself.
+        const closure = try winbindgen.collectNamespaceClosure(
+            init.arena.allocator(),
+            &file,
+            &.{namespace},
             arch,
         );
         for (closure) |ns| try buf.writer.print("{s}\n", .{ns});

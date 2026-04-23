@@ -54,6 +54,108 @@ fn isProjectableNs(ns: []const u8) bool {
 /// Placeholder — full CLI lands later in Phase 3.
 pub fn generate(_: std.mem.Allocator) !void {}
 
+/// Compute the transitive closure of namespace dependencies starting
+/// from `roots`. Scans metadata directly (TypeDef → method sigs,
+/// interface impls, field types) for cross-namespace references
+/// without running the full emitter. Returns a sorted, deduplicated
+/// list of all namespaces needed — including the roots themselves.
+pub fn collectNamespaceClosure(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    roots: []const []const u8,
+    arch: Arch,
+) ![][]const u8 {
+    _ = arch;
+    var visited: std.StringHashMapUnmanaged(void) = .empty;
+    var queue = try std.ArrayList([]const u8).initCapacity(arena, roots.len);
+    for (roots) |r| {
+        try queue.append(arena, r);
+        try visited.put(arena, r, {});
+    }
+
+    var head: usize = 0;
+    while (head < queue.items.len) {
+        const ns = queue.items[head];
+        head += 1;
+
+        // Walk every TypeDef in this namespace and collect foreign
+        // namespace refs from method sigs and interface impls.
+        const rows = file.rowCount(.type_def);
+        var row: u32 = 0;
+        while (row < rows) : (row += 1) {
+            if (!std.mem.eql(u8, file.str(.type_def, row, 2), ns)) continue;
+
+            // Scan method signatures for foreign namespace refs.
+            const methods = file.list(.type_def, row, 5, .method_def);
+            var m = methods.start;
+            while (m < methods.end) : (m += 1) {
+                const sig_blob = file.blob(.method_def, m, 4);
+                const sig = winmd.readMethodSignature(arena, file, sig_blob) catch continue;
+                try collectNsDepsFromTy(&visited, &queue, arena, sig.return_type, ns);
+                for (sig.params) |p| {
+                    try collectNsDepsFromTy(&visited, &queue, arena, p, ns);
+                }
+            }
+
+            // Scan InterfaceImpl rows for cross-ns base interfaces.
+            const impls = file.equalRange(.interface_impl, 0, row + 1);
+            var ii = impls.start;
+            while (ii < impls.end) : (ii += 1) {
+                const iface_tok = file.cell(.interface_impl, ii, 1);
+                const iface_name = winmd.resolveTypeDefOrRefName(file, iface_tok) catch continue;
+                if (iface_name.namespace.len > 0 and
+                    isProjectableNs(iface_name.namespace) and
+                    !std.mem.eql(u8, iface_name.namespace, ns) and
+                    !visited.contains(iface_name.namespace))
+                {
+                    const dep = try arena.dupe(u8, iface_name.namespace);
+                    try visited.put(arena, dep, {});
+                    try queue.append(arena, dep);
+                }
+            }
+        }
+    }
+
+    const result = try arena.dupe([]const u8, queue.items);
+    std.mem.sort([]const u8, result, {}, struct {
+        fn lt(_: void, a: []const u8, b: []const u8) bool {
+            return std.mem.lessThan(u8, a, b);
+        }
+    }.lt);
+    return result;
+}
+
+/// Recursively walk a `Ty` and add any foreign namespace to the BFS queue.
+fn collectNsDepsFromTy(
+    visited: *std.StringHashMapUnmanaged(void),
+    queue: *std.ArrayList([]const u8),
+    arena: std.mem.Allocator,
+    ty: winmd.Ty,
+    home_ns: []const u8,
+) !void {
+    switch (ty) {
+        .class_name, .value_name => |tn| {
+            if (tn.namespace.len > 0 and
+                isProjectableNs(tn.namespace) and
+                !std.mem.eql(u8, tn.namespace, home_ns) and
+                !visited.contains(tn.namespace))
+            {
+                const dep = try arena.dupe(u8, tn.namespace);
+                try visited.put(arena, dep, {});
+                try queue.append(arena, dep);
+            }
+            for (tn.generics) |g| try collectNsDepsFromTy(visited, queue, arena, g, home_ns);
+        },
+        .ptr_mut => |p| try collectNsDepsFromTy(visited, queue, arena, p.inner.*, home_ns),
+        .ptr_const => |p| try collectNsDepsFromTy(visited, queue, arena, p.inner.*, home_ns),
+        .ref_mut => |inner| try collectNsDepsFromTy(visited, queue, arena, inner.*, home_ns),
+        .ref_const => |inner| try collectNsDepsFromTy(visited, queue, arena, inner.*, home_ns),
+        .array => |inner| try collectNsDepsFromTy(visited, queue, arena, inner.*, home_ns),
+        .array_fixed => |a| try collectNsDepsFromTy(visited, queue, arena, a.inner.*, home_ns),
+        else => {},
+    }
+}
+
 /// Parsed seed for `--seed` CLI flag.
 pub const ParsedSeed = struct {
     key: []const u8,
@@ -4182,6 +4284,39 @@ test "emitInterfaceVtblsImpl deduplicates overloaded method names" {
 
     // No backticks in the output.
     try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+}
+
+test "collectNamespaceClosure returns transitive deps for Globalization" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const closure = try collectNamespaceClosure(
+        arena.allocator(),
+        &file,
+        &.{"Windows.Globalization"},
+        .x64,
+    );
+
+    // Must include the root itself.
+    var has_root = false;
+    var has_foundation = false;
+    var has_system = false;
+    for (closure) |ns| {
+        if (std.mem.eql(u8, ns, "Windows.Globalization")) has_root = true;
+        if (std.mem.eql(u8, ns, "Windows.Foundation")) has_foundation = true;
+        if (std.mem.eql(u8, ns, "Windows.System")) has_system = true;
+    }
+    try std.testing.expect(has_root);
+    try std.testing.expect(has_foundation);
+    try std.testing.expect(has_system);
+
+    // All entries must be projectable Windows.* namespaces.
+    for (closure) |ns| {
+        try std.testing.expect(isProjectableNs(ns));
+    }
 }
 
 test "emitFreeFunctions emits kernel32 exports for Windows.Win32.Foundation" {
