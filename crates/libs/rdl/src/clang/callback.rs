@@ -3,7 +3,6 @@ use super::*;
 #[derive(Debug)]
 pub struct Callback {
     pub name: String,
-    pub namespace: String,
     pub params: Vec<Param>,
     pub return_type: metadata::Type,
 }
@@ -13,7 +12,7 @@ impl Callback {
     ///
     /// Returns `Ok(Some(Callback))` when the typedef's underlying type is a pointer to a
     /// function prototype, `Ok(None)` otherwise.
-    pub fn parse(cursor: Cursor, namespace: &str) -> Result<Option<Self>, Error> {
+    pub fn parse(cursor: Cursor, parser: &mut Parser<'_>) -> Result<Option<Self>, Error> {
         let name = cursor.name();
         if name.is_empty() || name.starts_with('_') {
             return Ok(None);
@@ -34,7 +33,14 @@ impl Callback {
             None => return Ok(None),
         };
 
-        let return_type = fn_type.fn_result_type().to_type(namespace);
+        // Variadic function-pointer typedefs (e.g. `typedef int (*printf_t)(const char*, ...)`)
+        // cannot be represented as Windows metadata callbacks.  Skip them; the caller will
+        // fall through to Typedef::parse which emits a `type` alias instead.
+        if fn_type.is_variadic() {
+            return Ok(None);
+        }
+
+        let return_type = fn_type.fn_result_type().to_type(parser);
 
         // Get parameter names from the TypedefDecl cursor's ParmDecl children.
         let param_names: Vec<String> = cursor
@@ -47,7 +53,7 @@ impl Callback {
         let num_args = fn_type.num_arg_types();
         let mut params = vec![];
         for i in 0..num_args {
-            let ty = fn_type.arg_type(i as u32).to_type(namespace);
+            let ty = fn_type.arg_type(i as u32).to_type(parser);
             let pname = param_names
                 .get(i as usize)
                 .cloned()
@@ -58,25 +64,24 @@ impl Callback {
 
         Ok(Some(Self {
             name,
-            namespace: namespace.to_string(),
             params,
             return_type,
         }))
     }
 
-    pub fn write(&self) -> Result<TokenStream, Error> {
+    pub fn write(&self, namespace: &str) -> Result<TokenStream, Error> {
         let name = write_ident(&self.name);
 
         let params = self.params.iter().map(|param| {
             let name = write_ident(&param.name);
-            let ty = write_type(&self.namespace, &param.ty);
+            let ty = write_type(namespace, &param.ty);
             quote! { #name: #ty }
         });
 
         let return_type = match &self.return_type {
             metadata::Type::Void => quote! {},
             ty => {
-                let ty = write_type(&self.namespace, ty);
+                let ty = write_type(namespace, ty);
                 quote! { -> #ty }
             }
         };

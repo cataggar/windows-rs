@@ -4,7 +4,6 @@ use super::*;
 #[derive(Debug)]
 pub struct Const {
     pub name: String,
-    pub namespace: String,
     pub value: metadata::Value,
 }
 
@@ -15,11 +14,7 @@ impl Const {
     /// whose body matches a recognised Win32 constant pattern, `Ok(None)` when
     /// the macro should be silently skipped (built-in, function-like, or too
     /// complex to represent as a constant).
-    pub fn parse(
-        cursor: Cursor,
-        namespace: &str,
-        tu: &TranslationUnit,
-    ) -> Result<Option<Self>, Error> {
+    pub fn parse(cursor: Cursor, parser: &mut Parser<'_>) -> Result<Option<Self>, Error> {
         // Skip built-in macros (e.g. `__LINE__`, `__FILE__`).
         if cursor.is_macro_builtin() {
             return Ok(None);
@@ -36,26 +31,22 @@ impl Const {
 
         // Tokenize the macro definition extent.  The first token is always the
         // macro name itself; the remaining tokens are the replacement list.
-        let tokens = tu.tokenize(cursor.extent());
+        let tokens = parser.tu.tokenize(cursor.extent());
         // Body tokens = everything after the name token.
         let body: Vec<_> = tokens.into_iter().skip(1).collect();
 
-        let value = match parse_body(&body, namespace) {
+        let value = match parse_body(&body, parser.namespace, parser.ref_map) {
             Some(v) => v,
             None => return Ok(None),
         };
 
-        Ok(Some(Self {
-            name,
-            namespace: namespace.to_string(),
-            value,
-        }))
+        Ok(Some(Self { name, value }))
     }
 
-    pub fn write(&self) -> Result<TokenStream, Error> {
+    pub fn write(&self, namespace: &str) -> Result<TokenStream, Error> {
         let name = write_ident(&self.name);
-        let ty = write_type(&self.namespace, &self.value.ty());
-        let value = write_const_value(&self.value);
+        let ty = write_type(namespace, &self.value.ty());
+        let value = write_value(namespace, &self.value);
         Ok(quote! { const #name: #ty = #value; })
     }
 
@@ -87,7 +78,6 @@ impl Const {
     pub fn evaluate_macros(
         input: &str,
         names: &[String],
-        namespace: &str,
         index: &Index,
         args: &[&str],
     ) -> Result<Vec<Self>, Error> {
@@ -124,7 +114,7 @@ impl Const {
         // constant expressions (e.g. string macros) don't abort the TU.
         let tu = index.parse_unsaved(&synthetic, &source, args, CXTranslationUnit_KeepGoing)?;
 
-        collect_eval_results(&tu, namespace)
+        collect_eval_results(&tu)
     }
 
     /// Evaluate a batch of macro names from an in-memory source string.
@@ -139,7 +129,6 @@ impl Const {
     pub fn evaluate_macros_str(
         content: &str,
         names: &[String],
-        namespace: &str,
         index: &Index,
         args: &[&str],
     ) -> Result<Vec<Self>, Error> {
@@ -162,7 +151,7 @@ impl Const {
 
         let tu = index.parse_unsaved(SYNTHETIC, &source, args, CXTranslationUnit_KeepGoing)?;
 
-        collect_eval_results(&tu, namespace)
+        collect_eval_results(&tu)
     }
 }
 
@@ -174,7 +163,7 @@ impl Const {
 /// where the enumerator is named `__rdl_eval_<original_name>`.  This helper
 /// walks the TU cursor, strips the prefix, and converts the evaluated integer
 /// value to the narrowest fitting [`metadata::Value`] variant.
-fn collect_eval_results(tu: &TranslationUnit, namespace: &str) -> Result<Vec<Const>, Error> {
+fn collect_eval_results(tu: &TranslationUnit) -> Result<Vec<Const>, Error> {
     let mut results = vec![];
     for child in tu.cursor().children() {
         if !child.is_from_main_file() {
@@ -197,61 +186,12 @@ fn collect_eval_results(tu: &TranslationUnit, namespace: &str) -> Result<Vec<Con
                 };
                 results.push(Const {
                     name: original_name.to_string(),
-                    namespace: namespace.to_string(),
                     value,
                 });
             }
         }
     }
     Ok(results)
-}
-
-/// Emit the literal token stream for a `metadata::Value`.
-///
-/// Only the variants produced by the macro parser are handled; others are
-/// unreachable in this context.
-fn write_const_value(value: &metadata::Value) -> TokenStream {
-    match value {
-        metadata::Value::I8(v) => {
-            let lit = Literal::i8_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::U8(v) => {
-            let lit = Literal::u8_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::I16(v) => {
-            let lit = Literal::i16_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::U16(v) => {
-            let lit = Literal::u16_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::I32(v) => {
-            let lit = Literal::i32_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::U32(v) => {
-            let lit = Literal::u32_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::I64(v) => {
-            let lit = Literal::i64_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::U64(v) => {
-            let lit = Literal::u64_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::F64(v) => {
-            let lit = Literal::f64_unsuffixed(*v);
-            quote! { #lit }
-        }
-        metadata::Value::Utf8(s) => quote! { #s },
-        metadata::Value::EnumValue(_, inner) => write_const_value(inner),
-        _ => unreachable!("unexpected Value variant in clang const"),
-    }
 }
 
 // ---------------------------------------------------------------------------
@@ -270,7 +210,11 @@ fn write_const_value(value: &metadata::Value) -> TokenStream {
 ///
 /// Returns `None` for anything more complex (multi-identifier bodies, macro
 /// calls, etc.) which are silently skipped.
-fn parse_body(body: &[(CXTokenKind, String)], namespace: &str) -> Option<metadata::Value> {
+fn parse_body(
+    body: &[(CXTokenKind, String)],
+    namespace: &str,
+    ref_map: &HashMap<String, String>,
+) -> Option<metadata::Value> {
     match body {
         // Single literal token.
         [(CXToken_Literal, lit)] => parse_literal(lit, false),
@@ -282,25 +226,25 @@ fn parse_body(body: &[(CXTokenKind, String)], namespace: &str) -> Option<metadat
         [(CXToken_Punctuation, lp1), (CXToken_Punctuation, lp2), (CXToken_Identifier, ty), (CXToken_Punctuation, rp1), (CXToken_Literal, lit), (CXToken_Punctuation, rp2)]
             if lp1 == "(" && lp2 == "(" && rp1 == ")" && rp2 == ")" =>
         {
-            parse_named_cast(namespace, ty, lit, false)
+            parse_named_cast(namespace, ref_map, ty, lit, false)
         }
         // ((TYPE)-VALUE) — double-paren typed negated cast.
         [(CXToken_Punctuation, lp1), (CXToken_Punctuation, lp2), (CXToken_Identifier, ty), (CXToken_Punctuation, rp1), (CXToken_Punctuation, minus), (CXToken_Literal, lit), (CXToken_Punctuation, rp2)]
             if lp1 == "(" && lp2 == "(" && rp1 == ")" && minus == "-" && rp2 == ")" =>
         {
-            parse_named_cast(namespace, ty, lit, true)
+            parse_named_cast(namespace, ref_map, ty, lit, true)
         }
         // (TYPE)VALUE — single-paren typed cast.
         [(CXToken_Punctuation, lp), (CXToken_Identifier, ty), (CXToken_Punctuation, rp), (CXToken_Literal, lit)]
             if lp == "(" && rp == ")" =>
         {
-            parse_named_cast(namespace, ty, lit, false)
+            parse_named_cast(namespace, ref_map, ty, lit, false)
         }
         // (TYPE)-VALUE — single-paren typed negated cast.
         [(CXToken_Punctuation, lp), (CXToken_Identifier, ty), (CXToken_Punctuation, rp), (CXToken_Punctuation, minus), (CXToken_Literal, lit)]
             if lp == "(" && rp == ")" && minus == "-" =>
         {
-            parse_named_cast(namespace, ty, lit, true)
+            parse_named_cast(namespace, ref_map, ty, lit, true)
         }
         _ => None,
     }
@@ -377,6 +321,7 @@ fn parse_literal(lit: &str, negate: bool) -> Option<metadata::Value> {
 /// underlying type of `type_name` during the reader/writer roundtrip.
 fn parse_named_cast(
     namespace: &str,
+    ref_map: &HashMap<String, String>,
     type_name: &str,
     lit: &str,
     negate: bool,
@@ -388,8 +333,12 @@ fn parse_named_cast(
     } else {
         raw as i64
     };
+    let ns = ref_map
+        .get(type_name)
+        .map(|s| s.as_str())
+        .unwrap_or(namespace);
     Some(metadata::Value::EnumValue(
-        metadata::TypeName::named(namespace, type_name),
+        metadata::TypeName::named(ns, type_name),
         Box::new(metadata::Value::I64(v)),
     ))
 }

@@ -1,15 +1,6 @@
 #[win32]
 mod Test {
-    #[typedef]
-    struct DWORD {
-        value: u32,
-    }
-    #[typedef]
-    struct HANDLE {
-        value: *mut void,
-    }
-    #[typedef]
-    struct HRESULT {
-        value: isize,
-    }
+    type A = i32;
+    type B = u32;
+    type C = *mut void;
 }
