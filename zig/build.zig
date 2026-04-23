@@ -1071,20 +1071,101 @@ pub fn build(b: *std.Build) void {
         "Windows.Wdk.System.SystemInformation",
         "Windows.Wdk.Storage.FileSystem",
         "Windows.Wdk.Storage.FileSystem.Minifilters",
-        // WinRT — first v0.2 foothold. The transitive closure of
-        // Globalization is ~78 namespaces (run `winbindgen
-        // --namespace-closure Windows.Globalization` to recompute).
-        // Only Foundation is bundled today; adding more requires fixing
-        // pre-existing emitter issues (duplicate method names in
-        // wrappers, edge cases in type projection) that surface when
-        // many WinRT namespaces are compiled together.
+        // WinRT — transitive closure of Windows.Globalization.
+        "Windows.ApplicationModel",
+        "Windows.ApplicationModel.Activation",
+        "Windows.ApplicationModel.AppService",
+        "Windows.ApplicationModel.Appointments",
+        "Windows.ApplicationModel.Appointments.AppointmentsProvider",
+        "Windows.ApplicationModel.Background",
+        "Windows.ApplicationModel.Calls",
+        "Windows.ApplicationModel.Calls.Background",
+        "Windows.ApplicationModel.Contacts",
+        "Windows.ApplicationModel.Contacts.Provider",
+        "Windows.ApplicationModel.Core",
+        "Windows.ApplicationModel.DataTransfer",
+        "Windows.ApplicationModel.DataTransfer.ShareTarget",
+        "Windows.ApplicationModel.Email",
+        "Windows.ApplicationModel.Search",
+        "Windows.ApplicationModel.UserDataAccounts",
+        "Windows.ApplicationModel.UserDataAccounts.Provider",
+        "Windows.ApplicationModel.UserDataTasks",
+        "Windows.ApplicationModel.Wallet",
+        "Windows.Data.Json",
+        "Windows.Data.Text",
+        "Windows.Data.Xml.Dom",
+        "Windows.Devices.Bluetooth",
+        "Windows.Devices.Bluetooth.Advertisement",
+        "Windows.Devices.Bluetooth.Background",
+        "Windows.Devices.Bluetooth.GenericAttributeProfile",
+        "Windows.Devices.Bluetooth.Rfcomm",
+        "Windows.Devices.Enumeration",
+        "Windows.Devices.Geolocation",
+        "Windows.Devices.Haptics",
+        "Windows.Devices.Input",
+        "Windows.Devices.Printers.Extensions",
+        "Windows.Devices.Radios",
+        "Windows.Devices.Sensors",
+        "Windows.Devices.SmartCards",
+        "Windows.Devices.Sms",
         "Windows.Foundation",
+        "Windows.Foundation.Collections",
+        "Windows.Foundation.Numerics",
+        "Windows.Globalization",
+        "Windows.Graphics",
+        "Windows.Graphics.DirectX",
+        "Windows.Graphics.Display",
+        "Windows.Graphics.Effects",
+        "Windows.Media.SpeechRecognition",
+        "Windows.Networking",
+        "Windows.Networking.Connectivity",
+        "Windows.Networking.Sockets",
+        "Windows.Security.Authentication.Web",
+        "Windows.Security.Authentication.Web.Core",
+        "Windows.Security.Authentication.Web.Provider",
+        "Windows.Security.Credentials",
+        "Windows.Security.Cryptography.Certificates",
+        "Windows.Security.Cryptography.Core",
+        "Windows.Security.EnterpriseData",
+        "Windows.Storage",
+        "Windows.Storage.FileProperties",
+        "Windows.Storage.Pickers.Provider",
+        "Windows.Storage.Provider",
+        "Windows.Storage.Search",
+        "Windows.Storage.Streams",
+        "Windows.System",
+        "Windows.System.Diagnostics",
+        "Windows.System.RemoteSystems",
+        "Windows.UI",
+        "Windows.UI.Composition",
+        "Windows.UI.Core",
+        "Windows.UI.Input",
+        "Windows.UI.Notifications",
+        "Windows.UI.Popups",
+        "Windows.UI.Text",
+        "Windows.UI.Text.Core",
+        "Windows.UI.ViewManagement",
+        "Windows.UI.WindowManagement",
+        "Windows.Web",
+        "Windows.Web.Http",
+        "Windows.Web.Http.Filters",
+        "Windows.Web.Http.Headers",
+    };
+
+    // Cross-namespace generic instantiation seeds (M4 Phase 4b/4c).
+    const bundle_seeds = [_]struct { ns: []const u8, seed: []const u8 }{
+        .{ .ns = "Windows.Foundation.Collections", .seed = "--seed=IVectorView`1,string" },
+        .{ .ns = "Windows.Foundation.Collections", .seed = "--seed=IIterable`1,string" },
+        .{ .ns = "Windows.Foundation.Collections", .seed = "--seed=IIterator`1,string" },
     };
 
     const bundle_wf = b.addWriteFiles();
     for (bundle_namespaces) |ns| {
         const gen_run = b.addRunArtifact(winbindgen_exe);
         if (arch_flag) |f| gen_run.addArg(f);
+        for (bundle_seeds) |s| {
+            if (std.mem.eql(u8, s.ns, ns)) gen_run.addArg(s.seed);
+        }
         gen_run.addArg(ns);
         const gen_source = gen_run.captureStdOut(.{});
         _ = bundle_wf.addCopyFile(gen_source, b.fmt("{s}.zig", .{ns}));
@@ -1121,6 +1202,8 @@ pub fn build(b: *std.Build) void {
         \\pub const Com = @import("Windows.Win32.System.Com.zig");
         \\pub const WinRT = struct {
         \\    pub const Foundation = @import("Windows.Foundation.zig");
+        \\    pub const Collections = @import("Windows.Foundation.Collections.zig");
+        \\    pub const Globalization = @import("Windows.Globalization.zig");
         \\};
         \\
     ;

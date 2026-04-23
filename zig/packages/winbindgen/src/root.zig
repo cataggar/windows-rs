@@ -1920,9 +1920,20 @@ pub fn emitInterfaceHandles(
         try writeIUnknownWrappers(writer, name, is_winrt);
 
         const methods = file.list(.type_def, row, 5, .method_def);
+        var seen_names: std.StringHashMapUnmanaged(u32) = .empty;
         var m = methods.start;
         while (m < methods.end) : (m += 1) {
-            try writeMethodWrapper(writer, arena, file, m, name, namespace, cross);
+            const raw_name = file.str(.method_def, m, 3);
+            const gop = try seen_names.getOrPut(arena, raw_name);
+            if (gop.found_existing) {
+                gop.value_ptr.* += 1;
+                // Generate a suffixed name for the overload.
+                const suffixed = try std.fmt.allocPrint(arena, "{s}_{d}", .{ raw_name, gop.value_ptr.* });
+                try writeMethodWrapper(writer, arena, file, m, name, namespace, cross, suffixed);
+            } else {
+                gop.value_ptr.* = 1;
+                try writeMethodWrapper(writer, arena, file, m, name, namespace, cross, null);
+            }
         }
 
         try writer.writeAll("};\n");
@@ -2021,8 +2032,17 @@ fn writeMethodWrapper(
     this_name: []const u8,
     current_namespace: []const u8,
     cross: *CrossNsSet,
+    name_override: ?[]const u8,
 ) !void {
-    const method_name = file.str(.method_def, method_row, 3);
+    const raw_method_name = file.str(.method_def, method_row, 3);
+    const method_name = name_override orelse raw_method_name;
+    // The vtbl field may be suffixed for overloads; use the raw name
+    // for overload index 1 and the override name for index 2+.
+    const vtbl_field_name = if (name_override) |ovr|
+        // Overloaded: vtbl field was emitted as @"Name_N"
+        ovr
+    else
+        raw_method_name;
     const sig_blob = file.blob(.method_def, method_row, 4);
     const sig = winmd.readMethodSignature(arena, file, sig_blob) catch return;
 
@@ -2044,7 +2064,7 @@ fn writeMethodWrapper(
         try writer.writeAll(", result: *");
         _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
     }
-    try writer.print(") callconv(.winapi) HRESULT {{\n        return self.vtable.{s}(self", .{method_name});
+    try writer.print(") callconv(.winapi) HRESULT {{\n        return self.vtable.@\"{s}\"(self", .{vtbl_field_name});
     for (sig.params, 0..) |_, i| {
         try writer.print(", p{d}", .{i});
     }
@@ -2091,7 +2111,7 @@ fn writeMethodWrapper(
                 try writer.print("        defer h{d}.deinit();\n", .{i});
             }
         }
-        try writer.print("        return self.vtable.{s}(self", .{method_name});
+        try writer.print("        return self.vtable.@\"{s}\"(self", .{vtbl_field_name});
         for (sig.params, 0..) |p, i| {
             if (p == .string) {
                 try writer.print(", h{d}.raw", .{i});
@@ -2121,7 +2141,7 @@ fn writeMethodWrapper(
         }
         try writer.writeAll(") !win_core.Hstring {\n");
         try writer.writeAll("        var r: HSTRING = null;\n");
-        try writer.print("        try win_core.hresult.ok(self.vtable.{s}(self", .{method_name});
+        try writer.print("        try win_core.hresult.ok(self.vtable.@\"{s}\"(self", .{vtbl_field_name});
         for (sig.params, 0..) |_, i| {
             try writer.print(", p{d}", .{i});
         }
@@ -3349,7 +3369,7 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
         out,
         "pub fn ToString(self: *const IStringable, result: *HSTRING) callconv(.winapi) HRESULT {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.ToString(self, result);") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.@\"ToString\"(self, result);") != null);
 
     // IUnknown wrappers reach the IUnknown slots at `vtable.base.base.*`
     // (IInspectable_Vtbl.base is IUnknown_Vtbl).
@@ -3405,7 +3425,7 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
         "var h0 = win_core.Hstring.create(p0) catch return @as(HRESULT, @bitCast(@as(u32, 0x8007000E)));",
     ) != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "defer h0.deinit();") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.CreateUri(self, h0.raw, result);") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.@\"CreateUri\"(self, h0.raw, result);") != null);
 
     // Methods with no HSTRING inputs (e.g. IStringable.ToString) should
     // NOT get a FromUtf16 companion — the sugar is opt-in by signature.
@@ -3426,7 +3446,7 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     try std.testing.expect(std.mem.indexOf(
         u8,
         out,
-        "try win_core.hresult.ok(self.vtable.ToString(self, &r));",
+        "try win_core.hresult.ok(self.vtable.@\"ToString\"(self, &r));",
     ) != null);
     try std.testing.expect(std.mem.indexOf(u8, out, "return win_core.Hstring.fromRaw(r);") != null);
 
@@ -3479,12 +3499,20 @@ pub fn emitRuntimeClasses(
         const vis = flags & VISIBILITY_MASK;
         if (vis != VIS_NOT_PUBLIC and vis != VIS_PUBLIC) continue;
         if ((flags & TYPE_ATTR_INTERFACE) != 0) continue;
+        if ((flags & winmd.TYPE_ATTR_WINDOWS_RUNTIME) == 0) continue;
 
         const extends_tok = file.cell(.type_def, row, 3);
         if (extends_tok == 0) continue;
+        // Accept any WinRT class regardless of base — derived classes
+        // (e.g. AnimationPropertyInfo : CompositionObject) need handles
+        // too. Skip non-class metadata types like attributes and
+        // contracts.
         const base = winmd.resolveTypeDefOrRefName(file, extends_tok) catch continue;
-        if (!std.mem.eql(u8, base.namespace, "System")) continue;
-        if (!std.mem.eql(u8, base.name, "Object")) continue;
+        // Attributes and API contracts extend System.Attribute /
+        // System.ValueType — not runtime-constructable classes.
+        if (std.mem.eql(u8, base.namespace, "System") and
+            !std.mem.eql(u8, base.name, "Object"))
+            continue;
 
         const name = file.str(.type_def, row, 1);
         if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
