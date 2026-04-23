@@ -155,7 +155,7 @@ Follow-on (not blocking closure):
 
 ### M4 — Parameterised generics
 
-**Status: planning (design critiqued, ready for phased bring-up).**
+**Status: Phase 4b landed (cross-namespace registry + instantiation emission).**
 
 **Design:**
 
@@ -219,19 +219,24 @@ Follow-on (not blocking closure):
    sits inert. When a consumer forces the issue, wire `emitNamespace`
    to drain the `GenericInstSet` and emit `<Mangled>` / `<Mangled>_Vtbl`
    structs.
-2. **Phase 4b — cross-namespace registry (deferred, premise invalid).**
-   Originally scoped to type `Windows.Foundation.Uri.QueryParsed`'s
-   return as `IVectorView\`1<WwwFormUrlDecoderEntry>`. A second probe
-   invalidated this too: `IUriRuntimeClass.QueryParsed` actually
-   returns `*WwwFormUrlDecoder` — a concrete runtime class, not a
-   closed-generic view. Across all of `Windows.Foundation` and
-   `Windows.Foundation.Collections` the only closed-generic sig
-   occurrence remains the `TypedEventHandler<…, object>` param on
-   `IMemoryBufferReference.add_Closed`. Cross-namespace fixpoint
-   iteration infrastructure is therefore unmotivated: there's nothing
-   in the current bundle's sigs for it to propagate. Revisit when a
-   sample directly consumes a WinRT surface that genuinely returns or
-   accepts a closed generic in its vtbl sig.
+2. **Phase 4b — cross-namespace generic instantiation registry
+   (landed).**  `isMangleableArg` now accepts `.class_name`,
+   `.value_name`, and `.object` args (with recursive nesting).
+   `writeArgMangle` encodes namespace-qualified args as
+   `Ns_Dotted_Name` (dots → underscores). `writeZigTy` lifts the
+   same-namespace gate: cross-namespace generics emit
+   `*@"<home-ns>".MangledName` and add the home namespace to the
+   `CrossNsSet` for `@import` generation.
+   `collectGenericInstantiations` scans all method sigs in a namespace
+   to discover same-home closed generics. `emitGenericInstantiations`
+   drains the set with a worklist-based fixpoint (max 64 iterations)
+   to handle transitive generics (e.g. `IVector<T>` → `IIterator<T>`).
+   `emitNamespaceEx` accepts optional `extra_insts` seeds for bundle
+   drivers to route cross-namespace instantiations.
+   The one same-namespace closed generic in the current corpus
+   (`TypedEventHandler`2<IMemoryBufferReference, object>` on
+   `IMemoryBufferReference.add_Closed`) now produces a typed handle
+   + vtbl instead of falling back to `*anyopaque`.
 3. **Phase 4c — `Calendar.Languages` shipped canary (deferred, depends
    on 4b).** Downstream of 4b. `IVectorView\`1<HSTRING>` is reached
    today via the open-generic `GetAt` on `IVectorView\`1` — which lives
@@ -272,10 +277,12 @@ Follow-on (not blocking closure):
 - **`std.Io` churn.** Zig 0.16's I/O interface shape is still
   settling. M5 should not ship a design that has to rewrite itself
   after the 0.17 release.
-- **Emitter re-entrance.** Generic instantiation (M4) needs a
-  per-file cache that survives across `emitNamespace` calls when a
-  method pulls a generic from a different namespace. The current
-  `CrossNsSet` only records namespace names, not instantiation keys.
+- **Emitter re-entrance (mitigated by Phase 4b).** Generic
+  instantiation now uses `collectGenericInstantiations` for
+  same-namespace discovery and `emitNamespaceEx` with `extra_insts`
+  for cross-namespace routing. The `CrossNsSet` records namespace
+  names for `@import`; the `GenericInstSet` tracks instantiation keys
+  separately. Bundle drivers coordinate cross-namespace seeds.
 - **`HSTRING` allocator ownership.** `win-core` uses no allocator
   today; `HSTRING` helpers probably shouldn't pull one in either.
   The raw `HSTRING` handle can travel; only the UTF-8 conversion
