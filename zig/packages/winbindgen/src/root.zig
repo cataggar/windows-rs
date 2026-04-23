@@ -4250,19 +4250,27 @@ test "Phase 4c canary: Calendar.Languages → IVectorView<HSTRING> end-to-end" {
     const col_out = col_buf.written();
 
     // The seeded handle + vtbl must be present.
-    try std.testing.expect(std.mem.indexOf(u8, col_out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        col_out,
         "pub const IVectorView__G1__HSTRING_Vtbl = extern struct {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, col_out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        col_out,
         "pub const IVectorView__G1__HSTRING = extern struct {",
     ) != null);
 
     // GetAt should reference HSTRING (substituted from VAR(0)).
-    try std.testing.expect(std.mem.indexOf(u8, col_out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        col_out,
         "GetAt:",
     ) != null);
     // The vtbl should have base: IInspectable_Vtbl (WinRT interface).
-    try std.testing.expect(std.mem.indexOf(u8, col_out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        col_out,
         "base: IInspectable_Vtbl",
     ) != null);
 
@@ -4279,10 +4287,14 @@ test "Phase 4c canary: Calendar.Languages → IVectorView<HSTRING> end-to-end" {
     const glob_out = glob_buf.written();
 
     // get_Languages should reference the cross-ns mangled type.
-    try std.testing.expect(std.mem.indexOf(u8, glob_out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        glob_out,
         "get_Languages:",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, glob_out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        glob_out,
         "@\"Windows.Foundation.Collections\".IVectorView__G1__HSTRING",
     ) != null);
 }
@@ -4303,10 +4315,14 @@ test "emitInterfaceVtblsImpl deduplicates overloaded method names" {
     try emitInterfaceVtbls(&buf.writer, arena.allocator(), &file, "Windows.Globalization");
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(u8, out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
         "TimeZoneAsString:",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out,
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
         "@\"TimeZoneAsString_2\":",
     ) != null);
 

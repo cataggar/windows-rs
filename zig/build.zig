@@ -1370,6 +1370,11 @@ pub fn build(b: *std.Build) void {
             .root = "samples/winrt_uri/main.zig",
             .needs_win = true,
         },
+        .{
+            .name = "winrt-calendar",
+            .root = "samples/winrt_calendar/main.zig",
+            .needs_win = true,
+        },
     };
 
     for (samples) |s| {
