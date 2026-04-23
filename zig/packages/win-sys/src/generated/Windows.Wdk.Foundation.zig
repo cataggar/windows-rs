@@ -1021,11 +1021,6 @@ pub const DRIVER_CONTROL = opaque {};
 pub const PIO_COMPLETION_ROUTINE = opaque {};
 pub const DRIVER_NOTIFICATION_CALLBACK_ROUTINE = opaque {};
 pub const DRIVER_REINITIALIZE = opaque {};
-pub const Apis = extern struct {
-    vtable: *const anyopaque,
-    pub const NAME: []const u8 = "Windows.Wdk.Foundation.Apis";
-    pub const NAME_W: [27]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 87, 100, 107, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 65, 112, 105, 115 };
-};
 pub extern "ntdll" fn NtQueryObject(p0: @"Windows.Win32.Foundation".HANDLE, p1: OBJECT_INFORMATION_CLASS, p2: *anyopaque, p3: u32, p4: *u32) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
 pub extern "ntdll" fn NtClose(p0: @"Windows.Win32.Foundation".HANDLE) callconv(.winapi) @"Windows.Win32.Foundation".NTSTATUS;
 pub const NTSTRSAFE_UNICODE_STRING_MAX_CCH: u32 = 32767;
