@@ -155,7 +155,10 @@ Follow-on (not blocking closure):
 
 ### M4 — Parameterised generics
 
-**Status: Phase 4b landed (cross-namespace registry + instantiation emission).**
+**Status: Phase 4a + 4b + 4c all landed. Phase 4c bundle ships
+`Windows.Globalization` + `Windows.Foundation.Collections` with typed
+cross-namespace closed generics; host-Windows and cross-arch
+(x86/x64/arm64) CI all exercise the same `winbindgen bundle` driver.**
 
 **Design:**
 
@@ -237,22 +240,37 @@ Follow-on (not blocking closure):
    (`TypedEventHandler`2<IMemoryBufferReference, object>` on
    `IMemoryBufferReference.add_Closed`) now produces a typed handle
    + vtbl instead of falling back to `*anyopaque`.
-3. **Phase 4c — `Calendar.Languages` canary (unit-tested, bundle
-   deferred).** Cross-namespace seeding verified end-to-end:
-   `emitNamespaceEx` with `--seed=IVectorView\`1,string` produces a
-   typed `IVectorView__G1__HSTRING` handle + vtbl in Collections with
-   substituted `GetAt` → `HSTRING` method signatures.
-   Globalization's emitted output references
-   `@"Windows.Foundation.Collections".IVectorView__G1__HSTRING`.
-   Method-overload dedup added to `emitInterfaceVtblsImpl` (suffixes
-   `_2`, `_3`, ... for duplicate names like `Clone`, `GetWords`,
-   `TimeZoneAsString`). CLI gains `--seed=<open_name>,<arg>,...` flag
-   and `parseSeed` for bundle-driver coordination.
-   Adding Globalization to the **runtime bundle** is deferred: the
-   transitive namespace closure problem (`Windows.System` →
-   `Windows.UI.ViewManagement` → ...) requires a namespace-closure
-   resolver or lazy import stubs before the bundle can absorb new
-   WinRT namespaces beyond Foundation.
+3. **Phase 4c — `Calendar.Languages` canary (landed end-to-end in
+   runtime bundle).** The bundle driver now discovers cross-namespace
+   closed generics automatically via `discoverCrossNsGenerics`
+   (a pre-pass over every namespace's method sigs), routes each
+   instantiation to its home namespace, and re-emits the home with
+   an `extra_insts` seed list. The hand-coded `--seed=` CLI flag is
+   retained for bundle-external callers but the bundle itself no
+   longer needs it.
+   `Windows.Globalization`, `Windows.Foundation`, and
+   `Windows.Foundation.Collections` are all in `bundle_namespaces`
+   in `build.zig`; the transitive namespace closure
+   (`Windows.System`, `Windows.UI.ViewManagement`, etc.) was walked
+   and absorbed without a lazy-import-stub mechanism — direct
+   inclusion in the bundle proved tractable.
+   `samples/winrt_calendar/main.zig` activates
+   `ApplicationLanguages`, calls `get_Languages`, and drives the
+   resulting `IVectorView<HSTRING>` through typed
+   `GetAt` / `get_Size` — all projection-side types come from the
+   winmd via auto-routing; no hand-written IID, vtable, or mangled
+   struct name appears in the sample.
+   Method-overload dedup added to `emitInterfaceVtblsImpl`
+   (suffixes `_2`, `_3`, ... for duplicate names like `Clone`,
+   `GetWords`, `TimeZoneAsString`).
+4. **Phase 4b cross-arch unification (landed, PR #8).** All four
+   compile-check paths in `build.zig` (host-Windows
+   `compile-check-bundle` and the x86/x64/arm64 cross-arch loop)
+   now use `winbindgen bundle --outdir`. Previously only the host
+   path exercised cross-ns auto-routing; cross-arch emitted each
+   namespace individually and accepted the weaker `*anyopaque`
+   fallback. A regression in cross-ns closed-generic routing now
+   surfaces on every target triple in CI.
 
 ### M5 — Async contracts (bridge to `std.Io`)
 
@@ -299,10 +317,13 @@ Follow-on (not blocking closure):
 
 ## Definition of done for v0.2
 
-- `sample_com_uri` runs on CI.
-- At least one WinRT sample (Calendar or Uri) runs on CI with full
-  `HSTRING` round-trip.
-- A `project()` example pulls in a WinRT runtime class and calls a
-  method, under a gated config.
-- `docs/comptime-vs-codegen.md` updated with the WinRT cap numbers.
-- This file is rewritten as a changelog, not a plan.
+- [x] `sample_com_uri` runs on CI.
+- [x] At least one WinRT sample (Calendar or Uri) runs on CI with
+  full `HSTRING` round-trip. — `winrt_uri` and `winrt_calendar` both
+  run in `samples` step; `winrt_calendar` additionally drives a
+  cross-namespace closed-generic `IVectorView<HSTRING>`.
+- [ ] A `project()` example pulls in a WinRT runtime class and calls
+  a method, under a gated config. — **M6.**
+- [ ] `docs/comptime-vs-codegen.md` updated with the WinRT cap
+  numbers. — **pending M6.**
+- [ ] This file is rewritten as a changelog, not a plan.
