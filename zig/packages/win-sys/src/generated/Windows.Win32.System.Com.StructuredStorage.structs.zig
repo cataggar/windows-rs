@@ -22,6 +22,7 @@ pub const RemSNB = extern struct {
     ulCntChar: u32,
     rgString: [1]u16,
 };
+pub const VERSIONEDSTREAM = opaque {};
 pub const CAC = extern struct {
     cElems: u32,
     pElems: @"Windows.Win32.Foundation".PSTR,
@@ -78,6 +79,7 @@ pub const CASCODE = extern struct {
     cElems: u32,
     pElems: *i32,
 };
+pub const CAPROPVARIANT = opaque {};
 pub const CAH = extern struct {
     cElems: u32,
     pElems: *i64,
@@ -106,11 +108,12 @@ pub const CACLSID = extern struct {
     cElems: u32,
     pElems: *GUID,
 };
+pub const PROPVARIANT = opaque {};
 pub const PROPSPEC = extern struct {
-pub const PROPSPEC_0 = extern union {
-    propid: u32,
-    lpwstr: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PROPSPEC_0 = extern union {
+        propid: u32,
+        lpwstr: @"Windows.Win32.Foundation".PWSTR,
+    };
     ulKind: u32,
     Anonymous: PROPSPEC_0,
 };

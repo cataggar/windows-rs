@@ -77,6 +77,7 @@ pub const DWRITE_SHAPING_TEXT_PROPERTIES = extern struct {
 pub const DWRITE_SHAPING_GLYPH_PROPERTIES = extern struct {
     _bitfield: u16,
 };
+pub const DWRITE_GLYPH_RUN = opaque {};
 pub const DWRITE_GLYPH_RUN_DESCRIPTION = extern struct {
     localeName: @"Windows.Win32.Foundation".PWSTR,
     string: @"Windows.Win32.Foundation".PWSTR,
@@ -172,54 +173,54 @@ pub const DWRITE_CARET_METRICS = extern struct {
     offset: i16,
 };
 pub const DWRITE_PANOSE = extern union {
-pub const _text_e__Struct = extern struct {
-    familyKind: u8,
-    serifStyle: u8,
-    weight: u8,
-    proportion: u8,
-    contrast: u8,
-    strokeVariation: u8,
-    armStyle: u8,
-    letterform: u8,
-    midline: u8,
-    xHeight: u8,
-};
-pub const _script_e__Struct = extern struct {
-    familyKind: u8,
-    toolKind: u8,
-    weight: u8,
-    spacing: u8,
-    aspectRatio: u8,
-    contrast: u8,
-    scriptTopology: u8,
-    scriptForm: u8,
-    finials: u8,
-    xAscent: u8,
-};
-pub const _decorative_e__Struct = extern struct {
-    familyKind: u8,
-    decorativeClass: u8,
-    weight: u8,
-    aspect: u8,
-    contrast: u8,
-    serifVariant: u8,
-    fill: u8,
-    lining: u8,
-    decorativeTopology: u8,
-    characterRange: u8,
-};
-pub const _symbol_e__Struct = extern struct {
-    familyKind: u8,
-    symbolKind: u8,
-    weight: u8,
-    spacing: u8,
-    aspectRatioAndContrast: u8,
-    aspectRatio94: u8,
-    aspectRatio119: u8,
-    aspectRatio157: u8,
-    aspectRatio163: u8,
-    aspectRatio211: u8,
-};
+    pub const _text_e__Struct = extern struct {
+        familyKind: u8,
+        serifStyle: u8,
+        weight: u8,
+        proportion: u8,
+        contrast: u8,
+        strokeVariation: u8,
+        armStyle: u8,
+        letterform: u8,
+        midline: u8,
+        xHeight: u8,
+    };
+    pub const _script_e__Struct = extern struct {
+        familyKind: u8,
+        toolKind: u8,
+        weight: u8,
+        spacing: u8,
+        aspectRatio: u8,
+        contrast: u8,
+        scriptTopology: u8,
+        scriptForm: u8,
+        finials: u8,
+        xAscent: u8,
+    };
+    pub const _decorative_e__Struct = extern struct {
+        familyKind: u8,
+        decorativeClass: u8,
+        weight: u8,
+        aspect: u8,
+        contrast: u8,
+        serifVariant: u8,
+        fill: u8,
+        lining: u8,
+        decorativeTopology: u8,
+        characterRange: u8,
+    };
+    pub const _symbol_e__Struct = extern struct {
+        familyKind: u8,
+        symbolKind: u8,
+        weight: u8,
+        spacing: u8,
+        aspectRatioAndContrast: u8,
+        aspectRatio94: u8,
+        aspectRatio119: u8,
+        aspectRatio157: u8,
+        aspectRatio163: u8,
+        aspectRatio211: u8,
+    };
     values: [10]u8,
     familyKind: u8,
     text: _text_e__Struct,
@@ -248,6 +249,7 @@ pub const DWRITE_TEXT_METRICS1 = extern struct {
     Base: DWRITE_TEXT_METRICS,
     heightIncludingTrailingWhitespace: f32,
 };
+pub const DWRITE_COLOR_GLYPH_RUN = opaque {};
 pub const DWRITE_FONT_PROPERTY = extern struct {
     propertyId: i32,
     propertyValue: @"Windows.Win32.Foundation".PWSTR,
@@ -265,6 +267,7 @@ pub const DWRITE_LINE_SPACING = extern struct {
     leadingBefore: f32,
     fontLineGapUsage: i32,
 };
+pub const DWRITE_COLOR_GLYPH_RUN1 = opaque {};
 pub const DWRITE_GLYPH_IMAGE_DATA = extern struct {
     imageData: *anyopaque,
     imageDataSize: u32,
@@ -301,63 +304,63 @@ pub const DWRITE_PAINT_COLOR = extern struct {
     colorAttributes: i32,
 };
 pub const DWRITE_PAINT_ELEMENT = extern struct {
-pub const PAINT_UNION = extern union {
-pub const PAINT_LAYERS = extern struct {
-    childCount: u32,
-};
-pub const PAINT_SOLID_GLYPH = extern struct {
-    glyphIndex: u32,
-    color: DWRITE_PAINT_COLOR,
-};
-pub const PAINT_LINEAR_GRADIENT = extern struct {
-    extendMode: u32,
-    gradientStopCount: u32,
-    x0: f32,
-    y0: f32,
-    x1: f32,
-    y1: f32,
-    x2: f32,
-    y2: f32,
-};
-pub const PAINT_RADIAL_GRADIENT = extern struct {
-    extendMode: u32,
-    gradientStopCount: u32,
-    x0: f32,
-    y0: f32,
-    radius0: f32,
-    x1: f32,
-    y1: f32,
-    radius1: f32,
-};
-pub const PAINT_SWEEP_GRADIENT = extern struct {
-    extendMode: u32,
-    gradientStopCount: u32,
-    centerX: f32,
-    centerY: f32,
-    startAngle: f32,
-    endAngle: f32,
-};
-pub const PAINT_GLYPH = extern struct {
-    glyphIndex: u32,
-};
-pub const PAINT_COLOR_GLYPH = extern struct {
-    glyphIndex: u32,
-    clipBox: @"Windows.Win32.Graphics.Direct2D.Common".D2D_RECT_F,
-};
-pub const PAINT_COMPOSITE = extern struct {
-    mode: i32,
-};
-    layers: PAINT_LAYERS,
-    solidGlyph: PAINT_SOLID_GLYPH,
-    solid: DWRITE_PAINT_COLOR,
-    linearGradient: PAINT_LINEAR_GRADIENT,
-    radialGradient: PAINT_RADIAL_GRADIENT,
-    sweepGradient: PAINT_SWEEP_GRADIENT,
-    glyph: PAINT_GLYPH,
-    colorGlyph: PAINT_COLOR_GLYPH,
-    transform: DWRITE_MATRIX,
-    composite: PAINT_COMPOSITE,
-};
+    pub const PAINT_UNION = extern union {
+        pub const PAINT_LAYERS = extern struct {
+            childCount: u32,
+        };
+        pub const PAINT_SOLID_GLYPH = extern struct {
+            glyphIndex: u32,
+            color: DWRITE_PAINT_COLOR,
+        };
+        pub const PAINT_LINEAR_GRADIENT = extern struct {
+            extendMode: u32,
+            gradientStopCount: u32,
+            x0: f32,
+            y0: f32,
+            x1: f32,
+            y1: f32,
+            x2: f32,
+            y2: f32,
+        };
+        pub const PAINT_RADIAL_GRADIENT = extern struct {
+            extendMode: u32,
+            gradientStopCount: u32,
+            x0: f32,
+            y0: f32,
+            radius0: f32,
+            x1: f32,
+            y1: f32,
+            radius1: f32,
+        };
+        pub const PAINT_SWEEP_GRADIENT = extern struct {
+            extendMode: u32,
+            gradientStopCount: u32,
+            centerX: f32,
+            centerY: f32,
+            startAngle: f32,
+            endAngle: f32,
+        };
+        pub const PAINT_GLYPH = extern struct {
+            glyphIndex: u32,
+        };
+        pub const PAINT_COLOR_GLYPH = extern struct {
+            glyphIndex: u32,
+            clipBox: @"Windows.Win32.Graphics.Direct2D.Common".D2D_RECT_F,
+        };
+        pub const PAINT_COMPOSITE = extern struct {
+            mode: i32,
+        };
+        layers: PAINT_LAYERS,
+        solidGlyph: PAINT_SOLID_GLYPH,
+        solid: DWRITE_PAINT_COLOR,
+        linearGradient: PAINT_LINEAR_GRADIENT,
+        radialGradient: PAINT_RADIAL_GRADIENT,
+        sweepGradient: PAINT_SWEEP_GRADIENT,
+        glyph: PAINT_GLYPH,
+        colorGlyph: PAINT_COLOR_GLYPH,
+        transform: DWRITE_MATRIX,
+        composite: PAINT_COMPOSITE,
+    };
     paintType: i32,
     paint: PAINT_UNION,
 };

@@ -9,6 +9,7 @@ const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zi
 const @"Windows.Win32.Graphics.Dxgi.Common" = @import("Windows.Win32.Graphics.Dxgi.Common.structs.zig");
 const @"Windows.Win32.Graphics.Gdi" = @import("Windows.Win32.Graphics.Gdi.structs.zig");
 
+pub const AM_MEDIA_TYPE = opaque {};
 pub const CodecAPIEventData = extern struct {
     guid: GUID,
     dataLength: u32,
@@ -29,10 +30,10 @@ pub const MPEG1VIDEOINFO = extern struct {
     bSequenceHeader: [1]u8,
 };
 pub const VIDEOINFOHEADER2 = extern struct {
-pub const VIDEOINFOHEADER2_0 = extern union {
-    dwControlFlags: u32,
-    dwReserved1: u32,
-};
+    pub const VIDEOINFOHEADER2_0 = extern union {
+        dwControlFlags: u32,
+        dwReserved1: u32,
+    };
     rcSource: @"Windows.Win32.Foundation".RECT,
     rcTarget: @"Windows.Win32.Foundation".RECT,
     dwBitRate: u32,
@@ -254,6 +255,11 @@ pub const D3D12_VIDEO_DECODE_FRAME_ARGUMENT = extern struct {
     Size: u32,
     pData: *anyopaque,
 };
+pub const D3D12_VIDEO_DECODE_REFERENCE_FRAMES = opaque {};
+pub const D3D12_VIDEO_DECODE_COMPRESSED_BITSTREAM = opaque {};
+pub const D3D12_VIDEO_DECODE_CONVERSION_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_DECODE_INPUT_STREAM_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_DECODE_OUTPUT_STREAM_ARGUMENTS = opaque {};
 pub const D3D12_VIDEO_PROCESS_FILTER_RANGE = extern struct {
     Minimum: i32,
     Maximum: i32,
@@ -292,6 +298,7 @@ pub const D3D12_FEATURE_DATA_VIDEO_PROCESS_REFERENCE_INFO = extern struct {
     PastFrames: u32,
     FutureFrames: u32,
 };
+pub const D3D12_VIDEO_PROCESS_REFERENCE_SET = opaque {};
 pub const D3D12_VIDEO_PROCESS_TRANSFORM = extern struct {
     SourceRectangle: @"Windows.Win32.Foundation".RECT,
     DestinationRectangle: @"Windows.Win32.Foundation".RECT,
@@ -301,6 +308,14 @@ pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_RATE = extern struct {
     OutputIndex: u32,
     InputFrameOrField: u32,
 };
+pub const D3D12_VIDEO_PROCESS_INPUT_STREAM = opaque {};
+pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_PROCESS_OUTPUT_STREAM = opaque {};
+pub const D3D12_VIDEO_PROCESS_OUTPUT_STREAM_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_DECODE_OUTPUT_HISTOGRAM = opaque {};
+pub const D3D12_VIDEO_DECODE_CONVERSION_ARGUMENTS1 = opaque {};
+pub const D3D12_VIDEO_DECODE_OUTPUT_STREAM_ARGUMENTS1 = opaque {};
+pub const D3D12_VIDEO_PROCESS_INPUT_STREAM_ARGUMENTS1 = opaque {};
 pub const D3D12_FEATURE_DATA_VIDEO_FEATURE_AREA_SUPPORT = extern struct {
     NodeIndex: u32,
     VideoDecodeSupport: @"Windows.Win32.Foundation".BOOL,
@@ -346,6 +361,10 @@ pub const D3D12_RESOURCE_COORDINATE = extern struct {
     Z: u32,
     SubresourceIndex: u32,
 };
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_OUTPUT = opaque {};
+pub const D3D12_VIDEO_MOTION_ESTIMATOR_INPUT = opaque {};
+pub const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_OUTPUT = opaque {};
+pub const D3D12_RESOLVE_VIDEO_MOTION_VECTOR_HEAP_INPUT = opaque {};
 pub const D3D12_FEATURE_DATA_VIDEO_DECODE_PROTECTED_RESOURCES = extern struct {
     NodeIndex: u32,
     Configuration: D3D12_VIDEO_DECODE_CONFIGURATION,
@@ -648,17 +667,17 @@ pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_ABSOLUTE_QP_MAP = extern struct {
     QualityVsSpeed: u32,
 };
 pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_CONFIGURATION_PARAMS = extern struct {
-pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_CONFIGURATION_PARAMS_0 = extern union {
-    pConfiguration_CQP: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CQP,
-    pConfiguration_CBR: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CBR,
-    pConfiguration_VBR: *D3D12_VIDEO_ENCODER_RATE_CONTROL_VBR,
-    pConfiguration_QVBR: *D3D12_VIDEO_ENCODER_RATE_CONTROL_QVBR,
-    pConfiguration_CQP1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CQP1,
-    pConfiguration_CBR1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CBR1,
-    pConfiguration_VBR1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_VBR1,
-    pConfiguration_QVBR1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_QVBR1,
-    pConfiguration_AbsoluteQPMap: *D3D12_VIDEO_ENCODER_RATE_CONTROL_ABSOLUTE_QP_MAP,
-};
+    pub const D3D12_VIDEO_ENCODER_RATE_CONTROL_CONFIGURATION_PARAMS_0 = extern union {
+        pConfiguration_CQP: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CQP,
+        pConfiguration_CBR: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CBR,
+        pConfiguration_VBR: *D3D12_VIDEO_ENCODER_RATE_CONTROL_VBR,
+        pConfiguration_QVBR: *D3D12_VIDEO_ENCODER_RATE_CONTROL_QVBR,
+        pConfiguration_CQP1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CQP1,
+        pConfiguration_CBR1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_CBR1,
+        pConfiguration_VBR1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_VBR1,
+        pConfiguration_QVBR1: *D3D12_VIDEO_ENCODER_RATE_CONTROL_QVBR1,
+        pConfiguration_AbsoluteQPMap: *D3D12_VIDEO_ENCODER_RATE_CONTROL_ABSOLUTE_QP_MAP,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_RATE_CONTROL_CONFIGURATION_PARAMS_0,
 };
@@ -674,11 +693,11 @@ pub const D3D12_FEATURE_DATA_VIDEO_ENCODER_CODEC = extern struct {
     IsSupported: @"Windows.Win32.Foundation".BOOL,
 };
 pub const D3D12_VIDEO_ENCODER_PROFILE_DESC = extern struct {
-pub const D3D12_VIDEO_ENCODER_PROFILE_DESC_0 = extern union {
-    pH264Profile: *i32,
-    pHEVCProfile: *i32,
-    pAV1Profile: *i32,
-};
+    pub const D3D12_VIDEO_ENCODER_PROFILE_DESC_0 = extern union {
+        pH264Profile: *i32,
+        pHEVCProfile: *i32,
+        pAV1Profile: *i32,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_PROFILE_DESC_0,
 };
@@ -687,11 +706,11 @@ pub const D3D12_VIDEO_ENCODER_LEVEL_TIER_CONSTRAINTS_HEVC = extern struct {
     Tier: i32,
 };
 pub const D3D12_VIDEO_ENCODER_LEVEL_SETTING = extern struct {
-pub const D3D12_VIDEO_ENCODER_LEVEL_SETTING_0 = extern union {
-    pH264LevelSetting: *i32,
-    pHEVCLevelSetting: *D3D12_VIDEO_ENCODER_LEVEL_TIER_CONSTRAINTS_HEVC,
-    pAV1LevelSetting: *D3D12_VIDEO_ENCODER_AV1_LEVEL_TIER_CONSTRAINTS,
-};
+    pub const D3D12_VIDEO_ENCODER_LEVEL_SETTING_0 = extern union {
+        pH264LevelSetting: *i32,
+        pHEVCLevelSetting: *D3D12_VIDEO_ENCODER_LEVEL_TIER_CONSTRAINTS_HEVC,
+        pAV1LevelSetting: *D3D12_VIDEO_ENCODER_AV1_LEVEL_TIER_CONSTRAINTS,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_LEVEL_SETTING_0,
 };
@@ -771,9 +790,9 @@ pub const D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT = extern
     TileSizeBytesMinus1: u32,
 };
 pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT = extern struct {
-pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT_0 = extern union {
-    pAV1Support: *D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT,
-};
+    pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT_0 = extern union {
+        pAV1Support: *D3D12_VIDEO_ENCODER_AV1_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_CONFIG_SUPPORT_0,
 };
@@ -833,12 +852,12 @@ pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC1 = extern struct 
     SupportFlags1: i32,
 };
 pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT = extern struct {
-pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_0 = extern union {
-    pH264Support: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264,
-    pHEVCSupport: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC,
-    pHEVCSupport1: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC1,
-    pAV1Support: *D3D12_VIDEO_ENCODER_AV1_CODEC_CONFIGURATION_SUPPORT,
-};
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_0 = extern union {
+        pH264Support: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264,
+        pHEVCSupport: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC,
+        pHEVCSupport1: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC1,
+        pAV1Support: *D3D12_VIDEO_ENCODER_AV1_CODEC_CONFIGURATION_SUPPORT,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_0,
 };
@@ -864,11 +883,11 @@ pub const D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_HEVC = extern struct
     MaxDPBCapacity: u32,
 };
 pub const D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT = extern struct {
-pub const D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_0 = extern union {
-    pH264Support: *D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_H264,
-    pHEVCSupport: *D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_HEVC,
-    pAV1Support: *D3D12_VIDEO_ENCODER_CODEC_AV1_PICTURE_CONTROL_SUPPORT,
-};
+    pub const D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_0 = extern union {
+        pH264Support: *D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_H264,
+        pHEVCSupport: *D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_HEVC,
+        pAV1Support: *D3D12_VIDEO_ENCODER_CODEC_AV1_PICTURE_CONTROL_SUPPORT,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT_0,
 };
@@ -894,11 +913,11 @@ pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC = extern struct {
     max_transform_hierarchy_depth_intra: u8,
 };
 pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION = extern struct {
-pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_0 = extern union {
-    pH264Config: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264,
-    pHEVCConfig: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC,
-    pAV1Config: *D3D12_VIDEO_ENCODER_AV1_CODEC_CONFIGURATION,
-};
+    pub const D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_0 = extern union {
+        pH264Config: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264,
+        pHEVCConfig: *D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC,
+        pAV1Config: *D3D12_VIDEO_ENCODER_AV1_CODEC_CONFIGURATION,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_0,
 };
@@ -925,11 +944,11 @@ pub const D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_HEVC = extern struct {
     log2_max_pic_order_cnt_lsb_minus4: u8,
 };
 pub const D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE = extern struct {
-pub const D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_0 = extern union {
-    pH264GroupOfPictures: *D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_H264,
-    pHEVCGroupOfPictures: *D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_HEVC,
-    pAV1SequenceStructure: *D3D12_VIDEO_ENCODER_AV1_SEQUENCE_STRUCTURE,
-};
+    pub const D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_0 = extern union {
+        pH264GroupOfPictures: *D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_H264,
+        pHEVCGroupOfPictures: *D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_HEVC,
+        pAV1SequenceStructure: *D3D12_VIDEO_ENCODER_AV1_SEQUENCE_STRUCTURE,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE_0,
 };
@@ -952,20 +971,20 @@ pub const D3D12_FEATURE_DATA_VIDEO_ENCODER_SUPPORT = extern struct {
     pResolutionDependentSupport: *D3D12_FEATURE_DATA_VIDEO_ENCODER_RESOLUTION_SUPPORT_LIMITS,
 };
 pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES = extern struct {
-pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES_0 = extern union {
-    MaxBytesPerSlice: u32,
-    NumberOfCodingUnitsPerSlice: u32,
-    NumberOfRowsPerSlice: u32,
-    NumberOfSlicesPerFrame: u32,
-};
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES_0 = extern union {
+        MaxBytesPerSlice: u32,
+        NumberOfCodingUnitsPerSlice: u32,
+        NumberOfRowsPerSlice: u32,
+        NumberOfSlicesPerFrame: u32,
+    };
     Anonymous: D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES_0,
 };
 pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA = extern struct {
-pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_0 = extern union {
-    pSlicesPartition_H264: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES,
-    pSlicesPartition_HEVC: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES,
-    pTilesPartition_AV1: *D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_TILES,
-};
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_0 = extern union {
+        pSlicesPartition_H264: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES,
+        pSlicesPartition_HEVC: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_SLICES,
+        pTilesPartition_AV1: *D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_TILES,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA_0,
 };
@@ -1106,15 +1125,17 @@ pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC1 = extern struct {
     cr_qp_offset_list: [6]@"Windows.Win32.Foundation".CHAR,
 };
 pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA = extern struct {
-pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_0 = extern union {
-    pH264PicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264,
-    pHEVCPicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC,
-    pHEVCPicData1: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC1,
-    pAV1PicData: *D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_CODEC_DATA,
-};
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_0 = extern union {
+        pH264PicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264,
+        pHEVCPicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC,
+        pHEVCPicData1: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC1,
+        pAV1PicData: *D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_CODEC_DATA,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_0,
 };
+pub const D3D12_VIDEO_ENCODE_REFERENCE_FRAMES = opaque {};
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_DESC = opaque {};
 pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_DESC = extern struct {
     Flags: i32,
     IntraRefreshConfig: D3D12_VIDEO_ENCODER_INTRA_REFRESH,
@@ -1124,6 +1145,9 @@ pub const D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_DESC = extern struct {
     FrameSubregionsLayoutData: D3D12_VIDEO_ENCODER_PICTURE_CONTROL_SUBREGIONS_LAYOUT_DATA,
     CodecGopSequence: D3D12_VIDEO_ENCODER_SEQUENCE_GOP_STRUCTURE,
 };
+pub const D3D12_VIDEO_ENCODER_ENCODEFRAME_INPUT_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_ENCODER_COMPRESSED_BITSTREAM = opaque {};
+pub const D3D12_VIDEO_ENCODER_RECONSTRUCTED_PICTURE = opaque {};
 pub const D3D12_VIDEO_ENCODER_FRAME_SUBREGION_METADATA = extern struct {
     bSize: u64,
     bStartOffset: u64,
@@ -1143,6 +1167,10 @@ pub const D3D12_VIDEO_ENCODER_OUTPUT_METADATA = extern struct {
     EncodedBitstreamWrittenBytesCount: u64,
     WrittenSubregionsCount: u64,
 };
+pub const D3D12_VIDEO_ENCODER_ENCODE_OPERATION_METADATA_BUFFER = opaque {};
+pub const D3D12_VIDEO_ENCODER_RESOLVE_METADATA_INPUT_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_ENCODER_RESOLVE_METADATA_OUTPUT_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_ENCODER_ENCODEFRAME_OUTPUT_ARGUMENTS = opaque {};
 pub const D3D12_VIDEO_ENCODER_HEAP_DESC1 = extern struct {
     NodeMask: u32,
     Flags: i32,
@@ -1323,6 +1351,8 @@ pub const D3D12_VIDEO_ENCODER_DIRTY_RECT_INFO = extern struct {
     pDirtyRects: *@"Windows.Win32.Foundation".RECT,
     SourceDPBFrameReference: u32,
 };
+pub const D3D12_VIDEO_ENCODER_DIRTY_REGIONS = opaque {};
+pub const D3D12_VIDEO_ENCODER_QUANTIZATION_OPAQUE_MAP = opaque {};
 pub const D3D12_VIDEO_ENCODER_FRAME_MOTION_SEARCH_MODE_CONFIG = extern struct {
     MotionSearchMode: i32,
     SearchDeviationLimit: u32,
@@ -1339,6 +1369,7 @@ pub const D3D12_VIDEO_ENCODER_MOVEREGION_INFO = extern struct {
     MotionUnitPrecision: i32,
     Flags: i32,
 };
+pub const D3D12_VIDEO_ENCODER_FRAME_MOTION_VECTORS = opaque {};
 pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC2 = extern struct {
     Flags: i32,
     FrameType: i32,
@@ -1368,14 +1399,28 @@ pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC2 = extern struct {
     num_ref_idx_l1_active_minus1: u32,
 };
 pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA1 = extern struct {
-pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA1_0 = extern union {
-    pH264PicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264,
-    pHEVCPicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC2,
-    pAV1PicData: *D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_CODEC_DATA,
-};
+    pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA1_0 = extern union {
+        pH264PicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264,
+        pHEVCPicData: *D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC2,
+        pAV1PicData: *D3D12_VIDEO_ENCODER_AV1_PICTURE_CONTROL_CODEC_DATA,
+    };
     DataSize: u32,
     Anonymous: D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA1_0,
 };
+pub const D3D12_VIDEO_ENCODER_FRAME_ANALYSIS = opaque {};
+pub const D3D12_VIDEO_ENCODER_PICTURE_CONTROL_DESC1 = opaque {};
+pub const D3D12_VIDEO_ENCODER_ENCODEFRAME_INPUT_ARGUMENTS1 = opaque {};
+pub const D3D12_VIDEO_ENCODER_SUBREGION_COMPRESSED_BITSTREAM = opaque {};
+pub const D3D12_VIDEO_ENCODER_COMPRESSED_BITSTREAM1 = opaque {};
+pub const D3D12_VIDEO_ENCODER_ENCODEFRAME_OUTPUT_ARGUMENTS1 = opaque {};
+pub const D3D12_VIDEO_ENCODER_RESOLVE_METADATA_INPUT_ARGUMENTS1 = opaque {};
+pub const D3D12_VIDEO_ENCODER_RESOLVE_METADATA_OUTPUT_ARGUMENTS1 = opaque {};
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_DATA_QUANTIZATION_MATRIX = opaque {};
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_DATA_DIRTY_REGIONS = opaque {};
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_DATA_MOTION_VECTORS = opaque {};
+pub const D3D12_VIDEO_ENCODER_INPUT_MAP_DATA = opaque {};
+pub const D3D12_VIDEO_ENCODER_RESOLVE_INPUT_PARAM_LAYOUT_INPUT_ARGUMENTS = opaque {};
+pub const D3D12_VIDEO_ENCODER_RESOLVE_INPUT_PARAM_LAYOUT_OUTPUT_ARGUMENTS = opaque {};
 pub const AecQualityMetrics_Struct = extern struct {
     i64Timestamp: i64,
     ConvergenceFlag: u8,
@@ -1546,6 +1591,7 @@ pub const DXVA_DeinterlaceBlt = extern struct {
     Alpha: f32,
     Source: [32]DXVA_VideoSample,
 };
+pub const DXVA_DeinterlaceBltEx = opaque {};
 pub const DXVA_DeinterlaceQueryAvailableModes = extern struct {
     Size: u32,
     NumGuids: u32,
@@ -1677,13 +1723,13 @@ pub const DXVAHD_BLT_STATE_BACKGROUND_COLOR_DATA = extern struct {
     BackgroundColor: DXVAHD_COLOR,
 };
 pub const DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA = extern struct {
-pub const DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0 = extern union {
-pub const DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0_0,
-    Value: u32,
-};
+    pub const DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0 = extern union {
+        pub const DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0_0,
+        Value: u32,
+    };
     Anonymous: DXVAHD_BLT_STATE_OUTPUT_COLOR_SPACE_DATA_0,
 };
 pub const DXVAHD_BLT_STATE_ALPHA_FILL_DATA = extern struct {
@@ -1706,13 +1752,13 @@ pub const DXVAHD_STREAM_STATE_FRAME_FORMAT_DATA = extern struct {
     FrameFormat: i32,
 };
 pub const DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA = extern struct {
-pub const DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0 = extern union {
-pub const DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0_0,
-    Value: u32,
-};
+    pub const DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0 = extern union {
+        pub const DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0_0,
+        Value: u32,
+    };
     Anonymous: DXVAHD_STREAM_STATE_INPUT_COLOR_SPACE_DATA_0,
 };
 pub const DXVAHD_STREAM_STATE_OUTPUT_RATE_DATA = extern struct {
@@ -1755,6 +1801,7 @@ pub const DXVAHD_STREAM_STATE_PRIVATE_DATA = extern struct {
     DataSize: u32,
     pData: *anyopaque,
 };
+pub const DXVAHD_STREAM_DATA = opaque {};
 pub const DXVAHD_STREAM_STATE_PRIVATE_IVTC_DATA = extern struct {
     Enable: @"Windows.Win32.Foundation".BOOL,
     ITelecineFlags: u32,
@@ -1825,13 +1872,13 @@ pub const DXVAHDETW_DESTROYVIDEOPROCESSOR = extern struct {
     pObject: u64,
 };
 pub const DXVA2_ExtendedFormat = extern struct {
-pub const DXVA2_ExtendedFormat_0 = extern union {
-pub const DXVA2_ExtendedFormat_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: DXVA2_ExtendedFormat_0_0,
-    value: u32,
-};
+    pub const DXVA2_ExtendedFormat_0 = extern union {
+        pub const DXVA2_ExtendedFormat_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: DXVA2_ExtendedFormat_0_0,
+        value: u32,
+    };
     Anonymous: DXVA2_ExtendedFormat_0,
 };
 pub const DXVA2_Frequency = extern struct {
@@ -1861,14 +1908,14 @@ pub const DXVA2_VideoProcessorCaps = extern struct {
     DetailFilterTechnology: u32,
 };
 pub const DXVA2_Fixed32 = extern struct {
-pub const DXVA2_Fixed32_0 = extern union {
-pub const DXVA2_Fixed32_0_0 = extern struct {
-    Fraction: u16,
-    Value: i16,
-};
-    Anonymous: DXVA2_Fixed32_0_0,
-    ll: i32,
-};
+    pub const DXVA2_Fixed32_0 = extern union {
+        pub const DXVA2_Fixed32_0_0 = extern struct {
+            Fraction: u16,
+            Value: i16,
+        };
+        Anonymous: DXVA2_Fixed32_0_0,
+        ll: i32,
+    };
     Anonymous: DXVA2_Fixed32_0,
 };
 pub const DXVA2_AYUVSample8 = extern struct {
@@ -1883,6 +1930,7 @@ pub const DXVA2_AYUVSample16 = extern struct {
     Y: u16,
     Alpha: u16,
 };
+pub const DXVA2_VideoSample = opaque {};
 pub const DXVA2_ValueRange = extern struct {
     MinValue: DXVA2_Fixed32,
     MaxValue: DXVA2_Fixed32,
@@ -2156,6 +2204,7 @@ pub const MFT_OUTPUT_STREAM_INFO = extern struct {
     cbSize: u32,
     cbAlignment: u32,
 };
+pub const MFT_OUTPUT_DATA_BUFFER = opaque {};
 pub const STREAM_MEDIUM = extern struct {
     gidMedium: GUID,
     unMediumInstance: u32,
@@ -2197,11 +2246,11 @@ pub const ASF_FLAT_SYNCHRONISED_LYRICS = extern struct {
     dwLyricsLen: u32,
 };
 pub const MFTOPONODE_ATTRIBUTE_UPDATE = extern struct {
-pub const MFTOPONODE_ATTRIBUTE_UPDATE_0 = extern union {
-    u32: u32,
-    u64: u64,
-    d: f64,
-};
+    pub const MFTOPONODE_ATTRIBUTE_UPDATE_0 = extern union {
+        u32: u32,
+        u64: u64,
+        d: f64,
+    };
     NodeId: u64,
     guidAttributeKey: GUID,
     attrType: i32,
@@ -2250,6 +2299,7 @@ pub const MFINPUTTRUSTAUTHORITY_ACCESS_PARAMS = extern struct {
     cActions: u32,
     rgOutputActions: [1]MFINPUTTRUSTAUTHORITY_ACCESS_ACTION,
 };
+pub const MF_TRANSCODE_SINK_INFO = opaque {};
 pub const MFT_REGISTRATION_INFO = extern struct {
     clsid: GUID,
     guidCategory: GUID,
@@ -2507,6 +2557,20 @@ pub const MF_SINK_WRITER_STATISTICS = extern struct {
     dwAverageSampleRateEncoded: u32,
     dwAverageSampleRateProcessed: u32,
 };
+pub const MFP_EVENT_HEADER = opaque {};
+pub const MFP_PLAY_EVENT = opaque {};
+pub const MFP_PAUSE_EVENT = opaque {};
+pub const MFP_STOP_EVENT = opaque {};
+pub const MFP_POSITION_SET_EVENT = opaque {};
+pub const MFP_RATE_SET_EVENT = opaque {};
+pub const MFP_MEDIAITEM_CREATED_EVENT = opaque {};
+pub const MFP_MEDIAITEM_SET_EVENT = opaque {};
+pub const MFP_FRAME_STEP_EVENT = opaque {};
+pub const MFP_MEDIAITEM_CLEARED_EVENT = opaque {};
+pub const MFP_MF_EVENT = opaque {};
+pub const MFP_ERROR_EVENT = opaque {};
+pub const MFP_PLAYBACK_ENDED_EVENT = opaque {};
+pub const MFP_ACQUIRE_USER_CREDENTIAL_EVENT = opaque {};
 pub const DEVICE_INFO = extern struct {
     pFriendlyDeviceName: @"Windows.Win32.Foundation".BSTR,
     pUniqueDeviceName: @"Windows.Win32.Foundation".BSTR,
@@ -2522,3 +2586,4 @@ pub const MFVideoAlphaBitmapParams = extern struct {
     fAlpha: f32,
     dwFilterMode: u32,
 };
+pub const MFVideoAlphaBitmap = opaque {};

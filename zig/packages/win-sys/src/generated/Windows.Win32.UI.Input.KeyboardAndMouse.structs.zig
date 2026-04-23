@@ -201,11 +201,11 @@ pub const HARDWAREINPUT = extern struct {
     wParamH: u16,
 };
 pub const INPUT = extern struct {
-pub const INPUT_0 = extern union {
-    mi: MOUSEINPUT,
-    ki: KEYBDINPUT,
-    hi: HARDWAREINPUT,
-};
+    pub const INPUT_0 = extern union {
+        mi: MOUSEINPUT,
+        ki: KEYBDINPUT,
+        hi: HARDWAREINPUT,
+    };
     type: u32,
     Anonymous: INPUT_0,
 };

@@ -117,10 +117,10 @@ pub const SCARD_T0_COMMAND = extern struct {
     bP3: u8,
 };
 pub const SCARD_T0_REQUEST = extern struct {
-pub const SCARD_T0_REQUEST_0 = extern union {
-    CmdBytes: SCARD_T0_COMMAND,
-    rgbHeader: [5]u8,
-};
+    pub const SCARD_T0_REQUEST_0 = extern union {
+        CmdBytes: SCARD_T0_COMMAND,
+        rgbHeader: [5]u8,
+    };
     ioRequest: SCARD_IO_REQUEST,
     bSw1: u8,
     bSw2: u8,
@@ -221,23 +221,23 @@ pub const OPENCARDNAME_EXW = extern struct {
     hCardHandle: usize,
 };
 pub const READER_SEL_REQUEST = extern struct {
-pub const READER_SEL_REQUEST_0 = extern union {
-pub const _ReaderAndContainerParameter_e__Struct = extern struct {
-    cbReaderNameOffset: u32,
-    cchReaderNameLength: u32,
-    cbContainerNameOffset: u32,
-    cchContainerNameLength: u32,
-    dwDesiredCardModuleVersion: u32,
-    dwCspFlags: u32,
-};
-pub const _SerialNumberParameter_e__Struct = extern struct {
-    cbSerialNumberOffset: u32,
-    cbSerialNumberLength: u32,
-    dwDesiredCardModuleVersion: u32,
-};
-    ReaderAndContainerParameter: _ReaderAndContainerParameter_e__Struct,
-    SerialNumberParameter: _SerialNumberParameter_e__Struct,
-};
+    pub const READER_SEL_REQUEST_0 = extern union {
+        pub const _ReaderAndContainerParameter_e__Struct = extern struct {
+            cbReaderNameOffset: u32,
+            cchReaderNameLength: u32,
+            cbContainerNameOffset: u32,
+            cchContainerNameLength: u32,
+            dwDesiredCardModuleVersion: u32,
+            dwCspFlags: u32,
+        };
+        pub const _SerialNumberParameter_e__Struct = extern struct {
+            cbSerialNumberOffset: u32,
+            cbSerialNumberLength: u32,
+            dwDesiredCardModuleVersion: u32,
+        };
+        ReaderAndContainerParameter: _ReaderAndContainerParameter_e__Struct,
+        SerialNumberParameter: _SerialNumberParameter_e__Struct,
+    };
     dwShareMode: u32,
     dwPreferredProtocols: u32,
     MatchType: i32,

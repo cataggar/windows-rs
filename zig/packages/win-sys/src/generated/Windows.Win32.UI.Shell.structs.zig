@@ -93,10 +93,10 @@ pub const SHNAMEMAPPINGW = extern struct {
     cchNewPath: i32,
 };
 pub const SHELLEXECUTEINFOA = extern struct {
-pub const SHELLEXECUTEINFOA_0 = extern union {
-    hIcon: @"Windows.Win32.Foundation".HANDLE,
-    hMonitor: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const SHELLEXECUTEINFOA_0 = extern union {
+        hIcon: @"Windows.Win32.Foundation".HANDLE,
+        hMonitor: @"Windows.Win32.Foundation".HANDLE,
+    };
     cbSize: u32,
     fMask: u32,
     hwnd: @"Windows.Win32.Foundation".HWND,
@@ -114,10 +114,10 @@ pub const SHELLEXECUTEINFOA_0 = extern union {
     hProcess: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const SHELLEXECUTEINFOW = extern struct {
-pub const SHELLEXECUTEINFOW_0 = extern union {
-    hIcon: @"Windows.Win32.Foundation".HANDLE,
-    hMonitor: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const SHELLEXECUTEINFOW_0 = extern union {
+        hIcon: @"Windows.Win32.Foundation".HANDLE,
+        hMonitor: @"Windows.Win32.Foundation".HANDLE,
+    };
     cbSize: u32,
     fMask: u32,
     hwnd: @"Windows.Win32.Foundation".HWND,
@@ -160,10 +160,10 @@ pub const SHQUERYRBINFO = extern struct {
     i64NumItems: i64,
 };
 pub const NOTIFYICONDATAA = extern struct {
-pub const NOTIFYICONDATAA_0 = extern union {
-    uTimeout: u32,
-    uVersion: u32,
-};
+    pub const NOTIFYICONDATAA_0 = extern union {
+        uTimeout: u32,
+        uVersion: u32,
+    };
     cbSize: u32,
     hWnd: @"Windows.Win32.Foundation".HWND,
     uID: u32,
@@ -181,10 +181,10 @@ pub const NOTIFYICONDATAA_0 = extern union {
     hBalloonIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
 };
 pub const NOTIFYICONDATAW = extern struct {
-pub const NOTIFYICONDATAW_0 = extern union {
-    uTimeout: u32,
-    uVersion: u32,
-};
+    pub const NOTIFYICONDATAW_0 = extern union {
+        uTimeout: u32,
+        uVersion: u32,
+    };
     cbSize: u32,
     hWnd: @"Windows.Win32.Foundation".HWND,
     uID: u32,
@@ -340,6 +340,7 @@ pub const FOLDERSETTINGS = extern struct {
     ViewMode: u32,
     fFlags: u32,
 };
+pub const SV2CVW2_PARAMS = opaque {};
 pub const SORTCOLUMN = extern struct {
     propkey: @"Windows.Win32.Foundation".PROPERTYKEY,
     direction: i32,
@@ -396,6 +397,7 @@ pub const DELEGATEITEMID = extern struct {
     cbInner: u16,
     rgb: [1]u8,
 };
+pub const SMDATA = opaque {};
 pub const SMINFO = extern struct {
     dwMask: u32,
     dwType: u32,
@@ -431,6 +433,7 @@ pub const BANNER_NOTIFICATION = extern struct {
     providerIdentity: @"Windows.Win32.Foundation".PWSTR,
     contentId: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const NSTCCUSTOMDRAW = opaque {};
 pub const DATABLOCK_HEADER = extern struct {
     cbSize: u32,
     dwSignature: u32,
@@ -584,10 +587,12 @@ pub const SHChangeNotifyEntry = extern struct {
     pidl: *@"Windows.Win32.UI.Shell.Common".ITEMIDLIST,
     fRecursive: @"Windows.Win32.Foundation".BOOL,
 };
+pub const SHARDAPPIDINFO = opaque {};
 pub const SHARDAPPIDINFOIDLIST = extern struct {
     pidl: *@"Windows.Win32.UI.Shell.Common".ITEMIDLIST,
     pszAppID: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const SHARDAPPIDINFOLINK = opaque {};
 pub const SHChangeDWORDAsIDList = extern struct {
     cb: u16,
     dwItem1: u32,
@@ -662,6 +667,10 @@ pub const ITEMSPACING = extern struct {
     cxLarge: i32,
     cyLarge: i32,
 };
+pub const SFV_CREATE = opaque {};
+pub const DEFCONTEXTMENU = opaque {};
+pub const DFMICS = opaque {};
+pub const CSFV = opaque {};
 pub const SHELLSTATEA = extern struct {
     _bitfield1: i32,
     dwWin95Unused: u32,
@@ -685,6 +694,7 @@ pub const SHELLSTATEW = extern struct {
 pub const SHELLFLAGSTATE = extern struct {
     _bitfield: i32,
 };
+pub const BANDINFOSFB = opaque {};
 pub const SHCOLUMNINFO = extern struct {
     scid: @"Windows.Win32.Foundation".PROPERTYKEY,
     vt: u16,
@@ -821,6 +831,7 @@ pub const SYNCMGR_CONFLICT_ID_INFO = extern struct {
     pblobID: *@"Windows.Win32.System.Com".BYTE_BLOB,
     pblobExtra: *@"Windows.Win32.System.Com".BYTE_BLOB,
 };
+pub const CONFIRM_CONFLICT_ITEM = opaque {};
 pub const CONFIRM_CONFLICT_RESULT_INFO = extern struct {
     pszNewName: @"Windows.Win32.Foundation".PWSTR,
     iItemIndex: u32,
@@ -881,11 +892,14 @@ pub const HLBWINFO = extern struct {
     rcDocPos: @"Windows.Win32.Foundation".RECT,
     hltbinfo: HLTBINFO,
 };
+pub const BASEBROWSERDATAXP = opaque {};
+pub const BASEBROWSERDATALH = opaque {};
 pub const FOLDERSETDATA = extern struct {
     _fs: FOLDERSETTINGS,
     _vidRestore: GUID,
     _dwViewPriority: u32,
 };
+pub const TOOLBARITEM = opaque {};
 pub const CPLINFO = extern struct {
     idIcon: i32,
     idName: i32,

@@ -80,6 +80,7 @@ pub const DNS_WKS_DATA = extern struct {
     chProtocol: u8,
     BitMask: [1]u8,
 };
+pub const DNS_AAAA_DATA = opaque {};
 pub const DNS_SIG_DATAW = extern struct {
     wTypeCovered: u16,
     chAlgorithm: u8,
@@ -314,17 +315,24 @@ pub const DNS_SVCB_PARAM_IPV4 = extern struct {
     cIps: u16,
     rgIps: [1]u32,
 };
+pub const DNS_SVCB_PARAM_IPV6 = opaque {};
 pub const DNS_SVCB_PARAM_UNKNOWN = extern struct {
     cBytes: u16,
     pbSvcParamValue: [1]u8,
 };
+pub const DNS_SVCB_PARAM = opaque {};
+pub const DNS_SVCB_DATA = opaque {};
 pub const DNS_RECORD_FLAGS = extern struct {
     _bitfield: u32,
 };
+pub const DNS_RECORDW = opaque {};
+pub const DNS_RECORD_OPTW = opaque {};
+pub const DNS_RECORDA = opaque {};
+pub const _DnsRecordOptA = opaque {};
 pub const DNS_ADDR = extern struct {
-pub const _Data_e__Union = extern union {
-    DnsAddrUserDword: [8]u32,
-};
+    pub const _Data_e__Union = extern union {
+        DnsAddrUserDword: [8]u32,
+    };
     MaxSa: [32]@"Windows.Win32.Foundation".CHAR,
     Data: _Data_e__Union,
 };
@@ -354,13 +362,13 @@ pub const DNS_MESSAGE_BUFFER = extern struct {
     MessageBody: [1]@"Windows.Win32.Foundation".CHAR,
 };
 pub const DNS_CUSTOM_SERVER = extern struct {
-pub const DNS_CUSTOM_SERVER_0 = extern union {
-    pwszTemplate: @"Windows.Win32.Foundation".PWSTR,
-    pwszHostname: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const DNS_CUSTOM_SERVER_1 = extern union {
-    MaxSa: [32]@"Windows.Win32.Foundation".CHAR,
-};
+    pub const DNS_CUSTOM_SERVER_0 = extern union {
+        pwszTemplate: @"Windows.Win32.Foundation".PWSTR,
+        pwszHostname: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const DNS_CUSTOM_SERVER_1 = extern union {
+        MaxSa: [32]@"Windows.Win32.Foundation".CHAR,
+    };
     dwServerType: u32,
     ullFlags: u64,
     Anonymous1: DNS_CUSTOM_SERVER_0,
@@ -380,11 +388,13 @@ pub const DNS_WIRE_RECORD = extern struct {
     TimeToLive: u32,
     DataLength: u16,
 };
+pub const DNS_RRSET = opaque {};
 pub const DNS_PROXY_INFORMATION = extern struct {
     version: u32,
     proxyInformationType: i32,
     proxyName: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const DNS_QUERY_RESULT = opaque {};
 pub const DNS_APPLICATION_SETTINGS = extern struct {
     Version: u32,
     Flags: u64,
@@ -416,10 +426,11 @@ pub const DNS_QUERY_REQUEST3 = extern struct {
     cCustomServers: u32,
     pCustomServers: *DNS_CUSTOM_SERVER,
 };
+pub const DNS_QUERY_RAW_RESULT = opaque {};
 pub const DNS_QUERY_RAW_REQUEST = extern struct {
-pub const DNS_QUERY_RAW_REQUEST_0 = extern union {
-    maxSa: [32]@"Windows.Win32.Foundation".CHAR,
-};
+    pub const DNS_QUERY_RAW_REQUEST_0 = extern union {
+        maxSa: [32]@"Windows.Win32.Foundation".CHAR,
+    };
     version: u32,
     resultsVersion: u32,
     dnsQueryRawSize: u32,
@@ -440,23 +451,23 @@ pub const DNS_QUERY_RAW_CANCEL = extern struct {
     reserved: [32]@"Windows.Win32.Foundation".CHAR,
 };
 pub const DNS_CONNECTION_PROXY_INFO = extern struct {
-pub const DNS_CONNECTION_PROXY_INFO_0 = extern union {
-pub const _DNS_CONNECTION_PROXY_INFO_CONFIG = extern struct {
-    pwszServer: @"Windows.Win32.Foundation".PWSTR,
-    pwszUsername: @"Windows.Win32.Foundation".PWSTR,
-    pwszPassword: @"Windows.Win32.Foundation".PWSTR,
-    pwszException: @"Windows.Win32.Foundation".PWSTR,
-    pwszExtraInfo: @"Windows.Win32.Foundation".PWSTR,
-    Port: u16,
-};
-pub const _DNS_CONNECTION_PROXY_INFO_SCRIPT = extern struct {
-    pwszScript: @"Windows.Win32.Foundation".PWSTR,
-    pwszUsername: @"Windows.Win32.Foundation".PWSTR,
-    pwszPassword: @"Windows.Win32.Foundation".PWSTR,
-};
-    Config: _DNS_CONNECTION_PROXY_INFO_CONFIG,
-    Script: _DNS_CONNECTION_PROXY_INFO_SCRIPT,
-};
+    pub const DNS_CONNECTION_PROXY_INFO_0 = extern union {
+        pub const _DNS_CONNECTION_PROXY_INFO_CONFIG = extern struct {
+            pwszServer: @"Windows.Win32.Foundation".PWSTR,
+            pwszUsername: @"Windows.Win32.Foundation".PWSTR,
+            pwszPassword: @"Windows.Win32.Foundation".PWSTR,
+            pwszException: @"Windows.Win32.Foundation".PWSTR,
+            pwszExtraInfo: @"Windows.Win32.Foundation".PWSTR,
+            Port: u16,
+        };
+        pub const _DNS_CONNECTION_PROXY_INFO_SCRIPT = extern struct {
+            pwszScript: @"Windows.Win32.Foundation".PWSTR,
+            pwszUsername: @"Windows.Win32.Foundation".PWSTR,
+            pwszPassword: @"Windows.Win32.Foundation".PWSTR,
+        };
+        Config: _DNS_CONNECTION_PROXY_INFO_CONFIG,
+        Script: _DNS_CONNECTION_PROXY_INFO_SCRIPT,
+    };
     Version: u32,
     pwszFriendlyName: @"Windows.Win32.Foundation".PWSTR,
     Flags: u32,
@@ -506,14 +517,15 @@ pub const DNS_CONNECTION_POLICY_ENTRY_LIST = extern struct {
     pPolicyEntries: *DNS_CONNECTION_POLICY_ENTRY,
     nEntries: u32,
 };
+pub const DNS_SERVICE_INSTANCE = opaque {};
 pub const DNS_SERVICE_CANCEL = extern struct {
     reserved: *anyopaque,
 };
 pub const DNS_SERVICE_BROWSE_REQUEST = extern struct {
-pub const DNS_SERVICE_BROWSE_REQUEST_0 = extern union {
-    pBrowseCallback: ?*const anyopaque,
-    pBrowseCallbackV2: ?*const anyopaque,
-};
+    pub const DNS_SERVICE_BROWSE_REQUEST_0 = extern union {
+        pBrowseCallback: ?*const anyopaque,
+        pBrowseCallbackV2: ?*const anyopaque,
+    };
     Version: u32,
     InterfaceIndex: u32,
     QueryName: @"Windows.Win32.Foundation".PWSTR,
@@ -527,6 +539,7 @@ pub const DNS_SERVICE_RESOLVE_REQUEST = extern struct {
     pResolveCompletionCallback: ?*const anyopaque,
     pQueryContext: *anyopaque,
 };
+pub const DNS_SERVICE_REGISTER_REQUEST = opaque {};
 pub const MDNS_QUERY_HANDLE = extern struct {
     nameBuf: [256]u16,
     wType: u16,

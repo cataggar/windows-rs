@@ -22,10 +22,10 @@ pub const DEV_OBJECT = extern struct {
     pProperties: *@"Windows.Win32.Devices.Properties".DEVPROPERTY,
 };
 pub const DEV_QUERY_RESULT_ACTION_DATA = extern struct {
-pub const _DEV_QUERY_RESULT_UPDATE_PAYLOAD = extern union {
-    State: i32,
-    DeviceObject: DEV_OBJECT,
-};
+    pub const _DEV_QUERY_RESULT_UPDATE_PAYLOAD = extern union {
+        State: i32,
+        DeviceObject: DEV_OBJECT,
+    };
     Action: i32,
     Data: _DEV_QUERY_RESULT_UPDATE_PAYLOAD,
 };

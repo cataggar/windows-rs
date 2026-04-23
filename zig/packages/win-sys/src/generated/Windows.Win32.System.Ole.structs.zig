@@ -17,11 +17,23 @@ pub const SAFEARR_BSTR = extern struct {
     Size: u32,
     aBstr: **@"Windows.Win32.System.Com".FLAGGED_WORD_BLOB,
 };
+pub const SAFEARR_UNKNOWN = opaque {};
+pub const SAFEARR_DISPATCH = opaque {};
+pub const SAFEARR_VARIANT = opaque {};
+pub const SAFEARR_BRECORD = opaque {};
+pub const SAFEARR_HAVEIID = opaque {};
+pub const SAFEARRAYUNION = opaque {};
+pub const _wireSAFEARRAY = opaque {};
+pub const _wireBRECORD = opaque {};
+pub const _wireVARIANT = opaque {};
 pub const ARRAYDESC = extern struct {
     tdescElem: @"Windows.Win32.System.Com".TYPEDESC,
     cDims: u16,
     rgbounds: [1]@"Windows.Win32.System.Com".SAFEARRAYBOUND,
 };
+pub const PARAMDESCEX = opaque {};
+pub const PARAMDESC = opaque {};
+pub const CLEANLOCALSTORAGE = opaque {};
 pub const OBJECTDESCRIPTOR = extern struct {
     cbSize: u32,
     clsid: GUID,
@@ -122,6 +134,7 @@ pub const CADWORD = extern struct {
     cElems: u32,
     pElems: *u32,
 };
+pub const QACONTAINER = opaque {};
 pub const QACONTROL = extern struct {
     cbSize: u32,
     dwMiscStatus: u32,
@@ -130,6 +143,7 @@ pub const QACONTROL = extern struct {
     dwPropNotifyCookie: u32,
     dwPointerActivationPolicy: u32,
 };
+pub const OCPFIPARAMS = opaque {};
 pub const FONTDESC = extern struct {
     cbSizeofstruct: u32,
     lpstrName: @"Windows.Win32.Foundation".PWSTR,
@@ -141,27 +155,27 @@ pub const FONTDESC = extern struct {
     fStrikethrough: @"Windows.Win32.Foundation".BOOL,
 };
 pub const PICTDESC = extern struct {
-pub const PICTDESC_0 = extern union {
-pub const _bmp_e__Struct = extern struct {
-    hbitmap: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    hpal: @"Windows.Win32.Graphics.Gdi".HPALETTE,
-};
-pub const _wmf_e__Struct = extern struct {
-    hmeta: @"Windows.Win32.Graphics.Gdi".HMETAFILE,
-    xExt: i32,
-    yExt: i32,
-};
-pub const _icon_e__Struct = extern struct {
-    hicon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-};
-pub const _emf_e__Struct = extern struct {
-    hemf: @"Windows.Win32.Graphics.Gdi".HENHMETAFILE,
-};
-    bmp: _bmp_e__Struct,
-    wmf: _wmf_e__Struct,
-    icon: _icon_e__Struct,
-    emf: _emf_e__Struct,
-};
+    pub const PICTDESC_0 = extern union {
+        pub const _bmp_e__Struct = extern struct {
+            hbitmap: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+            hpal: @"Windows.Win32.Graphics.Gdi".HPALETTE,
+        };
+        pub const _wmf_e__Struct = extern struct {
+            hmeta: @"Windows.Win32.Graphics.Gdi".HMETAFILE,
+            xExt: i32,
+            yExt: i32,
+        };
+        pub const _icon_e__Struct = extern struct {
+            hicon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        };
+        pub const _emf_e__Struct = extern struct {
+            hemf: @"Windows.Win32.Graphics.Gdi".HENHMETAFILE,
+        };
+        bmp: _bmp_e__Struct,
+        wmf: _wmf_e__Struct,
+        icon: _icon_e__Struct,
+        emf: _emf_e__Struct,
+    };
     cbSizeofstruct: u32,
     picType: u32,
     Anonymous: PICTDESC_0,
@@ -187,6 +201,8 @@ pub const OLECMDTEXT = extern struct {
     cwBuf: u32,
     rgwz: [1]u16,
 };
+pub const OLEUIINSERTOBJECTW = opaque {};
+pub const OLEUIINSERTOBJECTA = opaque {};
 pub const OLEUIPASTEENTRYW = extern struct {
     fmtetc: @"Windows.Win32.System.Com".FORMATETC,
     lpstrFormatName: @"Windows.Win32.Foundation".PWSTR,
@@ -201,6 +217,10 @@ pub const OLEUIPASTEENTRYA = extern struct {
     dwFlags: u32,
     dwScratchSpace: u32,
 };
+pub const OLEUIPASTESPECIALW = opaque {};
+pub const OLEUIPASTESPECIALA = opaque {};
+pub const OLEUIEDITLINKSW = opaque {};
+pub const OLEUIEDITLINKSA = opaque {};
 pub const OLEUICHANGEICONW = extern struct {
     cbStruct: u32,
     dwFlags: u32,
@@ -305,3 +325,13 @@ pub const OLEUIBUSYA = extern struct {
     hTask: @"Windows.Win32.Foundation".HTASK,
     lphWndDialog: *@"Windows.Win32.Foundation".HWND,
 };
+pub const OLEUICHANGESOURCEW = opaque {};
+pub const OLEUICHANGESOURCEA = opaque {};
+pub const OLEUIGNRLPROPSW = opaque {};
+pub const OLEUIGNRLPROPSA = opaque {};
+pub const OLEUIVIEWPROPSW = opaque {};
+pub const OLEUIVIEWPROPSA = opaque {};
+pub const OLEUILINKPROPSW = opaque {};
+pub const OLEUILINKPROPSA = opaque {};
+pub const OLEUIOBJECTPROPSW = opaque {};
+pub const OLEUIOBJECTPROPSA = opaque {};

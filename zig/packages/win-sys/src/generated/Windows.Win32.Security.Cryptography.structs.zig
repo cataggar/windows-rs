@@ -813,15 +813,15 @@ pub const CERT_OTHER_NAME = extern struct {
     Value: CRYPT_INTEGER_BLOB,
 };
 pub const CERT_ALT_NAME_ENTRY = extern struct {
-pub const CERT_ALT_NAME_ENTRY_0 = extern union {
-    pOtherName: *CERT_OTHER_NAME,
-    pwszRfc822Name: @"Windows.Win32.Foundation".PWSTR,
-    pwszDNSName: @"Windows.Win32.Foundation".PWSTR,
-    DirectoryName: CRYPT_INTEGER_BLOB,
-    pwszURL: @"Windows.Win32.Foundation".PWSTR,
-    IPAddress: CRYPT_INTEGER_BLOB,
-    pszRegisteredID: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const CERT_ALT_NAME_ENTRY_0 = extern union {
+        pOtherName: *CERT_OTHER_NAME,
+        pwszRfc822Name: @"Windows.Win32.Foundation".PWSTR,
+        pwszDNSName: @"Windows.Win32.Foundation".PWSTR,
+        DirectoryName: CRYPT_INTEGER_BLOB,
+        pwszURL: @"Windows.Win32.Foundation".PWSTR,
+        IPAddress: CRYPT_INTEGER_BLOB,
+        pszRegisteredID: @"Windows.Win32.Foundation".PSTR,
+    };
     dwAltNameChoice: u32,
     Anonymous: CERT_ALT_NAME_ENTRY_0,
 };
@@ -916,9 +916,9 @@ pub const CERT_AUTHORITY_INFO_ACCESS = extern struct {
     rgAccDescr: *CERT_ACCESS_DESCRIPTION,
 };
 pub const CRL_DIST_POINT_NAME = extern struct {
-pub const CRL_DIST_POINT_NAME_0 = extern union {
-    FullName: CERT_ALT_NAME_INFO,
-};
+    pub const CRL_DIST_POINT_NAME_0 = extern union {
+        FullName: CERT_ALT_NAME_INFO,
+    };
     dwDistPointNameChoice: u32,
     Anonymous: CRL_DIST_POINT_NAME_0,
 };
@@ -1043,9 +1043,9 @@ pub const CMC_TAGGED_CERT_REQUEST = extern struct {
     SignedCertRequest: CRYPT_INTEGER_BLOB,
 };
 pub const CMC_TAGGED_REQUEST = extern struct {
-pub const CMC_TAGGED_REQUEST_0 = extern union {
-    pTaggedCertRequest: *CMC_TAGGED_CERT_REQUEST,
-};
+    pub const CMC_TAGGED_REQUEST_0 = extern union {
+        pTaggedCertRequest: *CMC_TAGGED_CERT_REQUEST,
+    };
     dwTaggedRequestChoice: u32,
     Anonymous: CMC_TAGGED_REQUEST_0,
 };
@@ -1081,10 +1081,10 @@ pub const CMC_PEND_INFO = extern struct {
     PendTime: @"Windows.Win32.Foundation".FILETIME,
 };
 pub const CMC_STATUS_INFO = extern struct {
-pub const CMC_STATUS_INFO_0 = extern union {
-    dwFailInfo: u32,
-    pPendInfo: *CMC_PEND_INFO,
-};
+    pub const CMC_STATUS_INFO_0 = extern union {
+        dwFailInfo: u32,
+        pPendInfo: *CMC_PEND_INFO,
+    };
     dwStatus: u32,
     cBodyList: u32,
     rgdwBodyList: *u32,
@@ -1127,10 +1127,10 @@ pub const CERT_LOGOTYPE_REFERENCE = extern struct {
     rgHashedUrl: *CERT_HASHED_URL,
 };
 pub const CERT_LOGOTYPE_IMAGE_INFO = extern struct {
-pub const CERT_LOGOTYPE_IMAGE_INFO_0 = extern union {
-    dwNumBits: u32,
-    dwTableSize: u32,
-};
+    pub const CERT_LOGOTYPE_IMAGE_INFO_0 = extern union {
+        dwNumBits: u32,
+        dwTableSize: u32,
+    };
     dwLogotypeImageInfoChoice: u32,
     dwFileSize: u32,
     dwXSize: u32,
@@ -1161,10 +1161,10 @@ pub const CERT_LOGOTYPE_DATA = extern struct {
     rgLogotypeAudio: *CERT_LOGOTYPE_AUDIO,
 };
 pub const CERT_LOGOTYPE_INFO = extern struct {
-pub const CERT_LOGOTYPE_INFO_0 = extern union {
-    pLogotypeDirectInfo: *CERT_LOGOTYPE_DATA,
-    pLogotypeIndirectInfo: *CERT_LOGOTYPE_REFERENCE,
-};
+    pub const CERT_LOGOTYPE_INFO_0 = extern union {
+        pLogotypeDirectInfo: *CERT_LOGOTYPE_DATA,
+        pLogotypeIndirectInfo: *CERT_LOGOTYPE_REFERENCE,
+    };
     dwLogotypeInfoChoice: u32,
     Anonymous: CERT_LOGOTYPE_INFO_0,
 };
@@ -1181,10 +1181,10 @@ pub const CERT_LOGOTYPE_EXT_INFO = extern struct {
     rgOtherLogo: *CERT_OTHER_LOGOTYPE_INFO,
 };
 pub const CERT_BIOMETRIC_DATA = extern struct {
-pub const CERT_BIOMETRIC_DATA_0 = extern union {
-    dwPredefined: u32,
-    pszObjId: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const CERT_BIOMETRIC_DATA_0 = extern union {
+        dwPredefined: u32,
+        pszObjId: @"Windows.Win32.Foundation".PSTR,
+    };
     dwTypeOfBiometricDataChoice: u32,
     Anonymous: CERT_BIOMETRIC_DATA_0,
     HashedUrl: CERT_HASHED_URL,
@@ -1236,9 +1236,9 @@ pub const OCSP_BASIC_REVOKED_INFO = extern struct {
     dwCrlReasonCode: u32,
 };
 pub const OCSP_BASIC_RESPONSE_ENTRY = extern struct {
-pub const OCSP_BASIC_RESPONSE_ENTRY_0 = extern union {
-    pRevokedInfo: *OCSP_BASIC_REVOKED_INFO,
-};
+    pub const OCSP_BASIC_RESPONSE_ENTRY_0 = extern union {
+        pRevokedInfo: *OCSP_BASIC_REVOKED_INFO,
+    };
     CertId: OCSP_CERT_ID,
     dwCertStatus: u32,
     Anonymous: OCSP_BASIC_RESPONSE_ENTRY_0,
@@ -1248,10 +1248,10 @@ pub const OCSP_BASIC_RESPONSE_ENTRY_0 = extern union {
     rgExtension: *CERT_EXTENSION,
 };
 pub const OCSP_BASIC_RESPONSE_INFO = extern struct {
-pub const OCSP_BASIC_RESPONSE_INFO_0 = extern union {
-    ByNameResponderId: CRYPT_INTEGER_BLOB,
-    ByKeyResponderId: CRYPT_INTEGER_BLOB,
-};
+    pub const OCSP_BASIC_RESPONSE_INFO_0 = extern union {
+        ByNameResponderId: CRYPT_INTEGER_BLOB,
+        ByKeyResponderId: CRYPT_INTEGER_BLOB,
+    };
     dwVersion: u32,
     dwResponderIdChoice: u32,
     Anonymous: OCSP_BASIC_RESPONSE_INFO_0,
@@ -1276,11 +1276,11 @@ pub const CRYPT_OID_FUNC_ENTRY = extern struct {
     pvFuncAddr: *anyopaque,
 };
 pub const CRYPT_OID_INFO = extern struct {
-pub const CRYPT_OID_INFO_0 = extern union {
-    dwValue: u32,
-    Algid: u32,
-    dwLength: u32,
-};
+    pub const CRYPT_OID_INFO_0 = extern union {
+        dwValue: u32,
+        Algid: u32,
+        dwLength: u32,
+    };
     cbSize: u32,
     pszOID: @"Windows.Win32.Foundation".PSTR,
     pwszName: @"Windows.Win32.Foundation".PWSTR,
@@ -1294,11 +1294,11 @@ pub const CERT_STRONG_SIGN_SERIALIZED_INFO = extern struct {
     pwszCNGPubKeyMinBitLengths: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const CERT_STRONG_SIGN_PARA = extern struct {
-pub const CERT_STRONG_SIGN_PARA_0 = extern union {
-    pvInfo: *anyopaque,
-    pSerializedInfo: *CERT_STRONG_SIGN_SERIALIZED_INFO,
-    pszOID: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const CERT_STRONG_SIGN_PARA_0 = extern union {
+        pvInfo: *anyopaque,
+        pSerializedInfo: *CERT_STRONG_SIGN_SERIALIZED_INFO,
+        pszOID: @"Windows.Win32.Foundation".PSTR,
+    };
     cbSize: u32,
     dwInfoChoice: u32,
     Anonymous: CERT_STRONG_SIGN_PARA_0,
@@ -1308,19 +1308,19 @@ pub const CERT_ISSUER_SERIAL_NUMBER = extern struct {
     SerialNumber: CRYPT_INTEGER_BLOB,
 };
 pub const CERT_ID = extern struct {
-pub const CERT_ID_0 = extern union {
-    IssuerSerialNumber: CERT_ISSUER_SERIAL_NUMBER,
-    KeyId: CRYPT_INTEGER_BLOB,
-    HashId: CRYPT_INTEGER_BLOB,
-};
+    pub const CERT_ID_0 = extern union {
+        IssuerSerialNumber: CERT_ISSUER_SERIAL_NUMBER,
+        KeyId: CRYPT_INTEGER_BLOB,
+        HashId: CRYPT_INTEGER_BLOB,
+    };
     dwIdChoice: u32,
     Anonymous: CERT_ID_0,
 };
 pub const CMSG_SIGNER_ENCODE_INFO = extern struct {
-pub const CMSG_SIGNER_ENCODE_INFO_0 = extern union {
-    hCryptProv: usize,
-    hNCryptKey: NCRYPT_KEY_HANDLE,
-};
+    pub const CMSG_SIGNER_ENCODE_INFO_0 = extern union {
+        hCryptProv: usize,
+        hNCryptKey: NCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     pCertInfo: *CERT_INFO,
     Anonymous: CMSG_SIGNER_ENCODE_INFO_0,
@@ -1365,10 +1365,10 @@ pub const CMSG_RECIPIENT_ENCRYPTED_KEY_ENCODE_INFO = extern struct {
     pOtherAttr: *CRYPT_ATTRIBUTE_TYPE_VALUE,
 };
 pub const CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO = extern struct {
-pub const CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO_0 = extern union {
-    pEphemeralAlgorithm: *CRYPT_ALGORITHM_IDENTIFIER,
-    pSenderId: *CERT_ID,
-};
+    pub const CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO_0 = extern union {
+        pEphemeralAlgorithm: *CRYPT_ALGORITHM_IDENTIFIER,
+        pSenderId: *CERT_ID,
+    };
     cbSize: u32,
     KeyEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
     pvKeyEncryptionAuxInfo: *anyopaque,
@@ -1383,10 +1383,10 @@ pub const CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO_0 = extern union {
     rgpRecipientEncryptedKeys: **CMSG_RECIPIENT_ENCRYPTED_KEY_ENCODE_INFO,
 };
 pub const CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO = extern struct {
-pub const CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO_0 = extern union {
-    hKeyEncryptionKey: usize,
-    pvKeyEncryptionKey: *anyopaque,
-};
+    pub const CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO_0 = extern union {
+        hKeyEncryptionKey: usize,
+        pvKeyEncryptionKey: *anyopaque,
+    };
     cbSize: u32,
     KeyEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
     pvKeyEncryptionAuxInfo: *anyopaque,
@@ -1398,11 +1398,11 @@ pub const CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO_0 = extern union {
     pOtherAttr: *CRYPT_ATTRIBUTE_TYPE_VALUE,
 };
 pub const CMSG_RECIPIENT_ENCODE_INFO = extern struct {
-pub const CMSG_RECIPIENT_ENCODE_INFO_0 = extern union {
-    pKeyTrans: *CMSG_KEY_TRANS_RECIPIENT_ENCODE_INFO,
-    pKeyAgree: *CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO,
-    pMailList: *CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO,
-};
+    pub const CMSG_RECIPIENT_ENCODE_INFO_0 = extern union {
+        pKeyTrans: *CMSG_KEY_TRANS_RECIPIENT_ENCODE_INFO,
+        pKeyAgree: *CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO,
+        pMailList: *CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO,
+    };
     dwRecipientChoice: u32,
     Anonymous: CMSG_RECIPIENT_ENCODE_INFO_0,
 };
@@ -1471,10 +1471,10 @@ pub const CMSG_RECIPIENT_ENCRYPTED_KEY_INFO = extern struct {
     pOtherAttr: *CRYPT_ATTRIBUTE_TYPE_VALUE,
 };
 pub const CMSG_KEY_AGREE_RECIPIENT_INFO = extern struct {
-pub const CMSG_KEY_AGREE_RECIPIENT_INFO_0 = extern union {
-    OriginatorCertId: CERT_ID,
-    OriginatorPublicKeyInfo: CERT_PUBLIC_KEY_INFO,
-};
+    pub const CMSG_KEY_AGREE_RECIPIENT_INFO_0 = extern union {
+        OriginatorCertId: CERT_ID,
+        OriginatorPublicKeyInfo: CERT_PUBLIC_KEY_INFO,
+    };
     dwVersion: u32,
     dwOriginatorChoice: u32,
     Anonymous: CMSG_KEY_AGREE_RECIPIENT_INFO_0,
@@ -1492,11 +1492,11 @@ pub const CMSG_MAIL_LIST_RECIPIENT_INFO = extern struct {
     pOtherAttr: *CRYPT_ATTRIBUTE_TYPE_VALUE,
 };
 pub const CMSG_CMS_RECIPIENT_INFO = extern struct {
-pub const CMSG_CMS_RECIPIENT_INFO_0 = extern union {
-    pKeyTrans: *CMSG_KEY_TRANS_RECIPIENT_INFO,
-    pKeyAgree: *CMSG_KEY_AGREE_RECIPIENT_INFO,
-    pMailList: *CMSG_MAIL_LIST_RECIPIENT_INFO,
-};
+    pub const CMSG_CMS_RECIPIENT_INFO_0 = extern union {
+        pKeyTrans: *CMSG_KEY_TRANS_RECIPIENT_INFO,
+        pKeyAgree: *CMSG_KEY_AGREE_RECIPIENT_INFO,
+        pMailList: *CMSG_MAIL_LIST_RECIPIENT_INFO,
+    };
     dwRecipientChoice: u32,
     Anonymous: CMSG_CMS_RECIPIENT_INFO_0,
 };
@@ -1508,20 +1508,20 @@ pub const CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA = extern struct {
     pvSigner: *anyopaque,
 };
 pub const CMSG_CTRL_DECRYPT_PARA = extern struct {
-pub const CMSG_CTRL_DECRYPT_PARA_0 = extern union {
-    hCryptProv: usize,
-    hNCryptKey: NCRYPT_KEY_HANDLE,
-};
+    pub const CMSG_CTRL_DECRYPT_PARA_0 = extern union {
+        hCryptProv: usize,
+        hNCryptKey: NCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     Anonymous: CMSG_CTRL_DECRYPT_PARA_0,
     dwKeySpec: u32,
     dwRecipientIndex: u32,
 };
 pub const CMSG_CTRL_KEY_TRANS_DECRYPT_PARA = extern struct {
-pub const CMSG_CTRL_KEY_TRANS_DECRYPT_PARA_0 = extern union {
-    hCryptProv: usize,
-    hNCryptKey: NCRYPT_KEY_HANDLE,
-};
+    pub const CMSG_CTRL_KEY_TRANS_DECRYPT_PARA_0 = extern union {
+        hCryptProv: usize,
+        hNCryptKey: NCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     Anonymous: CMSG_CTRL_KEY_TRANS_DECRYPT_PARA_0,
     dwKeySpec: u32,
@@ -1529,10 +1529,10 @@ pub const CMSG_CTRL_KEY_TRANS_DECRYPT_PARA_0 = extern union {
     dwRecipientIndex: u32,
 };
 pub const CMSG_CTRL_KEY_AGREE_DECRYPT_PARA = extern struct {
-pub const CMSG_CTRL_KEY_AGREE_DECRYPT_PARA_0 = extern union {
-    hCryptProv: usize,
-    hNCryptKey: NCRYPT_KEY_HANDLE,
-};
+    pub const CMSG_CTRL_KEY_AGREE_DECRYPT_PARA_0 = extern union {
+        hCryptProv: usize,
+        hNCryptKey: NCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     Anonymous: CMSG_CTRL_KEY_AGREE_DECRYPT_PARA_0,
     dwKeySpec: u32,
@@ -1542,10 +1542,10 @@ pub const CMSG_CTRL_KEY_AGREE_DECRYPT_PARA_0 = extern union {
     OriginatorPublicKey: CRYPT_BIT_BLOB,
 };
 pub const CMSG_CTRL_MAIL_LIST_DECRYPT_PARA = extern struct {
-pub const CMSG_CTRL_MAIL_LIST_DECRYPT_PARA_0 = extern union {
-    hKeyEncryptionKey: usize,
-    pvKeyEncryptionKey: *anyopaque,
-};
+    pub const CMSG_CTRL_MAIL_LIST_DECRYPT_PARA_0 = extern union {
+        hKeyEncryptionKey: usize,
+        pvKeyEncryptionKey: *anyopaque,
+    };
     cbSize: u32,
     hCryptProv: usize,
     pMailList: *CMSG_MAIL_LIST_RECIPIENT_INFO,
@@ -1564,10 +1564,10 @@ pub const CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA = extern struct {
     dwUnauthAttrIndex: u32,
 };
 pub const CMSG_CONTENT_ENCRYPT_INFO = extern struct {
-pub const CMSG_CONTENT_ENCRYPT_INFO_0 = extern union {
-    hContentEncryptKey: usize,
-    hCNGContentEncryptKey: BCRYPT_KEY_HANDLE,
-};
+    pub const CMSG_CONTENT_ENCRYPT_INFO_0 = extern union {
+        hContentEncryptKey: usize,
+        hCNGContentEncryptKey: BCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     hCryptProv: HCRYPTPROV_LEGACY,
     ContentEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
@@ -1596,10 +1596,10 @@ pub const CMSG_KEY_AGREE_KEY_ENCRYPT_INFO = extern struct {
     EncryptedKey: CRYPT_INTEGER_BLOB,
 };
 pub const CMSG_KEY_AGREE_ENCRYPT_INFO = extern struct {
-pub const CMSG_KEY_AGREE_ENCRYPT_INFO_0 = extern union {
-    OriginatorCertId: CERT_ID,
-    OriginatorPublicKeyInfo: CERT_PUBLIC_KEY_INFO,
-};
+    pub const CMSG_KEY_AGREE_ENCRYPT_INFO_0 = extern union {
+        OriginatorCertId: CERT_ID,
+        OriginatorPublicKeyInfo: CERT_PUBLIC_KEY_INFO,
+    };
     cbSize: u32,
     dwRecipientIndex: u32,
     KeyEncryptionAlgorithm: CRYPT_ALGORITHM_IDENTIFIER,
@@ -1668,10 +1668,10 @@ pub const CRYPT_KEY_PROV_INFO = extern struct {
     dwKeySpec: u32,
 };
 pub const CERT_KEY_CONTEXT = extern struct {
-pub const CERT_KEY_CONTEXT_0 = extern union {
-    hCryptProv: usize,
-    hNCryptKey: NCRYPT_KEY_HANDLE,
-};
+    pub const CERT_KEY_CONTEXT_0 = extern union {
+        hCryptProv: usize,
+        hNCryptKey: NCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     Anonymous: CERT_KEY_CONTEXT_0,
     dwKeySpec: u32,
@@ -1685,15 +1685,15 @@ pub const CRYPT_SMART_CARD_ROOT_INFO = extern struct {
     luid: ROOT_INFO_LUID,
 };
 pub const CERT_SYSTEM_STORE_RELOCATE_PARA = extern struct {
-pub const CERT_SYSTEM_STORE_RELOCATE_PARA_0 = extern union {
-    hKeyBase: @"Windows.Win32.System.Registry".HKEY,
-    pvBase: *anyopaque,
-};
-pub const CERT_SYSTEM_STORE_RELOCATE_PARA_1 = extern union {
-    pvSystemStore: *anyopaque,
-    pszSystemStore: @"Windows.Win32.Foundation".PSTR,
-    pwszSystemStore: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const CERT_SYSTEM_STORE_RELOCATE_PARA_0 = extern union {
+        hKeyBase: @"Windows.Win32.System.Registry".HKEY,
+        pvBase: *anyopaque,
+    };
+    pub const CERT_SYSTEM_STORE_RELOCATE_PARA_1 = extern union {
+        pvSystemStore: *anyopaque,
+        pszSystemStore: @"Windows.Win32.Foundation".PSTR,
+        pwszSystemStore: @"Windows.Win32.Foundation".PWSTR,
+    };
     Anonymous1: CERT_SYSTEM_STORE_RELOCATE_PARA_0,
     Anonymous2: CERT_SYSTEM_STORE_RELOCATE_PARA_1,
 };
@@ -1863,10 +1863,10 @@ pub const CRYPT_HASH_MESSAGE_PARA = extern struct {
     pvHashAuxInfo: *anyopaque,
 };
 pub const CRYPT_KEY_SIGN_MESSAGE_PARA = extern struct {
-pub const CRYPT_KEY_SIGN_MESSAGE_PARA_0 = extern union {
-    hCryptProv: usize,
-    hNCryptKey: NCRYPT_KEY_HANDLE,
-};
+    pub const CRYPT_KEY_SIGN_MESSAGE_PARA_0 = extern union {
+        hCryptProv: usize,
+        hNCryptKey: NCRYPT_KEY_HANDLE,
+    };
     cbSize: u32,
     dwMsgAndCertEncodingType: u32,
     Anonymous: CRYPT_KEY_SIGN_MESSAGE_PARA_0,
@@ -2102,10 +2102,10 @@ pub const AUTHENTICODE_TS_EXTRA_CERT_CHAIN_POLICY_PARA = extern struct {
     fCommercial: @"Windows.Win32.Foundation".BOOL,
 };
 pub const HTTPSPolicyCallbackData = extern struct {
-pub const HTTPSPolicyCallbackData_0 = extern union {
-    cbStruct: u32,
-    cbSize: u32,
-};
+    pub const HTTPSPolicyCallbackData_0 = extern union {
+        cbStruct: u32,
+        cbSize: u32,
+    };
     Anonymous: HTTPSPolicyCallbackData_0,
     dwAuthType: u32,
     fdwChecks: u32,
@@ -2281,11 +2281,11 @@ pub const SIGNER_SPC_CHAIN_INFO = extern struct {
     hCertStore: HCERTSTORE,
 };
 pub const SIGNER_CERT = extern struct {
-pub const SIGNER_CERT_0 = extern union {
-    pwszSpcFile: @"Windows.Win32.Foundation".PWSTR,
-    pCertStoreInfo: *SIGNER_CERT_STORE_INFO,
-    pSpcChainInfo: *SIGNER_SPC_CHAIN_INFO,
-};
+    pub const SIGNER_CERT_0 = extern union {
+        pwszSpcFile: @"Windows.Win32.Foundation".PWSTR,
+        pCertStoreInfo: *SIGNER_CERT_STORE_INFO,
+        pSpcChainInfo: *SIGNER_SPC_CHAIN_INFO,
+    };
     cbSize: u32,
     dwCertChoice: u32,
     Anonymous: SIGNER_CERT_0,
@@ -2297,12 +2297,12 @@ pub const SIGNER_CONTEXT = extern struct {
     pbBlob: *u8,
 };
 pub const SIGNER_DIGEST_SIGN_INFO = extern struct {
-pub const SIGNER_DIGEST_SIGN_INFO_0 = extern union {
-    pfnAuthenticodeDigestSign: ?*const anyopaque,
-    pfnAuthenticodeDigestSignWithFileHandle: ?*const anyopaque,
-    pfnAuthenticodeDigestSignEx: ?*const anyopaque,
-    pfnAuthenticodeDigestSignExWithFileHandle: ?*const anyopaque,
-};
+    pub const SIGNER_DIGEST_SIGN_INFO_0 = extern union {
+        pfnAuthenticodeDigestSign: ?*const anyopaque,
+        pfnAuthenticodeDigestSignWithFileHandle: ?*const anyopaque,
+        pfnAuthenticodeDigestSignEx: ?*const anyopaque,
+        pfnAuthenticodeDigestSignExWithFileHandle: ?*const anyopaque,
+    };
     cbSize: u32,
     dwDigestSignChoice: u32,
     Anonymous: SIGNER_DIGEST_SIGN_INFO_0,
@@ -2328,10 +2328,10 @@ pub const SIGNER_FILE_INFO = extern struct {
     hFile: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const SIGNER_PROVIDER_INFO = extern struct {
-pub const SIGNER_PROVIDER_INFO_0 = extern union {
-    pwszPvkFileName: @"Windows.Win32.Foundation".PWSTR,
-    pwszKeyContainer: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const SIGNER_PROVIDER_INFO_0 = extern union {
+        pwszPvkFileName: @"Windows.Win32.Foundation".PWSTR,
+        pwszKeyContainer: @"Windows.Win32.Foundation".PWSTR,
+    };
     cbSize: u32,
     pwszProviderName: @"Windows.Win32.Foundation".PWSTR,
     dwProviderType: u32,
@@ -2340,9 +2340,9 @@ pub const SIGNER_PROVIDER_INFO_0 = extern union {
     Anonymous: SIGNER_PROVIDER_INFO_0,
 };
 pub const SIGNER_SIGNATURE_INFO = extern struct {
-pub const SIGNER_SIGNATURE_INFO_0 = extern union {
-    pAttrAuthcode: *SIGNER_ATTR_AUTHCODE,
-};
+    pub const SIGNER_SIGNATURE_INFO_0 = extern union {
+        pAttrAuthcode: *SIGNER_ATTR_AUTHCODE,
+    };
     cbSize: u32,
     algidHash: u32,
     dwAttrChoice: u32,
@@ -2351,10 +2351,10 @@ pub const SIGNER_SIGNATURE_INFO_0 = extern union {
     psUnauthenticated: *CRYPT_ATTRIBUTES,
 };
 pub const SIGNER_SUBJECT_INFO = extern struct {
-pub const SIGNER_SUBJECT_INFO_0 = extern union {
-    pSignerFileInfo: *SIGNER_FILE_INFO,
-    pSignerBlobInfo: *SIGNER_BLOB_INFO,
-};
+    pub const SIGNER_SUBJECT_INFO_0 = extern union {
+        pSignerFileInfo: *SIGNER_FILE_INFO,
+        pSignerBlobInfo: *SIGNER_BLOB_INFO,
+    };
     cbSize: u32,
     pdwIndex: *u32,
     dwSubjectChoice: u32,
@@ -2422,12 +2422,12 @@ pub const CRYPT_XML_KEY_RSA_KEY_VALUE = extern struct {
     Exponent: CRYPT_XML_DATA_BLOB,
 };
 pub const CRYPT_XML_KEY_VALUE = extern struct {
-pub const CRYPT_XML_KEY_VALUE_0 = extern union {
-    DSAKeyValue: CRYPT_XML_KEY_DSA_KEY_VALUE,
-    RSAKeyValue: CRYPT_XML_KEY_RSA_KEY_VALUE,
-    ECDSAKeyValue: CRYPT_XML_KEY_ECDSA_KEY_VALUE,
-    Custom: CRYPT_XML_BLOB,
-};
+    pub const CRYPT_XML_KEY_VALUE_0 = extern union {
+        DSAKeyValue: CRYPT_XML_KEY_DSA_KEY_VALUE,
+        RSAKeyValue: CRYPT_XML_KEY_RSA_KEY_VALUE,
+        ECDSAKeyValue: CRYPT_XML_KEY_ECDSA_KEY_VALUE,
+        Custom: CRYPT_XML_BLOB,
+    };
     dwType: u32,
     Anonymous: CRYPT_XML_KEY_VALUE_0,
 };
@@ -2436,14 +2436,14 @@ pub const CRYPT_XML_ISSUER_SERIAL = extern struct {
     wszSerial: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const CRYPT_XML_X509DATA_ITEM = extern struct {
-pub const CRYPT_XML_X509DATA_ITEM_0 = extern union {
-    IssuerSerial: CRYPT_XML_ISSUER_SERIAL,
-    SKI: CRYPT_XML_DATA_BLOB,
-    wszSubjectName: @"Windows.Win32.Foundation".PWSTR,
-    Certificate: CRYPT_XML_DATA_BLOB,
-    CRL: CRYPT_XML_DATA_BLOB,
-    Custom: CRYPT_XML_BLOB,
-};
+    pub const CRYPT_XML_X509DATA_ITEM_0 = extern union {
+        IssuerSerial: CRYPT_XML_ISSUER_SERIAL,
+        SKI: CRYPT_XML_DATA_BLOB,
+        wszSubjectName: @"Windows.Win32.Foundation".PWSTR,
+        Certificate: CRYPT_XML_DATA_BLOB,
+        CRL: CRYPT_XML_DATA_BLOB,
+        Custom: CRYPT_XML_BLOB,
+    };
     dwType: u32,
     Anonymous: CRYPT_XML_X509DATA_ITEM_0,
 };
@@ -2452,13 +2452,13 @@ pub const CRYPT_XML_X509DATA = extern struct {
     rgX509Data: *CRYPT_XML_X509DATA_ITEM,
 };
 pub const CRYPT_XML_KEY_INFO_ITEM = extern struct {
-pub const CRYPT_XML_KEY_INFO_ITEM_0 = extern union {
-    wszKeyName: @"Windows.Win32.Foundation".PWSTR,
-    KeyValue: CRYPT_XML_KEY_VALUE,
-    RetrievalMethod: CRYPT_XML_BLOB,
-    X509Data: CRYPT_XML_X509DATA,
-    Custom: CRYPT_XML_BLOB,
-};
+    pub const CRYPT_XML_KEY_INFO_ITEM_0 = extern union {
+        wszKeyName: @"Windows.Win32.Foundation".PWSTR,
+        KeyValue: CRYPT_XML_KEY_VALUE,
+        RetrievalMethod: CRYPT_XML_BLOB,
+        X509Data: CRYPT_XML_X509DATA,
+        Custom: CRYPT_XML_BLOB,
+    };
     dwType: u32,
     Anonymous: CRYPT_XML_KEY_INFO_ITEM_0,
 };

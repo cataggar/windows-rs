@@ -112,6 +112,8 @@ pub const WER_DUMP_CUSTOM_OPTIONS_V3 = extern struct {
     hSnapshot: @"Windows.Win32.Foundation".HANDLE,
     dwThreadID: u32,
 };
+pub const WER_EXCEPTION_INFORMATION = opaque {};
+pub const WER_RUNTIME_EXCEPTION_INFORMATION = opaque {};
 pub const WER_REPORT_PARAMETER = extern struct {
     Name: [129]u16,
     Value: [260]u16,

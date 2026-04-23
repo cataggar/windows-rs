@@ -37,6 +37,7 @@ pub const GROUP_POLICY_OBJECTW = extern struct {
     lParam2: @"Windows.Win32.Foundation".LPARAM,
     lpLink: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const RSOP_TARGET = opaque {};
 pub const POLICYSETTINGSTATUSINFO = extern struct {
     szKey: @"Windows.Win32.Foundation".PWSTR,
     szEventSource: @"Windows.Win32.Foundation".PWSTR,
@@ -47,14 +48,14 @@ pub const POLICYSETTINGSTATUSINFO = extern struct {
     timeLogged: @"Windows.Win32.Foundation".SYSTEMTIME,
 };
 pub const INSTALLSPEC = extern union {
-pub const _AppName_e__Struct = extern struct {
-    Name: @"Windows.Win32.Foundation".PWSTR,
-    GPOId: GUID,
-};
-pub const _COMClass_e__Struct = extern struct {
-    Clsid: GUID,
-    ClsCtx: u32,
-};
+    pub const _AppName_e__Struct = extern struct {
+        Name: @"Windows.Win32.Foundation".PWSTR,
+        GPOId: GUID,
+    };
+    pub const _COMClass_e__Struct = extern struct {
+        Clsid: GUID,
+        ClsCtx: u32,
+    };
     AppName: _AppName_e__Struct,
     FileExt: @"Windows.Win32.Foundation".PWSTR,
     ProgId: @"Windows.Win32.Foundation".PWSTR,

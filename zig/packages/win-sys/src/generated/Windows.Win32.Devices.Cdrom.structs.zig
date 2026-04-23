@@ -76,10 +76,10 @@ pub const CDROM_TOC_ATIP_DATA = extern struct {
     Descriptors: [1]CDROM_TOC_ATIP_DATA_BLOCK,
 };
 pub const CDROM_TOC_CD_TEXT_DATA_BLOCK = extern struct {
-pub const CDROM_TOC_CD_TEXT_DATA_BLOCK_0 = extern union {
-    Text: [12]u8,
-    WText: [6]u16,
-};
+    pub const CDROM_TOC_CD_TEXT_DATA_BLOCK_0 = extern union {
+        Text: [12]u8,
+        WText: [6]u16,
+    };
     PackType: u8,
     _bitfield1: u8,
     SequenceNumber: u8,

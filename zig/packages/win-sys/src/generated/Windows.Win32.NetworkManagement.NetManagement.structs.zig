@@ -1700,6 +1700,7 @@ pub const NETWORK_NAME = extern struct {
 pub const HARDWARE_ADDRESS = extern struct {
     Address: [6]u8,
 };
+pub const OBO_TOKEN = opaque {};
 pub const RASCON_IPUI = extern struct {
     guidConnection: GUID,
     fIPv6Cfg: @"Windows.Win32.Foundation".BOOL,

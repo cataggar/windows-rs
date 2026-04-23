@@ -1122,6 +1122,7 @@ pub const DML_FEATURE_QUERY_FEATURE_LEVELS = extern struct {
 pub const DML_FEATURE_DATA_FEATURE_LEVELS = extern struct {
     MaxSupportedFeatureLevel: i32,
 };
+pub const DML_BINDING_TABLE_DESC = opaque {};
 pub const DML_BINDING_PROPERTIES = extern struct {
     RequiredDescriptorCount: u32,
     TemporaryResourceSize: u64,
@@ -1131,6 +1132,8 @@ pub const DML_BINDING_DESC = extern struct {
     Type: i32,
     Desc: *anyopaque,
 };
+pub const DML_BUFFER_BINDING = opaque {};
+pub const DML_BUFFER_ARRAY_BINDING = opaque {};
 pub const DML_GRAPH_EDGE_DESC = extern struct {
     Type: i32,
     Desc: *anyopaque,
@@ -1158,6 +1161,7 @@ pub const DML_GRAPH_NODE_DESC = extern struct {
     Type: i32,
     Desc: *anyopaque,
 };
+pub const DML_OPERATOR_GRAPH_NODE_DESC = opaque {};
 pub const DML_GRAPH_DESC = extern struct {
     InputCount: u32,
     OutputCount: u32,

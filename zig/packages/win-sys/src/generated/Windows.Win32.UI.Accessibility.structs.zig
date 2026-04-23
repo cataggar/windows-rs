@@ -38,6 +38,7 @@ pub const UiaPoint = extern struct {
     x: f64,
     y: f64,
 };
+pub const UiaChangeInfo = opaque {};
 pub const UIAutomationParameter = extern struct {
     type: i32,
     pData: *anyopaque,
@@ -59,6 +60,7 @@ pub const UIAutomationMethodInfo = extern struct {
     pParameterTypes: *i32,
     pParameterNames: *@"Windows.Win32.Foundation".PWSTR,
 };
+pub const UIAutomationPatternInfo = opaque {};
 pub const ExtendedProperty = extern struct {
     PropertyName: @"Windows.Win32.Foundation".BSTR,
     PropertyValue: @"Windows.Win32.Foundation".BSTR,
@@ -66,6 +68,7 @@ pub const ExtendedProperty = extern struct {
 pub const UiaCondition = extern struct {
     ConditionType: i32,
 };
+pub const UiaPropertyCondition = opaque {};
 pub const UiaAndOrCondition = extern struct {
     ConditionType: i32,
     ppConditions: **UiaCondition,
@@ -94,6 +97,7 @@ pub const UiaEventArgs = extern struct {
     Type: i32,
     EventId: i32,
 };
+pub const UiaPropertyChangedEventArgs = opaque {};
 pub const UiaStructureChangedEventArgs = extern struct {
     Type: i32,
     EventId: i32,
@@ -107,6 +111,7 @@ pub const UiaTextEditTextChangedEventArgs = extern struct {
     TextEditChangeType: i32,
     pTextChange: *@"Windows.Win32.System.Com".SAFEARRAY,
 };
+pub const UiaChangesEventArgs = opaque {};
 pub const UiaAsyncContentLoadedEventArgs = extern struct {
     Type: i32,
     EventId: i32,

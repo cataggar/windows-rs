@@ -90,24 +90,24 @@ pub const JET_RSTMAP_W = extern struct {
     szNewDatabaseName: *u16,
 };
 pub const JET_CONVERT_A = extern struct {
-pub const JET_CONVERT_A_0 = extern union {
-pub const JET_CONVERT_A_0_0 = extern struct {
-    _bitfield: u32,
-};
-    fFlags: u32,
-    Anonymous: JET_CONVERT_A_0_0,
-};
+    pub const JET_CONVERT_A_0 = extern union {
+        pub const JET_CONVERT_A_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        fFlags: u32,
+        Anonymous: JET_CONVERT_A_0_0,
+    };
     szOldDll: *i8,
     Anonymous: JET_CONVERT_A_0,
 };
 pub const JET_CONVERT_W = extern struct {
-pub const JET_CONVERT_W_0 = extern union {
-pub const JET_CONVERT_W_0_0 = extern struct {
-    _bitfield: u32,
-};
-    fFlags: u32,
-    Anonymous: JET_CONVERT_W_0_0,
-};
+    pub const JET_CONVERT_W_0 = extern union {
+        pub const JET_CONVERT_W_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        fFlags: u32,
+        Anonymous: JET_CONVERT_W_0_0,
+    };
     szOldDll: *u16,
     Anonymous: JET_CONVERT_W_0,
 };
@@ -117,13 +117,13 @@ pub const JET_SNPROG = extern struct {
     cunitTotal: u32,
 };
 pub const JET_DBINFOUPGRADE = extern struct {
-pub const JET_DBINFOUPGRADE_0 = extern union {
-pub const JET_DBINFOUPGRADE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    ulFlags: u32,
-    Anonymous: JET_DBINFOUPGRADE_0_0,
-};
+    pub const JET_DBINFOUPGRADE_0 = extern union {
+        pub const JET_DBINFOUPGRADE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        ulFlags: u32,
+        Anonymous: JET_DBINFOUPGRADE_0_0,
+    };
     cbStruct: u32,
     cbFilesizeLow: u32,
     cbFilesizeHigh: u32,
@@ -295,14 +295,14 @@ pub const JET_SPACEHINTS = extern struct {
     cbMaxExtent: u32,
 };
 pub const JET_INDEXCREATE_A = extern struct {
-pub const JET_INDEXCREATE_A_0 = extern union {
-    lcid: u32,
-    pidxunicode: *JET_UNICODEINDEX,
-};
-pub const JET_INDEXCREATE_A_1 = extern union {
-    cbVarSegMac: u32,
-    ptuplelimits: *JET_TUPLELIMITS,
-};
+    pub const JET_INDEXCREATE_A_0 = extern union {
+        lcid: u32,
+        pidxunicode: *JET_UNICODEINDEX,
+    };
+    pub const JET_INDEXCREATE_A_1 = extern union {
+        cbVarSegMac: u32,
+        ptuplelimits: *JET_TUPLELIMITS,
+    };
     cbStruct: u32,
     szIndexName: *i8,
     szKey: *i8,
@@ -317,14 +317,14 @@ pub const JET_INDEXCREATE_A_1 = extern union {
     cbKeyMost: u32,
 };
 pub const JET_INDEXCREATE_W = extern struct {
-pub const JET_INDEXCREATE_W_0 = extern union {
-    lcid: u32,
-    pidxunicode: *JET_UNICODEINDEX,
-};
-pub const JET_INDEXCREATE_W_1 = extern union {
-    cbVarSegMac: u32,
-    ptuplelimits: *JET_TUPLELIMITS,
-};
+    pub const JET_INDEXCREATE_W_0 = extern union {
+        lcid: u32,
+        pidxunicode: *JET_UNICODEINDEX,
+    };
+    pub const JET_INDEXCREATE_W_1 = extern union {
+        cbVarSegMac: u32,
+        ptuplelimits: *JET_TUPLELIMITS,
+    };
     cbStruct: u32,
     szIndexName: *u16,
     szKey: *u16,
@@ -339,14 +339,14 @@ pub const JET_INDEXCREATE_W_1 = extern union {
     cbKeyMost: u32,
 };
 pub const JET_INDEXCREATE2_A = extern struct {
-pub const JET_INDEXCREATE2_A_0 = extern union {
-    lcid: u32,
-    pidxunicode: *JET_UNICODEINDEX,
-};
-pub const JET_INDEXCREATE2_A_1 = extern union {
-    cbVarSegMac: u32,
-    ptuplelimits: *JET_TUPLELIMITS,
-};
+    pub const JET_INDEXCREATE2_A_0 = extern union {
+        lcid: u32,
+        pidxunicode: *JET_UNICODEINDEX,
+    };
+    pub const JET_INDEXCREATE2_A_1 = extern union {
+        cbVarSegMac: u32,
+        ptuplelimits: *JET_TUPLELIMITS,
+    };
     cbStruct: u32,
     szIndexName: *i8,
     szKey: *i8,
@@ -362,14 +362,14 @@ pub const JET_INDEXCREATE2_A_1 = extern union {
     pSpacehints: *JET_SPACEHINTS,
 };
 pub const JET_INDEXCREATE2_W = extern struct {
-pub const JET_INDEXCREATE2_W_0 = extern union {
-    lcid: u32,
-    pidxunicode: *JET_UNICODEINDEX,
-};
-pub const JET_INDEXCREATE2_W_1 = extern union {
-    cbVarSegMac: u32,
-    ptuplelimits: *JET_TUPLELIMITS,
-};
+    pub const JET_INDEXCREATE2_W_0 = extern union {
+        lcid: u32,
+        pidxunicode: *JET_UNICODEINDEX,
+    };
+    pub const JET_INDEXCREATE2_W_1 = extern union {
+        cbVarSegMac: u32,
+        ptuplelimits: *JET_TUPLELIMITS,
+    };
     cbStruct: u32,
     szIndexName: *u16,
     szKey: *u16,
@@ -385,10 +385,10 @@ pub const JET_INDEXCREATE2_W_1 = extern union {
     pSpacehints: *JET_SPACEHINTS,
 };
 pub const JET_INDEXCREATE3_A = extern struct {
-pub const JET_INDEXCREATE3_A_0 = extern union {
-    cbVarSegMac: u32,
-    ptuplelimits: *JET_TUPLELIMITS,
-};
+    pub const JET_INDEXCREATE3_A_0 = extern union {
+        cbVarSegMac: u32,
+        ptuplelimits: *JET_TUPLELIMITS,
+    };
     cbStruct: u32,
     szIndexName: *i8,
     szKey: *i8,
@@ -404,10 +404,10 @@ pub const JET_INDEXCREATE3_A_0 = extern union {
     pSpacehints: *JET_SPACEHINTS,
 };
 pub const JET_INDEXCREATE3_W = extern struct {
-pub const JET_INDEXCREATE3_W_0 = extern union {
-    cbVarSegMac: u32,
-    ptuplelimits: *JET_TUPLELIMITS,
-};
+    pub const JET_INDEXCREATE3_W_0 = extern union {
+        cbVarSegMac: u32,
+        ptuplelimits: *JET_TUPLELIMITS,
+    };
     cbStruct: u32,
     szIndexName: *u16,
     szKey: *u16,
@@ -622,20 +622,20 @@ pub const JET_INDEX_RANGE = extern struct {
     cEndColumns: u32,
 };
 pub const JET_LOGTIME = extern struct {
-pub const JET_LOGTIME_0 = extern union {
-pub const JET_LOGTIME_0_0 = extern struct {
-    _bitfield: u8,
-};
-    bFiller1: u8,
-    Anonymous: JET_LOGTIME_0_0,
-};
-pub const JET_LOGTIME_1 = extern union {
-pub const JET_LOGTIME_1_0 = extern struct {
-    _bitfield: u8,
-};
-    bFiller2: u8,
-    Anonymous: JET_LOGTIME_1_0,
-};
+    pub const JET_LOGTIME_0 = extern union {
+        pub const JET_LOGTIME_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        bFiller1: u8,
+        Anonymous: JET_LOGTIME_0_0,
+    };
+    pub const JET_LOGTIME_1 = extern union {
+        pub const JET_LOGTIME_1_0 = extern struct {
+            _bitfield: u8,
+        };
+        bFiller2: u8,
+        Anonymous: JET_LOGTIME_1_0,
+    };
     bSeconds: i8,
     bMinutes: i8,
     bHours: i8,
@@ -646,20 +646,20 @@ pub const JET_LOGTIME_1_0 = extern struct {
     Anonymous2: JET_LOGTIME_1,
 };
 pub const JET_BKLOGTIME = extern struct {
-pub const JET_BKLOGTIME_0 = extern union {
-pub const JET_BKLOGTIME_0_0 = extern struct {
-    _bitfield: u8,
-};
-    bFiller1: u8,
-    Anonymous: JET_BKLOGTIME_0_0,
-};
-pub const JET_BKLOGTIME_1 = extern union {
-pub const JET_BKLOGTIME_1_0 = extern struct {
-    _bitfield: u8,
-};
-    bFiller2: u8,
-    Anonymous: JET_BKLOGTIME_1_0,
-};
+    pub const JET_BKLOGTIME_0 = extern union {
+        pub const JET_BKLOGTIME_0_0 = extern struct {
+            _bitfield: u8,
+        };
+        bFiller1: u8,
+        Anonymous: JET_BKLOGTIME_0_0,
+    };
+    pub const JET_BKLOGTIME_1 = extern union {
+        pub const JET_BKLOGTIME_1_0 = extern struct {
+            _bitfield: u8,
+        };
+        bFiller2: u8,
+        Anonymous: JET_BKLOGTIME_1_0,
+    };
     bSeconds: i8,
     bMinutes: i8,
     bHours: i8,
@@ -680,10 +680,10 @@ pub const JET_SIGNATURE = extern struct {
     szComputerName: [16]i8,
 };
 pub const JET_BKINFO = extern struct {
-pub const JET_BKINFO_0 = extern union {
-    logtimeMark: JET_LOGTIME,
-    bklogtimeMark: JET_BKLOGTIME,
-};
+    pub const JET_BKINFO_0 = extern union {
+        logtimeMark: JET_LOGTIME,
+        bklogtimeMark: JET_BKLOGTIME,
+    };
     lgposMark: JET_LGPOS,
     Anonymous: JET_BKINFO_0,
     genLow: u32,
@@ -915,18 +915,18 @@ pub const JET_ENUMCOLUMNVALUE = extern struct {
     pvData: *anyopaque,
 };
 pub const JET_ENUMCOLUMN = extern struct {
-pub const JET_ENUMCOLUMN_0 = extern union {
-pub const JET_ENUMCOLUMN_0_0 = extern struct {
-    cEnumColumnValue: u32,
-    rgEnumColumnValue: *JET_ENUMCOLUMNVALUE,
-};
-pub const JET_ENUMCOLUMN_0_1 = extern struct {
-    cbData: u32,
-    pvData: *anyopaque,
-};
-    Anonymous1: JET_ENUMCOLUMN_0_0,
-    Anonymous2: JET_ENUMCOLUMN_0_1,
-};
+    pub const JET_ENUMCOLUMN_0 = extern union {
+        pub const JET_ENUMCOLUMN_0_0 = extern struct {
+            cEnumColumnValue: u32,
+            rgEnumColumnValue: *JET_ENUMCOLUMNVALUE,
+        };
+        pub const JET_ENUMCOLUMN_0_1 = extern struct {
+            cbData: u32,
+            pvData: *anyopaque,
+        };
+        Anonymous1: JET_ENUMCOLUMN_0_0,
+        Anonymous2: JET_ENUMCOLUMN_0_1,
+    };
     columnid: u32,
     err: i32,
     Anonymous: JET_ENUMCOLUMN_0,

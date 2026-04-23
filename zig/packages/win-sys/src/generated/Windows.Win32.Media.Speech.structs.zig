@@ -105,6 +105,7 @@ pub const SPPHRASERULE = extern struct {
     SREngineConfidence: f32,
     Confidence: i8,
 };
+pub const SPPHRASEPROPERTY = opaque {};
 pub const SPPHRASEREPLACEMENT = extern struct {
     bDisplayAttributes: u8,
     pszReplacementText: @"Windows.Win32.Foundation".PWSTR,
@@ -118,6 +119,8 @@ pub const SPSEMANTICERRORINFO = extern struct {
     pszDescription: @"Windows.Win32.Foundation".PWSTR,
     hrResultCode: @"Windows.Win32.Foundation".HRESULT,
 };
+pub const SPPHRASE_50 = opaque {};
+pub const SPPHRASE = opaque {};
 pub const SPSERIALIZEDPHRASE = extern struct {
     ulSerializedSize: u32,
 };
@@ -219,6 +222,7 @@ pub const SPTEXTSELECTIONINFO = extern struct {
     ulStartSelection: u32,
     cchSelection: u32,
 };
+pub const SPPROPERTYINFO = opaque {};
 pub const SPRECOCONTEXTSTATUS = extern struct {
     eInterference: i32,
     szRequestTypeOfUI: [255]u16,
@@ -277,26 +281,26 @@ pub const SPRULEENTRY = extern struct {
     pvClientGrammarContext: *anyopaque,
 };
 pub const SPTRANSITIONENTRY = extern struct {
-pub const SPTRANSITIONENTRY_0 = extern struct {
-    fHasProperty: u32,
-};
-pub const SPTRANSITIONENTRY_1 = extern union {
-pub const SPTRANSITIONENTRY_1_0 = extern struct {
-    hRuleInitialState: SPSTATEHANDLE,
-    hRule: SPRULEHANDLE,
-    pvClientRuleContext: *anyopaque,
-};
-pub const SPTRANSITIONENTRY_1_1 = extern struct {
-    hWord: SPWORDHANDLE,
-    pvClientWordContext: *anyopaque,
-};
-pub const SPTRANSITIONENTRY_1_2 = extern struct {
-    pvGrammarCookie: *anyopaque,
-};
-    Anonymous1: SPTRANSITIONENTRY_1_0,
-    Anonymous2: SPTRANSITIONENTRY_1_1,
-    Anonymous3: SPTRANSITIONENTRY_1_2,
-};
+    pub const SPTRANSITIONENTRY_0 = extern struct {
+        fHasProperty: u32,
+    };
+    pub const SPTRANSITIONENTRY_1 = extern union {
+        pub const SPTRANSITIONENTRY_1_0 = extern struct {
+            hRuleInitialState: SPSTATEHANDLE,
+            hRule: SPRULEHANDLE,
+            pvClientRuleContext: *anyopaque,
+        };
+        pub const SPTRANSITIONENTRY_1_1 = extern struct {
+            hWord: SPWORDHANDLE,
+            pvClientWordContext: *anyopaque,
+        };
+        pub const SPTRANSITIONENTRY_1_2 = extern struct {
+            pvGrammarCookie: *anyopaque,
+        };
+        Anonymous1: SPTRANSITIONENTRY_1_0,
+        Anonymous2: SPTRANSITIONENTRY_1_1,
+        Anonymous3: SPTRANSITIONENTRY_1_2,
+    };
     ID: SPTRANSITIONID,
     hNextState: SPSTATEHANDLE,
     Type: u8,
@@ -305,6 +309,7 @@ pub const SPTRANSITIONENTRY_1_2 = extern struct {
     Weight: f32,
     Anonymous2: SPTRANSITIONENTRY_1,
 };
+pub const SPTRANSITIONPROPERTY = opaque {};
 pub const SPSTATEINFO = extern struct {
     cAllocatedEntries: u32,
     pTransitions: *SPTRANSITIONENTRY,
@@ -317,6 +322,9 @@ pub const SPPATHENTRY = extern struct {
     hTransition: SPTRANSITIONID,
     elem: SPPHRASEELEMENT,
 };
+pub const SPPHRASEALT = opaque {};
+pub const SPRECORESULTINFO = opaque {};
+pub const SPRECORESULTINFOEX = opaque {};
 pub const SPPARSEINFO = extern struct {
     cbSize: u32,
     hRule: SPRULEHANDLE,
@@ -329,3 +337,4 @@ pub const SPPARSEINFO = extern struct {
     pSREnginePrivateData: *u8,
     fHypothesis: @"Windows.Win32.Foundation".BOOL,
 };
+pub const SPPHRASEALTREQUEST = opaque {};

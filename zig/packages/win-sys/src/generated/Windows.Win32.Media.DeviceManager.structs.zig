@@ -49,6 +49,11 @@ pub const WMDMMetadataView = extern struct {
     nDepth: u32,
     ppwszTags: **u16,
 };
+pub const WMDM_PROP_VALUES_RANGE = opaque {};
+pub const WMDM_PROP_VALUES_ENUM = opaque {};
+pub const WMDM_PROP_DESC = opaque {};
+pub const WMDM_PROP_CONFIG = opaque {};
+pub const WMDM_FORMAT_CAPABILITY = opaque {};
 pub const WMDMDetermineMaxPropStringLen = extern union {
     sz001: [27]u16,
     sz002: [31]u16,

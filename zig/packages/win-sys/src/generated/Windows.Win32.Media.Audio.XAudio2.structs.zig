@@ -65,6 +65,10 @@ pub const XAUDIO2_VOICE_DETAILS = extern struct {
     InputChannels: u32,
     InputSampleRate: u32,
 };
+pub const XAUDIO2_SEND_DESCRIPTOR = opaque {};
+pub const XAUDIO2_VOICE_SENDS = opaque {};
+pub const XAUDIO2_EFFECT_DESCRIPTOR = opaque {};
+pub const XAUDIO2_EFFECT_CHAIN = opaque {};
 pub const XAUDIO2_FILTER_PARAMETERS = extern struct {
     Type: i32,
     Frequency: f32,

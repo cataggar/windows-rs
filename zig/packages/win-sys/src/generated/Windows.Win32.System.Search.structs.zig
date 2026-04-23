@@ -25,6 +25,9 @@ pub const DBTIMESTAMP = extern struct {
     second: u16,
     fraction: u32,
 };
+pub const SEC_OBJECT_ELEMENT = opaque {};
+pub const SEC_OBJECT = opaque {};
+pub const DBIMPLICITSESSION = opaque {};
 pub const DBOBJECT = extern struct {
     dwFlags: u32,
     iid: GUID,
@@ -33,21 +36,32 @@ pub const DBBINDEXT = extern struct {
     pExtension: *u8,
     ulExtension: usize,
 };
+pub const DBBINDING = opaque {};
 pub const DBFAILUREINFO = extern struct {
     hRow: usize,
     iColumn: usize,
     failure: @"Windows.Win32.Foundation".HRESULT,
 };
+pub const DBCOLUMNINFO = opaque {};
 pub const DBPARAMS = extern struct {
     pData: *anyopaque,
     cParamSets: usize,
     hAccessor: HACCESSOR,
 };
+pub const DBPARAMINFO = opaque {};
 pub const DBPROPIDSET = extern struct {
     rgPropertyIDs: *u32,
     cPropertyIDs: u32,
     guidPropertySet: GUID,
 };
+pub const DBPROPINFO = opaque {};
+pub const DBPROPINFOSET = opaque {};
+pub const DBPROP = opaque {};
+pub const DBPROPSET = opaque {};
+pub const DBINDEXCOLUMNDESC = opaque {};
+pub const DBCOLUMNDESC = opaque {};
+pub const DBCOLUMNACCESS = opaque {};
+pub const DBCONSTRAINTDESC = opaque {};
 pub const MDAXISINFO = extern struct {
     cbSize: usize,
     iAxis: usize,
@@ -56,6 +70,7 @@ pub const MDAXISINFO = extern struct {
     rgcColumns: *usize,
     rgpwszDimensionNames: *@"Windows.Win32.Foundation".PWSTR,
 };
+pub const RMTPACK = opaque {};
 pub const DBPARAMBINDINFO = extern struct {
     pwszDataSourceType: @"Windows.Win32.Foundation".PWSTR,
     pwszName: @"Windows.Win32.Foundation".PWSTR,
@@ -176,6 +191,8 @@ pub const SEARCH_ITEM_INDEXING_STATUS = extern struct {
     dwDocID: u32,
     hrIndexingStatus: @"Windows.Win32.Foundation".HRESULT,
 };
+pub const SEARCH_COLUMN_PROPERTIES = opaque {};
+pub const ITEMPROP = opaque {};
 pub const SUBSCRIPTIONITEMINFO = extern struct {
     cbSize: u32,
     dwFlags: u32,
@@ -204,11 +221,13 @@ pub const SUBSCRIPTIONINFO = extern struct {
     fTaskFlags: u32,
     dwReserved: u32,
 };
+pub const DCINFO = opaque {};
 pub const KAGREQDIAG = extern struct {
     ulDiagFlags: u32,
     vt: u16,
     sDiagField: i16,
 };
+pub const KAGGETDIAG = opaque {};
 pub const DATE_STRUCT = extern struct {
     year: i16,
     month: u16,
@@ -240,10 +259,10 @@ pub const SQL_DAY_SECOND_STRUCT = extern struct {
     fraction: u32,
 };
 pub const SQL_INTERVAL_STRUCT = extern struct {
-pub const _intval_e__Union = extern union {
-    year_month: SQL_YEAR_MONTH_STRUCT,
-    day_second: SQL_DAY_SECOND_STRUCT,
-};
+    pub const _intval_e__Union = extern union {
+        year_month: SQL_YEAR_MONTH_STRUCT,
+        day_second: SQL_DAY_SECOND_STRUCT,
+    };
     interval_type: i32,
     interval_sign: i16,
     intval: _intval_e__Union,
@@ -309,6 +328,9 @@ pub const SQLPERF = extern struct {
     msExecutionTime: u32,
     msNetWorkServerTime: u32,
 };
+pub const NOTRESTRICTION = opaque {};
+pub const NODERESTRICTION = opaque {};
+pub const VECTORRESTRICTION = opaque {};
 pub const CONTENTRESTRICTION = extern struct {
     prop: @"Windows.Win32.Storage.IndexServer".FULLPROPSPEC,
     pwcsPhrase: @"Windows.Win32.Foundation".PWSTR,
@@ -320,6 +342,8 @@ pub const NATLANGUAGERESTRICTION = extern struct {
     pwcsPhrase: @"Windows.Win32.Foundation".PWSTR,
     lcid: u32,
 };
+pub const PROPERTYRESTRICTION = opaque {};
+pub const RESTRICTION = opaque {};
 pub const COLUMNSET = extern struct {
     cCol: u32,
     aCol: *@"Windows.Win32.Storage.IndexServer".FULLPROPSPEC,
@@ -337,21 +361,25 @@ pub const BUCKETCATEGORIZE = extern struct {
     cBuckets: u32,
     Distribution: u32,
 };
+pub const RANGECATEGORIZE = opaque {};
+pub const CATEGORIZATION = opaque {};
+pub const CATEGORIZATIONSET = opaque {};
 pub const ODBC_VS_ARGS = extern struct {
-pub const ODBC_VS_ARGS_0 = extern union {
-    wszArg: @"Windows.Win32.Foundation".PWSTR,
-    szArg: @"Windows.Win32.Foundation".PSTR,
-};
-pub const ODBC_VS_ARGS_1 = extern union {
-    wszCorrelation: @"Windows.Win32.Foundation".PWSTR,
-    szCorrelation: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const ODBC_VS_ARGS_0 = extern union {
+        wszArg: @"Windows.Win32.Foundation".PWSTR,
+        szArg: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const ODBC_VS_ARGS_1 = extern union {
+        wszCorrelation: @"Windows.Win32.Foundation".PWSTR,
+        szCorrelation: @"Windows.Win32.Foundation".PSTR,
+    };
     pguidEvent: *GUID,
     dwFlags: u32,
     Anonymous1: ODBC_VS_ARGS_0,
     Anonymous2: ODBC_VS_ARGS_1,
     RetCode: i16,
 };
+pub const SSVARIANT = opaque {};
 pub const SSERRORINFO = extern struct {
     pwszMessage: @"Windows.Win32.Foundation".PWSTR,
     pwszServer: @"Windows.Win32.Foundation".PWSTR,

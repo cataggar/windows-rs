@@ -15,11 +15,11 @@ pub const ITEMIDLIST = extern struct {
     mkid: SHITEMID,
 };
 pub const STRRET = extern struct {
-pub const STRRET_0 = extern union {
-    pOleStr: @"Windows.Win32.Foundation".PWSTR,
-    uOffset: u32,
-    cStr: [260]u8,
-};
+    pub const STRRET_0 = extern union {
+        pOleStr: @"Windows.Win32.Foundation".PWSTR,
+        uOffset: u32,
+        cStr: [260]u8,
+    };
     uType: u32,
     Anonymous: STRRET_0,
 };

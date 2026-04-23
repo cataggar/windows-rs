@@ -67,6 +67,7 @@ pub const D2D1_STROKE_STYLE_PROPERTIES = extern struct {
     dashStyle: i32,
     dashOffset: f32,
 };
+pub const D2D1_LAYER_PARAMETERS = opaque {};
 pub const D2D1_RENDER_TARGET_PROPERTIES = extern struct {
     type: i32,
     pixelFormat: @"Windows.Win32.Graphics.Direct2D.Common".D2D1_PIXEL_FORMAT,
@@ -90,6 +91,7 @@ pub const D2D1_DRAWING_STATE_DESCRIPTION = extern struct {
 pub const D2D1_FACTORY_OPTIONS = extern struct {
     debugLevel: i32,
 };
+pub const D2D1_BITMAP_PROPERTIES1 = opaque {};
 pub const D2D1_MAPPED_RECT = extern struct {
     pitch: u32,
     bits: *u8,
@@ -98,6 +100,7 @@ pub const D2D1_RENDERING_CONTROLS = extern struct {
     bufferPrecision: i32,
     tileSize: @"Windows.Win32.Graphics.Direct2D.Common".D2D_SIZE_U,
 };
+pub const D2D1_EFFECT_INPUT_DESCRIPTION = opaque {};
 pub const D2D1_POINT_DESCRIPTION = extern struct {
     point: @"Windows.Win32.Graphics.Direct2D.Common".D2D_POINT_2F,
     unitTangentVector: @"Windows.Win32.Graphics.Direct2D.Common".D2D_POINT_2F,
@@ -126,6 +129,7 @@ pub const D2D1_STROKE_STYLE_PROPERTIES1 = extern struct {
     dashOffset: f32,
     transformType: i32,
 };
+pub const D2D1_LAYER_PARAMETERS1 = opaque {};
 pub const D2D1_DRAWING_STATE_DESCRIPTION1 = extern struct {
     antialiasMode: i32,
     textAntialiasMode: i32,

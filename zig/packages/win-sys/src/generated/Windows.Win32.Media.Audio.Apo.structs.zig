@@ -26,6 +26,7 @@ pub const APO_CONNECTION_PROPERTY_V2 = extern struct {
     property: APO_CONNECTION_PROPERTY,
     u64QPCTime: u64,
 };
+pub const APO_CONNECTION_DESCRIPTOR = opaque {};
 pub const APO_REG_PROPERTIES = extern struct {
     clsid: GUID,
     Flags: i32,
@@ -45,11 +46,19 @@ pub const APOInitBaseStruct = extern struct {
     cbSize: u32,
     clsid: GUID,
 };
+pub const APOInitSystemEffects = opaque {};
+pub const APOInitSystemEffects2 = opaque {};
+pub const AudioFXExtensionParams = opaque {};
 pub const AUDIO_SYSTEMEFFECT = extern struct {
     id: GUID,
     canSetState: @"Windows.Win32.Foundation".BOOL,
     state: i32,
 };
+pub const APOInitSystemEffects3 = opaque {};
+pub const AcousticEchoCanceller_Reference_Input = opaque {};
+pub const AUDIO_ENDPOINT_VOLUME_CHANGE_NOTIFICATION = opaque {};
+pub const AUDIO_ENDPOINT_PROPERTY_CHANGE_NOTIFICATION = opaque {};
+pub const AUDIO_SYSTEMEFFECTS_PROPERTY_CHANGE_NOTIFICATION = opaque {};
 pub const AUDIO_VOLUME_NOTIFICATION_DATA2 = extern struct {
     notificationData: *@"Windows.Win32.Media.Audio".AUDIO_VOLUME_NOTIFICATION_DATA,
     masterVolumeInDb: f32,
@@ -60,3 +69,12 @@ pub const AUDIO_VOLUME_NOTIFICATION_DATA2 = extern struct {
     stepCount: u32,
     channelVolumesInDb: [1]f32,
 };
+pub const AUDIO_ENDPOINT_VOLUME_CHANGE_NOTIFICATION2 = opaque {};
+pub const AUDIO_MICROPHONE_BOOST_NOTIFICATION = opaque {};
+pub const AUDIO_ENVIRONMENT_STATE_CHANGE_NOTIFICATION = opaque {};
+pub const APO_NOTIFICATION = opaque {};
+pub const AUDIO_ENDPOINT_VOLUME_APO_NOTIFICATION_DESCRIPTOR = opaque {};
+pub const AUDIO_ENDPOINT_PROPERTY_CHANGE_APO_NOTIFICATION_DESCRIPTOR = opaque {};
+pub const AUDIO_SYSTEMEFFECTS_PROPERTY_CHANGE_APO_NOTIFICATION_DESCRIPTOR = opaque {};
+pub const AUDIO_MICROPHONE_BOOST_APO_NOTIFICATION_DESCRIPTOR = opaque {};
+pub const APO_NOTIFICATION_DESCRIPTOR = opaque {};

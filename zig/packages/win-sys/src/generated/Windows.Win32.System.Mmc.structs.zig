@@ -7,6 +7,7 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
+pub const MMC_SNAPIN_PROPERTY = opaque {};
 pub const MMCBUTTON = extern struct {
     nBitmap: i32,
     idCommand: i32,
@@ -76,6 +77,7 @@ pub const MMC_VISIBLE_COLUMNS = extern struct {
     nVisibleColumns: i32,
     rgVisibleCols: [1]i32,
 };
+pub const SMMCDataObjects = opaque {};
 pub const SMMCObjectTypes = extern struct {
     count: u32,
     guid: [1]GUID,
@@ -104,19 +106,19 @@ pub const MMC_TASK_DISPLAY_BITMAP = extern struct {
     szMouseOffBitmap: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const MMC_TASK_DISPLAY_OBJECT = extern struct {
-pub const MMC_TASK_DISPLAY_OBJECT_0 = extern union {
-    uBitmap: MMC_TASK_DISPLAY_BITMAP,
-    uSymbol: MMC_TASK_DISPLAY_SYMBOL,
-};
+    pub const MMC_TASK_DISPLAY_OBJECT_0 = extern union {
+        uBitmap: MMC_TASK_DISPLAY_BITMAP,
+        uSymbol: MMC_TASK_DISPLAY_SYMBOL,
+    };
     eDisplayType: i32,
     Anonymous: MMC_TASK_DISPLAY_OBJECT_0,
 };
 pub const MMC_TASK = extern struct {
-pub const MMC_TASK_0 = extern union {
-    nCommandID: isize,
-    szActionURL: @"Windows.Win32.Foundation".PWSTR,
-    szScript: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const MMC_TASK_0 = extern union {
+        nCommandID: isize,
+        szActionURL: @"Windows.Win32.Foundation".PWSTR,
+        szScript: @"Windows.Win32.Foundation".PWSTR,
+    };
     sDisplayObject: MMC_TASK_DISPLAY_OBJECT,
     szText: @"Windows.Win32.Foundation".PWSTR,
     szHelpString: @"Windows.Win32.Foundation".PWSTR,
@@ -162,6 +164,7 @@ pub const RDCOMPARE = extern struct {
     prdch1: *RDITEMHDR,
     prdch2: *RDITEMHDR,
 };
+pub const RESULT_VIEW_TYPE_INFO = opaque {};
 pub const CONTEXTMENUITEM2 = extern struct {
     strName: @"Windows.Win32.Foundation".PWSTR,
     strStatusBarText: @"Windows.Win32.Foundation".PWSTR,

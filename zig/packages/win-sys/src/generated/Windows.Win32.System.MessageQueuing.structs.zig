@@ -6,6 +6,8 @@ const HRESULT = win_core.HRESULT;
 const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 
+pub const MQPROPERTYRESTRICTION = opaque {};
+pub const MQRESTRICTION = opaque {};
 pub const MQCOLUMNSET = extern struct {
     cCol: u32,
     aCol: *u32,
@@ -18,6 +20,11 @@ pub const MQSORTSET = extern struct {
     cCol: u32,
     aCol: *MQSORTKEY,
 };
+pub const MQMSGPROPS = opaque {};
+pub const MQQUEUEPROPS = opaque {};
+pub const MQQMPROPS = opaque {};
+pub const MQPRIVATEPROPS = opaque {};
+pub const MQMGMTPROPS = opaque {};
 pub const SEQUENCE_INFO = extern struct {
     SeqID: i64,
     SeqNo: u32,

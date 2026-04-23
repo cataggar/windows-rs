@@ -18,10 +18,10 @@ pub const MachineGlobalObjectTableRegistrationToken = extern struct {
     Value: *anyopaque,
 };
 pub const CY = extern union {
-pub const CY_0 = extern struct {
-    Lo: u32,
-    Hi: i32,
-};
+    pub const CY_0 = extern struct {
+        Lo: u32,
+        Hi: i32,
+    };
     Anonymous: CY_0,
     int64: i64,
 };
@@ -39,23 +39,23 @@ pub const QUERYCONTEXT = extern struct {
     dwVersionLo: u32,
 };
 pub const uCLSSPEC = extern struct {
-pub const _tagged_union_e__Struct = extern union {
-pub const _ByName_e__Struct = extern struct {
-    pPackageName: @"Windows.Win32.Foundation".PWSTR,
-    PolicyId: GUID,
-};
-pub const _ByObjectId_e__Struct = extern struct {
-    ObjectId: GUID,
-    PolicyId: GUID,
-};
-    clsid: GUID,
-    pFileExt: @"Windows.Win32.Foundation".PWSTR,
-    pMimeType: @"Windows.Win32.Foundation".PWSTR,
-    pProgId: @"Windows.Win32.Foundation".PWSTR,
-    pFileName: @"Windows.Win32.Foundation".PWSTR,
-    ByName: _ByName_e__Struct,
-    ByObjectId: _ByObjectId_e__Struct,
-};
+    pub const _tagged_union_e__Struct = extern union {
+        pub const _ByName_e__Struct = extern struct {
+            pPackageName: @"Windows.Win32.Foundation".PWSTR,
+            PolicyId: GUID,
+        };
+        pub const _ByObjectId_e__Struct = extern struct {
+            ObjectId: GUID,
+            PolicyId: GUID,
+        };
+        clsid: GUID,
+        pFileExt: @"Windows.Win32.Foundation".PWSTR,
+        pMimeType: @"Windows.Win32.Foundation".PWSTR,
+        pProgId: @"Windows.Win32.Foundation".PWSTR,
+        pFileName: @"Windows.Win32.Foundation".PWSTR,
+        ByName: _ByName_e__Struct,
+        ByObjectId: _ByObjectId_e__Struct,
+    };
     tyspec: u32,
     tagged_union: _tagged_union_e__Struct,
 };
@@ -125,6 +125,7 @@ pub const COSERVERINFO = extern struct {
     pAuthInfo: *COAUTHINFO,
     dwReserved2: u32,
 };
+pub const MULTI_QI = opaque {};
 pub const STATSTG = extern struct {
     pwcsName: @"Windows.Win32.Foundation".PWSTR,
     type: u32,
@@ -170,6 +171,7 @@ pub const SOLE_AUTHENTICATION_LIST = extern struct {
     cAuthInfo: u32,
     aAuthInfo: *SOLE_AUTHENTICATION_INFO,
 };
+pub const ContextProperty = opaque {};
 pub const BIND_OPTS = extern struct {
     cbStruct: u32,
     grfFlags: u32,
@@ -202,6 +204,7 @@ pub const FORMATETC = extern struct {
     lindex: i32,
     tymed: u32,
 };
+pub const STATDATA = opaque {};
 pub const RemSTGMEDIUM = extern struct {
     tymed: u32,
     dwHandleType: u32,
@@ -210,6 +213,12 @@ pub const RemSTGMEDIUM = extern struct {
     cbData: u32,
     data: [1]u8,
 };
+pub const STGMEDIUM = opaque {};
+pub const GDI_OBJECT = opaque {};
+pub const userSTGMEDIUM = opaque {};
+pub const userFLAG_STGMEDIUM = opaque {};
+pub const FLAG_STGMEDIUM = opaque {};
+pub const INTERFACEINFO = opaque {};
 pub const StorageLayout = extern struct {
     LayoutType: u32,
     pwcsElementName: @"Windows.Win32.Foundation".PWSTR,
@@ -226,6 +235,7 @@ pub const ComCallData = extern struct {
     dwReserved: u32,
     pUserDefined: *anyopaque,
 };
+pub const BINDINFO = opaque {};
 pub const AUTHENTICATEINFO = extern struct {
     dwFlags: u32,
     dwReserved: u32,
@@ -243,11 +253,11 @@ pub const SAFEARRAY = extern struct {
     rgsabound: [1]SAFEARRAYBOUND,
 };
 pub const TYPEDESC = extern struct {
-pub const TYPEDESC_0 = extern union {
-    lptdesc: *TYPEDESC,
-    lpadesc: *@"Windows.Win32.System.Ole".ARRAYDESC,
-    hreftype: u32,
-};
+    pub const TYPEDESC_0 = extern union {
+        lptdesc: *TYPEDESC,
+        lpadesc: *@"Windows.Win32.System.Ole".ARRAYDESC,
+        hreftype: u32,
+    };
     Anonymous: TYPEDESC_0,
     vt: u16,
 };
@@ -255,6 +265,7 @@ pub const IDLDESC = extern struct {
     dwReserved: usize,
     wIDLFlags: u16,
 };
+pub const ELEMDESC = opaque {};
 pub const TYPEATTR = extern struct {
     guid: GUID,
     lcid: u32,
@@ -275,6 +286,7 @@ pub const TYPEATTR = extern struct {
     tdescAlias: TYPEDESC,
     idldescType: IDLDESC,
 };
+pub const DISPPARAMS = opaque {};
 pub const EXCEPINFO = extern struct {
     wCode: u16,
     wReserved: u16,
@@ -286,6 +298,11 @@ pub const EXCEPINFO = extern struct {
     pfnDeferredFillIn: ?*const anyopaque,
     scode: i32,
 };
+pub const FUNCDESC = opaque {};
+pub const VARDESC = opaque {};
+pub const CUSTDATAITEM = opaque {};
+pub const CUSTDATA = opaque {};
+pub const BINDPTR = opaque {};
 pub const TLIBATTR = extern struct {
     guid: GUID,
     lcid: u32,
@@ -294,3 +311,4 @@ pub const TLIBATTR = extern struct {
     wMinorVerNum: u16,
     wLibFlags: u16,
 };
+pub const CONNECTDATA = opaque {};

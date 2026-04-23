@@ -8,14 +8,14 @@ const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
 pub const OVERLAPPED = extern struct {
-pub const OVERLAPPED_0 = extern union {
-pub const OVERLAPPED_0_0 = extern struct {
-    Offset: u32,
-    OffsetHigh: u32,
-};
-    Anonymous: OVERLAPPED_0_0,
-    Pointer: *anyopaque,
-};
+    pub const OVERLAPPED_0 = extern union {
+        pub const OVERLAPPED_0_0 = extern struct {
+            Offset: u32,
+            OffsetHigh: u32,
+        };
+        Anonymous: OVERLAPPED_0_0,
+        Pointer: *anyopaque,
+    };
     Internal: usize,
     InternalHigh: usize,
     Anonymous: OVERLAPPED_0,
@@ -28,10 +28,10 @@ pub const OVERLAPPED_ENTRY = extern struct {
     dwNumberOfBytesTransferred: u32,
 };
 pub const IO_STATUS_BLOCK = extern struct {
-pub const IO_STATUS_BLOCK_0 = extern union {
-    Status: @"Windows.Win32.Foundation".NTSTATUS,
-    Pointer: *anyopaque,
-};
+    pub const IO_STATUS_BLOCK_0 = extern union {
+        Status: @"Windows.Win32.Foundation".NTSTATUS,
+        Pointer: *anyopaque,
+    };
     Anonymous: IO_STATUS_BLOCK_0,
     Information: usize,
 };

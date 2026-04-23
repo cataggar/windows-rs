@@ -143,12 +143,12 @@ pub const LINEAGENTCAPS = extern struct {
     ProxyGUID: GUID,
 };
 pub const LINEAGENTGROUPENTRY = extern struct {
-pub const _GroupID_e__Struct = extern struct {
-    dwGroupID1: u32,
-    dwGroupID2: u32,
-    dwGroupID3: u32,
-    dwGroupID4: u32,
-};
+    pub const _GroupID_e__Struct = extern struct {
+        dwGroupID1: u32,
+        dwGroupID2: u32,
+        dwGroupID3: u32,
+        dwGroupID4: u32,
+    };
     GroupID: _GroupID_e__Struct,
     dwNameSize: u32,
     dwNameOffset: u32,
@@ -586,10 +586,10 @@ pub const LINEGENERATETONE = extern struct {
     dwVolume: u32,
 };
 pub const LINEINITIALIZEEXPARAMS = extern struct {
-pub const _Handles_e__Union = extern union {
-    hEvent: @"Windows.Win32.Foundation".HANDLE,
-    hCompletionPort: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const _Handles_e__Union = extern union {
+        hEvent: @"Windows.Win32.Foundation".HANDLE,
+        hCompletionPort: @"Windows.Win32.Foundation".HANDLE,
+    };
     dwTotalSize: u32,
     dwNeededSize: u32,
     dwUsedSize: u32,
@@ -667,119 +667,119 @@ pub const LINEPROVIDERLIST = extern struct {
     dwProviderListOffset: u32,
 };
 pub const LINEPROXYREQUEST = extern struct {
-pub const LINEPROXYREQUEST_0 = extern union {
-pub const _SetAgentGroup_e__Struct = extern struct {
-    dwAddressID: u32,
-    GroupList: LINEAGENTGROUPLIST,
-};
-pub const _SetAgentState_e__Struct = extern struct {
-    dwAddressID: u32,
-    dwAgentState: u32,
-    dwNextAgentState: u32,
-};
-pub const _SetAgentActivity_e__Struct = extern struct {
-    dwAddressID: u32,
-    dwActivityID: u32,
-};
-pub const _GetAgentCaps_e__Struct = extern struct {
-    dwAddressID: u32,
-    AgentCaps: LINEAGENTCAPS,
-};
-pub const _GetAgentStatus_e__Struct = extern struct {
-    dwAddressID: u32,
-    AgentStatus: LINEAGENTSTATUS,
-};
-pub const _AgentSpecific_e__Struct = extern struct {
-    dwAddressID: u32,
-    dwAgentExtensionIDIndex: u32,
-    dwSize: u32,
-    Params: [1]u8,
-};
-pub const _GetAgentActivityList_e__Struct = extern struct {
-    dwAddressID: u32,
-    ActivityList: LINEAGENTACTIVITYLIST,
-};
-pub const _GetAgentGroupList_e__Struct = extern struct {
-    dwAddressID: u32,
-    GroupList: LINEAGENTGROUPLIST,
-};
-pub const _CreateAgent_e__Struct = extern struct {
-    hAgent: u32,
-    dwAgentIDSize: u32,
-    dwAgentIDOffset: u32,
-    dwAgentPINSize: u32,
-    dwAgentPINOffset: u32,
-};
-pub const _SetAgentStateEx_e__Struct = extern struct {
-    hAgent: u32,
-    dwAgentState: u32,
-    dwNextAgentState: u32,
-};
-pub const _SetAgentMeasurementPeriod_e__Struct = extern struct {
-    hAgent: u32,
-    dwMeasurementPeriod: u32,
-};
-pub const _GetAgentInfo_e__Struct = extern struct {
-    hAgent: u32,
-    AgentInfo: LINEAGENTINFO,
-};
-pub const _CreateAgentSession_e__Struct = extern struct {
-    hAgentSession: u32,
-    dwAgentPINSize: u32,
-    dwAgentPINOffset: u32,
-    hAgent: u32,
-    GroupID: GUID,
-    dwWorkingAddressID: u32,
-};
-pub const _GetAgentSessionList_e__Struct = extern struct {
-    hAgent: u32,
-    SessionList: LINEAGENTSESSIONLIST,
-};
-pub const _GetAgentSessionInfo_e__Struct = extern struct {
-    hAgentSession: u32,
-    SessionInfo: LINEAGENTSESSIONINFO,
-};
-pub const _SetAgentSessionState_e__Struct = extern struct {
-    hAgentSession: u32,
-    dwAgentSessionState: u32,
-    dwNextAgentSessionState: u32,
-};
-pub const _GetQueueList_e__Struct = extern struct {
-    GroupID: GUID,
-    QueueList: LINEQUEUELIST,
-};
-pub const _SetQueueMeasurementPeriod_e__Struct = extern struct {
-    dwQueueID: u32,
-    dwMeasurementPeriod: u32,
-};
-pub const _GetQueueInfo_e__Struct = extern struct {
-    dwQueueID: u32,
-    QueueInfo: LINEQUEUEINFO,
-};
-pub const _GetGroupList_e__Struct = extern struct {
-    GroupList: LINEAGENTGROUPLIST,
-};
-    SetAgentGroup: _SetAgentGroup_e__Struct,
-    SetAgentState: _SetAgentState_e__Struct,
-    SetAgentActivity: _SetAgentActivity_e__Struct,
-    GetAgentCaps: _GetAgentCaps_e__Struct,
-    GetAgentStatus: _GetAgentStatus_e__Struct,
-    AgentSpecific: _AgentSpecific_e__Struct,
-    GetAgentActivityList: _GetAgentActivityList_e__Struct,
-    GetAgentGroupList: _GetAgentGroupList_e__Struct,
-    CreateAgent: _CreateAgent_e__Struct,
-    SetAgentStateEx: _SetAgentStateEx_e__Struct,
-    SetAgentMeasurementPeriod: _SetAgentMeasurementPeriod_e__Struct,
-    GetAgentInfo: _GetAgentInfo_e__Struct,
-    CreateAgentSession: _CreateAgentSession_e__Struct,
-    GetAgentSessionList: _GetAgentSessionList_e__Struct,
-    GetAgentSessionInfo: _GetAgentSessionInfo_e__Struct,
-    SetAgentSessionState: _SetAgentSessionState_e__Struct,
-    GetQueueList: _GetQueueList_e__Struct,
-    SetQueueMeasurementPeriod: _SetQueueMeasurementPeriod_e__Struct,
-    GetQueueInfo: _GetQueueInfo_e__Struct,
-    GetGroupList: _GetGroupList_e__Struct,
-};
+    pub const LINEPROXYREQUEST_0 = extern union {
+        pub const _SetAgentGroup_e__Struct = extern struct {
+            dwAddressID: u32,
+            GroupList: LINEAGENTGROUPLIST,
+        };
+        pub const _SetAgentState_e__Struct = extern struct {
+            dwAddressID: u32,
+            dwAgentState: u32,
+            dwNextAgentState: u32,
+        };
+        pub const _SetAgentActivity_e__Struct = extern struct {
+            dwAddressID: u32,
+            dwActivityID: u32,
+        };
+        pub const _GetAgentCaps_e__Struct = extern struct {
+            dwAddressID: u32,
+            AgentCaps: LINEAGENTCAPS,
+        };
+        pub const _GetAgentStatus_e__Struct = extern struct {
+            dwAddressID: u32,
+            AgentStatus: LINEAGENTSTATUS,
+        };
+        pub const _AgentSpecific_e__Struct = extern struct {
+            dwAddressID: u32,
+            dwAgentExtensionIDIndex: u32,
+            dwSize: u32,
+            Params: [1]u8,
+        };
+        pub const _GetAgentActivityList_e__Struct = extern struct {
+            dwAddressID: u32,
+            ActivityList: LINEAGENTACTIVITYLIST,
+        };
+        pub const _GetAgentGroupList_e__Struct = extern struct {
+            dwAddressID: u32,
+            GroupList: LINEAGENTGROUPLIST,
+        };
+        pub const _CreateAgent_e__Struct = extern struct {
+            hAgent: u32,
+            dwAgentIDSize: u32,
+            dwAgentIDOffset: u32,
+            dwAgentPINSize: u32,
+            dwAgentPINOffset: u32,
+        };
+        pub const _SetAgentStateEx_e__Struct = extern struct {
+            hAgent: u32,
+            dwAgentState: u32,
+            dwNextAgentState: u32,
+        };
+        pub const _SetAgentMeasurementPeriod_e__Struct = extern struct {
+            hAgent: u32,
+            dwMeasurementPeriod: u32,
+        };
+        pub const _GetAgentInfo_e__Struct = extern struct {
+            hAgent: u32,
+            AgentInfo: LINEAGENTINFO,
+        };
+        pub const _CreateAgentSession_e__Struct = extern struct {
+            hAgentSession: u32,
+            dwAgentPINSize: u32,
+            dwAgentPINOffset: u32,
+            hAgent: u32,
+            GroupID: GUID,
+            dwWorkingAddressID: u32,
+        };
+        pub const _GetAgentSessionList_e__Struct = extern struct {
+            hAgent: u32,
+            SessionList: LINEAGENTSESSIONLIST,
+        };
+        pub const _GetAgentSessionInfo_e__Struct = extern struct {
+            hAgentSession: u32,
+            SessionInfo: LINEAGENTSESSIONINFO,
+        };
+        pub const _SetAgentSessionState_e__Struct = extern struct {
+            hAgentSession: u32,
+            dwAgentSessionState: u32,
+            dwNextAgentSessionState: u32,
+        };
+        pub const _GetQueueList_e__Struct = extern struct {
+            GroupID: GUID,
+            QueueList: LINEQUEUELIST,
+        };
+        pub const _SetQueueMeasurementPeriod_e__Struct = extern struct {
+            dwQueueID: u32,
+            dwMeasurementPeriod: u32,
+        };
+        pub const _GetQueueInfo_e__Struct = extern struct {
+            dwQueueID: u32,
+            QueueInfo: LINEQUEUEINFO,
+        };
+        pub const _GetGroupList_e__Struct = extern struct {
+            GroupList: LINEAGENTGROUPLIST,
+        };
+        SetAgentGroup: _SetAgentGroup_e__Struct,
+        SetAgentState: _SetAgentState_e__Struct,
+        SetAgentActivity: _SetAgentActivity_e__Struct,
+        GetAgentCaps: _GetAgentCaps_e__Struct,
+        GetAgentStatus: _GetAgentStatus_e__Struct,
+        AgentSpecific: _AgentSpecific_e__Struct,
+        GetAgentActivityList: _GetAgentActivityList_e__Struct,
+        GetAgentGroupList: _GetAgentGroupList_e__Struct,
+        CreateAgent: _CreateAgent_e__Struct,
+        SetAgentStateEx: _SetAgentStateEx_e__Struct,
+        SetAgentMeasurementPeriod: _SetAgentMeasurementPeriod_e__Struct,
+        GetAgentInfo: _GetAgentInfo_e__Struct,
+        CreateAgentSession: _CreateAgentSession_e__Struct,
+        GetAgentSessionList: _GetAgentSessionList_e__Struct,
+        GetAgentSessionInfo: _GetAgentSessionInfo_e__Struct,
+        SetAgentSessionState: _SetAgentSessionState_e__Struct,
+        GetQueueList: _GetQueueList_e__Struct,
+        SetQueueMeasurementPeriod: _SetQueueMeasurementPeriod_e__Struct,
+        GetQueueInfo: _GetQueueInfo_e__Struct,
+        GetGroupList: _GetGroupList_e__Struct,
+    };
     dwSize: u32,
     dwClientMachineNameSize: u32,
     dwClientMachineNameOffset: u32,
@@ -922,10 +922,10 @@ pub const PHONEEXTENSIONID = extern struct {
     dwExtensionID3: u32,
 };
 pub const PHONEINITIALIZEEXPARAMS = extern struct {
-pub const _Handles_e__Union = extern union {
-    hEvent: @"Windows.Win32.Foundation".HANDLE,
-    hCompletionPort: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const _Handles_e__Union = extern union {
+        hEvent: @"Windows.Win32.Foundation".HANDLE,
+        hCompletionPort: @"Windows.Win32.Foundation".HANDLE,
+    };
     dwTotalSize: u32,
     dwNeededSize: u32,
     dwUsedSize: u32,
@@ -998,6 +998,7 @@ pub const TAPI_DETECTTONE = extern struct {
     dwFrequency2: u32,
     dwFrequency3: u32,
 };
+pub const MSP_EVENT_INFO = opaque {};
 pub const STnefProblem = extern struct {
     ulComponent: u32,
     ulAttribute: u32,
@@ -1038,10 +1039,10 @@ pub const ADDRALIAS = extern struct {
     type: u16,
 };
 pub const NSID = extern struct {
-pub const _address_e__Union = extern union {
-    alias: ADDRALIAS,
-    rgchInterNet: [1]@"Windows.Win32.Foundation".CHAR,
-};
+    pub const _address_e__Union = extern union {
+        alias: ADDRALIAS,
+        rgchInterNet: [1]@"Windows.Win32.Foundation".CHAR,
+    };
     dwSize: u32,
     uchType: [16]u8,
     xtype: u32,

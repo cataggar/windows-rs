@@ -26,6 +26,8 @@ pub const TS_SELECTION_ACP = extern struct {
     acpEnd: i32,
     style: TS_SELECTIONSTYLE,
 };
+pub const TS_SELECTION_ANCHOR = opaque {};
+pub const TS_ATTRVAL = opaque {};
 pub const TS_RUNINFO = extern struct {
     uCount: u32,
     type: i32,
@@ -60,6 +62,9 @@ pub const TF_SELECTIONSTYLE = extern struct {
     ase: i32,
     fInterimChar: @"Windows.Win32.Foundation".BOOL,
 };
+pub const TF_SELECTION = opaque {};
+pub const TF_PROPERTYVAL = opaque {};
+pub const TF_HALTCOND = opaque {};
 pub const TF_INPUTPROCESSORPROFILE = extern struct {
     dwProfileType: u32,
     langid: u16,
@@ -76,10 +81,10 @@ pub const TF_PRESERVEDKEY = extern struct {
     uModifiers: u32,
 };
 pub const TF_DA_COLOR = extern struct {
-pub const TF_DA_COLOR_0 = extern union {
-    nIndex: i32,
-    cr: @"Windows.Win32.Foundation".COLORREF,
-};
+    pub const TF_DA_COLOR_0 = extern union {
+        nIndex: i32,
+        cr: @"Windows.Win32.Foundation".COLORREF,
+    };
     type: i32,
     Anonymous: TF_DA_COLOR_0,
 };
@@ -92,9 +97,9 @@ pub const TF_DISPLAYATTRIBUTE = extern struct {
     bAttr: i32,
 };
 pub const TF_LMLATTELEMENT = extern struct {
-pub const TF_LMLATTELEMENT_0 = extern union {
-    iCost: i32,
-};
+    pub const TF_LMLATTELEMENT_0 = extern union {
+        iCost: i32,
+    };
     dwFrameStart: u32,
     dwFrameLen: u32,
     dwFlags: u32,

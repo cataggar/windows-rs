@@ -86,22 +86,22 @@ pub const SYSTEMTIME = extern struct {
     wMilliseconds: u16,
 };
 pub const DECIMAL = extern struct {
-pub const DECIMAL_0 = extern union {
-pub const DECIMAL_0_0 = extern struct {
-    scale: u8,
-    sign: u8,
-};
-    Anonymous: DECIMAL_0_0,
-    signscale: u16,
-};
-pub const DECIMAL_1 = extern union {
-pub const DECIMAL_1_0 = extern struct {
-    Lo32: u32,
-    Mid32: u32,
-};
-    Anonymous: DECIMAL_1_0,
-    Lo64: u64,
-};
+    pub const DECIMAL_0 = extern union {
+        pub const DECIMAL_0_0 = extern struct {
+            scale: u8,
+            sign: u8,
+        };
+        Anonymous: DECIMAL_0_0,
+        signscale: u16,
+    };
+    pub const DECIMAL_1 = extern union {
+        pub const DECIMAL_1_0 = extern struct {
+            Lo32: u32,
+            Mid32: u32,
+        };
+        Anonymous: DECIMAL_1_0,
+        Lo64: u64,
+    };
     wReserved: u16,
     Anonymous1: DECIMAL_0,
     Hi32: u32,

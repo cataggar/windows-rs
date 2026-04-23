@@ -16,6 +16,9 @@ pub const AsnObjectIdentifier = extern struct {
     idLength: u32,
     ids: *u32,
 };
+pub const SnmpVarBindList = opaque {};
+pub const AsnAny = opaque {};
+pub const SnmpVarBind = opaque {};
 pub const smiOCTETS = extern struct {
     len: u32,
     ptr: *u8,
@@ -29,14 +32,14 @@ pub const smiCNTR64 = extern struct {
     lopart: u32,
 };
 pub const smiVALUE = extern struct {
-pub const _value_e__Union = extern union {
-    sNumber: i32,
-    uNumber: u32,
-    hNumber: smiCNTR64,
-    string: smiOCTETS,
-    oid: smiOID,
-    empty: u8,
-};
+    pub const _value_e__Union = extern union {
+        sNumber: i32,
+        uNumber: u32,
+        hNumber: smiCNTR64,
+        string: smiOCTETS,
+        oid: smiOID,
+        empty: u8,
+    };
     syntax: u32,
     value: _value_e__Union,
 };

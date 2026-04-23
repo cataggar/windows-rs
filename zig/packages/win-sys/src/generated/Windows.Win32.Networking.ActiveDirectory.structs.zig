@@ -26,6 +26,7 @@ pub const CQPAGE = extern struct {
     pDlgProc: ?*const anyopaque,
     lParam: @"Windows.Win32.Foundation".LPARAM,
 };
+pub const OPENQUERYWINDOW = opaque {};
 pub const ADS_OCTET_STRING = extern struct {
     dwLength: u32,
     lpValue: *u8,
@@ -103,35 +104,35 @@ pub const ADS_DN_WITH_STRING = extern struct {
     pszDNString: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const ADSVALUE = extern struct {
-pub const ADSVALUE_0 = extern union {
-    DNString: *u16,
-    CaseExactString: *u16,
-    CaseIgnoreString: *u16,
-    PrintableString: *u16,
-    NumericString: *u16,
-    Boolean: u32,
-    Integer: u32,
-    OctetString: ADS_OCTET_STRING,
-    UTCTime: @"Windows.Win32.Foundation".SYSTEMTIME,
-    LargeInteger: i64,
-    ClassName: *u16,
-    ProviderSpecific: ADS_PROV_SPECIFIC,
-    pCaseIgnoreList: *ADS_CASEIGNORE_LIST,
-    pOctetList: *ADS_OCTET_LIST,
-    pPath: *ADS_PATH,
-    pPostalAddress: *ADS_POSTALADDRESS,
-    Timestamp: ADS_TIMESTAMP,
-    BackLink: ADS_BACKLINK,
-    pTypedName: *ADS_TYPEDNAME,
-    Hold: ADS_HOLD,
-    pNetAddress: *ADS_NETADDRESS,
-    pReplicaPointer: *ADS_REPLICAPOINTER,
-    pFaxNumber: *ADS_FAXNUMBER,
-    Email: ADS_EMAIL,
-    SecurityDescriptor: ADS_NT_SECURITY_DESCRIPTOR,
-    pDNWithBinary: *ADS_DN_WITH_BINARY,
-    pDNWithString: *ADS_DN_WITH_STRING,
-};
+    pub const ADSVALUE_0 = extern union {
+        DNString: *u16,
+        CaseExactString: *u16,
+        CaseIgnoreString: *u16,
+        PrintableString: *u16,
+        NumericString: *u16,
+        Boolean: u32,
+        Integer: u32,
+        OctetString: ADS_OCTET_STRING,
+        UTCTime: @"Windows.Win32.Foundation".SYSTEMTIME,
+        LargeInteger: i64,
+        ClassName: *u16,
+        ProviderSpecific: ADS_PROV_SPECIFIC,
+        pCaseIgnoreList: *ADS_CASEIGNORE_LIST,
+        pOctetList: *ADS_OCTET_LIST,
+        pPath: *ADS_PATH,
+        pPostalAddress: *ADS_POSTALADDRESS,
+        Timestamp: ADS_TIMESTAMP,
+        BackLink: ADS_BACKLINK,
+        pTypedName: *ADS_TYPEDNAME,
+        Hold: ADS_HOLD,
+        pNetAddress: *ADS_NETADDRESS,
+        pReplicaPointer: *ADS_REPLICAPOINTER,
+        pFaxNumber: *ADS_FAXNUMBER,
+        Email: ADS_EMAIL,
+        SecurityDescriptor: ADS_NT_SECURITY_DESCRIPTOR,
+        pDNWithBinary: *ADS_DN_WITH_BINARY,
+        pDNWithString: *ADS_DN_WITH_STRING,
+    };
     dwType: i32,
     Anonymous: ADSVALUE_0,
 };
@@ -323,6 +324,8 @@ pub const DSOP_INIT_INFO = extern struct {
     cAttributesToFetch: u32,
     apwzAttributeNames: *@"Windows.Win32.Foundation".PWSTR,
 };
+pub const DS_SELECTION = opaque {};
+pub const DS_SELECTION_LIST = opaque {};
 pub const DSQUERYINITPARAMS = extern struct {
     cbStruct: u32,
     dwFlags: u32,
@@ -360,6 +363,7 @@ pub const DSA_NEWOBJ_DISPINFO = extern struct {
     lpszWizTitle: @"Windows.Win32.Foundation".PWSTR,
     lpszContDisplayName: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const ADSPROPINITPARAMS = opaque {};
 pub const ADSPROPERROR = extern struct {
     hwndPage: @"Windows.Win32.Foundation".HWND,
     pszPageTitle: @"Windows.Win32.Foundation".PWSTR,

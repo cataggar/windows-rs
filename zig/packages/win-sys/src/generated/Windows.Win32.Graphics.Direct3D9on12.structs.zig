@@ -6,3 +6,4 @@ const HRESULT = win_core.HRESULT;
 const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 
+pub const D3D9ON12_ARGS = opaque {};

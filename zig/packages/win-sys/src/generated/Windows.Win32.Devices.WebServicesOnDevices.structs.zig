@@ -36,6 +36,7 @@ pub const WSD_SECURITY_SIGNATURE_VALIDATION = extern struct {
     hSigningCertStore: @"Windows.Win32.Security.Cryptography".HCERTSTORE,
     dwFlags: u32,
 };
+pub const WSD_CONFIG_ADDRESSES = opaque {};
 pub const WSDUdpRetransmitParams = extern struct {
     ulSendDelay: u32,
     ulRepeat: u32,
@@ -119,6 +120,8 @@ pub const WSD_OPERATION = extern struct {
     ResponseType: *WSDXML_TYPE,
     RequestStubFunction: ?*const anyopaque,
 };
+pub const WSD_HANDLER_CONTEXT = opaque {};
+pub const WSD_SYNCHRONOUS_RESPONSE_CONTEXT = opaque {};
 pub const WSD_PORT_TYPE = extern struct {
     EncodedName: u32,
     OperationCount: u32,
@@ -363,3 +366,4 @@ pub const RESPONSEBODY_SubscriptionEnd = extern struct {
 pub const WSD_UNKNOWN_LOOKUP = extern struct {
     Any: *WSDXML_ELEMENT,
 };
+pub const WSD_EVENT = opaque {};

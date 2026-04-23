@@ -123,6 +123,7 @@ pub const WiaTransferParams = extern struct {
     ulTransferredBytes: u64,
     hrErrorStatus: @"Windows.Win32.Foundation".HRESULT,
 };
+pub const MINIDRV_TRANSFER_CONTEXT = opaque {};
 pub const WIA_DEV_CAP_DRV = extern struct {
     guid: *GUID,
     ulFlags: u32,
@@ -131,55 +132,55 @@ pub const WIA_DEV_CAP_DRV = extern struct {
     wszIcon: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const WIA_PROPERTY_INFO = extern struct {
-pub const _ValidVal_e__Union = extern union {
-pub const _Range_e__Struct = extern struct {
-    Min: i32,
-    Nom: i32,
-    Max: i32,
-    Inc: i32,
-};
-pub const _RangeFloat_e__Struct = extern struct {
-    Min: f64,
-    Nom: f64,
-    Max: f64,
-    Inc: f64,
-};
-pub const _List_e__Struct = extern struct {
-    cNumList: i32,
-    Nom: i32,
-    pList: *u8,
-};
-pub const _ListFloat_e__Struct = extern struct {
-    cNumList: i32,
-    Nom: f64,
-    pList: *u8,
-};
-pub const _ListGuid_e__Struct = extern struct {
-    cNumList: i32,
-    Nom: GUID,
-    pList: *GUID,
-};
-pub const _ListBStr_e__Struct = extern struct {
-    cNumList: i32,
-    Nom: @"Windows.Win32.Foundation".BSTR,
-    pList: *@"Windows.Win32.Foundation".BSTR,
-};
-pub const _Flag_e__Struct = extern struct {
-    Nom: i32,
-    ValidBits: i32,
-};
-pub const _None_e__Struct = extern struct {
-    Dummy: i32,
-};
-    Range: _Range_e__Struct,
-    RangeFloat: _RangeFloat_e__Struct,
-    List: _List_e__Struct,
-    ListFloat: _ListFloat_e__Struct,
-    ListGuid: _ListGuid_e__Struct,
-    ListBStr: _ListBStr_e__Struct,
-    Flag: _Flag_e__Struct,
-    None: _None_e__Struct,
-};
+    pub const _ValidVal_e__Union = extern union {
+        pub const _Range_e__Struct = extern struct {
+            Min: i32,
+            Nom: i32,
+            Max: i32,
+            Inc: i32,
+        };
+        pub const _RangeFloat_e__Struct = extern struct {
+            Min: f64,
+            Nom: f64,
+            Max: f64,
+            Inc: f64,
+        };
+        pub const _List_e__Struct = extern struct {
+            cNumList: i32,
+            Nom: i32,
+            pList: *u8,
+        };
+        pub const _ListFloat_e__Struct = extern struct {
+            cNumList: i32,
+            Nom: f64,
+            pList: *u8,
+        };
+        pub const _ListGuid_e__Struct = extern struct {
+            cNumList: i32,
+            Nom: GUID,
+            pList: *GUID,
+        };
+        pub const _ListBStr_e__Struct = extern struct {
+            cNumList: i32,
+            Nom: @"Windows.Win32.Foundation".BSTR,
+            pList: *@"Windows.Win32.Foundation".BSTR,
+        };
+        pub const _Flag_e__Struct = extern struct {
+            Nom: i32,
+            ValidBits: i32,
+        };
+        pub const _None_e__Struct = extern struct {
+            Dummy: i32,
+        };
+        Range: _Range_e__Struct,
+        RangeFloat: _RangeFloat_e__Struct,
+        List: _List_e__Struct,
+        ListFloat: _ListFloat_e__Struct,
+        ListGuid: _ListGuid_e__Struct,
+        ListBStr: _ListBStr_e__Struct,
+        Flag: _Flag_e__Struct,
+        None: _None_e__Struct,
+    };
     lAccessFlags: u32,
     vt: u16,
     ValidVal: _ValidVal_e__Union,
@@ -190,18 +191,18 @@ pub const WIA_PROPERTY_CONTEXT = extern struct {
     pChanged: *@"Windows.Win32.Foundation".BOOL,
 };
 pub const WIAS_CHANGED_VALUE_INFO = extern struct {
-pub const _Old_e__Union = extern union {
-    lVal: i32,
-    fltVal: f32,
-    bstrVal: @"Windows.Win32.Foundation".BSTR,
-    guidVal: GUID,
-};
-pub const _Current_e__Union = extern union {
-    lVal: i32,
-    fltVal: f32,
-    bstrVal: @"Windows.Win32.Foundation".BSTR,
-    guidVal: GUID,
-};
+    pub const _Old_e__Union = extern union {
+        lVal: i32,
+        fltVal: f32,
+        bstrVal: @"Windows.Win32.Foundation".BSTR,
+        guidVal: GUID,
+    };
+    pub const _Current_e__Union = extern union {
+        lVal: i32,
+        fltVal: f32,
+        bstrVal: @"Windows.Win32.Foundation".BSTR,
+        guidVal: GUID,
+    };
     bChanged: @"Windows.Win32.Foundation".BOOL,
     vt: i32,
     Old: _Old_e__Union,
@@ -230,6 +231,8 @@ pub const WIAS_ENDORSER_INFO = extern struct {
     ulNumEndorserValues: u32,
     pEndorserValues: *WIAS_ENDORSER_VALUE,
 };
+pub const DEVICEDIALOGDATA2 = opaque {};
+pub const DEVICEDIALOGDATA = opaque {};
 pub const RANGEVALUE = extern struct {
     lMin: i32,
     lMax: i32,

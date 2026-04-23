@@ -71,6 +71,9 @@ pub const FLICK_POINT = extern struct {
 pub const FLICK_DATA = extern struct {
     _bitfield: i32,
 };
+pub const IEC_STROKEINFO = opaque {};
+pub const IEC_GESTUREINFO = opaque {};
+pub const IEC_RECOGNITIONRESULTINFO = opaque {};
 pub const StylusInfo = extern struct {
     tcid: u32,
     cid: u32,
@@ -81,6 +84,7 @@ pub const GESTURE_DATA = extern struct {
     recoConfidence: i32,
     strokeCount: i32,
 };
+pub const DYNAMIC_RENDERER_CACHED_DATA = opaque {};
 pub const RECO_GUIDE = extern struct {
     xOrigin: i32,
     yOrigin: i32,

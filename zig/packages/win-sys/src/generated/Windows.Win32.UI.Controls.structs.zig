@@ -38,14 +38,14 @@ pub const TBBUTTON = extern struct {
     iString: isize,
 };
 pub const PROPSHEETPAGEA_V1 = extern struct {
-pub const PROPSHEETPAGEA_V1_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEA_V1_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const PROPSHEETPAGEA_V1_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEA_V1_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -58,14 +58,14 @@ pub const PROPSHEETPAGEA_V1_1 = extern union {
     pcRefParent: *u32,
 };
 pub const PROPSHEETPAGEA_V2 = extern struct {
-pub const PROPSHEETPAGEA_V2_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEA_V2_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const PROPSHEETPAGEA_V2_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEA_V2_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -80,14 +80,14 @@ pub const PROPSHEETPAGEA_V2_1 = extern union {
     pszHeaderSubTitle: @"Windows.Win32.Foundation".PSTR,
 };
 pub const PROPSHEETPAGEA_V3 = extern struct {
-pub const PROPSHEETPAGEA_V3_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEA_V3_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const PROPSHEETPAGEA_V3_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEA_V3_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -103,18 +103,18 @@ pub const PROPSHEETPAGEA_V3_1 = extern union {
     hActCtx: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const PROPSHEETPAGEA = extern struct {
-pub const PROPSHEETPAGEA_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEA_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PSTR,
-};
-pub const PROPSHEETPAGEA_2 = extern union {
-    hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    pszbmHeader: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const PROPSHEETPAGEA_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEA_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const PROPSHEETPAGEA_2 = extern union {
+        hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+        pszbmHeader: @"Windows.Win32.Foundation".PSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -131,14 +131,14 @@ pub const PROPSHEETPAGEA_2 = extern union {
     Anonymous3: PROPSHEETPAGEA_2,
 };
 pub const PROPSHEETPAGEW_V1 = extern struct {
-pub const PROPSHEETPAGEW_V1_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PWSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEW_V1_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PROPSHEETPAGEW_V1_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PWSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEW_V1_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -151,14 +151,14 @@ pub const PROPSHEETPAGEW_V1_1 = extern union {
     pcRefParent: *u32,
 };
 pub const PROPSHEETPAGEW_V2 = extern struct {
-pub const PROPSHEETPAGEW_V2_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PWSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEW_V2_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PROPSHEETPAGEW_V2_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PWSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEW_V2_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -173,14 +173,14 @@ pub const PROPSHEETPAGEW_V2_1 = extern union {
     pszHeaderSubTitle: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const PROPSHEETPAGEW_V3 = extern struct {
-pub const PROPSHEETPAGEW_V3_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PWSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEW_V3_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PROPSHEETPAGEW_V3_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PWSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEW_V3_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -196,18 +196,18 @@ pub const PROPSHEETPAGEW_V3_1 = extern union {
     hActCtx: @"Windows.Win32.Foundation".HANDLE,
 };
 pub const PROPSHEETPAGEW = extern struct {
-pub const PROPSHEETPAGEW_0 = extern union {
-    pszTemplate: @"Windows.Win32.Foundation".PWSTR,
-    pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
-};
-pub const PROPSHEETPAGEW_1 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const PROPSHEETPAGEW_2 = extern union {
-    hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    pszbmHeader: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PROPSHEETPAGEW_0 = extern union {
+        pszTemplate: @"Windows.Win32.Foundation".PWSTR,
+        pResource: *@"Windows.Win32.UI.WindowsAndMessaging".DLGTEMPLATE,
+    };
+    pub const PROPSHEETPAGEW_1 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const PROPSHEETPAGEW_2 = extern union {
+        hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+        pszbmHeader: @"Windows.Win32.Foundation".PWSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,
@@ -224,18 +224,18 @@ pub const PROPSHEETPAGEW_2 = extern union {
     Anonymous3: PROPSHEETPAGEW_2,
 };
 pub const PROPSHEETHEADERA_V1 = extern struct {
-pub const PROPSHEETHEADERA_V1_0 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PSTR,
-};
-pub const PROPSHEETHEADERA_V1_1 = extern union {
-    nStartPage: u32,
-    pStartPage: @"Windows.Win32.Foundation".PSTR,
-};
-pub const PROPSHEETHEADERA_V1_2 = extern union {
-    ppsp: *PROPSHEETPAGEA,
-    phpage: *HPROPSHEETPAGE,
-};
+    pub const PROPSHEETHEADERA_V1_0 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const PROPSHEETHEADERA_V1_1 = extern union {
+        nStartPage: u32,
+        pStartPage: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const PROPSHEETHEADERA_V1_2 = extern union {
+        ppsp: *PROPSHEETPAGEA,
+        phpage: *HPROPSHEETPAGE,
+    };
     dwSize: u32,
     dwFlags: u32,
     hwndParent: @"Windows.Win32.Foundation".HWND,
@@ -248,26 +248,26 @@ pub const PROPSHEETHEADERA_V1_2 = extern union {
     pfnCallback: ?*const anyopaque,
 };
 pub const PROPSHEETHEADERA_V2 = extern struct {
-pub const PROPSHEETHEADERA_V2_0 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PSTR,
-};
-pub const PROPSHEETHEADERA_V2_1 = extern union {
-    nStartPage: u32,
-    pStartPage: @"Windows.Win32.Foundation".PSTR,
-};
-pub const PROPSHEETHEADERA_V2_2 = extern union {
-    ppsp: *PROPSHEETPAGEA,
-    phpage: *HPROPSHEETPAGE,
-};
-pub const PROPSHEETHEADERA_V2_3 = extern union {
-    hbmWatermark: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    pszbmWatermark: @"Windows.Win32.Foundation".PSTR,
-};
-pub const PROPSHEETHEADERA_V2_4 = extern union {
-    hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    pszbmHeader: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const PROPSHEETHEADERA_V2_0 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const PROPSHEETHEADERA_V2_1 = extern union {
+        nStartPage: u32,
+        pStartPage: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const PROPSHEETHEADERA_V2_2 = extern union {
+        ppsp: *PROPSHEETPAGEA,
+        phpage: *HPROPSHEETPAGE,
+    };
+    pub const PROPSHEETHEADERA_V2_3 = extern union {
+        hbmWatermark: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+        pszbmWatermark: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const PROPSHEETHEADERA_V2_4 = extern union {
+        hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+        pszbmHeader: @"Windows.Win32.Foundation".PSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hwndParent: @"Windows.Win32.Foundation".HWND,
@@ -283,18 +283,18 @@ pub const PROPSHEETHEADERA_V2_4 = extern union {
     Anonymous5: PROPSHEETHEADERA_V2_4,
 };
 pub const PROPSHEETHEADERW_V1 = extern struct {
-pub const PROPSHEETHEADERW_V1_0 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const PROPSHEETHEADERW_V1_1 = extern union {
-    nStartPage: u32,
-    pStartPage: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const PROPSHEETHEADERW_V1_2 = extern union {
-    ppsp: *PROPSHEETPAGEW,
-    phpage: *HPROPSHEETPAGE,
-};
+    pub const PROPSHEETHEADERW_V1_0 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const PROPSHEETHEADERW_V1_1 = extern union {
+        nStartPage: u32,
+        pStartPage: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const PROPSHEETHEADERW_V1_2 = extern union {
+        ppsp: *PROPSHEETPAGEW,
+        phpage: *HPROPSHEETPAGE,
+    };
     dwSize: u32,
     dwFlags: u32,
     hwndParent: @"Windows.Win32.Foundation".HWND,
@@ -307,26 +307,26 @@ pub const PROPSHEETHEADERW_V1_2 = extern union {
     pfnCallback: ?*const anyopaque,
 };
 pub const PROPSHEETHEADERW_V2 = extern struct {
-pub const PROPSHEETHEADERW_V2_0 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszIcon: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const PROPSHEETHEADERW_V2_1 = extern union {
-    nStartPage: u32,
-    pStartPage: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const PROPSHEETHEADERW_V2_2 = extern union {
-    ppsp: *PROPSHEETPAGEW,
-    phpage: *HPROPSHEETPAGE,
-};
-pub const PROPSHEETHEADERW_V2_3 = extern union {
-    hbmWatermark: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    pszbmWatermark: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const PROPSHEETHEADERW_V2_4 = extern union {
-    hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
-    pszbmHeader: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PROPSHEETHEADERW_V2_0 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const PROPSHEETHEADERW_V2_1 = extern union {
+        nStartPage: u32,
+        pStartPage: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const PROPSHEETHEADERW_V2_2 = extern union {
+        ppsp: *PROPSHEETPAGEW,
+        phpage: *HPROPSHEETPAGE,
+    };
+    pub const PROPSHEETHEADERW_V2_3 = extern union {
+        hbmWatermark: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+        pszbmWatermark: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const PROPSHEETHEADERW_V2_4 = extern union {
+        hbmHeader: @"Windows.Win32.Graphics.Gdi".HBITMAP,
+        pszbmHeader: @"Windows.Win32.Foundation".PWSTR,
+    };
     dwSize: u32,
     dwFlags: u32,
     hwndParent: @"Windows.Win32.Foundation".HWND,
@@ -603,6 +603,8 @@ pub const NMTBHOTITEM = extern struct {
     idNew: i32,
     dwFlags: u32,
 };
+pub const NMTBSAVE = opaque {};
+pub const NMTBRESTORE = opaque {};
 pub const NMTBGETINFOTIPA = extern struct {
     hdr: NMHDR,
     pszText: @"Windows.Win32.Foundation".PSTR,
@@ -635,6 +637,8 @@ pub const NMTBDISPINFOW = extern struct {
     pszText: @"Windows.Win32.Foundation".PWSTR,
     cchText: i32,
 };
+pub const NMTOOLBARA = opaque {};
+pub const NMTOOLBARW = opaque {};
 pub const REBARINFO = extern struct {
     cbSize: u32,
     fMask: u32,
@@ -1185,19 +1189,19 @@ pub const TVITEMEXW = extern struct {
     iReserved: i32,
 };
 pub const TVINSERTSTRUCTA = extern struct {
-pub const TVINSERTSTRUCTA_0 = extern union {
-    itemex: TVITEMEXA,
-    item: TVITEMA,
-};
+    pub const TVINSERTSTRUCTA_0 = extern union {
+        itemex: TVITEMEXA,
+        item: TVITEMA,
+    };
     hParent: HTREEITEM,
     hInsertAfter: HTREEITEM,
     Anonymous: TVINSERTSTRUCTA_0,
 };
 pub const TVINSERTSTRUCTW = extern struct {
-pub const TVINSERTSTRUCTW_0 = extern union {
-    itemex: TVITEMEXW,
-    item: TVITEMW,
-};
+    pub const TVINSERTSTRUCTW_0 = extern union {
+        itemex: TVITEMEXW,
+        item: TVITEMW,
+    };
     hParent: HTREEITEM,
     hInsertAfter: HTREEITEM,
     Anonymous: TVINSERTSTRUCTW_0,
@@ -1551,14 +1555,14 @@ pub const TASKDIALOG_BUTTON = extern struct {
     pszButtonText: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const TASKDIALOGCONFIG = extern struct {
-pub const TASKDIALOGCONFIG_0 = extern union {
-    hMainIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszMainIcon: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const TASKDIALOGCONFIG_1 = extern union {
-    hFooterIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    pszFooterIcon: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const TASKDIALOGCONFIG_0 = extern union {
+        hMainIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszMainIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
+    pub const TASKDIALOGCONFIG_1 = extern union {
+        hFooterIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        pszFooterIcon: @"Windows.Win32.Foundation".PWSTR,
+    };
     cbSize: u32,
     hwndParent: @"Windows.Win32.Foundation".HWND,
     hInstance: @"Windows.Win32.Foundation".HINSTANCE,

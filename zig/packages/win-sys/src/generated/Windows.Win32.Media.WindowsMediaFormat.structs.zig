@@ -70,6 +70,9 @@ pub const WM_PORT_NUMBER_RANGE = extern struct {
     wPortBegin: u16,
     wPortEnd: u16,
 };
+pub const WMT_BUFFER_SEGMENT = opaque {};
+pub const WMT_PAYLOAD_FRAGMENT = opaque {};
+pub const WMT_FILESINK_DATA_UNIT = opaque {};
 pub const WMT_WEBSTREAM_FORMAT = extern struct {
     cbSize: u16,
     cbSampleHeaderFixedData: u16,
@@ -175,6 +178,7 @@ pub const WMT_VIDEOIMAGE_SAMPLE2 = extern struct {
     fEffectPara4: f32,
     bKeepPrevImage: @"Windows.Win32.Foundation".BOOL,
 };
+pub const WM_MEDIA_TYPE = opaque {};
 pub const WMVIDEOINFOHEADER = extern struct {
     rcSource: @"Windows.Win32.Foundation".RECT,
     rcTarget: @"Windows.Win32.Foundation".RECT,

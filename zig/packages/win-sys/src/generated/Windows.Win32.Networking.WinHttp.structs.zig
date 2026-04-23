@@ -144,14 +144,14 @@ pub const WINHTTP_CERTIFICATE_INFO = extern struct {
     dwKeySize: u32,
 };
 pub const WINHTTP_EXTENDED_HEADER = extern struct {
-pub const WINHTTP_EXTENDED_HEADER_0 = extern union {
-    pwszName: @"Windows.Win32.Foundation".PWSTR,
-    pszName: @"Windows.Win32.Foundation".PSTR,
-};
-pub const WINHTTP_EXTENDED_HEADER_1 = extern union {
-    pwszValue: @"Windows.Win32.Foundation".PWSTR,
-    pszValue: @"Windows.Win32.Foundation".PSTR,
-};
+    pub const WINHTTP_EXTENDED_HEADER_0 = extern union {
+        pwszName: @"Windows.Win32.Foundation".PWSTR,
+        pszName: @"Windows.Win32.Foundation".PSTR,
+    };
+    pub const WINHTTP_EXTENDED_HEADER_1 = extern union {
+        pwszValue: @"Windows.Win32.Foundation".PWSTR,
+        pszValue: @"Windows.Win32.Foundation".PSTR,
+    };
     Anonymous1: WINHTTP_EXTENDED_HEADER_0,
     Anonymous2: WINHTTP_EXTENDED_HEADER_1,
 };

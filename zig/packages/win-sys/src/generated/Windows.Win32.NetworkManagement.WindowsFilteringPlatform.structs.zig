@@ -67,26 +67,26 @@ pub const FWP_TOKEN_INFORMATION = extern struct {
     restrictedSids: *@"Windows.Win32.Security".SID_AND_ATTRIBUTES,
 };
 pub const FWP_VALUE0 = extern struct {
-pub const FWP_VALUE0_0 = extern union {
-    uint8: u8,
-    uint16: u16,
-    uint32: u32,
-    uint64: *u64,
-    int8: i8,
-    int16: i16,
-    int32: i32,
-    int64: *i64,
-    float32: f32,
-    double64: *f64,
-    byteArray16: *FWP_BYTE_ARRAY16,
-    byteBlob: *FWP_BYTE_BLOB,
-    sid: *@"Windows.Win32.Security".SID,
-    sd: *FWP_BYTE_BLOB,
-    tokenInformation: *FWP_TOKEN_INFORMATION,
-    tokenAccessInformation: *FWP_BYTE_BLOB,
-    unicodeString: @"Windows.Win32.Foundation".PWSTR,
-    byteArray6: *FWP_BYTE_ARRAY6,
-};
+    pub const FWP_VALUE0_0 = extern union {
+        uint8: u8,
+        uint16: u16,
+        uint32: u32,
+        uint64: *u64,
+        int8: i8,
+        int16: i16,
+        int32: i32,
+        int64: *i64,
+        float32: f32,
+        double64: *f64,
+        byteArray16: *FWP_BYTE_ARRAY16,
+        byteBlob: *FWP_BYTE_BLOB,
+        sid: *@"Windows.Win32.Security".SID,
+        sd: *FWP_BYTE_BLOB,
+        tokenInformation: *FWP_TOKEN_INFORMATION,
+        tokenAccessInformation: *FWP_BYTE_BLOB,
+        unicodeString: @"Windows.Win32.Foundation".PWSTR,
+        byteArray6: *FWP_BYTE_ARRAY6,
+    };
     type: i32,
     Anonymous: FWP_VALUE0_0,
 };
@@ -103,29 +103,29 @@ pub const FWP_RANGE0 = extern struct {
     valueHigh: FWP_VALUE0,
 };
 pub const FWP_CONDITION_VALUE0 = extern struct {
-pub const FWP_CONDITION_VALUE0_0 = extern union {
-    uint8: u8,
-    uint16: u16,
-    uint32: u32,
-    uint64: *u64,
-    int8: i8,
-    int16: i16,
-    int32: i32,
-    int64: *i64,
-    float32: f32,
-    double64: *f64,
-    byteArray16: *FWP_BYTE_ARRAY16,
-    byteBlob: *FWP_BYTE_BLOB,
-    sid: *@"Windows.Win32.Security".SID,
-    sd: *FWP_BYTE_BLOB,
-    tokenInformation: *FWP_TOKEN_INFORMATION,
-    tokenAccessInformation: *FWP_BYTE_BLOB,
-    unicodeString: @"Windows.Win32.Foundation".PWSTR,
-    byteArray6: *FWP_BYTE_ARRAY6,
-    v4AddrMask: *FWP_V4_ADDR_AND_MASK,
-    v6AddrMask: *FWP_V6_ADDR_AND_MASK,
-    rangeValue: *FWP_RANGE0,
-};
+    pub const FWP_CONDITION_VALUE0_0 = extern union {
+        uint8: u8,
+        uint16: u16,
+        uint32: u32,
+        uint64: *u64,
+        int8: i8,
+        int16: i16,
+        int32: i32,
+        int64: *i64,
+        float32: f32,
+        double64: *f64,
+        byteArray16: *FWP_BYTE_ARRAY16,
+        byteBlob: *FWP_BYTE_BLOB,
+        sid: *@"Windows.Win32.Security".SID,
+        sd: *FWP_BYTE_BLOB,
+        tokenInformation: *FWP_TOKEN_INFORMATION,
+        tokenAccessInformation: *FWP_BYTE_BLOB,
+        unicodeString: @"Windows.Win32.Foundation".PWSTR,
+        byteArray6: *FWP_BYTE_ARRAY6,
+        v4AddrMask: *FWP_V4_ADDR_AND_MASK,
+        v6AddrMask: *FWP_V6_ADDR_AND_MASK,
+        rangeValue: *FWP_RANGE0,
+    };
     type: i32,
     Anonymous: FWP_CONDITION_VALUE0_0,
 };
@@ -149,24 +149,24 @@ pub const IKEEXT_CERT_ROOT_CONFIG0 = extern struct {
     flags: u32,
 };
 pub const IKEEXT_CERTIFICATE_AUTHENTICATION0 = extern struct {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_0 = extern union {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_0_0 = extern struct {
-    inboundRootArraySize: u32,
-    inboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
-};
-    Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION0_0_0,
-    inboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-    inboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_1 = extern union {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_1_0 = extern struct {
-    outboundRootArraySize: u32,
-    outboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
-};
-    Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION0_1_0,
-    outboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-    outboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-};
+    pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_0 = extern union {
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_0_0 = extern struct {
+            inboundRootArraySize: u32,
+            inboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
+        };
+        Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION0_0_0,
+        inboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+        inboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+    };
+    pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_1 = extern union {
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_1_0 = extern struct {
+            outboundRootArraySize: u32,
+            outboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
+        };
+        Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION0_1_0,
+        outboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+        outboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+    };
     inboundConfigType: i32,
     Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION0_0,
     outboundConfigType: i32,
@@ -174,24 +174,24 @@ pub const IKEEXT_CERTIFICATE_AUTHENTICATION0_1_0 = extern struct {
     flags: u32,
 };
 pub const IKEEXT_CERTIFICATE_AUTHENTICATION1 = extern struct {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_0 = extern union {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_0_0 = extern struct {
-    inboundRootArraySize: u32,
-    inboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
-};
-    Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION1_0_0,
-    inboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-    inboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_1 = extern union {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_1_0 = extern struct {
-    outboundRootArraySize: u32,
-    outboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
-};
-    Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION1_1_0,
-    outboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-    outboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
-};
+    pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_0 = extern union {
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_0_0 = extern struct {
+            inboundRootArraySize: u32,
+            inboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
+        };
+        Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION1_0_0,
+        inboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+        inboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+    };
+    pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_1 = extern union {
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION1_1_0 = extern struct {
+            outboundRootArraySize: u32,
+            outboundRootArray: *IKEEXT_CERT_ROOT_CONFIG0,
+        };
+        Anonymous: IKEEXT_CERTIFICATE_AUTHENTICATION1_1_0,
+        outboundEnterpriseStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+        outboundTrustedRootStoreConfig: *IKEEXT_CERT_ROOT_CONFIG0,
+    };
     inboundConfigType: i32,
     Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION1_0,
     outboundConfigType: i32,
@@ -215,40 +215,40 @@ pub const IKEEXT_CERTIFICATE_CRITERIA0 = extern struct {
     flags: u32,
 };
 pub const IKEEXT_CERTIFICATE_AUTHENTICATION2 = extern struct {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0 = extern union {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0_0 = extern struct {
-    inboundRootArraySize: u32,
-    inboundRootCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0_1 = extern struct {
-    inboundEnterpriseStoreArraySize: u32,
-    inboundEnterpriseStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0_2 = extern struct {
-    inboundRootStoreArraySize: u32,
-    inboundTrustedRootStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
-};
-    Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION2_0_0,
-    Anonymous2: IKEEXT_CERTIFICATE_AUTHENTICATION2_0_1,
-    Anonymous3: IKEEXT_CERTIFICATE_AUTHENTICATION2_0_2,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1 = extern union {
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1_0 = extern struct {
-    outboundRootArraySize: u32,
-    outboundRootCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1_1 = extern struct {
-    outboundEnterpriseStoreArraySize: u32,
-    outboundEnterpriseStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
-};
-pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1_2 = extern struct {
-    outboundRootStoreArraySize: u32,
-    outboundTrustedRootStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
-};
-    Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION2_1_0,
-    Anonymous2: IKEEXT_CERTIFICATE_AUTHENTICATION2_1_1,
-    Anonymous3: IKEEXT_CERTIFICATE_AUTHENTICATION2_1_2,
-};
+    pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0 = extern union {
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0_0 = extern struct {
+            inboundRootArraySize: u32,
+            inboundRootCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
+        };
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0_1 = extern struct {
+            inboundEnterpriseStoreArraySize: u32,
+            inboundEnterpriseStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
+        };
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_0_2 = extern struct {
+            inboundRootStoreArraySize: u32,
+            inboundTrustedRootStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
+        };
+        Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION2_0_0,
+        Anonymous2: IKEEXT_CERTIFICATE_AUTHENTICATION2_0_1,
+        Anonymous3: IKEEXT_CERTIFICATE_AUTHENTICATION2_0_2,
+    };
+    pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1 = extern union {
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1_0 = extern struct {
+            outboundRootArraySize: u32,
+            outboundRootCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
+        };
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1_1 = extern struct {
+            outboundEnterpriseStoreArraySize: u32,
+            outboundEnterpriseStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
+        };
+        pub const IKEEXT_CERTIFICATE_AUTHENTICATION2_1_2 = extern struct {
+            outboundRootStoreArraySize: u32,
+            outboundTrustedRootStoreCriteria: *IKEEXT_CERTIFICATE_CRITERIA0,
+        };
+        Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION2_1_0,
+        Anonymous2: IKEEXT_CERTIFICATE_AUTHENTICATION2_1_1,
+        Anonymous3: IKEEXT_CERTIFICATE_AUTHENTICATION2_1_2,
+    };
     inboundConfigType: i32,
     Anonymous1: IKEEXT_CERTIFICATE_AUTHENTICATION2_0,
     outboundConfigType: i32,
@@ -280,41 +280,41 @@ pub const IKEEXT_EAP_AUTHENTICATION0 = extern struct {
     flags: u32,
 };
 pub const IKEEXT_AUTHENTICATION_METHOD0 = extern struct {
-pub const IKEEXT_AUTHENTICATION_METHOD0_0 = extern union {
-    presharedKeyAuthentication: IKEEXT_PRESHARED_KEY_AUTHENTICATION0,
-    certificateAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION0,
-    kerberosAuthentication: IKEEXT_KERBEROS_AUTHENTICATION0,
-    ntlmV2Authentication: IKEEXT_NTLM_V2_AUTHENTICATION0,
-    sslAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION0,
-    cgaAuthentication: IKEEXT_IPV6_CGA_AUTHENTICATION0,
-};
+    pub const IKEEXT_AUTHENTICATION_METHOD0_0 = extern union {
+        presharedKeyAuthentication: IKEEXT_PRESHARED_KEY_AUTHENTICATION0,
+        certificateAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION0,
+        kerberosAuthentication: IKEEXT_KERBEROS_AUTHENTICATION0,
+        ntlmV2Authentication: IKEEXT_NTLM_V2_AUTHENTICATION0,
+        sslAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION0,
+        cgaAuthentication: IKEEXT_IPV6_CGA_AUTHENTICATION0,
+    };
     authenticationMethodType: i32,
     Anonymous: IKEEXT_AUTHENTICATION_METHOD0_0,
 };
 pub const IKEEXT_AUTHENTICATION_METHOD1 = extern struct {
-pub const IKEEXT_AUTHENTICATION_METHOD1_0 = extern union {
-    presharedKeyAuthentication: IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
-    certificateAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION1,
-    kerberosAuthentication: IKEEXT_KERBEROS_AUTHENTICATION0,
-    ntlmV2Authentication: IKEEXT_NTLM_V2_AUTHENTICATION0,
-    sslAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION1,
-    cgaAuthentication: IKEEXT_IPV6_CGA_AUTHENTICATION0,
-    eapAuthentication: IKEEXT_EAP_AUTHENTICATION0,
-};
+    pub const IKEEXT_AUTHENTICATION_METHOD1_0 = extern union {
+        presharedKeyAuthentication: IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
+        certificateAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION1,
+        kerberosAuthentication: IKEEXT_KERBEROS_AUTHENTICATION0,
+        ntlmV2Authentication: IKEEXT_NTLM_V2_AUTHENTICATION0,
+        sslAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION1,
+        cgaAuthentication: IKEEXT_IPV6_CGA_AUTHENTICATION0,
+        eapAuthentication: IKEEXT_EAP_AUTHENTICATION0,
+    };
     authenticationMethodType: i32,
     Anonymous: IKEEXT_AUTHENTICATION_METHOD1_0,
 };
 pub const IKEEXT_AUTHENTICATION_METHOD2 = extern struct {
-pub const IKEEXT_AUTHENTICATION_METHOD2_0 = extern union {
-    presharedKeyAuthentication: IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
-    certificateAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION2,
-    kerberosAuthentication: IKEEXT_KERBEROS_AUTHENTICATION1,
-    reservedAuthentication: IKEEXT_RESERVED_AUTHENTICATION0,
-    ntlmV2Authentication: IKEEXT_NTLM_V2_AUTHENTICATION0,
-    sslAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION2,
-    cgaAuthentication: IKEEXT_IPV6_CGA_AUTHENTICATION0,
-    eapAuthentication: IKEEXT_EAP_AUTHENTICATION0,
-};
+    pub const IKEEXT_AUTHENTICATION_METHOD2_0 = extern union {
+        presharedKeyAuthentication: IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
+        certificateAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION2,
+        kerberosAuthentication: IKEEXT_KERBEROS_AUTHENTICATION1,
+        reservedAuthentication: IKEEXT_RESERVED_AUTHENTICATION0,
+        ntlmV2Authentication: IKEEXT_NTLM_V2_AUTHENTICATION0,
+        sslAuthentication: IKEEXT_CERTIFICATE_AUTHENTICATION2,
+        cgaAuthentication: IKEEXT_IPV6_CGA_AUTHENTICATION0,
+        eapAuthentication: IKEEXT_EAP_AUTHENTICATION0,
+    };
     authenticationMethodType: i32,
     Anonymous: IKEEXT_AUTHENTICATION_METHOD2_0,
 };
@@ -470,14 +470,14 @@ pub const IKEEXT_STATISTICS1 = extern struct {
     commonStatistics: IKEEXT_COMMON_STATISTICS1,
 };
 pub const IKEEXT_TRAFFIC0 = extern struct {
-pub const IKEEXT_TRAFFIC0_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const IKEEXT_TRAFFIC0_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
+    pub const IKEEXT_TRAFFIC0_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const IKEEXT_TRAFFIC0_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
     ipVersion: i32,
     Anonymous1: IKEEXT_TRAFFIC0_0,
     Anonymous2: IKEEXT_TRAFFIC0_1,
@@ -496,11 +496,11 @@ pub const IKEEXT_NAME_CREDENTIAL0 = extern struct {
     principalName: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const IKEEXT_CREDENTIAL0 = extern struct {
-pub const IKEEXT_CREDENTIAL0_0 = extern union {
-    presharedKey: *IKEEXT_PRESHARED_KEY_AUTHENTICATION0,
-    certificate: *IKEEXT_CERTIFICATE_CREDENTIAL0,
-    name: *IKEEXT_NAME_CREDENTIAL0,
-};
+    pub const IKEEXT_CREDENTIAL0_0 = extern union {
+        presharedKey: *IKEEXT_PRESHARED_KEY_AUTHENTICATION0,
+        certificate: *IKEEXT_CERTIFICATE_CREDENTIAL0,
+        name: *IKEEXT_NAME_CREDENTIAL0,
+    };
     authenticationMethodType: i32,
     impersonationType: i32,
     Anonymous: IKEEXT_CREDENTIAL0_0,
@@ -514,9 +514,9 @@ pub const IKEEXT_CREDENTIALS0 = extern struct {
     credentials: *IKEEXT_CREDENTIAL_PAIR0,
 };
 pub const IKEEXT_SA_DETAILS0 = extern struct {
-pub const IKEEXT_SA_DETAILS0_0 = extern union {
-    v4UdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IKEEXT_SA_DETAILS0_0 = extern union {
+        v4UdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     saId: u64,
     keyModuleType: i32,
     ipVersion: i32,
@@ -535,11 +535,11 @@ pub const IKEEXT_CERTIFICATE_CREDENTIAL1 = extern struct {
     certificate: FWP_BYTE_BLOB,
 };
 pub const IKEEXT_CREDENTIAL1 = extern struct {
-pub const IKEEXT_CREDENTIAL1_0 = extern union {
-    presharedKey: *IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
-    certificate: *IKEEXT_CERTIFICATE_CREDENTIAL1,
-    name: *IKEEXT_NAME_CREDENTIAL0,
-};
+    pub const IKEEXT_CREDENTIAL1_0 = extern union {
+        presharedKey: *IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
+        certificate: *IKEEXT_CERTIFICATE_CREDENTIAL1,
+        name: *IKEEXT_NAME_CREDENTIAL0,
+    };
     authenticationMethodType: i32,
     impersonationType: i32,
     Anonymous: IKEEXT_CREDENTIAL1_0,
@@ -553,9 +553,9 @@ pub const IKEEXT_CREDENTIALS1 = extern struct {
     credentials: *IKEEXT_CREDENTIAL_PAIR1,
 };
 pub const IKEEXT_SA_DETAILS1 = extern struct {
-pub const IKEEXT_SA_DETAILS1_0 = extern union {
-    v4UdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IKEEXT_SA_DETAILS1_0 = extern union {
+        v4UdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     saId: u64,
     keyModuleType: i32,
     ipVersion: i32,
@@ -569,11 +569,11 @@ pub const IKEEXT_SA_DETAILS1_0 = extern union {
     correlationKey: FWP_BYTE_BLOB,
 };
 pub const IKEEXT_CREDENTIAL2 = extern struct {
-pub const IKEEXT_CREDENTIAL2_0 = extern union {
-    presharedKey: *IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
-    certificate: *IKEEXT_CERTIFICATE_CREDENTIAL1,
-    name: *IKEEXT_NAME_CREDENTIAL0,
-};
+    pub const IKEEXT_CREDENTIAL2_0 = extern union {
+        presharedKey: *IKEEXT_PRESHARED_KEY_AUTHENTICATION1,
+        certificate: *IKEEXT_CERTIFICATE_CREDENTIAL1,
+        name: *IKEEXT_NAME_CREDENTIAL0,
+    };
     authenticationMethodType: i32,
     impersonationType: i32,
     Anonymous: IKEEXT_CREDENTIAL2_0,
@@ -587,9 +587,9 @@ pub const IKEEXT_CREDENTIALS2 = extern struct {
     credentials: *IKEEXT_CREDENTIAL_PAIR2,
 };
 pub const IKEEXT_SA_DETAILS2 = extern struct {
-pub const IKEEXT_SA_DETAILS2_0 = extern union {
-    v4UdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IKEEXT_SA_DETAILS2_0 = extern union {
+        v4UdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     saId: u64,
     keyModuleType: i32,
     ipVersion: i32,
@@ -633,13 +633,13 @@ pub const IPSEC_AUTH_AND_CIPHER_TRANSFORM0 = extern struct {
     cipherTransform: IPSEC_CIPHER_TRANSFORM0,
 };
 pub const IPSEC_SA_TRANSFORM0 = extern struct {
-pub const IPSEC_SA_TRANSFORM0_0 = extern union {
-    ahTransform: *IPSEC_AUTH_TRANSFORM0,
-    espAuthTransform: *IPSEC_AUTH_TRANSFORM0,
-    espCipherTransform: *IPSEC_CIPHER_TRANSFORM0,
-    espAuthAndCipherTransform: *IPSEC_AUTH_AND_CIPHER_TRANSFORM0,
-    espAuthFwTransform: *IPSEC_AUTH_TRANSFORM0,
-};
+    pub const IPSEC_SA_TRANSFORM0_0 = extern union {
+        ahTransform: *IPSEC_AUTH_TRANSFORM0,
+        espAuthTransform: *IPSEC_AUTH_TRANSFORM0,
+        espCipherTransform: *IPSEC_CIPHER_TRANSFORM0,
+        espAuthAndCipherTransform: *IPSEC_AUTH_AND_CIPHER_TRANSFORM0,
+        espAuthFwTransform: *IPSEC_AUTH_TRANSFORM0,
+    };
     ipsecTransformType: i32,
     Anonymous: IPSEC_SA_TRANSFORM0_0,
 };
@@ -654,14 +654,14 @@ pub const IPSEC_SA_IDLE_TIMEOUT0 = extern struct {
     idleTimeoutSecondsFailOver: u32,
 };
 pub const IPSEC_TRAFFIC_SELECTOR0 = extern struct {
-pub const IPSEC_TRAFFIC_SELECTOR0_0 = extern union {
-    startV4Address: u32,
-    startV6Address: [16]u8,
-};
-pub const IPSEC_TRAFFIC_SELECTOR0_1 = extern union {
-    endV4Address: u32,
-    endV6Address: [16]u8,
-};
+    pub const IPSEC_TRAFFIC_SELECTOR0_0 = extern union {
+        startV4Address: u32,
+        startV6Address: [16]u8,
+    };
+    pub const IPSEC_TRAFFIC_SELECTOR0_1 = extern union {
+        endV4Address: u32,
+        endV6Address: [16]u8,
+    };
     protocolId: u8,
     portStart: u16,
     portEnd: u16,
@@ -701,35 +701,35 @@ pub const IPSEC_TRANSPORT_POLICY2 = extern struct {
     emPolicy: *IKEEXT_EM_POLICY2,
 };
 pub const IPSEC_TUNNEL_ENDPOINTS0 = extern struct {
-pub const IPSEC_TUNNEL_ENDPOINTS0_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const IPSEC_TUNNEL_ENDPOINTS0_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
+    pub const IPSEC_TUNNEL_ENDPOINTS0_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const IPSEC_TUNNEL_ENDPOINTS0_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
     ipVersion: i32,
     Anonymous1: IPSEC_TUNNEL_ENDPOINTS0_0,
     Anonymous2: IPSEC_TUNNEL_ENDPOINTS0_1,
 };
 pub const IPSEC_TUNNEL_ENDPOINT0 = extern struct {
-pub const IPSEC_TUNNEL_ENDPOINT0_0 = extern union {
-    v4Address: u32,
-    v6Address: [16]u8,
-};
+    pub const IPSEC_TUNNEL_ENDPOINT0_0 = extern union {
+        v4Address: u32,
+        v6Address: [16]u8,
+    };
     ipVersion: i32,
     Anonymous: IPSEC_TUNNEL_ENDPOINT0_0,
 };
 pub const IPSEC_TUNNEL_ENDPOINTS2 = extern struct {
-pub const IPSEC_TUNNEL_ENDPOINTS2_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const IPSEC_TUNNEL_ENDPOINTS2_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
+    pub const IPSEC_TUNNEL_ENDPOINTS2_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const IPSEC_TUNNEL_ENDPOINTS2_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
     ipVersion: i32,
     Anonymous1: IPSEC_TUNNEL_ENDPOINTS2_0,
     Anonymous2: IPSEC_TUNNEL_ENDPOINTS2_1,
@@ -739,14 +739,14 @@ pub const IPSEC_TUNNEL_ENDPOINTS2_1 = extern union {
     remoteAddresses: *IPSEC_TUNNEL_ENDPOINT0,
 };
 pub const IPSEC_TUNNEL_ENDPOINTS1 = extern struct {
-pub const IPSEC_TUNNEL_ENDPOINTS1_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const IPSEC_TUNNEL_ENDPOINTS1_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
+    pub const IPSEC_TUNNEL_ENDPOINTS1_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const IPSEC_TUNNEL_ENDPOINTS1_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
     ipVersion: i32,
     Anonymous1: IPSEC_TUNNEL_ENDPOINTS1_0,
     Anonymous2: IPSEC_TUNNEL_ENDPOINTS1_1,
@@ -889,13 +889,13 @@ pub const IPSEC_SA_AUTH_AND_CIPHER_INFORMATION0 = extern struct {
     saAuthInformation: IPSEC_SA_AUTH_INFORMATION0,
 };
 pub const IPSEC_SA0 = extern struct {
-pub const IPSEC_SA0_0 = extern union {
-    ahInformation: *IPSEC_SA_AUTH_INFORMATION0,
-    espAuthInformation: *IPSEC_SA_AUTH_INFORMATION0,
-    espCipherInformation: *IPSEC_SA_CIPHER_INFORMATION0,
-    espAuthAndCipherInformation: *IPSEC_SA_AUTH_AND_CIPHER_INFORMATION0,
-    espAuthFwInformation: *IPSEC_SA_AUTH_INFORMATION0,
-};
+    pub const IPSEC_SA0_0 = extern union {
+        ahInformation: *IPSEC_SA_AUTH_INFORMATION0,
+        espAuthInformation: *IPSEC_SA_AUTH_INFORMATION0,
+        espCipherInformation: *IPSEC_SA_CIPHER_INFORMATION0,
+        espAuthAndCipherInformation: *IPSEC_SA_AUTH_AND_CIPHER_INFORMATION0,
+        espAuthFwInformation: *IPSEC_SA_AUTH_INFORMATION0,
+    };
     spi: u32,
     saTransformType: i32,
     Anonymous: IPSEC_SA0_0,
@@ -919,9 +919,9 @@ pub const IPSEC_ID0 = extern struct {
     logonId: u64,
 };
 pub const IPSEC_SA_BUNDLE0 = extern struct {
-pub const IPSEC_SA_BUNDLE0_0 = extern union {
-    peerV4PrivateAddress: u32,
-};
+    pub const IPSEC_SA_BUNDLE0_0 = extern union {
+        peerV4PrivateAddress: u32,
+    };
     flags: u32,
     lifetime: IPSEC_SA_LIFETIME0,
     idleTimeoutSeconds: u32,
@@ -938,9 +938,9 @@ pub const IPSEC_SA_BUNDLE0_0 = extern union {
     pfsGroup: i32,
 };
 pub const IPSEC_SA_BUNDLE1 = extern struct {
-pub const IPSEC_SA_BUNDLE1_0 = extern union {
-    peerV4PrivateAddress: u32,
-};
+    pub const IPSEC_SA_BUNDLE1_0 = extern union {
+        peerV4PrivateAddress: u32,
+    };
     flags: u32,
     lifetime: IPSEC_SA_LIFETIME0,
     idleTimeoutSeconds: u32,
@@ -959,18 +959,18 @@ pub const IPSEC_SA_BUNDLE1_0 = extern union {
     qmFilterId: u64,
 };
 pub const IPSEC_TRAFFIC0 = extern struct {
-pub const IPSEC_TRAFFIC0_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const IPSEC_TRAFFIC0_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
-pub const IPSEC_TRAFFIC0_2 = extern union {
-    ipsecFilterId: u64,
-    tunnelPolicyId: u64,
-};
+    pub const IPSEC_TRAFFIC0_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const IPSEC_TRAFFIC0_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
+    pub const IPSEC_TRAFFIC0_2 = extern union {
+        ipsecFilterId: u64,
+        tunnelPolicyId: u64,
+    };
     ipVersion: i32,
     Anonymous1: IPSEC_TRAFFIC0_0,
     Anonymous2: IPSEC_TRAFFIC0_1,
@@ -979,18 +979,18 @@ pub const IPSEC_TRAFFIC0_2 = extern union {
     remotePort: u16,
 };
 pub const IPSEC_TRAFFIC1 = extern struct {
-pub const IPSEC_TRAFFIC1_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const IPSEC_TRAFFIC1_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
-pub const IPSEC_TRAFFIC1_2 = extern union {
-    ipsecFilterId: u64,
-    tunnelPolicyId: u64,
-};
+    pub const IPSEC_TRAFFIC1_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const IPSEC_TRAFFIC1_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
+    pub const IPSEC_TRAFFIC1_2 = extern union {
+        ipsecFilterId: u64,
+        tunnelPolicyId: u64,
+    };
     ipVersion: i32,
     Anonymous1: IPSEC_TRAFFIC1_0,
     Anonymous2: IPSEC_TRAFFIC1_1,
@@ -1007,27 +1007,27 @@ pub const IPSEC_V4_UDP_ENCAPSULATION0 = extern struct {
     remoteUdpEncapPort: u16,
 };
 pub const IPSEC_GETSPI0 = extern struct {
-pub const IPSEC_GETSPI0_0 = extern union {
-    inboundUdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IPSEC_GETSPI0_0 = extern union {
+        inboundUdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     inboundIpsecTraffic: IPSEC_TRAFFIC0,
     ipVersion: i32,
     Anonymous: IPSEC_GETSPI0_0,
     rngCryptoModuleID: *GUID,
 };
 pub const IPSEC_GETSPI1 = extern struct {
-pub const IPSEC_GETSPI1_0 = extern union {
-    inboundUdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IPSEC_GETSPI1_0 = extern union {
+        inboundUdpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     inboundIpsecTraffic: IPSEC_TRAFFIC1,
     ipVersion: i32,
     Anonymous: IPSEC_GETSPI1_0,
     rngCryptoModuleID: *GUID,
 };
 pub const IPSEC_SA_DETAILS0 = extern struct {
-pub const IPSEC_SA_DETAILS0_0 = extern union {
-    udpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IPSEC_SA_DETAILS0_0 = extern union {
+        udpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     ipVersion: i32,
     saDirection: i32,
     traffic: IPSEC_TRAFFIC0,
@@ -1036,9 +1036,9 @@ pub const IPSEC_SA_DETAILS0_0 = extern union {
     transportFilter: *FWPM_FILTER0,
 };
 pub const IPSEC_SA_DETAILS1 = extern struct {
-pub const IPSEC_SA_DETAILS1_0 = extern union {
-    udpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
-};
+    pub const IPSEC_SA_DETAILS1_0 = extern union {
+        udpEncapsulation: *IPSEC_V4_UDP_ENCAPSULATION0,
+    };
     ipVersion: i32,
     saDirection: i32,
     traffic: IPSEC_TRAFFIC1,
@@ -1189,17 +1189,17 @@ pub const FWPM_NETWORK_CONNECTION_POLICY_SETTINGS0 = extern struct {
     settings: *FWPM_NETWORK_CONNECTION_POLICY_SETTING0,
 };
 pub const FWPM_PROVIDER_CONTEXT0 = extern struct {
-pub const FWPM_PROVIDER_CONTEXT0_0 = extern union {
-    keyingPolicy: *IPSEC_KEYING_POLICY0,
-    ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY0,
-    ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY0,
-    authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY0,
-    authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY0,
-    ikeMmPolicy: *IKEEXT_POLICY0,
-    authIpMmPolicy: *IKEEXT_POLICY0,
-    dataBuffer: *FWP_BYTE_BLOB,
-    classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
-};
+    pub const FWPM_PROVIDER_CONTEXT0_0 = extern union {
+        keyingPolicy: *IPSEC_KEYING_POLICY0,
+        ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY0,
+        ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY0,
+        authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY0,
+        authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY0,
+        ikeMmPolicy: *IKEEXT_POLICY0,
+        authIpMmPolicy: *IKEEXT_POLICY0,
+        dataBuffer: *FWP_BYTE_BLOB,
+        classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
+    };
     providerContextKey: GUID,
     displayData: FWPM_DISPLAY_DATA0,
     flags: u32,
@@ -1210,20 +1210,20 @@ pub const FWPM_PROVIDER_CONTEXT0_0 = extern union {
     providerContextId: u64,
 };
 pub const FWPM_PROVIDER_CONTEXT1 = extern struct {
-pub const FWPM_PROVIDER_CONTEXT1_0 = extern union {
-    keyingPolicy: *IPSEC_KEYING_POLICY0,
-    ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY1,
-    ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY1,
-    authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY1,
-    authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY1,
-    ikeMmPolicy: *IKEEXT_POLICY1,
-    authIpMmPolicy: *IKEEXT_POLICY1,
-    dataBuffer: *FWP_BYTE_BLOB,
-    classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
-    ikeV2QmTunnelPolicy: *IPSEC_TUNNEL_POLICY1,
-    ikeV2MmPolicy: *IKEEXT_POLICY1,
-    idpOptions: *IPSEC_DOSP_OPTIONS0,
-};
+    pub const FWPM_PROVIDER_CONTEXT1_0 = extern union {
+        keyingPolicy: *IPSEC_KEYING_POLICY0,
+        ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY1,
+        ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY1,
+        authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY1,
+        authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY1,
+        ikeMmPolicy: *IKEEXT_POLICY1,
+        authIpMmPolicy: *IKEEXT_POLICY1,
+        dataBuffer: *FWP_BYTE_BLOB,
+        classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
+        ikeV2QmTunnelPolicy: *IPSEC_TUNNEL_POLICY1,
+        ikeV2MmPolicy: *IKEEXT_POLICY1,
+        idpOptions: *IPSEC_DOSP_OPTIONS0,
+    };
     providerContextKey: GUID,
     displayData: FWPM_DISPLAY_DATA0,
     flags: u32,
@@ -1234,21 +1234,21 @@ pub const FWPM_PROVIDER_CONTEXT1_0 = extern union {
     providerContextId: u64,
 };
 pub const FWPM_PROVIDER_CONTEXT2 = extern struct {
-pub const FWPM_PROVIDER_CONTEXT2_0 = extern union {
-    keyingPolicy: *IPSEC_KEYING_POLICY1,
-    ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
-    ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY2,
-    authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
-    authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY2,
-    ikeMmPolicy: *IKEEXT_POLICY2,
-    authIpMmPolicy: *IKEEXT_POLICY2,
-    dataBuffer: *FWP_BYTE_BLOB,
-    classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
-    ikeV2QmTunnelPolicy: *IPSEC_TUNNEL_POLICY2,
-    ikeV2QmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
-    ikeV2MmPolicy: *IKEEXT_POLICY2,
-    idpOptions: *IPSEC_DOSP_OPTIONS0,
-};
+    pub const FWPM_PROVIDER_CONTEXT2_0 = extern union {
+        keyingPolicy: *IPSEC_KEYING_POLICY1,
+        ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
+        ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY2,
+        authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
+        authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY2,
+        ikeMmPolicy: *IKEEXT_POLICY2,
+        authIpMmPolicy: *IKEEXT_POLICY2,
+        dataBuffer: *FWP_BYTE_BLOB,
+        classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
+        ikeV2QmTunnelPolicy: *IPSEC_TUNNEL_POLICY2,
+        ikeV2QmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
+        ikeV2MmPolicy: *IKEEXT_POLICY2,
+        idpOptions: *IPSEC_DOSP_OPTIONS0,
+    };
     providerContextKey: GUID,
     displayData: FWPM_DISPLAY_DATA0,
     flags: u32,
@@ -1259,22 +1259,22 @@ pub const FWPM_PROVIDER_CONTEXT2_0 = extern union {
     providerContextId: u64,
 };
 pub const FWPM_PROVIDER_CONTEXT3 = extern struct {
-pub const FWPM_PROVIDER_CONTEXT3_0 = extern union {
-    keyingPolicy: *IPSEC_KEYING_POLICY1,
-    ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
-    ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY3,
-    authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
-    authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY3,
-    ikeMmPolicy: *IKEEXT_POLICY2,
-    authIpMmPolicy: *IKEEXT_POLICY2,
-    dataBuffer: *FWP_BYTE_BLOB,
-    classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
-    ikeV2QmTunnelPolicy: *IPSEC_TUNNEL_POLICY3,
-    ikeV2QmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
-    ikeV2MmPolicy: *IKEEXT_POLICY2,
-    idpOptions: *IPSEC_DOSP_OPTIONS0,
-    networkConnectionPolicy: *FWPM_NETWORK_CONNECTION_POLICY_SETTINGS0,
-};
+    pub const FWPM_PROVIDER_CONTEXT3_0 = extern union {
+        keyingPolicy: *IPSEC_KEYING_POLICY1,
+        ikeQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
+        ikeQmTunnelPolicy: *IPSEC_TUNNEL_POLICY3,
+        authipQmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
+        authipQmTunnelPolicy: *IPSEC_TUNNEL_POLICY3,
+        ikeMmPolicy: *IKEEXT_POLICY2,
+        authIpMmPolicy: *IKEEXT_POLICY2,
+        dataBuffer: *FWP_BYTE_BLOB,
+        classifyOptions: *FWPM_CLASSIFY_OPTIONS0,
+        ikeV2QmTunnelPolicy: *IPSEC_TUNNEL_POLICY3,
+        ikeV2QmTransportPolicy: *IPSEC_TRANSPORT_POLICY2,
+        ikeV2MmPolicy: *IKEEXT_POLICY2,
+        idpOptions: *IPSEC_DOSP_OPTIONS0,
+        networkConnectionPolicy: *FWPM_NETWORK_CONNECTION_POLICY_SETTINGS0,
+    };
     providerContextKey: GUID,
     displayData: FWPM_DISPLAY_DATA0,
     flags: u32,
@@ -1359,10 +1359,10 @@ pub const FWPM_CALLOUT_SUBSCRIPTION0 = extern struct {
     sessionKey: GUID,
 };
 pub const FWPM_ACTION0 = extern struct {
-pub const FWPM_ACTION0_0 = extern union {
-    filterType: GUID,
-    calloutKey: GUID,
-};
+    pub const FWPM_ACTION0_0 = extern union {
+        filterType: GUID,
+        calloutKey: GUID,
+    };
     type: u32,
     Anonymous: FWPM_ACTION0_0,
 };
@@ -1372,10 +1372,10 @@ pub const FWPM_FILTER_CONDITION0 = extern struct {
     conditionValue: FWP_CONDITION_VALUE0,
 };
 pub const FWPM_FILTER0 = extern struct {
-pub const FWPM_FILTER0_0 = extern union {
-    rawContext: u64,
-    providerContextKey: GUID,
-};
+    pub const FWPM_FILTER0_0 = extern union {
+        rawContext: u64,
+        providerContextKey: GUID,
+    };
     filterKey: GUID,
     displayData: FWPM_DISPLAY_DATA0,
     flags: u32,
@@ -1506,14 +1506,14 @@ pub const FWPM_STATISTICS1 = extern struct {
     reauthReasonProxyHandleChanged: u64,
 };
 pub const FWPM_NET_EVENT_HEADER0 = extern struct {
-pub const FWPM_NET_EVENT_HEADER0_0 = extern union {
-    localAddrV4: u32,
-    localAddrV6: FWP_BYTE_ARRAY16,
-};
-pub const FWPM_NET_EVENT_HEADER0_1 = extern union {
-    remoteAddrV4: u32,
-    remoteAddrV6: FWP_BYTE_ARRAY16,
-};
+    pub const FWPM_NET_EVENT_HEADER0_0 = extern union {
+        localAddrV4: u32,
+        localAddrV6: FWP_BYTE_ARRAY16,
+    };
+    pub const FWPM_NET_EVENT_HEADER0_1 = extern union {
+        remoteAddrV4: u32,
+        remoteAddrV6: FWP_BYTE_ARRAY16,
+    };
     timeStamp: @"Windows.Win32.Foundation".FILETIME,
     flags: u32,
     ipVersion: i32,
@@ -1527,35 +1527,35 @@ pub const FWPM_NET_EVENT_HEADER0_1 = extern union {
     userId: *@"Windows.Win32.Security".SID,
 };
 pub const FWPM_NET_EVENT_HEADER1 = extern struct {
-pub const FWPM_NET_EVENT_HEADER1_0 = extern union {
-    localAddrV4: u32,
-    localAddrV6: FWP_BYTE_ARRAY16,
-};
-pub const FWPM_NET_EVENT_HEADER1_1 = extern union {
-    remoteAddrV4: u32,
-    remoteAddrV6: FWP_BYTE_ARRAY16,
-};
-pub const FWPM_NET_EVENT_HEADER1_2 = extern union {
-pub const FWPM_NET_EVENT_HEADER1_2_0 = extern struct {
-pub const FWPM_NET_EVENT_HEADER1_2_0_0 = extern union {
-pub const FWPM_NET_EVENT_HEADER1_2_0_0_0 = extern struct {
-    reserved2: FWP_BYTE_ARRAY6,
-    reserved3: FWP_BYTE_ARRAY6,
-    reserved4: u32,
-    reserved5: u32,
-    reserved6: u16,
-    reserved7: u32,
-    reserved8: u32,
-    reserved9: u16,
-    reserved10: u64,
-};
-    Anonymous: FWPM_NET_EVENT_HEADER1_2_0_0_0,
-};
-    reserved1: i32,
-    Anonymous: FWPM_NET_EVENT_HEADER1_2_0_0,
-};
-    Anonymous: FWPM_NET_EVENT_HEADER1_2_0,
-};
+    pub const FWPM_NET_EVENT_HEADER1_0 = extern union {
+        localAddrV4: u32,
+        localAddrV6: FWP_BYTE_ARRAY16,
+    };
+    pub const FWPM_NET_EVENT_HEADER1_1 = extern union {
+        remoteAddrV4: u32,
+        remoteAddrV6: FWP_BYTE_ARRAY16,
+    };
+    pub const FWPM_NET_EVENT_HEADER1_2 = extern union {
+        pub const FWPM_NET_EVENT_HEADER1_2_0 = extern struct {
+            pub const FWPM_NET_EVENT_HEADER1_2_0_0 = extern union {
+                pub const FWPM_NET_EVENT_HEADER1_2_0_0_0 = extern struct {
+                    reserved2: FWP_BYTE_ARRAY6,
+                    reserved3: FWP_BYTE_ARRAY6,
+                    reserved4: u32,
+                    reserved5: u32,
+                    reserved6: u16,
+                    reserved7: u32,
+                    reserved8: u32,
+                    reserved9: u16,
+                    reserved10: u64,
+                };
+                Anonymous: FWPM_NET_EVENT_HEADER1_2_0_0_0,
+            };
+            reserved1: i32,
+            Anonymous: FWPM_NET_EVENT_HEADER1_2_0_0,
+        };
+        Anonymous: FWPM_NET_EVENT_HEADER1_2_0,
+    };
     timeStamp: @"Windows.Win32.Foundation".FILETIME,
     flags: u32,
     ipVersion: i32,
@@ -1570,14 +1570,14 @@ pub const FWPM_NET_EVENT_HEADER1_2_0_0_0 = extern struct {
     Anonymous3: FWPM_NET_EVENT_HEADER1_2,
 };
 pub const FWPM_NET_EVENT_HEADER2 = extern struct {
-pub const FWPM_NET_EVENT_HEADER2_0 = extern union {
-    localAddrV4: u32,
-    localAddrV6: FWP_BYTE_ARRAY16,
-};
-pub const FWPM_NET_EVENT_HEADER2_1 = extern union {
-    remoteAddrV4: u32,
-    remoteAddrV6: FWP_BYTE_ARRAY16,
-};
+    pub const FWPM_NET_EVENT_HEADER2_0 = extern union {
+        localAddrV4: u32,
+        localAddrV6: FWP_BYTE_ARRAY16,
+    };
+    pub const FWPM_NET_EVENT_HEADER2_1 = extern union {
+        remoteAddrV4: u32,
+        remoteAddrV6: FWP_BYTE_ARRAY16,
+    };
     timeStamp: @"Windows.Win32.Foundation".FILETIME,
     flags: u32,
     ipVersion: i32,
@@ -1593,14 +1593,14 @@ pub const FWPM_NET_EVENT_HEADER2_1 = extern union {
     packageSid: *@"Windows.Win32.Security".SID,
 };
 pub const FWPM_NET_EVENT_HEADER3 = extern struct {
-pub const FWPM_NET_EVENT_HEADER3_0 = extern union {
-    localAddrV4: u32,
-    localAddrV6: FWP_BYTE_ARRAY16,
-};
-pub const FWPM_NET_EVENT_HEADER3_1 = extern union {
-    remoteAddrV4: u32,
-    remoteAddrV6: FWP_BYTE_ARRAY16,
-};
+    pub const FWPM_NET_EVENT_HEADER3_0 = extern union {
+        localAddrV4: u32,
+        localAddrV6: FWP_BYTE_ARRAY16,
+    };
+    pub const FWPM_NET_EVENT_HEADER3_1 = extern union {
+        remoteAddrV4: u32,
+        remoteAddrV6: FWP_BYTE_ARRAY16,
+    };
     timeStamp: @"Windows.Win32.Foundation".FILETIME,
     flags: u32,
     ipVersion: i32,
@@ -1668,12 +1668,12 @@ pub const FWPM_NET_EVENT_IKEEXT_MM_FAILURE2 = extern struct {
     providerContextKey: *GUID,
 };
 pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE0 = extern struct {
-pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE0_0 = extern union {
-    localSubNet: FWP_CONDITION_VALUE0,
-};
-pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE0_1 = extern union {
-    remoteSubNet: FWP_CONDITION_VALUE0,
-};
+    pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE0_0 = extern union {
+        localSubNet: FWP_CONDITION_VALUE0,
+    };
+    pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE0_1 = extern union {
+        remoteSubNet: FWP_CONDITION_VALUE0,
+    };
     failureErrorCode: u32,
     failurePoint: i32,
     keyingModuleType: i32,
@@ -1685,12 +1685,12 @@ pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE0_1 = extern union {
     qmFilterId: u64,
 };
 pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE1 = extern struct {
-pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_0 = extern union {
-    localSubNet: FWP_CONDITION_VALUE0,
-};
-pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_1 = extern union {
-    remoteSubNet: FWP_CONDITION_VALUE0,
-};
+    pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_0 = extern union {
+        localSubNet: FWP_CONDITION_VALUE0,
+    };
+    pub const FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_1 = extern union {
+        remoteSubNet: FWP_CONDITION_VALUE0,
+    };
     failureErrorCode: u32,
     failurePoint: i32,
     keyingModuleType: i32,
@@ -1795,14 +1795,14 @@ pub const FWPM_NET_EVENT_IPSEC_KERNEL_DROP0 = extern struct {
     layerId: u16,
 };
 pub const FWPM_NET_EVENT_IPSEC_DOSP_DROP0 = extern struct {
-pub const FWPM_NET_EVENT_IPSEC_DOSP_DROP0_0 = extern union {
-    publicHostV4Addr: u32,
-    publicHostV6Addr: [16]u8,
-};
-pub const FWPM_NET_EVENT_IPSEC_DOSP_DROP0_1 = extern union {
-    internalHostV4Addr: u32,
-    internalHostV6Addr: [16]u8,
-};
+    pub const FWPM_NET_EVENT_IPSEC_DOSP_DROP0_0 = extern union {
+        publicHostV4Addr: u32,
+        publicHostV6Addr: [16]u8,
+    };
+    pub const FWPM_NET_EVENT_IPSEC_DOSP_DROP0_1 = extern union {
+        internalHostV4Addr: u32,
+        internalHostV6Addr: [16]u8,
+    };
     ipVersion: i32,
     Anonymous1: FWPM_NET_EVENT_IPSEC_DOSP_DROP0_0,
     Anonymous2: FWPM_NET_EVENT_IPSEC_DOSP_DROP0_1,
@@ -1823,96 +1823,96 @@ pub const FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0 = extern struct {
     spi: u32,
 };
 pub const FWPM_NET_EVENT0 = extern struct {
-pub const FWPM_NET_EVENT0_0 = extern union {
-    ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE0,
-    ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
-    ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE0,
-    classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP0,
-    ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
-    idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
-};
+    pub const FWPM_NET_EVENT0_0 = extern union {
+        ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE0,
+        ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
+        ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE0,
+        classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP0,
+        ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
+        idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
+    };
     header: FWPM_NET_EVENT_HEADER0,
     type: i32,
     Anonymous: FWPM_NET_EVENT0_0,
 };
 pub const FWPM_NET_EVENT1 = extern struct {
-pub const FWPM_NET_EVENT1_0 = extern union {
-    ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE1,
-    ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
-    ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
-    classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP1,
-    ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
-    idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
-};
+    pub const FWPM_NET_EVENT1_0 = extern union {
+        ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE1,
+        ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
+        ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
+        classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP1,
+        ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
+        idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
+    };
     header: FWPM_NET_EVENT_HEADER1,
     type: i32,
     Anonymous: FWPM_NET_EVENT1_0,
 };
 pub const FWPM_NET_EVENT2 = extern struct {
-pub const FWPM_NET_EVENT2_0 = extern union {
-    ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE1,
-    ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
-    ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
-    classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
-    ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
-    idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
-    classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
-    capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
-    capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
-    classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
-};
+    pub const FWPM_NET_EVENT2_0 = extern union {
+        ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE1,
+        ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
+        ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
+        classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
+        ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
+        idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
+        classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
+        capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
+        capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
+        classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
+    };
     header: FWPM_NET_EVENT_HEADER2,
     type: i32,
     Anonymous: FWPM_NET_EVENT2_0,
 };
 pub const FWPM_NET_EVENT3 = extern struct {
-pub const FWPM_NET_EVENT3_0 = extern union {
-    ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE1,
-    ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
-    ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
-    classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
-    ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
-    idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
-    classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
-    capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
-    capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
-    classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
-};
+    pub const FWPM_NET_EVENT3_0 = extern union {
+        ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE1,
+        ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE0,
+        ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
+        classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
+        ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
+        idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
+        classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
+        capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
+        capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
+        classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
+    };
     header: FWPM_NET_EVENT_HEADER3,
     type: i32,
     Anonymous: FWPM_NET_EVENT3_0,
 };
 pub const FWPM_NET_EVENT4 = extern struct {
-pub const FWPM_NET_EVENT4_0 = extern union {
-    ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE2,
-    ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE1,
-    ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
-    classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
-    ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
-    idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
-    classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
-    capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
-    capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
-    classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
-};
+    pub const FWPM_NET_EVENT4_0 = extern union {
+        ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE2,
+        ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE1,
+        ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
+        classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
+        ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
+        idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
+        classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
+        capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
+        capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
+        classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
+    };
     header: FWPM_NET_EVENT_HEADER3,
     type: i32,
     Anonymous: FWPM_NET_EVENT4_0,
 };
 pub const FWPM_NET_EVENT5 = extern struct {
-pub const FWPM_NET_EVENT5_0 = extern union {
-    ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE2,
-    ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE1,
-    ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
-    classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
-    ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
-    idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
-    classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
-    capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
-    capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
-    classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
-    lpmPacketArrival: *FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0,
-};
+    pub const FWPM_NET_EVENT5_0 = extern union {
+        ikeMmFailure: *FWPM_NET_EVENT_IKEEXT_MM_FAILURE2,
+        ikeQmFailure: *FWPM_NET_EVENT_IKEEXT_QM_FAILURE1,
+        ikeEmFailure: *FWPM_NET_EVENT_IKEEXT_EM_FAILURE1,
+        classifyDrop: *FWPM_NET_EVENT_CLASSIFY_DROP2,
+        ipsecDrop: *FWPM_NET_EVENT_IPSEC_KERNEL_DROP0,
+        idpDrop: *FWPM_NET_EVENT_IPSEC_DOSP_DROP0,
+        classifyAllow: *FWPM_NET_EVENT_CLASSIFY_ALLOW0,
+        capabilityDrop: *FWPM_NET_EVENT_CAPABILITY_DROP0,
+        capabilityAllow: *FWPM_NET_EVENT_CAPABILITY_ALLOW0,
+        classifyDropMac: *FWPM_NET_EVENT_CLASSIFY_DROP_MAC0,
+        lpmPacketArrival: *FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0,
+    };
     header: FWPM_NET_EVENT_HEADER3,
     type: i32,
     Anonymous: FWPM_NET_EVENT5_0,
@@ -1938,14 +1938,14 @@ pub const FWPM_SYSTEM_PORTS0 = extern struct {
     types: *FWPM_SYSTEM_PORTS_BY_TYPE0,
 };
 pub const FWPM_CONNECTION0 = extern struct {
-pub const FWPM_CONNECTION0_0 = extern union {
-    localV4Address: u32,
-    localV6Address: [16]u8,
-};
-pub const FWPM_CONNECTION0_1 = extern union {
-    remoteV4Address: u32,
-    remoteV6Address: [16]u8,
-};
+    pub const FWPM_CONNECTION0_0 = extern union {
+        localV4Address: u32,
+        localV6Address: [16]u8,
+    };
+    pub const FWPM_CONNECTION0_1 = extern union {
+        remoteV4Address: u32,
+        remoteV6Address: [16]u8,
+    };
     connectionId: u64,
     ipVersion: i32,
     Anonymous1: FWPM_CONNECTION0_0,
@@ -1971,19 +1971,19 @@ pub const FWPM_CONNECTION_SUBSCRIPTION0 = extern struct {
     sessionKey: GUID,
 };
 pub const FWPM_VSWITCH_EVENT0 = extern struct {
-pub const FWPM_VSWITCH_EVENT0_0 = extern union {
-pub const _positionInfo_e__Struct = extern struct {
-    numvSwitchFilterExtensions: u32,
-    vSwitchFilterExtensions: *@"Windows.Win32.Foundation".PWSTR,
-};
-pub const _reorderInfo_e__Struct = extern struct {
-    inRequiredPosition: @"Windows.Win32.Foundation".BOOL,
-    numvSwitchFilterExtensions: u32,
-    vSwitchFilterExtensions: *@"Windows.Win32.Foundation".PWSTR,
-};
-    positionInfo: _positionInfo_e__Struct,
-    reorderInfo: _reorderInfo_e__Struct,
-};
+    pub const FWPM_VSWITCH_EVENT0_0 = extern union {
+        pub const _positionInfo_e__Struct = extern struct {
+            numvSwitchFilterExtensions: u32,
+            vSwitchFilterExtensions: *@"Windows.Win32.Foundation".PWSTR,
+        };
+        pub const _reorderInfo_e__Struct = extern struct {
+            inRequiredPosition: @"Windows.Win32.Foundation".BOOL,
+            numvSwitchFilterExtensions: u32,
+            vSwitchFilterExtensions: *@"Windows.Win32.Foundation".PWSTR,
+        };
+        positionInfo: _positionInfo_e__Struct,
+        reorderInfo: _reorderInfo_e__Struct,
+    };
     eventType: i32,
     vSwitchId: @"Windows.Win32.Foundation".PWSTR,
     Anonymous: FWPM_VSWITCH_EVENT0_0,

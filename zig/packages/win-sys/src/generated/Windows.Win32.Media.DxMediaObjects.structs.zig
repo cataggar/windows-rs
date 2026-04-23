@@ -6,6 +6,8 @@ const HRESULT = win_core.HRESULT;
 const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 
+pub const DMO_MEDIA_TYPE = opaque {};
+pub const DMO_OUTPUT_DATA_BUFFER = opaque {};
 pub const DMO_PARTIAL_MEDIATYPE = extern struct {
     type: GUID,
     subtype: GUID,

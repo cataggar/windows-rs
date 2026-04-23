@@ -50,14 +50,14 @@ pub const IMAGE_INFO = extern struct {
     Format: i32,
 };
 pub const DBID = extern struct {
-pub const _uGuid_e__Union = extern union {
-    guid: GUID,
-    pguid: *GUID,
-};
-pub const _uName_e__Union = extern union {
-    pwszName: @"Windows.Win32.Foundation".PWSTR,
-    ulPropid: u32,
-};
+    pub const _uGuid_e__Union = extern union {
+        guid: GUID,
+        pguid: *GUID,
+    };
+    pub const _uName_e__Union = extern union {
+        pwszName: @"Windows.Win32.Foundation".PWSTR,
+        ulPropid: u32,
+    };
     uGuid: _uGuid_e__Union,
     eKind: u32,
     uName: _uName_e__Union,

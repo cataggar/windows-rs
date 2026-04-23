@@ -8,10 +8,10 @@ const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
 pub const DVD_COPY_PROTECT_KEY = extern struct {
-pub const _Parameters_e__Union = extern union {
-    FileHandle: @"Windows.Win32.Foundation".HANDLE,
-    TitleOffset: i64,
-};
+    pub const _Parameters_e__Union = extern union {
+        FileHandle: @"Windows.Win32.Foundation".HANDLE,
+        TitleOffset: i64,
+    };
     KeyLength: u32,
     SessionId: u32,
     KeyType: i32,
@@ -63,25 +63,25 @@ pub const DVD_MANUFACTURER_DESCRIPTOR = extern struct {
     ManufacturingInformation: [2048]u8,
 };
 pub const DVD_COPYRIGHT_MANAGEMENT_DESCRIPTOR = extern struct {
-pub const DVD_COPYRIGHT_MANAGEMENT_DESCRIPTOR_0 = extern union {
-pub const _Dvdrom_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _DvdRecordable_Version1_e__Struct = extern struct {
-    _bitfield: u8,
-};
-pub const _Dvdram_e__Struct = extern struct {
-    Reserved0003: u8,
-};
-pub const _DvdRecordable_e__Struct = extern struct {
-    _bitfield: u8,
-};
-    Dvdrom: _Dvdrom_e__Struct,
-    DvdRecordable_Version1: _DvdRecordable_Version1_e__Struct,
-    Dvdram: _Dvdram_e__Struct,
-    DvdRecordable: _DvdRecordable_e__Struct,
-    CPR_MAI: u8,
-};
+    pub const DVD_COPYRIGHT_MANAGEMENT_DESCRIPTOR_0 = extern union {
+        pub const _Dvdrom_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        pub const _DvdRecordable_Version1_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        pub const _Dvdram_e__Struct = extern struct {
+            Reserved0003: u8,
+        };
+        pub const _DvdRecordable_e__Struct = extern struct {
+            _bitfield: u8,
+        };
+        Dvdrom: _Dvdrom_e__Struct,
+        DvdRecordable_Version1: _DvdRecordable_Version1_e__Struct,
+        Dvdram: _Dvdram_e__Struct,
+        DvdRecordable: _DvdRecordable_e__Struct,
+        CPR_MAI: u8,
+    };
     Anonymous: DVD_COPYRIGHT_MANAGEMENT_DESCRIPTOR_0,
     Reserved0: [3]u8,
 };
@@ -165,27 +165,27 @@ pub const DVD_DUAL_LAYER_REMAPPING_INFORMATION = extern struct {
     RemappingAddress: [4]u8,
 };
 pub const DVD_DISC_CONTROL_BLOCK_HEADER = extern struct {
-pub const _ProhibitedActions_e__Union = extern union {
-pub const _ProhibitedActions_e__Union_0 = extern struct {
-    ReservedDoNotUse_UseAsByteInstead_0: [3]u8,
-    _bitfield: u8,
-};
-    Anonymous: _ProhibitedActions_e__Union_0,
-    AsByte: [4]u8,
-};
+    pub const _ProhibitedActions_e__Union = extern union {
+        pub const _ProhibitedActions_e__Union_0 = extern struct {
+            ReservedDoNotUse_UseAsByteInstead_0: [3]u8,
+            _bitfield: u8,
+        };
+        Anonymous: _ProhibitedActions_e__Union_0,
+        AsByte: [4]u8,
+    };
     ContentDescriptor: [4]u8,
     ProhibitedActions: _ProhibitedActions_e__Union,
     VendorId: [32]u8,
 };
 pub const DVD_DISC_CONTROL_BLOCK_WRITE_INHIBIT = extern struct {
-pub const _WriteProtectActions_e__Union = extern union {
-pub const _WriteProtectActions_e__Union_0 = extern struct {
-    ReservedDoNotUse_UseAsByteInstead_0: [3]u8,
-    _bitfield: u8,
-};
-    Anonymous: _WriteProtectActions_e__Union_0,
-    AsByte: [4]u8,
-};
+    pub const _WriteProtectActions_e__Union = extern union {
+        pub const _WriteProtectActions_e__Union_0 = extern struct {
+            ReservedDoNotUse_UseAsByteInstead_0: [3]u8,
+            _bitfield: u8,
+        };
+        Anonymous: _WriteProtectActions_e__Union_0,
+        AsByte: [4]u8,
+    };
     header: DVD_DISC_CONTROL_BLOCK_HEADER,
     UpdateCount: [4]u8,
     WriteProtectActions: _WriteProtectActions_e__Union,
@@ -309,10 +309,10 @@ pub const AACS_BINDING_NONCE = extern struct {
     MAC: [16]u8,
 };
 pub const AACS_READ_BINDING_NONCE = extern struct {
-pub const AACS_READ_BINDING_NONCE_0 = extern union {
-    Handle: @"Windows.Win32.Foundation".HANDLE,
-    ForceStructureLengthToMatch64bit: u64,
-};
+    pub const AACS_READ_BINDING_NONCE_0 = extern union {
+        Handle: @"Windows.Win32.Foundation".HANDLE,
+        ForceStructureLengthToMatch64bit: u64,
+    };
     SessionId: u32,
     NumberOfSectors: u32,
     StartLba: u64,

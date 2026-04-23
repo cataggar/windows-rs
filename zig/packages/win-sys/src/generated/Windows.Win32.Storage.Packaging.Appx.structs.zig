@@ -23,6 +23,11 @@ pub const PACKAGE_ID = extern struct {
     resourceId: @"Windows.Win32.Foundation".PWSTR,
     publisherId: @"Windows.Win32.Foundation".PWSTR,
 };
+pub const PACKAGE_INFO = opaque {};
+pub const APPX_PACKAGE_SETTINGS = opaque {};
+pub const APPX_PACKAGE_WRITER_PAYLOAD_STREAM = opaque {};
+pub const APPX_ENCRYPTED_PACKAGE_SETTINGS = opaque {};
+pub const APPX_ENCRYPTED_PACKAGE_SETTINGS2 = opaque {};
 pub const APPX_KEY_INFO = extern struct {
     keyLength: u32,
     keyIdLength: u32,
@@ -34,16 +39,16 @@ pub const APPX_ENCRYPTED_EXEMPTIONS = extern struct {
     plainTextFiles: *@"Windows.Win32.Foundation".PWSTR,
 };
 pub const PACKAGE_VERSION = extern struct {
-pub const PACKAGE_VERSION_0 = extern union {
-pub const PACKAGE_VERSION_0_0 = extern struct {
-    Revision: u16,
-    Build: u16,
-    Minor: u16,
-    Major: u16,
-};
-    Version: u64,
-    Anonymous: PACKAGE_VERSION_0_0,
-};
+    pub const PACKAGE_VERSION_0 = extern union {
+        pub const PACKAGE_VERSION_0_0 = extern struct {
+            Revision: u16,
+            Build: u16,
+            Minor: u16,
+            Major: u16,
+        };
+        Version: u64,
+        Anonymous: PACKAGE_VERSION_0_0,
+    };
     Anonymous: PACKAGE_VERSION_0,
 };
 pub const _PACKAGE_INFO_REFERENCE = extern struct {

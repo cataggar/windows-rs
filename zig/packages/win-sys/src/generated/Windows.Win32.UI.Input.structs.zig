@@ -17,14 +17,14 @@ pub const RAWINPUTHEADER = extern struct {
     wParam: @"Windows.Win32.Foundation".WPARAM,
 };
 pub const RAWMOUSE = extern struct {
-pub const RAWMOUSE_0 = extern union {
-pub const RAWMOUSE_0_0 = extern struct {
-    usButtonFlags: u16,
-    usButtonData: u16,
-};
-    ulButtons: u32,
-    Anonymous: RAWMOUSE_0_0,
-};
+    pub const RAWMOUSE_0 = extern union {
+        pub const RAWMOUSE_0_0 = extern struct {
+            usButtonFlags: u16,
+            usButtonData: u16,
+        };
+        ulButtons: u32,
+        Anonymous: RAWMOUSE_0_0,
+    };
     usFlags: u16,
     Anonymous: RAWMOUSE_0,
     ulRawButtons: u32,
@@ -46,11 +46,11 @@ pub const RAWHID = extern struct {
     bRawData: [1]u8,
 };
 pub const RAWINPUT = extern struct {
-pub const _data_e__Union = extern union {
-    mouse: RAWMOUSE,
-    keyboard: RAWKEYBOARD,
-    hid: RAWHID,
-};
+    pub const _data_e__Union = extern union {
+        mouse: RAWMOUSE,
+        keyboard: RAWKEYBOARD,
+        hid: RAWHID,
+    };
     header: RAWINPUTHEADER,
     data: _data_e__Union,
 };
@@ -76,11 +76,11 @@ pub const RID_DEVICE_INFO_HID = extern struct {
     usUsage: u16,
 };
 pub const RID_DEVICE_INFO = extern struct {
-pub const RID_DEVICE_INFO_0 = extern union {
-    mouse: RID_DEVICE_INFO_MOUSE,
-    keyboard: RID_DEVICE_INFO_KEYBOARD,
-    hid: RID_DEVICE_INFO_HID,
-};
+    pub const RID_DEVICE_INFO_0 = extern union {
+        mouse: RID_DEVICE_INFO_MOUSE,
+        keyboard: RID_DEVICE_INFO_KEYBOARD,
+        hid: RID_DEVICE_INFO_HID,
+    };
     cbSize: u32,
     dwType: u32,
     Anonymous: RID_DEVICE_INFO_0,

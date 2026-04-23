@@ -152,13 +152,13 @@ pub const DHCP_IP_RESERVATION = extern struct {
     ReservedForClient: *DHCP_BINARY_DATA,
 };
 pub const DHCP_SUBNET_ELEMENT_DATA = extern struct {
-pub const DHCP_SUBNET_ELEMENT_UNION = extern union {
-    IpRange: *DHCP_IP_RANGE,
-    SecondaryHost: *DHCP_HOST_INFO,
-    ReservedIp: *DHCP_IP_RESERVATION,
-    ExcludeIpRange: *DHCP_IP_RANGE,
-    IpUsedCluster: *DHCP_IP_CLUSTER,
-};
+    pub const DHCP_SUBNET_ELEMENT_UNION = extern union {
+        IpRange: *DHCP_IP_RANGE,
+        SecondaryHost: *DHCP_HOST_INFO,
+        ReservedIp: *DHCP_IP_RESERVATION,
+        ExcludeIpRange: *DHCP_IP_RANGE,
+        IpUsedCluster: *DHCP_IP_CLUSTER,
+    };
     ElementType: i32,
     Element: DHCP_SUBNET_ELEMENT_UNION,
 };
@@ -195,17 +195,17 @@ pub const DHCP_FILTER_ENUM_INFO = extern struct {
     pEnumRecords: *DHCP_FILTER_RECORD,
 };
 pub const DHCP_OPTION_DATA_ELEMENT = extern struct {
-pub const DHCP_OPTION_ELEMENT_UNION = extern union {
-    ByteOption: u8,
-    WordOption: u16,
-    DWordOption: u32,
-    DWordDWordOption: DWORD_DWORD,
-    IpAddressOption: u32,
-    StringDataOption: @"Windows.Win32.Foundation".PWSTR,
-    BinaryDataOption: DHCP_BINARY_DATA,
-    EncapsulatedDataOption: DHCP_BINARY_DATA,
-    Ipv6AddressDataOption: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const DHCP_OPTION_ELEMENT_UNION = extern union {
+        ByteOption: u8,
+        WordOption: u16,
+        DWordOption: u32,
+        DWordDWordOption: DWORD_DWORD,
+        IpAddressOption: u32,
+        StringDataOption: @"Windows.Win32.Foundation".PWSTR,
+        BinaryDataOption: DHCP_BINARY_DATA,
+        EncapsulatedDataOption: DHCP_BINARY_DATA,
+        Ipv6AddressDataOption: @"Windows.Win32.Foundation".PWSTR,
+    };
     OptionType: i32,
     Element: DHCP_OPTION_ELEMENT_UNION,
 };
@@ -237,13 +237,13 @@ pub const DHCP_RESERVED_SCOPE = extern struct {
     ReservedIpSubnetAddress: u32,
 };
 pub const DHCP_OPTION_SCOPE_INFO = extern struct {
-pub const _DHCP_OPTION_SCOPE_UNION = extern union {
-    DefaultScopeInfo: *anyopaque,
-    GlobalScopeInfo: *anyopaque,
-    SubnetScopeInfo: u32,
-    ReservedScopeInfo: DHCP_RESERVED_SCOPE,
-    MScopeInfo: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const _DHCP_OPTION_SCOPE_UNION = extern union {
+        DefaultScopeInfo: *anyopaque,
+        GlobalScopeInfo: *anyopaque,
+        SubnetScopeInfo: u32,
+        ReservedScopeInfo: DHCP_RESERVED_SCOPE,
+        MScopeInfo: @"Windows.Win32.Foundation".PWSTR,
+    };
     ScopeType: i32,
     ScopeInfo: _DHCP_OPTION_SCOPE_UNION,
 };
@@ -252,11 +252,11 @@ pub const DHCP_RESERVED_SCOPE6 = extern struct {
     ReservedIpSubnetAddress: DHCP_IPV6_ADDRESS,
 };
 pub const DHCP_OPTION_SCOPE_INFO6 = extern struct {
-pub const DHCP_OPTION_SCOPE_UNION6 = extern union {
-    DefaultScopeInfo: *anyopaque,
-    SubnetScopeInfo: DHCP_IPV6_ADDRESS,
-    ReservedScopeInfo: DHCP_RESERVED_SCOPE6,
-};
+    pub const DHCP_OPTION_SCOPE_UNION6 = extern union {
+        DefaultScopeInfo: *anyopaque,
+        SubnetScopeInfo: DHCP_IPV6_ADDRESS,
+        ReservedScopeInfo: DHCP_RESERVED_SCOPE6,
+    };
     ScopeType: i32,
     ScopeInfo: DHCP_OPTION_SCOPE_UNION6,
 };
@@ -335,22 +335,22 @@ pub const DHCP_CLIENT_INFO_PB_ARRAY = extern struct {
     Clients: **DHCP_CLIENT_INFO_PB,
 };
 pub const DHCP_SEARCH_INFO = extern struct {
-pub const DHCP_CLIENT_SEARCH_UNION = extern union {
-    ClientIpAddress: u32,
-    ClientHardwareAddress: DHCP_BINARY_DATA,
-    ClientName: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const DHCP_CLIENT_SEARCH_UNION = extern union {
+        ClientIpAddress: u32,
+        ClientHardwareAddress: DHCP_BINARY_DATA,
+        ClientName: @"Windows.Win32.Foundation".PWSTR,
+    };
     SearchType: i32,
     SearchInfo: DHCP_CLIENT_SEARCH_UNION,
 };
 pub const DHCP_PROPERTY = extern struct {
-pub const _DHCP_PROPERTY_VALUE_UNION = extern union {
-    ByteValue: u8,
-    WordValue: u16,
-    DWordValue: u32,
-    StringValue: @"Windows.Win32.Foundation".PWSTR,
-    BinaryValue: DHCP_BINARY_DATA,
-};
+    pub const _DHCP_PROPERTY_VALUE_UNION = extern union {
+        ByteValue: u8,
+        WordValue: u16,
+        DWordValue: u32,
+        StringValue: @"Windows.Win32.Foundation".PWSTR,
+        BinaryValue: DHCP_BINARY_DATA,
+    };
     ID: i32,
     Type: i32,
     Value: _DHCP_PROPERTY_VALUE_UNION,
@@ -522,13 +522,13 @@ pub const DHCP_RESERVATION_INFO_ARRAY = extern struct {
     Elements: **DHCP_IP_RESERVATION_INFO,
 };
 pub const DHCP_SUBNET_ELEMENT_DATA_V4 = extern struct {
-pub const DHCP_SUBNET_ELEMENT_UNION_V4 = extern union {
-    IpRange: *DHCP_IP_RANGE,
-    SecondaryHost: *DHCP_HOST_INFO,
-    ReservedIp: *DHCP_IP_RESERVATION_V4,
-    ExcludeIpRange: *DHCP_IP_RANGE,
-    IpUsedCluster: *DHCP_IP_CLUSTER,
-};
+    pub const DHCP_SUBNET_ELEMENT_UNION_V4 = extern union {
+        IpRange: *DHCP_IP_RANGE,
+        SecondaryHost: *DHCP_HOST_INFO,
+        ReservedIp: *DHCP_IP_RESERVATION_V4,
+        ExcludeIpRange: *DHCP_IP_RANGE,
+        IpUsedCluster: *DHCP_IP_CLUSTER,
+    };
     ElementType: i32,
     Element: DHCP_SUBNET_ELEMENT_UNION_V4,
 };
@@ -620,34 +620,34 @@ pub const DHCP_CLIENT_INFO_ARRAY_V5 = extern struct {
     Clients: **DHCP_CLIENT_INFO_V5,
 };
 pub const DHCP_ALL_OPTIONS = extern struct {
-pub const DHCP_ALL_OPTIONS_0 = extern struct {
-    Option: DHCP_OPTION,
-    VendorName: @"Windows.Win32.Foundation".PWSTR,
-    ClassName: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const DHCP_ALL_OPTIONS_0 = extern struct {
+        Option: DHCP_OPTION,
+        VendorName: @"Windows.Win32.Foundation".PWSTR,
+        ClassName: @"Windows.Win32.Foundation".PWSTR,
+    };
     Flags: u32,
     NonVendorOptions: *DHCP_OPTION_ARRAY,
     NumVendorOptions: u32,
     VendorOptions: *DHCP_ALL_OPTIONS_0,
 };
 pub const DHCP_ALL_OPTION_VALUES = extern struct {
-pub const DHCP_ALL_OPTION_VALUES_0 = extern struct {
-    ClassName: @"Windows.Win32.Foundation".PWSTR,
-    VendorName: @"Windows.Win32.Foundation".PWSTR,
-    IsVendor: @"Windows.Win32.Foundation".BOOL,
-    OptionsArray: *DHCP_OPTION_VALUE_ARRAY,
-};
+    pub const DHCP_ALL_OPTION_VALUES_0 = extern struct {
+        ClassName: @"Windows.Win32.Foundation".PWSTR,
+        VendorName: @"Windows.Win32.Foundation".PWSTR,
+        IsVendor: @"Windows.Win32.Foundation".BOOL,
+        OptionsArray: *DHCP_OPTION_VALUE_ARRAY,
+    };
     Flags: u32,
     NumElements: u32,
     Options: *DHCP_ALL_OPTION_VALUES_0,
 };
 pub const DHCP_ALL_OPTION_VALUES_PB = extern struct {
-pub const DHCP_ALL_OPTION_VALUES_PB_0 = extern struct {
-    PolicyName: @"Windows.Win32.Foundation".PWSTR,
-    VendorName: @"Windows.Win32.Foundation".PWSTR,
-    IsVendor: @"Windows.Win32.Foundation".BOOL,
-    OptionsArray: *DHCP_OPTION_VALUE_ARRAY,
-};
+    pub const DHCP_ALL_OPTION_VALUES_PB_0 = extern struct {
+        PolicyName: @"Windows.Win32.Foundation".PWSTR,
+        VendorName: @"Windows.Win32.Foundation".PWSTR,
+        IsVendor: @"Windows.Win32.Foundation".BOOL,
+        OptionsArray: *DHCP_OPTION_VALUE_ARRAY,
+    };
     Flags: u32,
     NumElements: u32,
     Options: *DHCP_ALL_OPTION_VALUES_PB_0,
@@ -667,10 +667,10 @@ pub const DHCPDS_SERVERS = extern struct {
     Servers: *DHCPDS_SERVER,
 };
 pub const DHCP_ATTRIB = extern struct {
-pub const DHCP_ATTRIB_0 = extern union {
-    DhcpAttribBool: @"Windows.Win32.Foundation".BOOL,
-    DhcpAttribUlong: u32,
-};
+    pub const DHCP_ATTRIB_0 = extern union {
+        DhcpAttribBool: @"Windows.Win32.Foundation".BOOL,
+        DhcpAttribUlong: u32,
+    };
     DhcpAttribId: u32,
     DhcpAttribType: u32,
     Anonymous: DHCP_ATTRIB_0,
@@ -686,13 +686,13 @@ pub const DHCP_BOOTP_IP_RANGE = extern struct {
     MaxBootpAllowed: u32,
 };
 pub const DHCP_SUBNET_ELEMENT_DATA_V5 = extern struct {
-pub const _DHCP_SUBNET_ELEMENT_UNION_V5 = extern union {
-    IpRange: *DHCP_BOOTP_IP_RANGE,
-    SecondaryHost: *DHCP_HOST_INFO,
-    ReservedIp: *DHCP_IP_RESERVATION_V4,
-    ExcludeIpRange: *DHCP_IP_RANGE,
-    IpUsedCluster: *DHCP_IP_CLUSTER,
-};
+    pub const _DHCP_SUBNET_ELEMENT_UNION_V5 = extern union {
+        IpRange: *DHCP_BOOTP_IP_RANGE,
+        SecondaryHost: *DHCP_HOST_INFO,
+        ReservedIp: *DHCP_IP_RESERVATION_V4,
+        ExcludeIpRange: *DHCP_IP_RANGE,
+        IpUsedCluster: *DHCP_IP_CLUSTER,
+    };
     ElementType: i32,
     Element: _DHCP_SUBNET_ELEMENT_UNION_V5,
 };
@@ -793,11 +793,11 @@ pub const DHCP_IP_RESERVATION_V6 = extern struct {
     InterfaceId: u32,
 };
 pub const DHCP_SUBNET_ELEMENT_DATA_V6 = extern struct {
-pub const DHCP_SUBNET_ELEMENT_UNION_V6 = extern union {
-    IpRange: *DHCP_IP_RANGE_V6,
-    ReservedIp: *DHCP_IP_RESERVATION_V6,
-    ExcludeIpRange: *DHCP_IP_RANGE_V6,
-};
+    pub const DHCP_SUBNET_ELEMENT_UNION_V6 = extern union {
+        IpRange: *DHCP_IP_RANGE_V6,
+        ReservedIp: *DHCP_IP_RESERVATION_V6,
+        ExcludeIpRange: *DHCP_IP_RANGE_V6,
+    };
     ElementType: i32,
     Element: DHCP_SUBNET_ELEMENT_UNION_V6,
 };
@@ -825,11 +825,11 @@ pub const DHCP_CLIENT_INFO_ARRAY_V6 = extern struct {
     Clients: **DHCP_CLIENT_INFO_V6,
 };
 pub const DHCP_SEARCH_INFO_V6 = extern struct {
-pub const _DHCP_CLIENT_SEARCH_UNION_V6 = extern union {
-    ClientIpAddress: DHCP_IPV6_ADDRESS,
-    ClientDUID: DHCP_BINARY_DATA,
-    ClientName: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const _DHCP_CLIENT_SEARCH_UNION_V6 = extern union {
+        ClientIpAddress: DHCP_IPV6_ADDRESS,
+        ClientDUID: DHCP_BINARY_DATA,
+        ClientName: @"Windows.Win32.Foundation".PWSTR,
+    };
     SearchType: i32,
     SearchInfo: _DHCP_CLIENT_SEARCH_UNION_V6,
 };

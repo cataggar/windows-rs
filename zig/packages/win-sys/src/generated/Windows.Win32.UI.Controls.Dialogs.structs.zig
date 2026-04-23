@@ -102,6 +102,10 @@ pub const OPENFILENAMEW = extern struct {
     dwReserved: u32,
     FlagsEx: u32,
 };
+pub const OFNOTIFYA = opaque {};
+pub const OFNOTIFYW = opaque {};
+pub const OFNOTIFYEXA = opaque {};
+pub const OFNOTIFYEXW = opaque {};
 pub const CHOOSECOLORA = extern struct {
     lStructSize: u32,
     hwndOwner: @"Windows.Win32.Foundation".HWND,
@@ -232,6 +236,8 @@ pub const PRINTPAGERANGE = extern struct {
     nFromPage: u32,
     nToPage: u32,
 };
+pub const PRINTDLGEXA = opaque {};
+pub const PRINTDLGEXW = opaque {};
 pub const DEVNAMES = extern struct {
     wDriverOffset: u16,
     wDeviceOffset: u16,

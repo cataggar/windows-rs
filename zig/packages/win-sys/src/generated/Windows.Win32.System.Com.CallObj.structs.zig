@@ -27,3 +27,4 @@ pub const CALLFRAMEPARAMINFO = extern struct {
     stackOffset: u32,
     cbParam: u32,
 };
+pub const CALLFRAME_MARSHALCONTEXT = opaque {};

@@ -21,11 +21,11 @@ pub const RM_PROCESS_INFO = extern struct {
     bRestartable: @"Windows.Win32.Foundation".BOOL,
 };
 pub const RM_FILTER_INFO = extern struct {
-pub const RM_FILTER_INFO_0 = extern union {
-    strFilename: @"Windows.Win32.Foundation".PWSTR,
-    Process: RM_UNIQUE_PROCESS,
-    strServiceShortName: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const RM_FILTER_INFO_0 = extern union {
+        strFilename: @"Windows.Win32.Foundation".PWSTR,
+        Process: RM_UNIQUE_PROCESS,
+        strServiceShortName: @"Windows.Win32.Foundation".PWSTR,
+    };
     FilterAction: i32,
     FilterTrigger: i32,
     cbNextOffset: u32,

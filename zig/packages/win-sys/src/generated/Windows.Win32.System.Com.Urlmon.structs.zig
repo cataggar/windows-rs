@@ -12,6 +12,7 @@ pub const REMSECURITY_ATTRIBUTES = extern struct {
     lpSecurityDescriptor: u32,
     bInheritHandle: @"Windows.Win32.Foundation".BOOL,
 };
+pub const RemBINDINFO = opaque {};
 pub const RemFORMATETC = extern struct {
     cfFormat: u32,
     ptd: u32,
@@ -25,6 +26,7 @@ pub const PROTOCOLDATA = extern struct {
     pData: *anyopaque,
     cbData: u32,
 };
+pub const StartParam = opaque {};
 pub const ZONEATTRIBUTES = extern struct {
     cbSize: u32,
     szDisplayName: [260]u16,
@@ -58,6 +60,7 @@ pub const SOFTDISTINFO = extern struct {
     dwAdvertisedVersionLS: u32,
     dwReserved: u32,
 };
+pub const PROTOCOLFILTERDATA = opaque {};
 pub const DATAINFO = extern struct {
     ulTotalSize: u32,
     ulavrPacketSize: u32,
@@ -71,6 +74,7 @@ pub const HIT_LOGGING_INFO = extern struct {
     EndTime: @"Windows.Win32.Foundation".SYSTEMTIME,
     lpszExtendedInfo: @"Windows.Win32.Foundation".PSTR,
 };
+pub const CONFIRMSAFETY = opaque {};
 pub const PROTOCOL_ARGUMENT = extern struct {
     szMethod: @"Windows.Win32.Foundation".PWSTR,
     szTargetUrl: @"Windows.Win32.Foundation".PWSTR,
