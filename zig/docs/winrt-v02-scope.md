@@ -237,13 +237,22 @@ Follow-on (not blocking closure):
    (`TypedEventHandler`2<IMemoryBufferReference, object>` on
    `IMemoryBufferReference.add_Closed`) now produces a typed handle
    + vtbl instead of falling back to `*anyopaque`.
-3. **Phase 4c — `Calendar.Languages` shipped canary (deferred, depends
-   on 4b).** Downstream of 4b. `IVectorView\`1<HSTRING>` is reached
-   today via the open-generic `GetAt` on `IVectorView\`1` — which lives
-   in `Windows.Foundation.Collections` where all sig types are `VAR`
-   references (open), not closed instantiations. A consumer sample
-   would still compile today against the opaque-`*anyopaque` fallback,
-   just without the typed-handle ergonomics 4b/4c would provide.
+3. **Phase 4c — `Calendar.Languages` canary (unit-tested, bundle
+   deferred).** Cross-namespace seeding verified end-to-end:
+   `emitNamespaceEx` with `--seed=IVectorView\`1,string` produces a
+   typed `IVectorView__G1__HSTRING` handle + vtbl in Collections with
+   substituted `GetAt` → `HSTRING` method signatures.
+   Globalization's emitted output references
+   `@"Windows.Foundation.Collections".IVectorView__G1__HSTRING`.
+   Method-overload dedup added to `emitInterfaceVtblsImpl` (suffixes
+   `_2`, `_3`, ... for duplicate names like `Clone`, `GetWords`,
+   `TimeZoneAsString`). CLI gains `--seed=<open_name>,<arg>,...` flag
+   and `parseSeed` for bundle-driver coordination.
+   Adding Globalization to the **runtime bundle** is deferred: the
+   transitive namespace closure problem (`Windows.System` →
+   `Windows.UI.ViewManagement` → ...) requires a namespace-closure
+   resolver or lazy import stubs before the bundle can absorb new
+   WinRT namespaces beyond Foundation.
 
 ### M5 — Async contracts (bridge to `std.Io`)
 

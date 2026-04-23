@@ -38,7 +38,7 @@ const CrossNsSet = std.StringArrayHashMapUnmanaged(void);
 /// entries from the bundle driver via `emitNamespaceEx`. Drained by
 /// `emitGenericInstantiations` which looks up the open-def TypeDef
 /// row and emits substituted `<Mangled>` + `<Mangled>_Vtbl` structs.
-const GenericInstSet = std.StringArrayHashMapUnmanaged(winmd.TypeName);
+pub const GenericInstSet = std.StringArrayHashMapUnmanaged(winmd.TypeName);
 
 /// Is `ns` a namespace we are willing to emit a cross-namespace
 /// import alias for?  Today only `Windows.*` (and the bare root
@@ -53,6 +53,66 @@ fn isProjectableNs(ns: []const u8) bool {
 
 /// Placeholder — full CLI lands later in Phase 3.
 pub fn generate(_: std.mem.Allocator) !void {}
+
+/// Parsed seed for `--seed` CLI flag.
+pub const ParsedSeed = struct {
+    key: []const u8,
+    tn: winmd.TypeName,
+};
+
+/// Parse a `--seed` argument: `<open_name>,<arg>,...`
+/// where `open_name` includes backtick arity (e.g. `IVectorView`1`)
+/// and each `arg` is a primitive name: `string`, `i32`, `object`, etc.
+/// The namespace of the open def is provided by the caller (it's the
+/// namespace being emitted). Returns the mangled key and TypeName.
+pub fn parseSeed(arena: std.mem.Allocator, namespace: []const u8, seed_str: []const u8) !ParsedSeed {
+    // Split on commas: first field is open_name, rest are arg types.
+    var parts = std.mem.splitScalar(u8, seed_str, ',');
+    const open_name = parts.first();
+    if (open_name.len == 0) return error.EmptySeed;
+
+    var args_list = try std.ArrayList(winmd.Ty).initCapacity(arena, 4);
+    while (parts.next()) |arg_str| {
+        const ty = parsePrimitiveTy(arg_str) orelse return error.UnknownArgType;
+        try args_list.append(arena, ty);
+    }
+    if (args_list.items.len == 0) return error.NoArgs;
+
+    const generics = try arena.dupe(winmd.Ty, args_list.items);
+    const key = try mangleInstAlloc(arena, open_name, generics);
+
+    return .{
+        .key = key,
+        .tn = .{
+            .namespace = namespace,
+            .name = try arena.dupe(u8, open_name),
+            .generics = generics,
+        },
+    };
+}
+
+/// Map a CLI arg-type name to a winmd.Ty primitive.
+fn parsePrimitiveTy(name: []const u8) ?winmd.Ty {
+    const map = std.StaticStringMap(winmd.Ty).initComptime(.{
+        .{ "bool", .bool },
+        .{ "char", .char },
+        .{ "i8", .i8 },
+        .{ "u8", .u8 },
+        .{ "i16", .i16 },
+        .{ "u16", .u16 },
+        .{ "i32", .i32 },
+        .{ "u32", .u32 },
+        .{ "i64", .i64 },
+        .{ "u64", .u64 },
+        .{ "f32", .f32 },
+        .{ "f64", .f64 },
+        .{ "isize", .isize },
+        .{ "usize", .usize },
+        .{ "string", .string },
+        .{ "object", .object },
+    });
+    return map.get(name);
+}
 
 /// Architecture filter for SupportedArchitectureAttribute bitmasks.
 /// Values match the ECMA attribute bit layout that `windows-bindgen`
@@ -1463,10 +1523,18 @@ fn emitInterfaceVtblsImpl(
         , .{ name, base_vtbl });
 
         const methods = file.list(.type_def, row, 5, .method_def);
+        var seen_names: std.StringHashMapUnmanaged(u32) = .empty;
         var m = methods.start;
         while (m < methods.end) : (m += 1) {
-            const method_name = file.str(.method_def, m, 3);
-            try writer.print("    {s}: ", .{method_name});
+            const raw_name = file.str(.method_def, m, 3);
+            const gop = try seen_names.getOrPut(arena, raw_name);
+            if (gop.found_existing) {
+                gop.value_ptr.* += 1;
+                try writer.print("    @\"{s}_{d}\": ", .{ raw_name, gop.value_ptr.* });
+            } else {
+                gop.value_ptr.* = 1;
+                try writer.print("    {s}: ", .{raw_name});
+            }
             try writeMethodPointer(writer, arena, file, m, name, namespace, cross);
             try writer.writeAll(",\n");
         }
@@ -2106,6 +2174,20 @@ fn isMangleableArg(arg: winmd.Ty) bool {
     };
 }
 
+/// Returns true iff every arg is a primitive type (no class/value name
+/// refs). Used to gate cross-namespace generic emission: only
+/// primitive-arg instantiations can be safely emitted without
+/// coordinating imports with the home namespace.
+fn allPrimitiveArgs(args: []const winmd.Ty) bool {
+    for (args) |a| {
+        switch (a) {
+            .bool, .char, .i8, .u8, .i16, .u16, .i32, .u32, .i64, .u64, .f32, .f64, .isize, .usize, .string, .object => {},
+            else => return false,
+        }
+    }
+    return true;
+}
+
 /// Write the Zig identifier fragment for a single generic-arg `Ty`.
 /// Mirrors the Zig type name emitted by `writeZigTy` for the
 /// primitive cases — so `i32` maps to `i32`, `.string` to `HSTRING`,
@@ -2315,14 +2397,21 @@ fn writeZigTy(
                             // Same namespace — unqualified reference.
                             try writer.writeAll("*");
                             try writeInstMangle(writer, tn.name, tn.generics);
-                        } else if (isProjectableNs(tn.namespace)) {
-                            // Cross-namespace — qualified reference.
+                        } else if (isProjectableNs(tn.namespace) and allPrimitiveArgs(tn.generics)) {
+                            // Cross-namespace with primitive-only args —
+                            // safe to emit qualified reference because
+                            // the home namespace can define it without
+                            // importing a third namespace.
                             try cross.put(gpa, tn.namespace, {});
                             try writer.writeAll("*@\"");
                             try writer.writeAll(tn.namespace);
                             try writer.writeAll("\".");
                             try writeInstMangle(writer, tn.name, tn.generics);
                         } else {
+                            // Cross-namespace with class/value args —
+                            // the home ns may not have a seed for this
+                            // instantiation. Fall back to opaque until
+                            // a bundle driver seeds it.
                             try writer.writeAll("*anyopaque");
                         }
                         return true;
@@ -3836,6 +3925,36 @@ test "emitNamespace qualifies cross-namespace refs and emits import aliases" {
     }
 }
 
+test "emitNamespace Globalization references cross-ns IVectorView<HSTRING>" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Globalization", .x64);
+    const out = buf.written();
+
+    // Calendar's ICalendar interface has `get_Languages` which returns
+    // IVectorView`1<HSTRING>. Phase 4b should emit a cross-namespace
+    // qualified reference to the mangled instantiation in Collections.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "@\"Windows.Foundation.Collections\".IVectorView__G1__HSTRING",
+    ) != null);
+
+    // Collections must appear in the import aliases.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "@import(\"Windows.Foundation.Collections.zig\")",
+    ) != null);
+}
+
 test "emitNamespace skips generic-arity typedefs (no backticks in output)" {
     const bytes = @embedFile("Windows.winmd");
     var file = try winmd.parse(bytes);
@@ -3967,6 +4086,102 @@ test "isMangleableArg accepts class_name and object" {
     try std.testing.expect(isMangleableArg(.string));
     // var_generic is not mangleable.
     try std.testing.expect(!isMangleableArg(.{ .var_generic = 0 }));
+}
+
+test "Phase 4c canary: Calendar.Languages → IVectorView<HSTRING> end-to-end" {
+    // This test verifies the complete cross-namespace generic path:
+    // 1. Globalization references IVectorView`1<HSTRING> from Collections
+    // 2. Collections is seeded with IVectorView`1,string
+    // 3. The seeded instantiation produces a typed GetAt method
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    // Step 1: Emit Collections with an HSTRING seed for IVectorView.
+    var seeds: GenericInstSet = .empty;
+    try seeds.put(arena.allocator(), "IVectorView__G1__HSTRING", .{
+        .namespace = "Windows.Foundation.Collections",
+        .name = "IVectorView`1",
+        .generics = &.{.string},
+    });
+
+    var col_buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer col_buf.deinit();
+    try emitNamespaceEx(
+        &col_buf.writer,
+        arena.allocator(),
+        &file,
+        "Windows.Foundation.Collections",
+        .x64,
+        &seeds,
+    );
+    const col_out = col_buf.written();
+
+    // The seeded handle + vtbl must be present.
+    try std.testing.expect(std.mem.indexOf(u8, col_out,
+        "pub const IVectorView__G1__HSTRING_Vtbl = extern struct {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, col_out,
+        "pub const IVectorView__G1__HSTRING = extern struct {",
+    ) != null);
+
+    // GetAt should reference HSTRING (substituted from VAR(0)).
+    try std.testing.expect(std.mem.indexOf(u8, col_out,
+        "GetAt:",
+    ) != null);
+    // The vtbl should have base: IInspectable_Vtbl (WinRT interface).
+    try std.testing.expect(std.mem.indexOf(u8, col_out,
+        "base: IInspectable_Vtbl",
+    ) != null);
+
+    // Step 2: Verify Globalization references the Collections type.
+    var glob_buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer glob_buf.deinit();
+    try emitNamespace(
+        &glob_buf.writer,
+        arena.allocator(),
+        &file,
+        "Windows.Globalization",
+        .x64,
+    );
+    const glob_out = glob_buf.written();
+
+    // get_Languages should reference the cross-ns mangled type.
+    try std.testing.expect(std.mem.indexOf(u8, glob_out,
+        "get_Languages:",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, glob_out,
+        "@\"Windows.Foundation.Collections\".IVectorView__G1__HSTRING",
+    ) != null);
+}
+
+test "emitInterfaceVtblsImpl deduplicates overloaded method names" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    // Windows.Globalization has ITimeZoneOnCalendar with overloaded
+    // TimeZoneAsString (0-param and 1-param). The emitter should
+    // suffix the duplicate as TimeZoneAsString_2.
+    try emitInterfaceVtbls(&buf.writer, arena.allocator(), &file, "Windows.Globalization");
+    const out = buf.written();
+
+    try std.testing.expect(std.mem.indexOf(u8, out,
+        "TimeZoneAsString:",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(u8, out,
+        "@\"TimeZoneAsString_2\":",
+    ) != null);
+
+    // No backticks in the output.
+    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
 }
 
 test "emitFreeFunctions emits kernel32 exports for Windows.Win32.Foundation" {

@@ -86,6 +86,7 @@ pub fn main(init: std.process.Init) !void {
     var structs_only = false;
     var closure_only = false;
     var namespace_arg: ?[]const u8 = null;
+    var seed_args = try std.ArrayList([]const u8).initCapacity(init.arena.allocator(), 0);
     {
         var i: usize = 1;
         while (i < args.len) : (i += 1) {
@@ -103,6 +104,8 @@ pub fn main(init: std.process.Init) !void {
                     try stderr.flush();
                     std.process.exit(2);
                 }
+            } else if (std.mem.startsWith(u8, a, "--seed=")) {
+                try seed_args.append(init.arena.allocator(), a["--seed=".len..]);
             } else if (std.mem.eql(u8, a, "--index")) {
                 index_only = true;
             } else if (std.mem.eql(u8, a, "--structs")) {
@@ -113,7 +116,7 @@ pub fn main(init: std.process.Init) !void {
                 namespace_arg = a;
             } else {
                 try stderr.writeAll(
-                    \\usage: winbindgen [--arch=x86|x64|arm64] [--index|--structs|--structs-closure] <namespace>
+                    \\usage: winbindgen [--arch=x86|x64|arm64] [--seed=<open_name>,<arg>,...] <namespace>
                     \\       winbindgen --list
                     \\
                 );
@@ -169,7 +172,22 @@ pub fn main(init: std.process.Init) !void {
         );
         for (closure) |ns| try buf.writer.print("{s}\n", .{ns});
     } else {
-        try winbindgen.emitNamespace(&buf.writer, init.arena.allocator(), &file, namespace, arch);
+        // Parse --seed args into a GenericInstSet for emitNamespaceEx.
+        // Format: --seed=<open_name>,<arg>,... where <open_name> includes
+        // backtick arity (e.g. IVectorView`1) and <arg> is a primitive
+        // name (string, i32, object, etc.).
+        var seeds: winbindgen.GenericInstSet = .empty;
+        const al = init.arena.allocator();
+        for (seed_args.items) |seed_str| {
+            const seed = winbindgen.parseSeed(al, namespace, seed_str) catch |err| {
+                try stderr.print("bad --seed value '{s}': {}\n", .{ seed_str, err });
+                try stderr.flush();
+                std.process.exit(2);
+            };
+            try seeds.put(al, seed.key, seed.tn);
+        }
+        const extra: ?*const winbindgen.GenericInstSet = if (seeds.count() > 0) &seeds else null;
+        try winbindgen.emitNamespaceEx(&buf.writer, init.arena.allocator(), &file, namespace, arch, extra);
     }
 
     try stdout.writeAll(buf.written());
