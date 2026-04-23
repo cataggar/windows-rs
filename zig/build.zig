@@ -1259,13 +1259,22 @@ pub fn build(b: *std.Build) void {
         cross_core_mod.linkSystemLibrary("api-ms-win-core-winrt-string-l1-1-0", .{});
         cross_core_mod.linkSystemLibrary("api-ms-win-core-winrt-l1-1-0", .{});
 
+        // M4 Phase 4b: use the `bundle` subcommand so cross-namespace
+        // closed-generic instantiations (e.g. `IVectorView``1<HSTRING>`
+        // reached from `Windows.Globalization`) are auto-routed into
+        // their home namespace under every target arch, mirroring the
+        // host-Windows `compile-check-bundle` above.
+        const cross_bundle_run = b.addRunArtifact(winbindgen_exe);
+        cross_bundle_run.addArg("bundle");
+        cross_bundle_run.addArg(ca.flag);
+        cross_bundle_run.addArg("--outdir");
+        const cross_bundle_outdir = cross_bundle_run.addOutputDirectoryArg("bundle");
+        for (bundle_namespaces) |ns| cross_bundle_run.addArg(ns);
+
         const cross_wf = b.addWriteFiles();
         for (bundle_namespaces) |ns| {
-            const gen_run = b.addRunArtifact(winbindgen_exe);
-            gen_run.addArg(ca.flag);
-            gen_run.addArg(ns);
-            const gen_source = gen_run.captureStdOut(.{});
-            _ = cross_wf.addCopyFile(gen_source, b.fmt("{s}.zig", .{ns}));
+            const src = cross_bundle_outdir.path(b, b.fmt("{s}.zig", .{ns}));
+            _ = cross_wf.addCopyFile(src, b.fmt("{s}.zig", .{ns}));
         }
         const cross_root = cross_wf.getDirectory().path(b, b.fmt("{s}.zig", .{bundle_namespaces[0]}));
 
