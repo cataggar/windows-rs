@@ -361,39 +361,40 @@ fn runBundle(
         std.process.exit(2);
     }
 
-    // All input namespaces must resolve to the same winmd file. Pick
-    // the file based on the first namespace; reject any namespace that
-    // doesn't match.
-    const first_bytes = selectBytes(namespaces.items[0]);
-    for (namespaces.items[1..]) |ns| {
-        if (selectBytes(ns).ptr != first_bytes.ptr) {
-            try stderr.print(
-                "bundle: mixed metadata files — {s} and {s} come from different .winmd\n",
-                .{ namespaces.items[0], ns },
-            );
-            try stderr.flush();
-            std.process.exit(2);
-        }
+    // Group namespaces by which winmd file they resolve to; cross-ns
+    // generic routing happens only within the same winmd. Phase 4b's
+    // WinRT-only routing is a natural fit for this grouping because the
+    // Windows.winmd group is where all closed generics live.
+    var groups: std.AutoArrayHashMapUnmanaged([*]const u8, std.ArrayListUnmanaged([]const u8)) = .empty;
+    for (namespaces.items) |ns| {
+        const bytes = selectBytes(ns);
+        const gop = try groups.getOrPut(arena, bytes.ptr);
+        if (!gop.found_existing) gop.value_ptr.* = .empty;
+        try gop.value_ptr.append(arena, ns);
     }
-
-    var file = try winmd.parse(first_bytes);
-    const emission = try winbindgen.emitBundle(arena, &file, namespaces.items, arch);
 
     var dir = try std.Io.Dir.cwd().createDirPathOpen(io, dir_path, .{});
     defer dir.close(io);
 
-    // Write each namespace's bytes to <outdir>/<ns>.zig. Use gpa-backed
-    // buffered writer to avoid arena peak bloat on many small files.
-    for (namespaces.items) |ns| {
-        const bytes = emission.get(ns) orelse continue;
-        const file_name = try std.fmt.allocPrint(arena, "{s}.zig", .{ns});
-        var out_file = try dir.createFile(io, file_name, .{});
-        defer out_file.close(io);
+    var git = groups.iterator();
+    while (git.next()) |entry| {
+        const group_ns = entry.value_ptr.items;
+        const group_bytes = selectBytes(group_ns[0]);
 
-        var out_buf: [4096]u8 = undefined;
-        var out_writer = out_file.writer(io, &out_buf);
-        try out_writer.interface.writeAll(bytes);
-        try out_writer.interface.flush();
+        var file = try winmd.parse(group_bytes);
+        const emission = try winbindgen.emitBundle(arena, &file, group_ns, arch);
+
+        for (group_ns) |ns| {
+            const bytes = emission.get(ns) orelse continue;
+            const file_name = try std.fmt.allocPrint(arena, "{s}.zig", .{ns});
+            var out_file = try dir.createFile(io, file_name, .{});
+            defer out_file.close(io);
+
+            var out_buf: [4096]u8 = undefined;
+            var out_writer = out_file.writer(io, &out_buf);
+            try out_writer.interface.writeAll(bytes);
+            try out_writer.interface.flush();
+        }
     }
 
     // Suppress-unused-warning; gpa currently only needed for future
