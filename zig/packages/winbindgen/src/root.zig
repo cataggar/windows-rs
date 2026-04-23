@@ -40,6 +40,26 @@ const CrossNsSet = std.StringArrayHashMapUnmanaged(void);
 /// row and emits substituted `<Mangled>` + `<Mangled>_Vtbl` structs.
 pub const GenericInstSet = std.StringArrayHashMapUnmanaged(winmd.TypeName);
 
+/// M4 Phase 4b cross-namespace generic instantiation registry.
+///
+/// Map from home-namespace → set of closed-generic instantiations
+/// whose open definition lives in that namespace. Built by
+/// `discoverCrossNsGenerics` in a pre-pass over every namespace's
+/// method sigs. Consumed by a bundle driver which routes each
+/// per-namespace set into the corresponding `emitNamespaceEx` call
+/// via the `extra_insts` parameter.
+///
+/// Motivation: the v0.1 emitter only registers closed generics whose
+/// open def lives in the currently-emitting namespace. A method sig
+/// like `Calendar.Languages → IVectorView\`1<HSTRING>` references an
+/// open def (`IVectorView\`1`) that lives in a *different* namespace
+/// (`Windows.Foundation.Collections`). Without routing, that instantiation
+/// never gets emitted anywhere, and `writeZigTy` falls back to
+/// `*anyopaque`. Phase 4b closes this loop: each source namespace's
+/// sigs are pre-scanned for cross-namespace closed generics, and each
+/// discovered key is routed to its home namespace for emission.
+pub const PendingGenericMap = std.StringArrayHashMapUnmanaged(GenericInstSet);
+
 /// Is `ns` a namespace we are willing to emit a cross-namespace
 /// import alias for?  Today only `Windows.*` (and the bare root
 /// `Windows`) qualify — `System.Guid`, `System.Object`, etc. are
@@ -1717,6 +1737,152 @@ fn collectInstFromTy(
         .array_fixed => |a| try collectInstFromTy(insts, arena, a.inner.*, home_namespace),
         else => {},
     }
+}
+
+/// M4 Phase 4b: discover every closed-generic instantiation referenced
+/// by method signatures in `source_namespace` whose open TypeDef lives
+/// in a *different* namespace. Groups them by home namespace and
+/// appends to `out` (creating per-ns `GenericInstSet`s on demand).
+///
+/// This is the Phase 4b discovery pre-pass. A bundle driver calls this
+/// for each namespace it plans to emit, then routes each collected
+/// per-home-namespace set into that home namespace's `emitNamespaceEx`
+/// call via `extra_insts`. Without this routing, a reference like
+/// `Calendar.Languages → IVectorView\`1<HSTRING>` would never see its
+/// closed-generic handle emitted anywhere in the bundle, because
+/// `collectGenericInstantiations` only registers open defs whose home
+/// matches the currently-emitting namespace.
+///
+/// Only instantiations whose arg Tys are all `isMangleableArg` are
+/// recorded (primitives plus class/value refs); everything else is
+/// still out of scope for v0.1.
+pub fn discoverCrossNsGenerics(
+    out: *PendingGenericMap,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    source_namespace: []const u8,
+) !void {
+    const rows = file.rowCount(.type_def);
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        if (!std.mem.eql(u8, file.str(.type_def, row, 2), source_namespace)) continue;
+
+        const methods = file.list(.type_def, row, 5, .method_def);
+        var m = methods.start;
+        while (m < methods.end) : (m += 1) {
+            const sig_blob = file.blob(.method_def, m, 4);
+            const sig = winmd.readMethodSignature(arena, file, sig_blob) catch continue;
+
+            try collectCrossNsInstFromTy(out, arena, sig.return_type, source_namespace);
+            for (sig.params) |p| {
+                try collectCrossNsInstFromTy(out, arena, p, source_namespace);
+            }
+        }
+    }
+}
+
+/// Walk a `Ty` tree and register any closed-generic instantiation
+/// whose home namespace differs from `source_namespace`. The key is
+/// inserted into `out[tn.namespace]`. Recurses into pointer/ref/array
+/// wrappers and nested generic args.
+fn collectCrossNsInstFromTy(
+    out: *PendingGenericMap,
+    arena: std.mem.Allocator,
+    ty: winmd.Ty,
+    source_namespace: []const u8,
+) !void {
+    switch (ty) {
+        .class_name, .value_name => |tn| {
+            if (std.mem.indexOfScalar(u8, tn.name, '`') != null and
+                tn.generics.len > 0 and
+                !std.mem.eql(u8, tn.namespace, source_namespace) and
+                isProjectableNs(tn.namespace))
+            {
+                var all_mangleable = true;
+                for (tn.generics) |a| {
+                    if (!isMangleableArg(a)) {
+                        all_mangleable = false;
+                        break;
+                    }
+                }
+                if (all_mangleable) {
+                    const key = try mangleInstAlloc(arena, tn.name, tn.generics);
+                    const home_key = try arena.dupe(u8, tn.namespace);
+                    const gop = try out.getOrPut(arena, home_key);
+                    if (!gop.found_existing) gop.value_ptr.* = .empty;
+                    if (!gop.value_ptr.contains(key)) {
+                        try gop.value_ptr.put(arena, key, tn);
+                    }
+                }
+            }
+            // Recurse into generic args (they may themselves be
+            // cross-namespace closed generics).
+            for (tn.generics) |g| {
+                try collectCrossNsInstFromTy(out, arena, g, source_namespace);
+            }
+        },
+        .ptr_mut => |p| try collectCrossNsInstFromTy(out, arena, p.inner.*, source_namespace),
+        .ptr_const => |p| try collectCrossNsInstFromTy(out, arena, p.inner.*, source_namespace),
+        .ref_mut => |inner| try collectCrossNsInstFromTy(out, arena, inner.*, source_namespace),
+        .ref_const => |inner| try collectCrossNsInstFromTy(out, arena, inner.*, source_namespace),
+        .array => |inner| try collectCrossNsInstFromTy(out, arena, inner.*, source_namespace),
+        .array_fixed => |a| try collectCrossNsInstFromTy(out, arena, a.inner.*, source_namespace),
+        else => {},
+    }
+}
+
+/// Result of a bundle emission: one entry per input namespace mapping
+/// to the fully-emitted Zig source bytes (arena-allocated). The caller
+/// writes these out to disk / buffer.
+pub const BundleEmission = std.StringArrayHashMapUnmanaged([]const u8);
+
+/// Emit a bundle of namespaces as a single coordinated batch, auto-routing
+/// cross-namespace closed-generic instantiations to their home namespace.
+///
+/// Workflow:
+///   1. Pre-pass: for every input namespace, run `discoverCrossNsGenerics`
+///      to route closed generics to their home namespace's pending set.
+///   2. Fixpoint: re-run discovery until no new keys are added. Today a
+///      single pass suffices (discovery scans unsubstituted sigs, which
+///      is idempotent), but the loop guards against future substitution-
+///      based discovery. A `max_iters` cap prevents runaway loops.
+///   3. Emit: call `emitNamespaceEx` once per namespace, passing in its
+///      accumulated pending set as `extra_insts`.
+///
+/// The returned `BundleEmission` owns no memory beyond the arena; when
+/// the arena is freed all buffers vanish. The caller is expected to
+/// consume the bytes before arena teardown.
+pub fn emitBundle(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    namespaces: []const []const u8,
+    arch: Arch,
+) !BundleEmission {
+    var pending: PendingGenericMap = .empty;
+
+    const max_iters: usize = 4;
+    var iter: usize = 0;
+    while (iter < max_iters) : (iter += 1) {
+        var before: usize = 0;
+        for (pending.values()) |s| before += s.count();
+
+        for (namespaces) |ns| {
+            try discoverCrossNsGenerics(&pending, arena, file, ns);
+        }
+
+        var after: usize = 0;
+        for (pending.values()) |s| after += s.count();
+        if (after == before and iter > 0) break;
+    }
+
+    var out: BundleEmission = .empty;
+    for (namespaces) |ns| {
+        var buf: std.Io.Writer.Allocating = .init(arena);
+        const extra = pending.getPtr(ns);
+        try emitNamespaceEx(&buf.writer, arena, file, ns, arch, extra);
+        try out.put(arena, ns, buf.written());
+    }
+    return out;
 }
 
 /// Emit closed-generic instantiation structs for every entry in
@@ -4944,4 +5110,93 @@ test "emitDef writes LIBRARY/EXPORTS with ordinal rewrite" {
         \\
     ;
     try std.testing.expectEqualStrings(expected, buf.written());
+}
+
+test "discoverCrossNsGenerics finds Calendar.Languages → IVectorView`1<HSTRING>" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var pending: PendingGenericMap = .empty;
+    try discoverCrossNsGenerics(
+        &pending,
+        arena.allocator(),
+        &file,
+        "Windows.Globalization",
+    );
+
+    // Windows.Globalization.Calendar.Languages returns
+    // IVectorView`1<HSTRING>, whose open def lives in
+    // Windows.Foundation.Collections. Phase 4b discovery must route
+    // this into pending["Windows.Foundation.Collections"].
+    const collections_insts = pending.get("Windows.Foundation.Collections") orelse {
+        std.debug.print("expected pending entry for Windows.Foundation.Collections, got keys: ", .{});
+        for (pending.keys()) |k| std.debug.print("{s}, ", .{k});
+        std.debug.print("\n", .{});
+        return error.NoCollectionsSeed;
+    };
+
+    try std.testing.expect(collections_insts.contains("IVectorView__G1__HSTRING"));
+}
+
+test "discoverCrossNsGenerics ignores same-namespace closed generics" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var pending: PendingGenericMap = .empty;
+    try discoverCrossNsGenerics(
+        &pending,
+        arena.allocator(),
+        &file,
+        "Windows.Foundation",
+    );
+
+    // The well-known TypedEventHandler`2<IMemoryBufferReference, object>
+    // instantiation is same-namespace (Windows.Foundation → Windows.Foundation),
+    // so it must NOT appear in the cross-ns pending map under
+    // "Windows.Foundation".
+    if (pending.get("Windows.Foundation")) |_| {
+        return error.SameNamespaceLeakedIntoPending;
+    }
+}
+
+test "emitBundle auto-routes IVectorView<HSTRING> to Foundation.Collections" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    const namespaces = [_][]const u8{
+        "Windows.Foundation",
+        "Windows.Foundation.Collections",
+        "Windows.Globalization",
+    };
+
+    var out = try emitBundle(arena.allocator(), &file, &namespaces, .x64);
+
+    // Every input namespace must produce an emission entry.
+    for (namespaces) |ns| {
+        try std.testing.expect(out.contains(ns));
+    }
+
+    // Foundation.Collections must carry the seeded IVectorView`1<HSTRING>
+    // closed-generic pair because Globalization's Calendar.Languages
+    // returns it.
+    const collections = out.get("Windows.Foundation.Collections").?;
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        collections,
+        "pub const IVectorView__G1__HSTRING = extern struct {",
+    ) != null);
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        collections,
+        "pub const IVectorView__G1__HSTRING_Vtbl = extern struct {",
+    ) != null);
 }

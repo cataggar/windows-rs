@@ -64,6 +64,25 @@ pub fn main(init: std.process.Init) !void {
         return;
     }
 
+    // `bundle --outdir <dir> [--arch=...] ns1 ns2 ...` emits a batch
+    // of namespaces as a coordinated bundle, auto-routing
+    // cross-namespace closed-generic instantiations to their home
+    // namespace. Writes `<outdir>/<ns>.zig` for each input.
+    //
+    // All input namespaces must resolve to the same metadata file —
+    // closed generics today are WinRT-only, so this is the Phase 4b
+    // path for `Windows.winmd`.
+    if (args.len >= 2 and std.mem.eql(u8, args[1], "bundle")) {
+        try runBundle(
+            init.arena.allocator(),
+            gpa,
+            io,
+            args[2..],
+            stderr,
+        );
+        return;
+    }
+
     // `--emit-mod <dir>` scans <dir> for sibling `*.structs.zig` and
     // `*.index.zig` generated files and prints a `mod.zig` to stdout
     // that re-exports them by namespace. This retires the hand-edited
@@ -279,4 +298,106 @@ fn emitMod(
 
 fn stringLessThan(_: void, a: []const u8, b: []const u8) bool {
     return std.mem.lessThan(u8, a, b);
+}
+
+/// Handle the `bundle --outdir <dir> [--arch=...] ns1 ns2 ...` subcommand.
+/// Calls `winbindgen.emitBundle` to emit every input namespace in a single
+/// coordinated pass (cross-namespace closed generics auto-route to their
+/// home namespace), then writes `<outdir>/<ns>.zig` for each result.
+fn runBundle(
+    arena: std.mem.Allocator,
+    gpa: std.mem.Allocator,
+    io: std.Io,
+    args: []const []const u8,
+    stderr: *std.Io.Writer,
+) !void {
+    var arch: winbindgen.Arch = .x64;
+    var outdir: ?[]const u8 = null;
+    var namespaces = try std.ArrayList([]const u8).initCapacity(arena, 0);
+
+    var i: usize = 0;
+    while (i < args.len) : (i += 1) {
+        const a = args[i];
+        if (std.mem.startsWith(u8, a, "--arch=")) {
+            const v = a["--arch=".len..];
+            if (std.mem.eql(u8, v, "x86")) {
+                arch = .x86;
+            } else if (std.mem.eql(u8, v, "x64")) {
+                arch = .x64;
+            } else if (std.mem.eql(u8, v, "arm64")) {
+                arch = .arm64;
+            } else {
+                try stderr.print("unknown --arch value: {s}\n", .{v});
+                try stderr.flush();
+                std.process.exit(2);
+            }
+        } else if (std.mem.startsWith(u8, a, "--outdir=")) {
+            outdir = a["--outdir=".len..];
+        } else if (std.mem.eql(u8, a, "--outdir")) {
+            i += 1;
+            if (i >= args.len) {
+                try stderr.writeAll("--outdir requires a path argument\n");
+                try stderr.flush();
+                std.process.exit(2);
+            }
+            outdir = args[i];
+        } else {
+            try namespaces.append(arena, a);
+        }
+    }
+
+    const dir_path = outdir orelse {
+        try stderr.writeAll(
+            \\usage: winbindgen bundle --outdir <dir> [--arch=x86|x64|arm64] ns1 ns2 ...
+            \\
+        );
+        try stderr.flush();
+        std.process.exit(2);
+    };
+
+    if (namespaces.items.len == 0) {
+        try stderr.writeAll("bundle: need at least one namespace\n");
+        try stderr.flush();
+        std.process.exit(2);
+    }
+
+    // Group namespaces by which winmd file they resolve to; cross-ns
+    // generic routing happens only within the same winmd. Phase 4b's
+    // WinRT-only routing is a natural fit for this grouping because the
+    // Windows.winmd group is where all closed generics live.
+    var groups: std.AutoArrayHashMapUnmanaged([*]const u8, std.ArrayListUnmanaged([]const u8)) = .empty;
+    for (namespaces.items) |ns| {
+        const bytes = selectBytes(ns);
+        const gop = try groups.getOrPut(arena, bytes.ptr);
+        if (!gop.found_existing) gop.value_ptr.* = .empty;
+        try gop.value_ptr.append(arena, ns);
+    }
+
+    var dir = try std.Io.Dir.cwd().createDirPathOpen(io, dir_path, .{});
+    defer dir.close(io);
+
+    var git = groups.iterator();
+    while (git.next()) |entry| {
+        const group_ns = entry.value_ptr.items;
+        const group_bytes = selectBytes(group_ns[0]);
+
+        var file = try winmd.parse(group_bytes);
+        const emission = try winbindgen.emitBundle(arena, &file, group_ns, arch);
+
+        for (group_ns) |ns| {
+            const bytes = emission.get(ns) orelse continue;
+            const file_name = try std.fmt.allocPrint(arena, "{s}.zig", .{ns});
+            var out_file = try dir.createFile(io, file_name, .{});
+            defer out_file.close(io);
+
+            var out_buf: [4096]u8 = undefined;
+            var out_writer = out_file.writer(io, &out_buf);
+            try out_writer.interface.writeAll(bytes);
+            try out_writer.interface.flush();
+        }
+    }
+
+    // Suppress-unused-warning; gpa currently only needed for future
+    // large-file buffers.
+    _ = gpa;
 }
