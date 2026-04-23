@@ -1152,23 +1152,22 @@ pub fn build(b: *std.Build) void {
         "Windows.Web.Http.Headers",
     };
 
-    // Cross-namespace generic instantiation seeds (M4 Phase 4b/4c).
-    const bundle_seeds = [_]struct { ns: []const u8, seed: []const u8 }{
-        .{ .ns = "Windows.Foundation.Collections", .seed = "--seed=IVectorView`1,string" },
-        .{ .ns = "Windows.Foundation.Collections", .seed = "--seed=IIterable`1,string" },
-        .{ .ns = "Windows.Foundation.Collections", .seed = "--seed=IIterator`1,string" },
-    };
+    // M4 Phase 4b: a single `winbindgen bundle` invocation emits every
+    // namespace in the bundle and auto-routes closed-generic
+    // instantiations (e.g. `IVectorView``1<HSTRING>` reached from
+    // Windows.Globalization) into their home namespace. Replaces the
+    // per-namespace loop + hand-coded --seed= flags.
+    const bundle_run = b.addRunArtifact(winbindgen_exe);
+    bundle_run.addArg("bundle");
+    if (arch_flag) |f| bundle_run.addArg(f);
+    bundle_run.addArg("--outdir");
+    const bundle_outdir = bundle_run.addOutputDirectoryArg("bundle");
+    for (bundle_namespaces) |ns| bundle_run.addArg(ns);
 
     const bundle_wf = b.addWriteFiles();
     for (bundle_namespaces) |ns| {
-        const gen_run = b.addRunArtifact(winbindgen_exe);
-        if (arch_flag) |f| gen_run.addArg(f);
-        for (bundle_seeds) |s| {
-            if (std.mem.eql(u8, s.ns, ns)) gen_run.addArg(s.seed);
-        }
-        gen_run.addArg(ns);
-        const gen_source = gen_run.captureStdOut(.{});
-        _ = bundle_wf.addCopyFile(gen_source, b.fmt("{s}.zig", .{ns}));
+        const src = bundle_outdir.path(b, b.fmt("{s}.zig", .{ns}));
+        _ = bundle_wf.addCopyFile(src, b.fmt("{s}.zig", .{ns}));
     }
 
     // Use the first namespace as the root of the bundle module; sibling
