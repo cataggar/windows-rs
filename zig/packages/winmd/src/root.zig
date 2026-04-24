@@ -236,6 +236,47 @@ pub const File = struct {
     pub fn implMapImportName(self: *const File, impl_map_row: u32) []const u8 {
         return self.str(.impl_map, impl_map_row, 2);
     }
+
+    /// ParamAttributes for the Param row that describes signature parameter
+    /// `sig_index` (0-based) of MethodDef row `method_row`. Sequence 0 in
+    /// the Param table is the return value; `sig_index == 0` addresses the
+    /// first regular parameter and matches Sequence == 1.
+    ///
+    /// Param rows are optional (ECMA-335 §II.22.33): an all-zero
+    /// `ParamFlags` means either "no row at all" or "row exists with no
+    /// flags set". For the WinRT array-direction decision both cases
+    /// mean the same thing — treat as neither IN nor OUT.
+    pub fn paramFlags(self: *const File, method_row: u32, sig_index: u32) ParamFlags {
+        const range = self.list(.method_def, method_row, 5, .method_param);
+        const target_seq: u32 = sig_index + 1;
+        var i = range.start;
+        while (i < range.end) : (i += 1) {
+            const seq = self.cell(.method_param, i, 1);
+            if (seq == target_seq) {
+                const bits: u16 = @intCast(self.cell(.method_param, i, 0));
+                return @bitCast(bits);
+            }
+            if (seq > target_seq) break;
+        }
+        return @bitCast(@as(u16, 0));
+    }
+};
+
+/// ECMA-335 §II.23.1.13 ParamAttributes. Only the bits we decode are
+/// named; the rest are reserved and preserved as padding so the struct
+/// round-trips a raw u16.
+pub const ParamFlags = packed struct(u16) {
+    /// `[in]` — parameter is read by the callee.
+    in: bool,
+    /// `[out]` — parameter is written by the callee.
+    out: bool,
+    _pad_2_3: u2,
+    /// `[optional]` — caller may pass a default-valued argument.
+    optional: bool,
+    _pad_5_11: u7,
+    has_default: bool,
+    has_field_marshal: bool,
+    _pad_14_15: u2,
 };
 
 fn lowerBound(f: *const File, table: Table, first_in: u32, last: u32, column: u3, value: u32) u32 {
@@ -1892,6 +1933,58 @@ test "method signature decodes IClosable.Close as void()" {
 
     // Malformed blob: claims 1 param but has no type byte after void return.
     try std.testing.expectError(error.ShortBlob, readMethodSignature(arena.allocator(), &f, &[_]u8{ 0x20, 0x01, 0x01 }));
+}
+
+test "paramFlags decodes WinRT array directions (IN for PassArray, OUT for FillArray)" {
+    const bytes = @embedFile("Windows.winmd");
+    const f = try parse(bytes);
+
+    var index = try TypeIndex.init(std.testing.allocator, &f);
+    defer index.deinit();
+
+    // Helper: locate method `name` inside TypeDef `type_row`.
+    const H = struct {
+        fn find(file: *const File, type_row: u32, name: []const u8) ?u32 {
+            const methods = file.list(.type_def, type_row, 5, .method_def);
+            var i = methods.start;
+            while (i < methods.end) : (i += 1) {
+                if (std.mem.eql(u8, file.str(.method_def, i, 3), name)) return i;
+            }
+            return null;
+        }
+    };
+
+    // --- PassArray: IPropertyValueStatics.CreateInt32Array(value) is [in].
+    const pvs_rows = index.get("Windows.Foundation", "IPropertyValueStatics");
+    try std.testing.expectEqual(@as(usize, 1), pvs_rows.len);
+    const create_row = H.find(&f, pvs_rows[0], "CreateInt32Array") orelse return error.MissingMethod;
+
+    // Sig param 0 is the array (`value`); the [out, retval] return is
+    // the HRESULT + IPropertyValue** split, not a sig param.
+    const in_flags = f.paramFlags(create_row, 0);
+    try std.testing.expect(in_flags.in);
+    try std.testing.expect(!in_flags.out);
+
+    // --- FillArray: IVector`1.GetMany(startIndex, [out] items).
+    // TypeIndex strips the arity suffix; pick the arity-1 row by raw name.
+    const ivec_rows = index.get("Windows.Foundation.Collections", "IVector");
+    var ivec_row: ?u32 = null;
+    for (ivec_rows) |r| {
+        if (std.mem.eql(u8, f.str(.type_def, r, 1), "IVector`1")) {
+            ivec_row = r;
+            break;
+        }
+    }
+    try std.testing.expect(ivec_row != null);
+    const get_many_row = H.find(&f, ivec_row.?, "GetMany") orelse return error.MissingMethod;
+
+    // Param 0 = startIndex (UInt32, [in]); param 1 = items (T[], [out]).
+    const p0 = f.paramFlags(get_many_row, 0);
+    try std.testing.expect(p0.in);
+    try std.testing.expect(!p0.out);
+    const p1 = f.paramFlags(get_many_row, 1);
+    try std.testing.expect(p1.out);
+    try std.testing.expect(!p1.in);
 }
 
 test "attribute helpers find Point's ContractVersionAttribute" {
