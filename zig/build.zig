@@ -1383,6 +1383,12 @@ pub fn build(b: *std.Build) void {
             .root = "samples/winrt_calendar/main.zig",
             .needs_win = true,
         },
+        .{
+            .name = "winrt-property-value",
+            .root = "samples/winrt_property_value/main.zig",
+            .extra_libs = &.{"ole32"},
+            .needs_win = true,
+        },
     };
 
     for (samples) |s| {
