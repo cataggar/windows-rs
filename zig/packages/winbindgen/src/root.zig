@@ -2213,29 +2213,53 @@ fn writeMethodWrapper(
     const sig = winmd.readMethodSignature(arena, file, sig_blob) catch return;
 
     if (!canRepresent(sig.return_type)) return;
-    for (sig.params) |p| {
+    for (sig.params, 0..) |p, i| {
         if (!canRepresent(p)) return;
+        if (!isPhaseBArrayOk(p, file, method_row, @intCast(i))) return;
     }
 
     try writer.print("    pub fn {s}(self: *const {s}", .{ method_name, this_name });
     for (sig.params, 0..) |p, i| {
-        try writer.print(", p{d}: ", .{i});
-        try writeParam(writer, arena, p, current_namespace, cross);
+        switch (p) {
+            .array => |inner| {
+                try writer.print(", p{d}_size: u32, p{d}_ptr: [*]const ", .{ i, i });
+                _ = try writeZigTy(writer, arena, inner.*, current_namespace, cross, null, null, null);
+            },
+            else => {
+                try writer.print(", p{d}: ", .{i});
+                try writeParam(writer, arena, p, current_namespace, cross);
+            },
+        }
     }
     // Classic-COM methods already return HRESULT directly; only
     // synthesize the WinRT-style `result: *T` out-param when the
-    // logical return is a non-HRESULT / non-void value.
+    // logical return is a non-HRESULT / non-void value. Array returns
+    // always split into a `result_size: *u32, result_ptr: *[*]T` pair.
     const split_return = sig.return_type != .void and !isHresultTy(sig.return_type);
     if (split_return) {
-        try writer.writeAll(", result: *");
-        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
+        switch (sig.return_type) {
+            .array => |inner| {
+                try writer.writeAll(", result_size: *u32, result_ptr: *[*]");
+                _ = try writeZigTy(writer, arena, inner.*, current_namespace, cross, null, null, null);
+            },
+            else => {
+                try writer.writeAll(", result: *");
+                _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
+            },
+        }
     }
     try writer.print(") callconv(.winapi) HRESULT {{\n        return self.vtable.@\"{s}\"(self", .{vtbl_field_name});
-    for (sig.params, 0..) |_, i| {
-        try writer.print(", p{d}", .{i});
+    for (sig.params, 0..) |p, i| {
+        switch (p) {
+            .array => try writer.print(", p{d}_size, p{d}_ptr", .{ i, i }),
+            else => try writer.print(", p{d}", .{i}),
+        }
     }
     if (split_return) {
-        try writer.writeAll(", result");
+        switch (sig.return_type) {
+            .array => try writer.writeAll(", result_size, result_ptr"),
+            else => try writer.writeAll(", result"),
+        }
     }
     try writer.writeAll(");\n    }\n");
 
@@ -2246,14 +2270,17 @@ fn writeMethodWrapper(
     // if `Hstring.create` fails. Uses `[]const u16` (not `[]const u8`)
     // to avoid requiring an allocator — callers feed `win_core.utf16Lit`
     // literals or the slice from an already-created wide string.
+    //
+    // Skip the sugar when any sig param is an array — Phase B keeps
+    // the raw ABI shape only; mixing HSTRING sugar with split-pair
+    // array params is a follow-up.
     var has_hstring_in = false;
+    var has_array_param = false;
     for (sig.params) |p| {
-        if (p == .string) {
-            has_hstring_in = true;
-            break;
-        }
+        if (p == .string) has_hstring_in = true;
+        if (p == .array) has_array_param = true;
     }
-    if (has_hstring_in) {
+    if (has_hstring_in and !has_array_param and sig.return_type != .array) {
         try writer.print("    pub fn {s}FromUtf16(self: *const {s}", .{ method_name, this_name });
         for (sig.params, 0..) |p, i| {
             try writer.print(", p{d}: ", .{i});
@@ -2349,8 +2376,15 @@ fn writeMethodPointer(
         try writer.writeAll("*const anyopaque");
         return;
     }
-    for (sig.params) |p| {
+    for (sig.params, 0..) |p, i| {
         if (!canRepresent(p)) {
+            try writer.writeAll("*const anyopaque");
+            return;
+        }
+        // Phase B covers only IN arrays (PassArray). FillArray /
+        // ReceiveArray arrays (OUT, and `ref_mut(.array)`) are deferred
+        // to Phase C — fall back to opaque until then.
+        if (!isPhaseBArrayOk(p, file, method_row, @intCast(i))) {
             try writer.writeAll("*const anyopaque");
             return;
         }
@@ -2358,15 +2392,33 @@ fn writeMethodPointer(
 
     try writer.print("*const fn (this: *const {s}", .{this_name});
     for (sig.params, 0..) |p, i| {
-        try writer.print(", p{d}: ", .{i});
-        try writeParam(writer, arena, p, current_namespace, cross);
+        switch (p) {
+            .array => |inner| {
+                try writer.print(", p{d}_size: u32, p{d}_ptr: [*]const ", .{ i, i });
+                _ = try writeZigTy(writer, arena, inner.*, current_namespace, cross, null, null, null);
+            },
+            else => {
+                try writer.print(", p{d}: ", .{i});
+                try writeParam(writer, arena, p, current_namespace, cross);
+            },
+        }
     }
     // Mirrors the split-return gate in `writeMethodWrapper`. Classic
     // COM: return HRESULT directly. WinRT: logical return becomes a
     // trailing `result: *T` out-param and the function returns HRESULT.
+    // Array returns are always callee-allocated — they split into a
+    // trailing `result_size: *u32, result_ptr: *[*]T` pair.
     if (sig.return_type != .void and !isHresultTy(sig.return_type)) {
-        try writer.writeAll(", result: *");
-        _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
+        switch (sig.return_type) {
+            .array => |inner| {
+                try writer.writeAll(", result_size: *u32, result_ptr: *[*]");
+                _ = try writeZigTy(writer, arena, inner.*, current_namespace, cross, null, null, null);
+            },
+            else => {
+                try writer.writeAll(", result: *");
+                _ = try writeZigTy(writer, arena, sig.return_type, current_namespace, cross, null, null, null);
+            },
+        }
     }
     try writer.writeAll(") callconv(.winapi) HRESULT");
 }
@@ -2423,8 +2475,40 @@ fn canRepresent(ty: winmd.Ty) bool {
         .ptr_mut => |p| canRepresent(p.inner.*),
         .ptr_const => |p| canRepresent(p.inner.*),
         .array_fixed => |a| canRepresent(a.inner.*),
+        // SZARRAY: representable only when the element type is
+        // representable. Direction (IN vs OUT) is enforced separately
+        // by `isPhaseBArrayOk` at each emit site — Phase B only emits
+        // IN arrays, Phase C will extend to OUT.
+        .array => |inner| canRepresent(inner.*),
         else => false,
     };
+}
+
+/// Phase B array gate. Returns `false` for sig params that carry a
+/// SZARRAY shape we don't yet emit (OUT arrays — FillArray /
+/// ReceiveArray). Non-array params always pass.
+///
+/// ECMA-335 Param flags expose the direction:
+///   - `[in]`  only  → PassArray (caller-owned input buffer)
+///   - `[out]` only  → FillArray (caller-allocated output buffer)
+///   - both    → ReceiveArray (callee-allocated output — rendered on
+///                              the `ref_mut(.array)` shape)
+///
+/// Phase B accepts IN-only arrays. Everything else falls back to
+/// `*const anyopaque` at the call site until Phase C lands.
+fn isPhaseBArrayOk(p: winmd.Ty, file: *const winmd.File, method_row: u32, sig_index: u32) bool {
+    switch (p) {
+        .array => {
+            const flags = file.paramFlags(method_row, sig_index);
+            return flags.in and !flags.out;
+        },
+        .ref_mut => |inner| {
+            // `ref_mut(.array)` is always ReceiveArray (OUT) — defer
+            // to Phase C.
+            return inner.* != .array;
+        },
+        else => return true,
+    }
 }
 
 /// Returns true iff `arg` is a generic-type argument we can mangle
@@ -2863,6 +2947,17 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
         u8,
         out,
         "CreateInt32: *const fn (this: *const IPropertyValueStatics, p0: i32, result: *?*const anyopaque) callconv(.winapi) HRESULT",
+    ) != null);
+
+    // Phase B (issue #3): SZARRAY inputs with `[in]` (PassArray) lower
+    // to a two-slot vtbl pair `p{N}_size: u32, p{N}_ptr: [*]const T`.
+    // `CreateInt32Array([in] UINT32 __valueSize, [in] INT32[] value)
+    // → IInspectable** propertyValue` exercises the primitive case.
+    // Previously the whole slot fell back to `*const anyopaque`.
+    try std.testing.expect(std.mem.indexOf(
+        u8,
+        out,
+        "CreateInt32Array: *const fn (this: *const IPropertyValueStatics, p0_size: u32, p0_ptr: [*]const i32, result: *?*const anyopaque) callconv(.winapi) HRESULT",
     ) != null);
 
     // At least one interface in Windows.Foundation uses types we don't
