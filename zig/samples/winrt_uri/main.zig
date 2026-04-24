@@ -33,11 +33,10 @@ pub fn main(init: std.process.Init) !void {
     // Activation factory for `Windows.Foundation.Uri`, typed as
     // `IUriRuntimeClassFactory` via `Uri.Factory` (emitter-generated
     // from `[Activatable(typeof(IUriRuntimeClassFactory), ...)]`).
-    const factory = try core.activationFactory(
-        Uri.Factory.Vtbl,
-        &Uri.Factory.IID,
-        &Uri.NAME_W,
-    );
+    // `Uri.factory()` is the M6 convenience that collapses
+    // `core.activationFactory(Uri.Factory.Vtbl, &Uri.Factory.IID, &Uri.NAME_W)`
+    // down to a single call.
+    const factory = try Uri.factory();
     defer factory.deinit();
 
     // Construct the Uri instance. `CreateUriFromUtf16` is the M2

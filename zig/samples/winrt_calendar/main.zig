@@ -41,13 +41,10 @@ pub fn main(init: std.process.Init) !void {
 
     // `ApplicationLanguages` is a pure-static WinRT class: no instance
     // activation, just an `IActivationFactory` that also implements
-    // `IApplicationLanguagesStatics`. `ApplicationLanguages.Statics`
-    // is the emitter-generated alias for that statics interface.
-    const factory = try core.activationFactory(
-        ApplicationLanguages.Statics.Vtbl,
-        &ApplicationLanguages.Statics.IID,
-        &ApplicationLanguages.NAME_W,
-    );
+    // `IApplicationLanguagesStatics`. `ApplicationLanguages.statics()`
+    // is the M6 convenience wrapper around `activationFactory` keyed
+    // off the `Statics` alias.
+    const factory = try ApplicationLanguages.statics();
     defer factory.deinit();
 
     const statics_this: *const ApplicationLanguages.Statics =
