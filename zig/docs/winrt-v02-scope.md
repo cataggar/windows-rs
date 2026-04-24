@@ -232,6 +232,48 @@ follow-up: 78 bundled WinRT namespaces, ~9.3 MB of generated Zig,
 ~490 KB `ReleaseSmall` exe for a single-class sample (DCE strips
 >99 % of emitted vtables).
 
+## M7 — WinRT array ABI
+
+`ELEMENT_TYPE_SZARRAY` sig params used to collapse the entire vtbl
+slot to `*const anyopaque`; `canRepresent` rejected `Ty.array` and
+the emitter fell back to opaque. Closed issue #3 by lowering WinRT
+arrays into the canonical split-pair (`count`, `ptr`) slots,
+keyed on the Param row's `[in]` / `[out]` flags:
+
+| Winmd shape | Direction | Emitted vtbl slots |
+| --- | --- | --- |
+| `Ty.array(T)` | `[in]` PassArray | `p_size: u32, p: [*]const T` |
+| `Ty.array(T)` | `[out]` FillArray | `p_size: u32, p: [*]T` |
+| `Ty.ref_mut(Ty.array(T))` | `[out]` ReceiveArray | `p_size: *u32, p: *[*]T` |
+| return `Ty.array(T)` | callee-allocated | trailing `result_size: *u32, result_ptr: *[*]T` |
+
+Landed:
+
+- `winmd` grew `paramFlags(method_row, sig_index)` — reads
+  `[in]` / `[out]` off the Param table, matching the Rust
+  projection's `Param::is_input` / `is_output`.
+- `canRepresent` accepts `.array(T)` when `canRepresent(T)`.
+- `classifyArrayParam` dispatches each sig param to its shape;
+  `writeMethodPointer` / `writeMethodWrapper` /
+  `writeSubstitutedMethodPointer` emit the split-pair slots.
+- `substituteTy` recurses through `.array` for closed-generic
+  instantiations (`IVector<T>.GetMany` → typed
+  `p1_size: u32, p1_ptr: [*]T`).
+- `Owned` HSTRING sugar is suppressed on methods with any
+  array param/return (arrays forward raw; slice sugar deferred
+  to v0.3).
+
+`samples/winrt_property_value` round-trips `[_]i32{1, 2, 4, 8, 16}`
+through `PropertyValue.CreateInt32Array` (PassArray) and
+`IPropertyValue.GetInt32Array` (ReceiveArray, callee-allocated),
+freeing the returned buffer via `CoTaskMemFree`. All 19
+`IPropertyValueStatics.Create*Array` slots render typed; zero
+opaque fallback remains on the Phase B corpus.
+
+**Deferred to v0.3:** Win32 arrays (`SIZE_IS` / `LENGTH_IS`),
+slice-sugar wrappers analogous to `FromUtf16`, and array-returning
+method sugar (e.g. `GetInt32ArrayOwned` → `![]i32`).
+
 ## Non-goals for v0.2 (held)
 
 - Re-generating `.winmd` from headers. `tool_bindgen` /
