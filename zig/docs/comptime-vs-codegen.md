@@ -113,6 +113,80 @@ Guidance:
   are. Codegen gives you a diffable surface and per-function debug
   info the IDE can index.
 
+## WinRT cap numbers
+
+WinRT uses a different mechanism: the bundle (`@import("winrt")`) is
+emitted wholesale by `zig build bindings` and relies on Zig / LLD
+dead-code elimination to strip the unused parts at link time. There is
+no WinRT analogue to `project()` — the cap numbers are about bundle
+volume and DCE effectiveness, not `@setEvalBranchQuota`.
+
+Current bundle (regenerated from the vendored `.winmd` files as of M6):
+
+| Dimension                                                | Number      |
+| -------------------------------------------------------- | ----------- |
+| WinRT namespaces                                         | 78          |
+| Interface `Vtbl` aliases                                 | ~3,085      |
+| Runtime classes with a `factory()` method                | ~155        |
+| Emitted `statics*()` methods                             | ~448        |
+| Total WinRT bundle source                                | ~9.3 MB     |
+| Total WinRT bundle lines of generated Zig                | ~150,000    |
+
+Binary-size footprint of a single-class sample
+(`samples/winrt_uri`, calls `Uri.factory()` → `CreateUri` once):
+
+| Build mode                                               | Size        |
+| -------------------------------------------------------- | ----------- |
+| `Debug`                                                  | ~1.9 MB     |
+| `ReleaseSmall`                                           | ~490 KB     |
+
+DCE strips >99% of the emitted interface vtables. The bundle being
+large is not the binary-size story.
+
+Build cost of the same sample:
+
+| Scenario                                          | Wall-clock  |
+| ------------------------------------------------- | ----------- |
+| Cold (empty `.zig-cache`, regenerates bundle)     | ~107 s      |
+| Incremental (touch sample, keep cache)            | ~1.5 s      |
+
+The cold number is dominated by `zig build bindings` walking every
+winmd file. Day-to-day edits pay only the incremental cost.
+
+### Guidance
+
+- **Add a WinRT class?** Nothing to size-budget; DCE handles it. The
+  bundle already carries the 78-namespace closure.
+- **Care about cold CI time?** Cache `.zig-cache/o/*/bundle/` between
+  runs — bindings regeneration is the expensive step.
+- **Care about binary size?** Build `ReleaseSmall`; expect ≤ ~500 KB
+  for a typical single-API sample. Further reduction requires fewer
+  call sites, not a smaller bundle.
+
+### Re-measuring
+
+```powershell
+cd zig
+Remove-Item -Recurse -Force .zig-cache, zig-out
+Measure-Command { zig build run-winrt-uri } | ForEach-Object TotalSeconds
+Measure-Command { zig build run-winrt-uri } | ForEach-Object TotalSeconds  # warm
+zig build samples -Doptimize=ReleaseSmall
+(Get-Item zig-out\bin\winrt-uri.exe).Length
+```
+
+To recount bundle volume:
+
+```powershell
+$b = (Get-ChildItem .zig-cache\o -Directory |
+      ForEach-Object { Join-Path $_.FullName 'bundle' } |
+      Where-Object { Test-Path $_ } | Select-Object -First 1)
+$winrt = Get-ChildItem $b -Filter *.zig |
+    Where-Object { $_.Name -notlike 'Windows.Win32.*' -and
+                   $_.Name -notlike 'Windows.Wdk.*' }
+"{0} namespaces, {1:N0} KB" -f $winrt.Count,
+    (($winrt | Measure-Object Length -Sum).Sum / 1KB)
+```
+
 ## Limitations (as of Phase 4)
 
 - Function-pointer typedefs referenced from a projected method (e.g.

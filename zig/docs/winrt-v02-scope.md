@@ -367,6 +367,6 @@ binary, same as any other unused `pub fn` in a Zig library. See
 - [x] WinRT activation ergonomics: emitted `Class.factory()` /
   `Class.statics[N]()` methods replace the
   `activationFactory(Vtbl, &IID, &NAME_W)` triple at call sites. — **M6.**
-- [ ] `docs/comptime-vs-codegen.md` updated with the WinRT cap
-  numbers. — **pending M6 follow-up.**
+- [x] `docs/comptime-vs-codegen.md` updated with the WinRT cap
+  numbers. — **shipped in M6 follow-up.**
 - [ ] This file is rewritten as a changelog, not a plan.
