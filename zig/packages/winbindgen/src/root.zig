@@ -3831,7 +3831,15 @@ fn writeFactoryAlias(
     } else if (isProjectableNs(factory.namespace)) {
         try cross.put(arena, factory.namespace, {});
         try writer.print("    pub const Factory = @\"{s}\".{s};\n", .{ factory.namespace, factory.name });
+    } else {
+        return;
     }
+    try writer.writeAll(
+        \\    pub fn factory() !win_core.Com(Factory.Vtbl) {
+        \\        return win_core.activationFactory(Factory.Vtbl, &Factory.IID, &NAME_W);
+        \\    }
+        \\
+    );
 }
 
 /// Scan the custom attributes on runtime-class row `class_row` for
@@ -3967,6 +3975,21 @@ fn writeStaticsAliases(
             } else {
                 try writer.print("    pub const Statics{d} = @\"{s}\".{s};\n", .{ index, statics.namespace, statics.name });
             }
+        }
+        if (index == 1) {
+            try writer.writeAll(
+                \\    pub fn statics() !win_core.Com(Statics.Vtbl) {
+                \\        return win_core.activationFactory(Statics.Vtbl, &Statics.IID, &NAME_W);
+                \\    }
+                \\
+            );
+        } else {
+            try writer.print(
+                "    pub fn statics{d}() !win_core.Com(Statics{d}.Vtbl) {{\n" ++
+                    "        return win_core.activationFactory(Statics{d}.Vtbl, &Statics{d}.IID, &NAME_W);\n" ++
+                    "    }}\n",
+                .{ index, index, index, index },
+            );
         }
     }
 }

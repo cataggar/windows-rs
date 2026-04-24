@@ -281,13 +281,55 @@ cross-namespace closed generics; host-Windows and cross-arch
     interface settles.
 - One sample per pattern that survives the design pass.
 
-### M6 — Comptime WinRT
+### M6 — WinRT activation ergonomics (landed)
 
-- Extend `project()` to accept WinRT interfaces and runtime classes.
-- Gated by an explicit `.winrt = true` config so Win32-only callers
-  pay nothing.
-- Sample: `project({ .@"Windows.Globalization" = .{"Calendar"} })`
-  with a size benchmark.
+Shipped in #TBD (cataggar/zig-m6-factory-methods).
+
+Original scope (from v0.2 draft): "Extend `project()` to accept WinRT
+interfaces and runtime classes, gated by `.winrt = true`."
+
+Reality after probing the codegen shape: WinRT bundles are emitted
+wholesale and Zig's DCE already removes unused paths, so a
+`project()`-style filter has no credible size story. The shipping
+gap was ergonomic — every call site paid
+`core.activationFactory(Class.Factory.Vtbl, &Class.Factory.IID, &Class.NAME_W)`
+(three tokens for one intent) before reaching the typed factory. The
+pivot (after rubber-duck critique) was to emit the sugar on the class
+struct itself:
+
+```zig
+pub const Uri = extern struct {
+    vtable: *const IUriRuntimeClass_Vtbl,
+    pub const NAME_W: [22]u16 = .{ ... };
+    pub const Factory = IUriRuntimeClassFactory;
+    pub const Statics = IUriEscapeStatics;
+
+    pub fn factory() !win_core.Com(Factory.Vtbl) {
+        return win_core.activationFactory(Factory.Vtbl, &Factory.IID, &NAME_W);
+    }
+    pub fn statics() !win_core.Com(Statics.Vtbl) {
+        return win_core.activationFactory(Statics.Vtbl, &Statics.IID, &NAME_W);
+    }
+};
+```
+
+Emitted by `emitRuntimeClasses` alongside the existing `activate()`
+for parameterless-activatable classes. Classes carrying
+`Statics2`/`Statics3` sibling aliases get matching `statics2()` /
+`statics3()` methods numbered to match. Gating piggy-backs on the
+alias emission: no `Factory` alias → no `factory()` method.
+
+Samples updated:
+
+- `samples/winrt_uri`: `core.activationFactory(Uri.Factory.Vtbl, ...)`
+  → `try Uri.factory()`.
+- `samples/winrt_calendar`: same collapse for
+  `ApplicationLanguages.statics()`.
+
+Size story is explicitly DCE-driven: classes whose `factory()` /
+`statics()` are never referenced don't get emitted into the final
+binary, same as any other unused `pub fn` in a Zig library. See
+`docs/comptime-vs-codegen.md` for the full cap discussion.
 
 ## Non-goals for v0.2
 
@@ -322,8 +364,9 @@ cross-namespace closed generics; host-Windows and cross-arch
   full `HSTRING` round-trip. — `winrt_uri` and `winrt_calendar` both
   run in `samples` step; `winrt_calendar` additionally drives a
   cross-namespace closed-generic `IVectorView<HSTRING>`.
-- [ ] A `project()` example pulls in a WinRT runtime class and calls
-  a method, under a gated config. — **M6.**
+- [x] WinRT activation ergonomics: emitted `Class.factory()` /
+  `Class.statics[N]()` methods replace the
+  `activationFactory(Vtbl, &IID, &NAME_W)` triple at call sites. — **M6.**
 - [ ] `docs/comptime-vs-codegen.md` updated with the WinRT cap
-  numbers. — **pending M6.**
+  numbers. — **pending M6 follow-up.**
 - [ ] This file is rewritten as a changelog, not a plan.
