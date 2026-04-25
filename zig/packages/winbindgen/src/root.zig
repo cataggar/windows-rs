@@ -2142,6 +2142,80 @@ pub fn emitInterfaceHandles(
     }
 }
 
+/// Compute the parameterised interface IID for a closed WinRT generic
+/// from its runtime-type signature string.
+///
+/// The recipe (RFC 4122 v5 UUID with the WinRT PIID namespace) is the
+/// same one Rust `windows-core::GUID::from_signature` uses
+/// (`crates/libs/core/src/guid.rs:73`). Steps:
+///
+///   1. Prepend the 16-byte WinRT namespace GUID
+///      `{11f47ad5-7b73-42c0-abae-878b1e16adee}` to `sig` and SHA-1
+///      the lot.
+///   2. Take the first 16 bytes of the digest.
+///   3. Force version `5` into the high nibble of byte 6:
+///      `b[6] = (b[6] & 0x0f) | 0x50`.
+///   4. Force variant `10` into the top two bits of byte 8:
+///      `b[8] = (b[8] & 0x3f) | 0x80`.
+///   5. Pack `data1` as big-endian `u32` over bytes 0..4, `data2` as
+///      BE `u16` over 4..6, `data3` as BE `u16` over 6..8, and
+///      `data4` as the remaining 8 bytes.
+///
+/// `sig` itself is built by `runtimeSignature` (M1) — for a closed
+/// generic that is `pinterface({base-iid};arg-sig;arg-sig;...)`. This
+/// helper is pure / I/O-free and runs at codegen time.
+fn parameterizedIid(sig: []const u8) GUID_t {
+    const namespace = [_]u8{
+        0x11, 0xf4, 0x7a, 0xd5, 0x7b, 0x73, 0x42, 0xc0,
+        0xab, 0xae, 0x87, 0x8b, 0x1e, 0x16, 0xad, 0xee,
+    };
+    var hasher = std.crypto.hash.Sha1.init(.{});
+    hasher.update(&namespace);
+    hasher.update(sig);
+    var out: [std.crypto.hash.Sha1.digest_length]u8 = undefined;
+    hasher.final(&out);
+
+    var b: [16]u8 = out[0..16].*;
+    b[6] = (b[6] & 0x0f) | 0x50;
+    b[8] = (b[8] & 0x3f) | 0x80;
+
+    return .{
+        .data1 = std.mem.readInt(u32, b[0..4], .big),
+        .data2 = std.mem.readInt(u16, b[4..6], .big),
+        .data3 = std.mem.readInt(u16, b[6..8], .big),
+        .data4 = b[8..16].*,
+    };
+}
+
+/// Local alias so this file doesn't depend on `win-core` for a
+/// codegen-time helper. The shape matches `win_core.GUID` exactly
+/// (`extern struct { data1: u32, data2: u16, data3: u16, data4: [8]u8 }`),
+/// so a value of this type can be formatted into a `GUID = .{...}`
+/// literal in generated source.
+const GUID_t = extern struct {
+    data1: u32,
+    data2: u16,
+    data3: u16,
+    data4: [8]u8,
+};
+
+test "parameterizedIid matches IReference<bool> golden vector" {
+    // IReference<T>'s open-template IID and the canonical signature
+    // for `IReference<bool>`. The expected closed IID is published
+    // by Windows itself and lives in `windows-core`'s tests too.
+    const sig = "pinterface({61c17706-2d65-11e0-9ae8-d48564015472};b1)";
+    const got = parameterizedIid(sig);
+
+    const expected: GUID_t = .{
+        .data1 = 0x3c00fd60,
+        .data2 = 0x2950,
+        .data3 = 0x5939,
+        .data4 = .{ 0xa2, 0x1a, 0x2d, 0x12, 0xc5, 0xa0, 0x1b, 0x8a },
+    };
+
+    try std.testing.expectEqual(expected, got);
+}
+
 /// Emit `pub const IID: GUID = .{ ... };` inside an interface handle's
 /// struct body when the TypeDef carries a `GuidAttribute`. The WinRT
 /// `Windows.Foundation.Metadata.GuidAttribute` ctor has eleven
