@@ -2216,6 +2216,25 @@ test "parameterizedIid matches IReference<bool> golden vector" {
     try std.testing.expectEqual(expected, got);
 }
 
+test "parameterizedIid matches IVector<HSTRING> golden vector" {
+    // Second independent vector: `IVector<HSTRING>`. The open-template
+    // IID `913337e9-11a1-4345-a3a2-4e7f956e222d` is the IVector<T>
+    // GuidAttribute used across `windows-rs`; the closed IID was
+    // computed from that signature by the reference SHA-1 + bit-flip
+    // recipe (`crates/libs/core/src/guid.rs::GUID::from_signature`).
+    const sig = "pinterface({913337e9-11a1-4345-a3a2-4e7f956e222d};string)";
+    const got = parameterizedIid(sig);
+
+    const expected: GUID_t = .{
+        .data1 = 0x98b9acc1,
+        .data2 = 0x4b56,
+        .data3 = 0x532e,
+        .data4 = .{ 0xac, 0x73, 0x03, 0xd5, 0x29, 0x1c, 0xca, 0x90 },
+    };
+
+    try std.testing.expectEqual(expected, got);
+}
+
 /// Read a TypeDef's `GuidAttribute` and return the assembled GUID, or
 /// null if the type carries no `GuidAttribute` or the attribute payload
 /// has the wrong shape. Same parser as `writeInterfaceIid` — kept
