@@ -2142,6 +2142,393 @@ pub fn emitInterfaceHandles(
     }
 }
 
+/// Compute the parameterised interface IID for a closed WinRT generic
+/// from its runtime-type signature string.
+///
+/// The recipe (RFC 4122 v5 UUID with the WinRT PIID namespace) is the
+/// same one Rust `windows-core::GUID::from_signature` uses
+/// (`crates/libs/core/src/guid.rs:73`). Steps:
+///
+///   1. Prepend the 16-byte WinRT namespace GUID
+///      `{11f47ad5-7b73-42c0-abae-878b1e16adee}` to `sig` and SHA-1
+///      the lot.
+///   2. Take the first 16 bytes of the digest.
+///   3. Force version `5` into the high nibble of byte 6:
+///      `b[6] = (b[6] & 0x0f) | 0x50`.
+///   4. Force variant `10` into the top two bits of byte 8:
+///      `b[8] = (b[8] & 0x3f) | 0x80`.
+///   5. Pack `data1` as big-endian `u32` over bytes 0..4, `data2` as
+///      BE `u16` over 4..6, `data3` as BE `u16` over 6..8, and
+///      `data4` as the remaining 8 bytes.
+///
+/// `sig` itself is built by `runtimeSignature` (M1) — for a closed
+/// generic that is `pinterface({base-iid};arg-sig;arg-sig;...)`. This
+/// helper is pure / I/O-free and runs at codegen time.
+fn parameterizedIid(sig: []const u8) GUID_t {
+    const namespace = [_]u8{
+        0x11, 0xf4, 0x7a, 0xd5, 0x7b, 0x73, 0x42, 0xc0,
+        0xab, 0xae, 0x87, 0x8b, 0x1e, 0x16, 0xad, 0xee,
+    };
+    var hasher = std.crypto.hash.Sha1.init(.{});
+    hasher.update(&namespace);
+    hasher.update(sig);
+    var out: [std.crypto.hash.Sha1.digest_length]u8 = undefined;
+    hasher.final(&out);
+
+    var b: [16]u8 = out[0..16].*;
+    b[6] = (b[6] & 0x0f) | 0x50;
+    b[8] = (b[8] & 0x3f) | 0x80;
+
+    return .{
+        .data1 = std.mem.readInt(u32, b[0..4], .big),
+        .data2 = std.mem.readInt(u16, b[4..6], .big),
+        .data3 = std.mem.readInt(u16, b[6..8], .big),
+        .data4 = b[8..16].*,
+    };
+}
+
+/// Local alias so this file doesn't depend on `win-core` for a
+/// codegen-time helper. The shape matches `win_core.GUID` exactly
+/// (`extern struct { data1: u32, data2: u16, data3: u16, data4: [8]u8 }`),
+/// so a value of this type can be formatted into a `GUID = .{...}`
+/// literal in generated source.
+const GUID_t = extern struct {
+    data1: u32,
+    data2: u16,
+    data3: u16,
+    data4: [8]u8,
+};
+
+test "parameterizedIid matches IReference<bool> golden vector" {
+    // IReference<T>'s open-template IID and the canonical signature
+    // for `IReference<bool>`. The expected closed IID is published
+    // by Windows itself and lives in `windows-core`'s tests too.
+    const sig = "pinterface({61c17706-2d65-11e0-9ae8-d48564015472};b1)";
+    const got = parameterizedIid(sig);
+
+    const expected: GUID_t = .{
+        .data1 = 0x3c00fd60,
+        .data2 = 0x2950,
+        .data3 = 0x5939,
+        .data4 = .{ 0xa2, 0x1a, 0x2d, 0x12, 0xc5, 0xa0, 0x1b, 0x8a },
+    };
+
+    try std.testing.expectEqual(expected, got);
+}
+
+/// Read a TypeDef's `GuidAttribute` and return the assembled GUID, or
+/// null if the type carries no `GuidAttribute` or the attribute payload
+/// has the wrong shape. Same parser as `writeInterfaceIid` — kept
+/// separate so signature builders can use the value without printing.
+fn readTypeDefGuid(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    type_def_row: u32,
+) ?GUID_t {
+    const attr_row = winmd.findAttribute(file, .type_def, type_def_row, "GuidAttribute") orelse return null;
+    const args = winmd.readAttributeArgs(arena, file, attr_row) catch return null;
+    if (args.len != 11) return null;
+
+    const d1 = switch (args[0].value) {
+        .u32_val => |v| v,
+        else => return null,
+    };
+    const d2 = switch (args[1].value) {
+        .u16_val => |v| v,
+        else => return null,
+    };
+    const d3 = switch (args[2].value) {
+        .u16_val => |v| v,
+        else => return null,
+    };
+    var d4: [8]u8 = undefined;
+    for (0..8) |i| {
+        d4[i] = switch (args[3 + i].value) {
+            .u8_val => |v| v,
+            else => return null,
+        };
+    }
+    return .{ .data1 = d1, .data2 = d2, .data3 = d3, .data4 = d4 };
+}
+
+/// Format a GUID as the canonical lowercase hex form
+/// `xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx` (no braces). Callers add
+/// braces around it where the WinRT signature grammar requires.
+fn writeGuidHex(writer: *std.Io.Writer, g: GUID_t) !void {
+    try writer.print(
+        "{x:0>8}-{x:0>4}-{x:0>4}-{x:0>2}{x:0>2}-{x:0>2}{x:0>2}{x:0>2}{x:0>2}{x:0>2}{x:0>2}",
+        .{
+            g.data1,    g.data2,    g.data3,
+            g.data4[0], g.data4[1], g.data4[2],
+            g.data4[3], g.data4[4], g.data4[5],
+            g.data4[6], g.data4[7],
+        },
+    );
+}
+
+/// Write the WinRT runtime-signature string for `ty` (used as input to
+/// `parameterizedIid`). Mirrors `Type::runtime_signature` in
+/// `crates/libs/bindgen/src/types/mod.rs:599` plus the per-kind helpers
+/// (`Class::runtime_signature`, `Enum::runtime_signature`,
+/// `Struct::runtime_signature`, `interface_signature`).
+///
+/// Special cases:
+/// * `System.Guid` → `g16` (matches the Rust `Type::GUID` variant).
+/// * `Windows.Foundation.HResult` is NOT special-cased here; walking
+///   its single `Value: i4` field naturally produces the same string
+///   as the Rust `Type::HRESULT` variant.
+///
+/// Unhandled `Ty` variants (pointers, byref, arrays, generic
+/// parameters) return `error.UnsupportedTypeForSignature`. Closed
+/// generic instantiations only carry concrete primitive / class /
+/// value types, so those variants can't legitimately appear.
+const RuntimeSignatureError = error{
+    UnsupportedTypeForSignature,
+    TypeNotFound,
+    NoGuidAttribute,
+    NoDefaultInterface,
+    EnumValueFieldMissing,
+    OutOfMemory,
+    WriteFailed,
+    BadFieldProlog,
+    InvalidCodedToken,
+    ShortBlob,
+    TrailingBytes,
+    UnsupportedElement,
+};
+
+fn writeRuntimeSignature(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    ty: winmd.Ty,
+) RuntimeSignatureError!void {
+    switch (ty) {
+        .bool => try writer.writeAll("b1"),
+        .char => try writer.writeAll("c2"),
+        .i8 => try writer.writeAll("i1"),
+        .u8 => try writer.writeAll("u1"),
+        .i16 => try writer.writeAll("i2"),
+        .u16 => try writer.writeAll("u2"),
+        .i32 => try writer.writeAll("i4"),
+        .u32 => try writer.writeAll("u4"),
+        .i64 => try writer.writeAll("i8"),
+        .u64 => try writer.writeAll("u8"),
+        .f32 => try writer.writeAll("f4"),
+        .f64 => try writer.writeAll("f8"),
+        .isize => try writer.writeAll("is"),
+        .usize => try writer.writeAll("us"),
+        .string => try writer.writeAll("string"),
+        .object => try writer.writeAll("cinterface(IInspectable)"),
+        .value_name => |tn| try writeValueRuntimeSignature(writer, arena, file, tn),
+        .class_name => |tn| try writeClassRuntimeSignature(writer, arena, file, tn),
+        else => return error.UnsupportedTypeForSignature,
+    }
+}
+
+/// Signature for a `value_name` (struct or enum). Dispatches on the
+/// TypeDef's `Extends` column.
+fn writeValueRuntimeSignature(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    tn: winmd.TypeName,
+) RuntimeSignatureError!void {
+    // `System.Guid` projects to a 16-byte GUID — Rust's `Type::GUID`.
+    // Walking its declared fields would yield a different string, so
+    // intercept here.
+    if (std.mem.eql(u8, tn.namespace, "System") and std.mem.eql(u8, tn.name, "Guid")) {
+        try writer.writeAll("g16");
+        return;
+    }
+
+    const row = findTypeDefRow(file, tn.namespace, tn.name) orelse return error.TypeNotFound;
+
+    var is_enum = false;
+    const extends_tok = file.cell(.type_def, row, 3);
+    if (extends_tok != 0) {
+        if (winmd.resolveTypeDefOrRefName(file, extends_tok)) |base| {
+            if (std.mem.eql(u8, base.namespace, "System") and std.mem.eql(u8, base.name, "Enum")) {
+                is_enum = true;
+            }
+        } else |_| {}
+    }
+
+    const FIELD_ATTR_STATIC: u32 = 0x10;
+    const fields = file.list(.type_def, row, 4, .field);
+
+    if (is_enum) {
+        // `enum(Ns.Name;<underlying>)` — underlying type is the `value__`
+        // instance field's signature.
+        try writer.print("enum({s}.{s};", .{ tn.namespace, tn.name });
+
+        var repr_field: u32 = fields.start;
+        var found = false;
+        var f: u32 = fields.start;
+        while (f < fields.end) : (f += 1) {
+            if (std.mem.eql(u8, file.str(.field, f, 1), "value__")) {
+                repr_field = f;
+                found = true;
+                break;
+            }
+        }
+        if (!found) return error.EnumValueFieldMissing;
+
+        const inner = try winmd.readFieldSignature(arena, file, file.blob(.field, repr_field, 2));
+        try writeRuntimeSignature(writer, arena, file, inner);
+        try writer.writeAll(")");
+    } else {
+        // `struct(Ns.Name;f1;f2;...)` — instance fields only, in
+        // declaration order. Static literals on a struct (e.g. constants)
+        // would not contribute to the runtime layout signature.
+        try writer.print("struct({s}.{s}", .{ tn.namespace, tn.name });
+        var f: u32 = fields.start;
+        while (f < fields.end) : (f += 1) {
+            const flags = file.cell(.field, f, 0);
+            if ((flags & FIELD_ATTR_STATIC) != 0) continue;
+            const inner = try winmd.readFieldSignature(arena, file, file.blob(.field, f, 2));
+            try writer.writeAll(";");
+            try writeRuntimeSignature(writer, arena, file, inner);
+        }
+        try writer.writeAll(")");
+    }
+}
+
+/// Signature for a `class_name` (interface, class, or delegate).
+/// Dispatches on `TypeAttributes.Interface` and `Extends`.
+fn writeClassRuntimeSignature(
+    writer: *std.Io.Writer,
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    tn: winmd.TypeName,
+) RuntimeSignatureError!void {
+    const row = findTypeDefRow(file, tn.namespace, tn.name) orelse return error.TypeNotFound;
+    const flags = file.cell(.type_def, row, 0);
+    const is_interface = (flags & TYPE_ATTR_INTERFACE) != 0;
+
+    var is_delegate = false;
+    if (!is_interface) {
+        const extends_tok = file.cell(.type_def, row, 3);
+        if (extends_tok != 0) {
+            if (winmd.resolveTypeDefOrRefName(file, extends_tok)) |base| {
+                if (std.mem.eql(u8, base.namespace, "System") and std.mem.eql(u8, base.name, "MulticastDelegate")) {
+                    is_delegate = true;
+                }
+            } else |_| {}
+        }
+    }
+
+    if (is_interface) {
+        const guid = readTypeDefGuid(arena, file, row) orelse return error.NoGuidAttribute;
+        if (tn.generics.len == 0) {
+            try writer.writeAll("{");
+            try writeGuidHex(writer, guid);
+            try writer.writeAll("}");
+        } else {
+            try writer.writeAll("pinterface({");
+            try writeGuidHex(writer, guid);
+            try writer.writeAll("}");
+            for (tn.generics) |g| {
+                try writer.writeAll(";");
+                try writeRuntimeSignature(writer, arena, file, g);
+            }
+            try writer.writeAll(")");
+        }
+    } else if (is_delegate) {
+        const guid = readTypeDefGuid(arena, file, row) orelse return error.NoGuidAttribute;
+        if (tn.generics.len == 0) {
+            try writer.writeAll("delegate({");
+            try writeGuidHex(writer, guid);
+            try writer.writeAll("})");
+        } else {
+            try writer.writeAll("pinterface({");
+            try writeGuidHex(writer, guid);
+            try writer.writeAll("}");
+            for (tn.generics) |g| {
+                try writer.writeAll(";");
+                try writeRuntimeSignature(writer, arena, file, g);
+            }
+            try writer.writeAll(")");
+        }
+    } else {
+        // Runtime class: `rc(Ns.Name;<default-interface-sig>)`.
+        const default = defaultInterface(file, row) orelse return error.NoDefaultInterface;
+        try writer.print("rc({s}.{s};", .{ tn.namespace, tn.name });
+        try writeClassRuntimeSignature(writer, arena, file, default);
+        try writer.writeAll(")");
+    }
+}
+
+test "writeRuntimeSignature primitive and string" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try writeRuntimeSignature(&buf.writer, arena.allocator(), &file, .bool);
+    try writeRuntimeSignature(&buf.writer, arena.allocator(), &file, .i32);
+    try writeRuntimeSignature(&buf.writer, arena.allocator(), &file, .string);
+    try writeRuntimeSignature(&buf.writer, arena.allocator(), &file, .object);
+
+    try std.testing.expectEqualStrings("b1i4stringcinterface(IInspectable)", buf.written());
+}
+
+test "writeRuntimeSignature System.Guid -> g16" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    const ty: winmd.Ty = .{ .value_name = .{ .namespace = "System", .name = "Guid" } };
+    try writeRuntimeSignature(&buf.writer, arena.allocator(), &file, ty);
+
+    try std.testing.expectEqualStrings("g16", buf.written());
+}
+
+test "writeRuntimeSignature builds IReference<bool> sig and matches golden IID" {
+    // End-to-end: walk metadata to assemble the `pinterface(...)` sig
+    // for `IReference<bool>` and confirm `parameterizedIid` returns the
+    // published closed IID. This is the headline M1 test.
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    const generics = [_]winmd.Ty{.bool};
+    const ty: winmd.Ty = .{ .class_name = .{
+        .namespace = "Windows.Foundation",
+        .name = "IReference`1",
+        .generics = &generics,
+    } };
+    try writeRuntimeSignature(&buf.writer, arena.allocator(), &file, ty);
+
+    try std.testing.expectEqualStrings(
+        "pinterface({61c17706-2d65-11e0-9ae8-d48564015472};b1)",
+        buf.written(),
+    );
+
+    const got = parameterizedIid(buf.written());
+    const expected: GUID_t = .{
+        .data1 = 0x3c00fd60,
+        .data2 = 0x2950,
+        .data3 = 0x5939,
+        .data4 = .{ 0xa2, 0x1a, 0x2d, 0x12, 0xc5, 0xa0, 0x1b, 0x8a },
+    };
+    try std.testing.expectEqual(expected, got);
+}
+
 /// Emit `pub const IID: GUID = .{ ... };` inside an interface handle's
 /// struct body when the TypeDef carries a `GuidAttribute`. The WinRT
 /// `Windows.Foundation.Metadata.GuidAttribute` ctor has eleven
