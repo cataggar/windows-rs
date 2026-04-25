@@ -1389,6 +1389,12 @@ pub fn build(b: *std.Build) void {
             .extra_libs = &.{"ole32"},
             .needs_win = true,
         },
+        .{
+            .name = "winrt-property-set",
+            .root = "samples/winrt_property_set/main.zig",
+            .extra_libs = &.{"ole32"},
+            .needs_win = true,
+        },
     };
 
     for (samples) |s| {
