@@ -284,10 +284,16 @@ method sugar (e.g. `GetInt32ArrayOwned` → `![]i32`).
   `extern struct { vtable: ... }` shape is the baseline; ergonomic
   wrappers ship per-sample as needed.
 
+## Delivered post-v0.2
+
+- **Parameterised IIDs** for closed WinRT generics — the v5 UUID
+  recipe over a `pinterface(...)` runtime-type signature, computed at
+  codegen time. Unblocks `cast()` / `QueryInterface` onto closed
+  generics. See [parameterised-iids.md](parameterised-iids.md). Issue
+  [#13](https://github.com/cataggar/windows-rs/issues/13).
+
 ## Carry-overs into v0.3
 
-- **Parameterised IIDs** (SHA-1 over per-instantiation blob).
-  Unlocks `cast()` / `QueryInterface` onto closed generics.
 - **Async contracts** (M5 deferred above).
 - **Generic delegates** with add/remove-handler sugar.
 - **Generic methods** (`.mvar_generic` still resolves to
