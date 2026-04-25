@@ -14,8 +14,11 @@ void __stdcall RevertToPrinterSelf() {}
 void __stdcall RouterAllocBidiMem(int p0) {}
 void __stdcall RouterAllocBidiResponseContainer(int p0) {}
 void __stdcall RouterAllocPrinterNotifyInfo(int p0) {}
+void __stdcall RouterCreatePrintAsyncNotificationChannel(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall RouterFreeBidiMem(int p0) {}
 void __stdcall RouterFreePrinterNotifyInfo(int p0) {}
+void __stdcall RouterGetPrintClassObject(int p0, int p1, int p2) {}
+void __stdcall RouterUnregisterForPrintAsyncNotifications(int p0) {}
 void __stdcall SplIsSessionZero(int p0, int p1, int p2) {}
 void __stdcall SplPromptUIInUsersSession(int p0, int p1, int p2, int p3) {}
 void __stdcall SpoolerFindClosePrinterChangeNotification(int p0) {}

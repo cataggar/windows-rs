@@ -23,6 +23,8 @@ void __stdcall PowerDeterminePlatformRoleEx(int p0) {}
 void __stdcall PowerDuplicateScheme(int p0, int p1, int p2) {}
 void __stdcall PowerEnumerate(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall PowerGetActiveScheme(int p0, int p1) {}
+void __stdcall PowerGetUserConfiguredACPowerMode(int p0) {}
+void __stdcall PowerGetUserConfiguredDCPowerMode(int p0) {}
 void __stdcall PowerImportPowerScheme(int p0, int p1, int p2) {}
 void __stdcall PowerIsSettingRangeDefined(int p0, int p1) {}
 void __stdcall PowerOpenSystemPowerKey(int p0, int p1, int p2) {}
@@ -52,6 +54,8 @@ void __stdcall PowerReportThermalEvent(int p0) {}
 void __stdcall PowerRestoreDefaultPowerSchemes() {}
 void __stdcall PowerRestoreIndividualDefaultPowerScheme(int p0) {}
 void __stdcall PowerSetActiveScheme(int p0, int p1) {}
+void __stdcall PowerSetUserConfiguredACPowerMode(int p0) {}
+void __stdcall PowerSetUserConfiguredDCPowerMode(int p0) {}
 void __stdcall PowerSettingAccessCheck(int p0, int p1) {}
 void __stdcall PowerSettingAccessCheckEx(int p0, int p1, int p2) {}
 void __stdcall PowerSettingRegisterNotification(int p0, int p1, int p2, int p3) {}

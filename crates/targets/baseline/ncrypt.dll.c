@@ -4,9 +4,11 @@ void __stdcall NCryptCloseProtectionDescriptor(int p0) {}
 void __stdcall NCryptCreateClaim(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall NCryptCreatePersistedKey(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall NCryptCreateProtectionDescriptor(int p0, int p1, int p2) {}
+void __stdcall NCryptDecapsulate(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall NCryptDecrypt(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall NCryptDeleteKey(int p0, int p1) {}
 void __stdcall NCryptDeriveKey(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
+void __stdcall NCryptEncapsulate(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall NCryptEncrypt(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall NCryptEnumAlgorithms(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall NCryptEnumKeys(int p0, int p1, int p2, int p3, int p4) {}

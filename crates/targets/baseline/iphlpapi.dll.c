@@ -18,6 +18,7 @@ void __stdcall ConvertInterfaceNameToLuidW(int p0, int p1) {}
 void __stdcall ConvertIpv4MaskToLength(int p0, int p1) {}
 void __stdcall ConvertLengthToIpv4Mask(int p0, int p1) {}
 void __stdcall CreateAnycastIpAddressEntry(int p0) {}
+void __stdcall CreateFlVirtualInterface(int p0) {}
 void __stdcall CreateIpForwardEntry(int p0) {}
 void __stdcall CreateIpForwardEntry2(int p0) {}
 void __stdcall CreateIpNetEntry(int p0) {}
@@ -28,6 +29,7 @@ void __stdcall CreateProxyArpEntry(int p0, int p1, int p2) {}
 void __stdcall CreateSortedAddressPairs(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall CreateUnicastIpAddressEntry(int p0) {}
 void __stdcall DeleteAnycastIpAddressEntry(int p0) {}
+void __stdcall DeleteFlVirtualInterface(int p0) {}
 void __stdcall DeleteIPAddress(int p0) {}
 void __stdcall DeleteIpForwardEntry(int p0) {}
 void __stdcall DeleteIpForwardEntry2(int p0) {}
@@ -61,6 +63,8 @@ void __stdcall GetDefaultCompartmentId() {}
 void __stdcall GetDnsSettings(int p0) {}
 void __stdcall GetExtendedTcpTable(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall GetExtendedUdpTable(int p0, int p1, int p2, int p3, int p4, int p5) {}
+void __stdcall GetFlVirtualInterface(int p0) {}
+void __stdcall GetFlVirtualInterfaceTable(int p0, int p1) {}
 void __stdcall GetFriendlyIfIndex(int p0) {}
 void __stdcall GetIcmpStatistics(int p0) {}
 void __stdcall GetIcmpStatisticsEx(int p0, int p1) {}
@@ -136,6 +140,7 @@ void __stdcall IcmpParseReplies(int p0, int p1) {}
 void __stdcall IcmpSendEcho(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall IcmpSendEcho2(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10) {}
 void __stdcall IcmpSendEcho2Ex(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10, int p11) {}
+void __stdcall InitializeFlVirtualInterfaceEntry(int p0) {}
 void __stdcall InitializeIpForwardEntry(int p0) {}
 void __stdcall InitializeIpInterfaceEntry(int p0) {}
 void __stdcall InitializeUnicastIpAddressEntry(int p0) {}
@@ -178,6 +183,7 @@ void __stdcall SendARP(int p0, int p1, int p2, int p3) {}
 void __stdcall SetCurrentThreadCompartmentId(int p0) {}
 void __stdcall SetCurrentThreadCompartmentScope(int p0) {}
 void __stdcall SetDnsSettings(int p0) {}
+void __stdcall SetFlVirtualInterface(int p0) {}
 void __stdcall SetIfEntry(int p0) {}
 void __stdcall SetInterfaceDnsSettings(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall SetIpForwardEntry(int p0) {}

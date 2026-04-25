@@ -9,6 +9,7 @@ void __stdcall Tbsi_Get_TCG_Log_Ex(int p0, int p1, int p2) {}
 void __stdcall Tbsi_Is_Tpm_Present() {}
 void __stdcall Tbsi_Physical_Presence_Command(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall Tbsi_Revoke_Attestation() {}
+void __stdcall Tbsi_Tpm_Vendor_Maintenance_Mode(int p0, int p1) {}
 void __stdcall Tbsip_Cancel_Commands(int p0) {}
 void __stdcall Tbsip_Context_Close(int p0) {}
 void __stdcall Tbsip_Submit_Command(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}

@@ -8,6 +8,7 @@ void __stdcall AnimateWindow(int p0, int p1, int p2) {}
 void __stdcall AnyPopup() {}
 void __stdcall AppendMenuA(int p0, int p1, int p2, int p3) {}
 void __stdcall AppendMenuW(int p0, int p1, int p2, int p3) {}
+void __stdcall ApplyWindowAction(int p0, int p1) {}
 void __stdcall AreDpiAwarenessContextsEqual(int p0, int p1) {}
 void __stdcall ArrangeIconicWindows(int p0) {}
 void __stdcall AttachThreadInput(int p0, int p1, int p2) {}
@@ -69,6 +70,8 @@ void __stdcall CloseTouchInputHandle(int p0) {}
 void __stdcall CloseWindow(int p0) {}
 void __stdcall CloseWindowStation(int p0) {}
 void __stdcall ConsoleControl(int p0, int p1, int p2) {}
+void __stdcall ConvertPrimaryPointerToMouseDrag() {}
+void __stdcall ConvertToInterceptWindow(int p0) {}
 void __stdcall CopyAcceleratorTableA(int p0, int p1, int p2) {}
 void __stdcall CopyAcceleratorTableW(int p0, int p1, int p2) {}
 void __stdcall CopyIcon(int p0) {}
@@ -194,6 +197,7 @@ void __stdcall EndDeferWindowPos(int p0) {}
 void __stdcall EndDialog(int p0, int p1) {}
 void __stdcall EndMenu() {}
 void __stdcall EndPaint(int p0, int p1) {}
+void __stdcall EnterMoveSizeLoop(int p0, int p1, int p2, int p3) {}
 void __stdcall EnumChildWindows(int p0, int p1, int p2) {}
 void __stdcall EnumClipboardFormats(int p0) {}
 void __stdcall EnumDesktopWindows(int p0, int p1, int p2) {}
@@ -259,7 +263,10 @@ void __stdcall GetClipboardOwner() {}
 void __stdcall GetClipboardSequenceNumber() {}
 void __stdcall GetClipboardViewer() {}
 void __stdcall GetComboBoxInfo(int p0, int p1) {}
+void __stdcall GetConsoleKeyboardLayoutNameA(int p0) {}
+void __stdcall GetConsoleKeyboardLayoutNameW(int p0) {}
 void __stdcall GetCurrentInputMessageSource(int p0) {}
+void __stdcall GetCurrentMonitorTopologyId() {}
 void __stdcall GetCursor() {}
 void __stdcall GetCursorInfo(int p0) {}
 void __stdcall GetCursorPos(int p0) {}
@@ -461,6 +468,7 @@ void __stdcall IsGUIThread(int p0) {}
 void __stdcall IsHungAppWindow(int p0) {}
 void __stdcall IsIconic(int p0) {}
 void __stdcall IsImmersiveProcess(int p0) {}
+void __stdcall IsInterceptWindow(int p0, int p1) {}
 void __stdcall IsMenu(int p0) {}
 void __stdcall IsMouseInPointerEnabled() {}
 void __stdcall IsProcessDPIAware() {}
@@ -566,6 +574,7 @@ void __stdcall RegisterClassExW(int p0) {}
 void __stdcall RegisterClassW(int p0) {}
 void __stdcall RegisterClipboardFormatA(int p0) {}
 void __stdcall RegisterClipboardFormatW(int p0) {}
+void __stdcall RegisterCloakedNotification(int p0, int p1) {}
 void __stdcall RegisterDeviceNotificationA(int p0, int p1, int p2) {}
 void __stdcall RegisterDeviceNotificationW(int p0, int p1, int p2) {}
 void __stdcall RegisterForTooltipDismissNotification(int p0, int p1) {}

@@ -34,6 +34,7 @@ void __stdcall WinBioIdentify(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall WinBioIdentifyWithCallback(int p0, int p1, int p2) {}
 void __stdcall WinBioImproveBegin(int p0, int p1) {}
 void __stdcall WinBioImproveEnd(int p0) {}
+void __stdcall WinBioIsESSCapable(int p0) {}
 void __stdcall WinBioLocateSensor(int p0, int p1) {}
 void __stdcall WinBioLocateSensorWithCallback(int p0, int p1, int p2) {}
 void __stdcall WinBioLockUnit(int p0, int p1) {}

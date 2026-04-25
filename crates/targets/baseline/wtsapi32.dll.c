@@ -1,4 +1,11 @@
+void __stdcall WTSActiveSessionExists(int p0) {}
 void __stdcall WTSCloseServer(int p0) {}
+void __stdcall WTSCloudAuthClose(int p0) {}
+void __stdcall WTSCloudAuthConvertAssertionToSerializedUserCredential(int p0, int p1, int p2, int p3, int p4) {}
+void __stdcall WTSCloudAuthDuplicateSerializedUserCredential(int p0, int p1) {}
+void __stdcall WTSCloudAuthGetServerNonce(int p0, int p1) {}
+void __stdcall WTSCloudAuthNetworkLogonWithSerializedCredential(int p0, int p1, int p2) {}
+void __stdcall WTSCloudAuthOpen(int p0) {}
 void __stdcall WTSConnectSessionA(int p0, int p1, int p2, int p3) {}
 void __stdcall WTSConnectSessionW(int p0, int p1, int p2, int p3) {}
 void __stdcall WTSCreateListenerA(int p0, int p1, int p2, int p3, int p4, int p5) {}

@@ -1,6 +1,8 @@
 void __stdcall HcsAttachLayerStorageFilter(int p0, int p1) {}
+void __stdcall HcsAttachOverlayFilter(int p0, int p1) {}
 void __stdcall HcsDestroyLayer(int p0) {}
 void __stdcall HcsDetachLayerStorageFilter(int p0) {}
+void __stdcall HcsDetachOverlayFilter(int p0, int p1) {}
 void __stdcall HcsExportLayer(int p0, int p1, int p2, int p3) {}
 void __stdcall HcsExportLegacyWritableLayer(int p0, int p1, int p2, int p3) {}
 void __stdcall HcsFormatWritableLayerVhd(int p0) {}

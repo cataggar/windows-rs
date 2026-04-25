@@ -6,6 +6,7 @@ void __stdcall BCryptConfigureContextFunction(int p0, int p1, int p2, int p3, in
 void __stdcall BCryptCreateContext(int p0, int p1, int p2) {}
 void __stdcall BCryptCreateHash(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall BCryptCreateMultiHash(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
+void __stdcall BCryptDecapsulate(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall BCryptDecrypt(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9) {}
 void __stdcall BCryptDeleteContext(int p0, int p1) {}
 void __stdcall BCryptDeriveKey(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
@@ -16,6 +17,7 @@ void __stdcall BCryptDestroyKey(int p0) {}
 void __stdcall BCryptDestroySecret(int p0) {}
 void __stdcall BCryptDuplicateHash(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall BCryptDuplicateKey(int p0, int p1, int p2, int p3, int p4) {}
+void __stdcall BCryptEncapsulate(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall BCryptEncrypt(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9) {}
 void __stdcall BCryptEnumAlgorithms(int p0, int p1, int p2, int p3) {}
 void __stdcall BCryptEnumContextFunctionProviders(int p0, int p1, int p2, int p3, int p4, int p5) {}
