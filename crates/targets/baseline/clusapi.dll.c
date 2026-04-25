@@ -253,6 +253,7 @@ void __stdcall RemoveClusterResourceNodeEx(int p0, int p1, int p2) {}
 void __stdcall RemoveClusterStorageNode(int p0, int p1, int p2, int p3) {}
 void __stdcall RemoveCrossClusterGroupSetDependency(int p0, int p1, int p2) {}
 void __stdcall RemoveResourceFromClusterSharedVolumes(int p0) {}
+void __stdcall RepairClusterNameAccount(int p0, int p1, int p2, int p3) {}
 void __stdcall RestartClusterResource(int p0, int p1) {}
 void __stdcall RestartClusterResourceEx(int p0, int p1, int p2) {}
 void __stdcall RestoreClusterDatabase(int p0, int p1, int p2) {}

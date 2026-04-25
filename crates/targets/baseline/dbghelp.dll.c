@@ -124,6 +124,7 @@ void __stdcall SymGetModuleInfoW(int p0, int p1, int p2) {}
 void __stdcall SymGetModuleInfoW64(int p0, int p1, int p2, int p3) {}
 void __stdcall SymGetOmaps(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall SymGetOptions() {}
+void __stdcall SymGetParentWindow(int p0) {}
 void __stdcall SymGetScope(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall SymGetScopeW(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall SymGetSearchPath(int p0, int p1, int p2) {}

@@ -13,10 +13,12 @@ void __stdcall HcsCreateOperationWithNotifications(int p0, int p1, int p2) {}
 void __stdcall HcsCreateProcess(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall HcsEnumerateComputeSystems(int p0, int p1) {}
 void __stdcall HcsEnumerateComputeSystemsInNamespace(int p0, int p1, int p2) {}
+void __stdcall HcsFinalizeLiveMigration(int p0, int p1, int p2) {}
 void __stdcall HcsGetComputeSystemFromOperation(int p0) {}
 void __stdcall HcsGetComputeSystemProperties(int p0, int p1, int p2) {}
 void __stdcall HcsGetOperationContext(int p0) {}
 void __stdcall HcsGetOperationId(int p0) {}
+void __stdcall HcsGetOperationProperties(int p0, int p1, int p2) {}
 void __stdcall HcsGetOperationResult(int p0, int p1) {}
 void __stdcall HcsGetOperationResultAndProcessInfo(int p0, int p1, int p2) {}
 void __stdcall HcsGetOperationType(int p0) {}
@@ -27,6 +29,7 @@ void __stdcall HcsGetProcessorCompatibilityFromSavedState(int p0, int p1) {}
 void __stdcall HcsGetServiceProperties(int p0, int p1) {}
 void __stdcall HcsGrantVmAccess(int p0, int p1) {}
 void __stdcall HcsGrantVmGroupAccess(int p0) {}
+void __stdcall HcsInitializeLiveMigrationOnSource(int p0, int p1, int p2) {}
 void __stdcall HcsModifyComputeSystem(int p0, int p1, int p2, int p3) {}
 void __stdcall HcsModifyProcess(int p0, int p1, int p2) {}
 void __stdcall HcsModifyServiceSettings(int p0, int p1) {}
@@ -45,6 +48,8 @@ void __stdcall HcsSetProcessCallback(int p0, int p1, int p2, int p3) {}
 void __stdcall HcsShutDownComputeSystem(int p0, int p1, int p2) {}
 void __stdcall HcsSignalProcess(int p0, int p1, int p2) {}
 void __stdcall HcsStartComputeSystem(int p0, int p1, int p2) {}
+void __stdcall HcsStartLiveMigrationOnSource(int p0, int p1, int p2) {}
+void __stdcall HcsStartLiveMigrationTransfer(int p0, int p1, int p2) {}
 void __stdcall HcsSubmitWerReport(int p0) {}
 void __stdcall HcsTerminateComputeSystem(int p0, int p1, int p2) {}
 void __stdcall HcsTerminateProcess(int p0, int p1, int p2) {}

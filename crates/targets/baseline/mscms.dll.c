@@ -4,6 +4,7 @@ void __stdcall CheckBitmapBits(int p0, int p1, int p2, int p3, int p4, int p5, i
 void __stdcall CheckColors(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall CloseColorProfile(int p0) {}
 void __stdcall ColorProfileAddDisplayAssociation(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
+void __stdcall ColorProfileGetDeviceCapabilities(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall ColorProfileGetDisplayDefault(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall ColorProfileGetDisplayList(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall ColorProfileGetDisplayUserScope(int p0, int p1, int p2, int p3) {}

@@ -24,6 +24,9 @@ void __stdcall WinHttpGetProxySettingsResultEx(int p0, int p1) {}
 void __stdcall WinHttpGetProxySettingsVersion(int p0, int p1) {}
 void __stdcall WinHttpOpen(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall WinHttpOpenRequest(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
+void __stdcall WinHttpProtocolCompleteUpgrade(int p0, int p1) {}
+void __stdcall WinHttpProtocolReceive(int p0, int p1, int p2, int p3, int p4, int p5) {}
+void __stdcall WinHttpProtocolSend(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall WinHttpQueryAuthSchemes(int p0, int p1, int p2, int p3) {}
 void __stdcall WinHttpQueryConnectionGroup(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall WinHttpQueryDataAvailable(int p0, int p1) {}

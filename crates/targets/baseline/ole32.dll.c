@@ -16,7 +16,6 @@ void __stdcall CoAllowUnmarshalerCLSID(int p0) {}
 void __stdcall CoBuildVersion() {}
 void __stdcall CoCancelCall(int p0, int p1) {}
 void __stdcall CoCopyProxy(int p0, int p1) {}
-void __stdcall CoCreateFreeThreadedMarshaler(int p0, int p1) {}
 void __stdcall CoCreateGuid(int p0) {}
 void __stdcall CoCreateInstance(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall CoCreateInstanceEx(int p0, int p1, int p2, int p3, int p4, int p5) {}
@@ -58,7 +57,6 @@ void __stdcall CoGetStdMarshalEx(int p0, int p1, int p2) {}
 void __stdcall CoGetSystemSecurityPermissions(int p0, int p1) {}
 void __stdcall CoGetTreatAsClass(int p0, int p1) {}
 void __stdcall CoImpersonateClient() {}
-void __stdcall CoIncrementMTAUsage(int p0) {}
 void __stdcall CoInitialize(int p0) {}
 void __stdcall CoInitializeEx(int p0, int p1) {}
 void __stdcall CoInitializeSecurity(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {}
@@ -95,8 +93,6 @@ void __stdcall CoSetCancelObject(int p0) {}
 void __stdcall CoSetProxyBlanket(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7) {}
 void __stdcall CoSuspendClassObjects() {}
 void __stdcall CoSwitchCallContext(int p0, int p1) {}
-void __stdcall CoTaskMemAlloc(int p0) {}
-void __stdcall CoTaskMemFree(int p0) {}
 void __stdcall CoTaskMemRealloc(int p0, int p1) {}
 void __stdcall CoTestCancel() {}
 void __stdcall CoTreatAsClass(int p0, int p1) {}
@@ -275,7 +271,6 @@ void __stdcall ReadFmtUserTypeStg(int p0, int p1, int p2) {}
 void __stdcall RegisterDragDrop(int p0, int p1) {}
 void __stdcall ReleaseStgMedium(int p0) {}
 void __stdcall RevokeDragDrop(int p0) {}
-void __stdcall RoGetAgileReference(int p0, int p1, int p2, int p3) {}
 void __stdcall SNB_UserFree(int p0, int p1) {}
 void __stdcall SNB_UserFree64(int p0, int p1) {}
 void __stdcall SNB_UserMarshal(int p0, int p1, int p2) {}

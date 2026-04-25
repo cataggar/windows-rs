@@ -29,6 +29,7 @@ void __stdcall MFCreateCollection(int p0) {}
 void __stdcall MFCreateContentDecryptorContext(int p0, int p1, int p2, int p3) {}
 void __stdcall MFCreateContentProtectionDevice(int p0, int p1) {}
 void __stdcall MFCreateD3D12SynchronizationObject(int p0, int p1, int p2) {}
+void __stdcall MFCreateDXGICrossAdapterBuffer(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall MFCreateDXGIDeviceManager(int p0, int p1) {}
 void __stdcall MFCreateDXGISurfaceBuffer(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall MFCreateDXSurfaceBuffer(int p0, int p1, int p2, int p3) {}
@@ -77,6 +78,7 @@ void __stdcall MFFrameRateToAverageTimePerFrame(int p0, int p1, int p2) {}
 void __stdcall MFGetAttributesAsBlob(int p0, int p1, int p2) {}
 void __stdcall MFGetAttributesAsBlobSize(int p0, int p1) {}
 void __stdcall MFGetContentProtectionSystemCLSID(int p0, int p1) {}
+void __stdcall MFGetDXGIDeviceManageMode(int p0, int p1) {}
 void __stdcall MFGetMFTMerit(int p0, int p1, int p2, int p3) {}
 void __stdcall MFGetPluginControl(int p0) {}
 void __stdcall MFGetStrideForBitmapInfoHeader(int p0, int p1, int p2) {}

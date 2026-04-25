@@ -17,6 +17,7 @@ void __stdcall AddVectoredContinueHandler(int p0, int p1) {}
 void __stdcall AddVectoredExceptionHandler(int p0, int p1) {}
 void __stdcall AdjustCalendarDate(int p0, int p1, int p2) {}
 void __stdcall AllocConsole() {}
+void __stdcall AllocConsoleWithOptions(int p0, int p1) {}
 void __stdcall AllocateUserPhysicalPages(int p0, int p1, int p2) {}
 void __stdcall AllocateUserPhysicalPagesNuma(int p0, int p1, int p2, int p3) {}
 void __stdcall AppPolicyGetClrCompat(int p0, int p1) {}
@@ -45,7 +46,9 @@ void __stdcall BuildCommDCBAndTimeoutsA(int p0, int p1, int p2) {}
 void __stdcall BuildCommDCBAndTimeoutsW(int p0, int p1, int p2) {}
 void __stdcall BuildCommDCBW(int p0, int p1) {}
 void __stdcall BuildIoRingFlushFile(int p0, int p1, int p2, int p3, int p4, int p5) {}
+void __stdcall BuildIoRingReadFileScatter(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9) {}
 void __stdcall BuildIoRingWriteFile(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10, int p11) {}
+void __stdcall BuildIoRingWriteFileGather(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8, int p9, int p10) {}
 void __stdcall CallNamedPipeA(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall CallNamedPipeW(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall CallbackMayRunLong(int p0) {}
@@ -66,6 +69,7 @@ void __stdcall CheckTokenCapability(int p0, int p1, int p2) {}
 void __stdcall CheckTokenMembershipEx(int p0, int p1, int p2, int p3) {}
 void __stdcall ClearCommBreak(int p0) {}
 void __stdcall ClearCommError(int p0, int p1, int p2) {}
+void __stdcall CloseConsoleHandle(int p0) {}
 void __stdcall CloseHandle(int p0) {}
 void __stdcall ClosePackageInfo(int p0) {}
 void __stdcall ClosePrivateNamespace(int p0, int p1) {}
@@ -85,6 +89,7 @@ void __stdcall CompareStringEx(int p0, int p1, int p2, int p3, int p4, int p5, i
 void __stdcall CompareStringOrdinal(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall CompareStringW(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall ConnectNamedPipe(int p0, int p1) {}
+void __stdcall ConsoleMenuControl(int p0, int p1, int p2) {}
 void __stdcall ContinueDebugEvent(int p0, int p1, int p2) {}
 void __stdcall ConvertCalDateTimeToSystemTime(int p0, int p1) {}
 void __stdcall ConvertDefaultLocale(int p0) {}
@@ -106,6 +111,8 @@ void __stdcall CreateActCtxW(int p0) {}
 void __stdcall CreateBoundaryDescriptorA(int p0, int p1) {}
 void __stdcall CreateBoundaryDescriptorW(int p0, int p1) {}
 void __stdcall CreateConsoleScreenBuffer(int p0, int p1, int p2, int p3, int p4) {}
+void __stdcall CreateDirectory2A(int p0, int p1, int p2, int p3, int p4) {}
+void __stdcall CreateDirectory2W(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall CreateDirectoryA(int p0, int p1) {}
 void __stdcall CreateDirectoryExA(int p0, int p1, int p2) {}
 void __stdcall CreateDirectoryExW(int p0, int p1, int p2) {}
@@ -120,6 +127,7 @@ void __stdcall CreateEventW(int p0, int p1, int p2, int p3) {}
 void __stdcall CreateFiber(int p0, int p1, int p2) {}
 void __stdcall CreateFiberEx(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall CreateFile2(int p0, int p1, int p2, int p3, int p4) {}
+void __stdcall CreateFile3(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall CreateFileA(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall CreateFileMappingA(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall CreateFileMappingFromApp(int p0, int p1, int p2, int p3, int p4, int p5) {}
@@ -195,6 +203,8 @@ void __stdcall DeleteAtom(int p0) {}
 void __stdcall DeleteBoundaryDescriptor(int p0) {}
 void __stdcall DeleteCriticalSection(int p0) {}
 void __stdcall DeleteFiber(int p0) {}
+void __stdcall DeleteFile2A(int p0, int p1) {}
+void __stdcall DeleteFile2W(int p0, int p1) {}
 void __stdcall DeleteFileA(int p0) {}
 void __stdcall DeleteFileTransactedA(int p0, int p1) {}
 void __stdcall DeleteFileTransactedW(int p0, int p1) {}
@@ -219,6 +229,7 @@ void __stdcall DnsHostnameToComputerNameA(int p0, int p1, int p2) {}
 void __stdcall DnsHostnameToComputerNameExW(int p0, int p1, int p2) {}
 void __stdcall DnsHostnameToComputerNameW(int p0, int p1, int p2) {}
 void __stdcall DosDateTimeToFileTime(int p0, int p1, int p2) {}
+void __stdcall DuplicateConsoleHandle(int p0, int p1, int p2, int p3) {}
 void __stdcall DuplicateHandle(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall DuplicatePackageVirtualizationContext(int p0, int p1) {}
 void __stdcall EnableProcessOptionalXStateFeatures(int p0, int p1) {}
@@ -332,6 +343,7 @@ void __stdcall FindVolumeMountPointClose(int p0) {}
 void __stdcall FlsAlloc(int p0) {}
 void __stdcall FlsFree(int p0) {}
 void __stdcall FlsGetValue(int p0) {}
+void __stdcall FlsGetValue2(int p0) {}
 void __stdcall FlsSetValue(int p0, int p1) {}
 void __stdcall FlushConsoleInputBuffer(int p0) {}
 void __stdcall FlushFileBuffers(int p0) {}
@@ -401,15 +413,23 @@ void __stdcall GetConsoleAliasesLengthA(int p0) {}
 void __stdcall GetConsoleAliasesLengthW(int p0) {}
 void __stdcall GetConsoleAliasesW(int p0, int p1, int p2) {}
 void __stdcall GetConsoleCP() {}
+void __stdcall GetConsoleCharType(int p0, int p1, int p2) {}
 void __stdcall GetConsoleCommandHistoryA(int p0, int p1, int p2) {}
 void __stdcall GetConsoleCommandHistoryLengthA(int p0) {}
 void __stdcall GetConsoleCommandHistoryLengthW(int p0) {}
 void __stdcall GetConsoleCommandHistoryW(int p0, int p1, int p2) {}
 void __stdcall GetConsoleCursorInfo(int p0, int p1) {}
+void __stdcall GetConsoleCursorMode(int p0, int p1, int p2) {}
 void __stdcall GetConsoleDisplayMode(int p0) {}
+void __stdcall GetConsoleFontInfo(int p0, int p1, int p2, int p3) {}
 void __stdcall GetConsoleFontSize(int p0, int p1) {}
+void __stdcall GetConsoleHardwareState(int p0, int p1, int p2) {}
 void __stdcall GetConsoleHistoryInfo(int p0) {}
+void __stdcall GetConsoleInputExeNameA(int p0, int p1) {}
+void __stdcall GetConsoleInputExeNameW(int p0, int p1) {}
+void __stdcall GetConsoleInputWaitHandle() {}
 void __stdcall GetConsoleMode(int p0, int p1) {}
+void __stdcall GetConsoleNlsMode(int p0, int p1) {}
 void __stdcall GetConsoleOriginalTitleA(int p0, int p1) {}
 void __stdcall GetConsoleOriginalTitleW(int p0, int p1) {}
 void __stdcall GetConsoleOutputCP() {}
@@ -482,6 +502,7 @@ void __stdcall GetFileAttributesW(int p0) {}
 void __stdcall GetFileBandwidthReservation(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall GetFileInformationByHandle(int p0, int p1) {}
 void __stdcall GetFileInformationByHandleEx(int p0, int p1, int p2, int p3) {}
+void __stdcall GetFileInformationByName(int p0, int p1, int p2, int p3) {}
 void __stdcall GetFileMUIInfo(int p0, int p1, int p2, int p3) {}
 void __stdcall GetFileMUIPath(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall GetFileSize(int p0, int p1) {}
@@ -557,6 +578,7 @@ void __stdcall GetNumaProximityNodeEx(int p0, int p1) {}
 void __stdcall GetNumberFormatA(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall GetNumberFormatEx(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall GetNumberFormatW(int p0, int p1, int p2, int p3, int p4, int p5) {}
+void __stdcall GetNumberOfConsoleFonts() {}
 void __stdcall GetNumberOfConsoleInputEvents(int p0, int p1) {}
 void __stdcall GetNumberOfConsoleMouseButtons(int p0) {}
 void __stdcall GetOEMCP() {}
@@ -614,6 +636,7 @@ void __stdcall GetProfileStringA(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall GetProfileStringW(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall GetQueuedCompletionStatus(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall GetQueuedCompletionStatusEx(int p0, int p1, int p2, int p3, int p4, int p5) {}
+void __stdcall GetRuntimeAttestationReport(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall GetShortPathNameA(int p0, int p1, int p2) {}
 void __stdcall GetShortPathNameW(int p0, int p1, int p2) {}
 void __stdcall GetStagedPackagePathByFullName(int p0, int p1, int p2) {}
@@ -773,6 +796,7 @@ void __stdcall InterlockedFlushSList(int p0) {}
 void __stdcall InterlockedPopEntrySList(int p0) {}
 void __stdcall InterlockedPushEntrySList(int p0, int p1) {}
 void __stdcall InterlockedPushListSListEx(int p0, int p1, int p2, int p3) {}
+void __stdcall InvalidateConsoleDIBits(int p0, int p1) {}
 void __stdcall IsBadCodePtr(int p0) {}
 void __stdcall IsBadHugeReadPtr(int p0, int p1) {}
 void __stdcall IsBadHugeWritePtr(int p0, int p1) {}
@@ -897,6 +921,7 @@ void __stdcall NormalizeString(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall NotifyUILanguageChange(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall OOBEComplete(int p0) {}
 void __stdcall OfferVirtualMemory(int p0, int p1, int p2) {}
+void __stdcall OpenConsoleW(int p0, int p1, int p2, int p3) {}
 void __stdcall OpenEventA(int p0, int p1, int p2) {}
 void __stdcall OpenEventW(int p0, int p1, int p2) {}
 void __stdcall OpenFile(int p0, int p1, int p2) {}
@@ -980,6 +1005,8 @@ void __stdcall RaiseFailFastException(int p0, int p1, int p2) {}
 void __stdcall ReOpenFile(int p0, int p1, int p2, int p3) {}
 void __stdcall ReadConsoleA(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall ReadConsoleInputA(int p0, int p1, int p2, int p3) {}
+void __stdcall ReadConsoleInputExA(int p0, int p1, int p2, int p3, int p4) {}
+void __stdcall ReadConsoleInputExW(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall ReadConsoleInputW(int p0, int p1, int p2, int p3) {}
 void __stdcall ReadConsoleOutputA(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall ReadConsoleOutputAttribute(int p0, int p1, int p2, int p3, int p4) {}
@@ -998,16 +1025,22 @@ void __stdcall ReclaimVirtualMemory(int p0, int p1) {}
 void __stdcall RegisterApplicationRecoveryCallback(int p0, int p1, int p2, int p3) {}
 void __stdcall RegisterApplicationRestart(int p0, int p1) {}
 void __stdcall RegisterBadMemoryNotification(int p0) {}
+void __stdcall RegisterConsoleIME(int p0, int p1) {}
+void __stdcall RegisterConsoleOS2(int p0) {}
+void __stdcall RegisterConsoleVDM(int p0, int p1, int p2, int p3, int p4, int p5, int p6, int p7, int p8) {}
 void __stdcall RegisterWaitForSingleObject(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall RegisterWaitUntilOOBECompleted(int p0, int p1, int p2) {}
 void __stdcall ReleaseActCtx(int p0) {}
 void __stdcall ReleaseMutex(int p0) {}
 void __stdcall ReleaseMutexWhenCallbackReturns(int p0, int p1) {}
 void __stdcall ReleasePackageVirtualizationContext(int p0) {}
+void __stdcall ReleasePseudoConsole(int p0) {}
 void __stdcall ReleaseSRWLockExclusive(int p0) {}
 void __stdcall ReleaseSRWLockShared(int p0) {}
 void __stdcall ReleaseSemaphore(int p0, int p1, int p2) {}
 void __stdcall ReleaseSemaphoreWhenCallbackReturns(int p0, int p1, int p2) {}
+void __stdcall RemoveDirectory2A(int p0, int p1) {}
+void __stdcall RemoveDirectory2W(int p0, int p1) {}
 void __stdcall RemoveDirectoryA(int p0) {}
 void __stdcall RemoveDirectoryTransactedA(int p0, int p1) {}
 void __stdcall RemoveDirectoryTransactedW(int p0, int p1) {}
@@ -1061,14 +1094,27 @@ void __stdcall SetComputerNameW(int p0) {}
 void __stdcall SetConsoleActiveScreenBuffer(int p0) {}
 void __stdcall SetConsoleCP(int p0) {}
 void __stdcall SetConsoleCtrlHandler(int p0, int p1) {}
+void __stdcall SetConsoleCursor(int p0, int p1) {}
 void __stdcall SetConsoleCursorInfo(int p0, int p1) {}
+void __stdcall SetConsoleCursorMode(int p0, int p1, int p2) {}
 void __stdcall SetConsoleCursorPosition(int p0, int p1) {}
 void __stdcall SetConsoleDisplayMode(int p0, int p1, int p2) {}
+void __stdcall SetConsoleFont(int p0, int p1) {}
+void __stdcall SetConsoleHardwareState(int p0, int p1, int p2) {}
 void __stdcall SetConsoleHistoryInfo(int p0) {}
+void __stdcall SetConsoleIcon(int p0) {}
+void __stdcall SetConsoleInputExeNameA(int p0) {}
+void __stdcall SetConsoleInputExeNameW(int p0) {}
+void __stdcall SetConsoleKeyShortcuts(int p0, int p1, int p2, int p3) {}
+void __stdcall SetConsoleLocalEUDC(int p0, int p1, int p2, int p3) {}
+void __stdcall SetConsoleMenuClose(int p0) {}
 void __stdcall SetConsoleMode(int p0, int p1) {}
+void __stdcall SetConsoleNlsMode(int p0, int p1) {}
 void __stdcall SetConsoleNumberOfCommandsA(int p0, int p1) {}
 void __stdcall SetConsoleNumberOfCommandsW(int p0, int p1) {}
+void __stdcall SetConsoleOS2OemFormat(int p0) {}
 void __stdcall SetConsoleOutputCP(int p0) {}
+void __stdcall SetConsolePalette(int p0, int p1, int p2) {}
 void __stdcall SetConsoleScreenBufferInfoEx(int p0, int p1) {}
 void __stdcall SetConsoleScreenBufferSize(int p0, int p1) {}
 void __stdcall SetConsoleTextAttribute(int p0, int p1) {}
@@ -1117,6 +1163,7 @@ void __stdcall SetHandleCount(int p0) {}
 void __stdcall SetHandleInformation(int p0, int p1, int p2) {}
 void __stdcall SetInformationJobObject(int p0, int p1, int p2, int p3) {}
 void __stdcall SetIoRateControlInformationJobObject(int p0, int p1) {}
+void __stdcall SetLastConsoleEventActive() {}
 void __stdcall SetLastError(int p0) {}
 void __stdcall SetLocalTime(int p0) {}
 void __stdcall SetLocaleInfoA(int p0, int p1, int p2) {}
@@ -1188,6 +1235,7 @@ void __stdcall SetWaitableTimer(int p0, int p1, int p2, int p3, int p4, int p5) 
 void __stdcall SetWaitableTimerEx(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall SetXStateFeaturesMask(int p0, int p1, int p2) {}
 void __stdcall SetupComm(int p0, int p1, int p2) {}
+void __stdcall ShowConsoleCursor(int p0, int p1) {}
 void __stdcall SignalObjectAndWait(int p0, int p1, int p2, int p3) {}
 void __stdcall SizeofResource(int p0, int p1) {}
 void __stdcall Sleep(int p0) {}
@@ -1210,6 +1258,7 @@ void __stdcall Thread32Next(int p0, int p1) {}
 void __stdcall TlsAlloc() {}
 void __stdcall TlsFree(int p0) {}
 void __stdcall TlsGetValue(int p0) {}
+void __stdcall TlsGetValue2(int p0) {}
 void __stdcall TlsSetValue(int p0, int p1) {}
 void __stdcall Toolhelp32ReadProcessMemory(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall TransactNamedPipe(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
@@ -1229,6 +1278,7 @@ void __stdcall UnmapViewOfFileEx(int p0, int p1) {}
 void __stdcall UnregisterApplicationRecoveryCallback() {}
 void __stdcall UnregisterApplicationRestart() {}
 void __stdcall UnregisterBadMemoryNotification(int p0) {}
+void __stdcall UnregisterConsoleIME() {}
 void __stdcall UnregisterWait(int p0) {}
 void __stdcall UnregisterWaitEx(int p0, int p1) {}
 void __stdcall UnregisterWaitUntilOOBECompleted(int p0) {}
@@ -1236,9 +1286,11 @@ void __stdcall UpdateCalendarDayOfWeek(int p0) {}
 void __stdcall UpdateProcThreadAttribute(int p0, int p1, int p2, int p3, int p4, int p5, int p6) {}
 void __stdcall UpdateResourceA(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall UpdateResourceW(int p0, int p1, int p2, int p3, int p4, int p5) {}
+void __stdcall VDMConsoleOperation(int p0, int p1) {}
 void __stdcall VerLanguageNameA(int p0, int p1, int p2) {}
 void __stdcall VerLanguageNameW(int p0, int p1, int p2) {}
 void __stdcall VerSetConditionMask(int p0, int p1, int p2, int p3) {}
+void __stdcall VerifyConsoleIoHandle(int p0) {}
 void __stdcall VerifyScripts(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall VerifyVersionInfoA(int p0, int p1, int p2, int p3) {}
 void __stdcall VerifyVersionInfoW(int p0, int p1, int p2, int p3) {}
@@ -1296,6 +1348,8 @@ void __stdcall Wow64SetThreadContext(int p0, int p1) {}
 void __stdcall Wow64SuspendThread(int p0) {}
 void __stdcall WriteConsoleA(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall WriteConsoleInputA(int p0, int p1, int p2, int p3) {}
+void __stdcall WriteConsoleInputVDMA(int p0, int p1, int p2, int p3) {}
+void __stdcall WriteConsoleInputVDMW(int p0, int p1, int p2, int p3) {}
 void __stdcall WriteConsoleInputW(int p0, int p1, int p2, int p3) {}
 void __stdcall WriteConsoleOutputA(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall WriteConsoleOutputAttribute(int p0, int p1, int p2, int p3, int p4) {}

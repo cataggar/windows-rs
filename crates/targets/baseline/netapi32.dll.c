@@ -99,6 +99,7 @@ void __stdcall NetGroupGetUsers(int p0, int p1, int p2, int p3, int p4, int p5, 
 void __stdcall NetGroupSetInfo(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall NetGroupSetUsers(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall NetIsServiceAccount(int p0, int p1, int p2) {}
+void __stdcall NetIsServiceAccount2(int p0, int p1, int p2, int p3) {}
 void __stdcall NetJoinDomain(int p0, int p1, int p2, int p3, int p4, int p5) {}
 void __stdcall NetLocalGroupAdd(int p0, int p1, int p2, int p3) {}
 void __stdcall NetLocalGroupAddMember(int p0, int p1, int p2) {}

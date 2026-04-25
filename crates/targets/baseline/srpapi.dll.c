@@ -7,5 +7,6 @@ void __stdcall SrpGetEnterpriseIds(int p0, int p1, int p2, int p3) {}
 void __stdcall SrpGetEnterprisePolicy(int p0, int p1) {}
 void __stdcall SrpHostingInitialize(int p0, int p1, int p2, int p3) {}
 void __stdcall SrpHostingTerminate(int p0) {}
+void __stdcall SrpIsAllowed(int p0) {}
 void __stdcall SrpIsTokenService(int p0, int p1) {}
 void __stdcall SrpSetTokenEnterpriseId(int p0, int p1) {}

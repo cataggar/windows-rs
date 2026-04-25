@@ -599,6 +599,7 @@ void __stdcall StopTraceW(int p0, int p1, int p2, int p3) {}
 void __stdcall SystemFunction036(int p0, int p1) {}
 void __stdcall SystemFunction040(int p0, int p1, int p2) {}
 void __stdcall SystemFunction041(int p0, int p1, int p2) {}
+void __stdcall TraceConfigureLastBranchRecord(int p0, int p1, int p2, int p3, int p4) {}
 void __stdcall TraceEvent(int p0, int p1, int p2) {}
 void __stdcall TraceEventInstance(int p0, int p1, int p2, int p3, int p4) {}
 void __cdecl TraceMessage() {}
