@@ -1952,9 +1952,36 @@ fn emitGenericInstantiations(
                 \\pub const {s} = extern struct {{
                 \\    vtable: *const {s}_Vtbl,
                 \\    pub const Vtbl = {s}_Vtbl;
-                \\}};
                 \\
             , .{ mangled_name, mangled_name, mangled_name });
+
+            // Emit the parameterised IID for this closed instantiation.
+            // Best-effort: if the open def lacks a `GuidAttribute` or
+            // an arg type uses a sig variant we don't yet handle, skip
+            // the IID so the rest of the handle still compiles. Callers
+            // that need it will get a clear "no field IID" error from
+            // `cast()` rather than wrong bytes.
+            emit_iid: {
+                const ty: winmd.Ty = .{ .class_name = .{
+                    .namespace = tn.namespace,
+                    .name = tn.name,
+                    .generics = tn.generics,
+                } };
+                var sig_buf: std.Io.Writer.Allocating = .init(arena);
+                writeRuntimeSignature(&sig_buf.writer, arena, file, ty) catch break :emit_iid;
+                const iid = parameterizedIid(sig_buf.written());
+                try writer.print(
+                    "    pub const IID: GUID = .{{ .data1 = 0x{x:0>8}, .data2 = 0x{x:0>4}, .data3 = 0x{x:0>4}, .data4 = .{{ 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2}, 0x{x:0>2} }} }};\n",
+                    .{
+                        iid.data1,    iid.data2,    iid.data3,
+                        iid.data4[0], iid.data4[1], iid.data4[2],
+                        iid.data4[3], iid.data4[4], iid.data4[5],
+                        iid.data4[6], iid.data4[7],
+                    },
+                );
+            }
+
+            try writer.writeAll("};\n");
         }
 
         // Remove processed entries. If the worklist grew during
