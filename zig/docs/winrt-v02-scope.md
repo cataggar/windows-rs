@@ -113,7 +113,9 @@ The heaviest milestone; landed in four phases.
 - **Generic delegates** (`EventHandler`1`, `TypedEventHandler`2`
   as first-class). They round-trip through the registry enough to
   unblock sigs that reference them, but there's no sugar for
-  add/remove-handler token dance.
+  add/remove-handler token dance. See
+  [generic-delegates.md](generic-delegates.md) for the carry-over
+  plan + ABI notes.
 
 **Phased bring-up:**
 
@@ -295,7 +297,8 @@ method sugar (e.g. `GetInt32ArrayOwned` → `![]i32`).
 ## Carry-overs into v0.3
 
 - **Async contracts** (M5 deferred above).
-- **Generic delegates** with add/remove-handler sugar.
+- **Generic delegates** with add/remove-handler sugar. Plan +
+  ABI notes: [generic-delegates.md](generic-delegates.md).
 - **Generic methods** (`.mvar_generic` still resolves to
   `UnsupportedElement`).
 - **`<Method>OwnedFromUtf16`** combined input-and-return HSTRING

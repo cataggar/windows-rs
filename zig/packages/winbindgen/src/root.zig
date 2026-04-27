@@ -1925,7 +1925,27 @@ fn emitGenericInstantiations(
             const type_def_row = findTypeDefRow(file, tn.namespace, tn.name) orelse continue;
             const flags = file.cell(.type_def, type_def_row, 0);
             const is_winrt = (flags & winmd.TYPE_ATTR_WINDOWS_RUNTIME) != 0;
-            const base_vtbl = if (is_winrt) "IInspectable_Vtbl" else "IUnknown_Vtbl";
+
+            // WinRT *interfaces* extend `IInspectable`; WinRT *delegates*
+            // extend `System.MulticastDelegate` and inherit only the three
+            // `IUnknown` slots. Picking `IInspectable_Vtbl` for delegates
+            // would shift `Invoke` by three pointer-sized slots and the
+            // ABI would be silently wrong. See `zig/docs/generic-delegates.md`.
+            var is_delegate = false;
+            const extends_tok = file.cell(.type_def, type_def_row, 3);
+            if (extends_tok != 0) {
+                if (winmd.resolveTypeDefOrRefName(file, extends_tok)) |base| {
+                    if (std.mem.eql(u8, base.namespace, "System") and
+                        std.mem.eql(u8, base.name, "MulticastDelegate"))
+                    {
+                        is_delegate = true;
+                    }
+                } else |_| {}
+            }
+            const base_vtbl = if (is_delegate or !is_winrt)
+                "IUnknown_Vtbl"
+            else
+                "IInspectable_Vtbl";
 
             // Emit vtbl with substituted method signatures.
             try writer.print(
@@ -4938,6 +4958,39 @@ test "emitNamespace emits closed-generic instantiation for TypedEventHandler" {
 
     // No backticks in the output.
     try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+}
+
+test "closed-generic delegate vtbl uses IUnknown_Vtbl base, not IInspectable_Vtbl" {
+    // WinRT delegates extend `System.MulticastDelegate` and inherit only
+    // the three `IUnknown` slots. If the emitter picks `IInspectable_Vtbl`
+    // (which is correct for WinRT *interfaces*), `Invoke` shifts three
+    // pointer-sized slots and the ABI is silently wrong. Guard the
+    // foundation that issue #14's `win_core.Delegate` builds on.
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    var buf: std.Io.Writer.Allocating = .init(std.testing.allocator);
+    defer buf.deinit();
+
+    try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation", .x64);
+    const out = buf.written();
+
+    // The closed-generic TypedEventHandler vtbl must inherit IUnknown,
+    // not IInspectable.
+    const handler_vtbl_decl =
+        "pub const TypedEventHandler__G2__Windows_Foundation_IMemoryBufferReference__object_Vtbl = extern struct {";
+    const idx = std.mem.indexOf(u8, out, handler_vtbl_decl) orelse
+        return error.HandlerVtblNotEmitted;
+    const after = out[idx + handler_vtbl_decl.len ..];
+    const struct_end = std.mem.indexOfScalar(u8, after, '}') orelse return error.MalformedVtbl;
+    const body = after[0..struct_end];
+
+    try std.testing.expect(std.mem.indexOf(u8, body, "base: IUnknown_Vtbl") != null);
+    try std.testing.expect(std.mem.indexOf(u8, body, "base: IInspectable_Vtbl") == null);
+    try std.testing.expect(std.mem.indexOf(u8, body, "Invoke:") != null);
 }
 
 test "emitNamespaceEx accepts external generic seeds" {
