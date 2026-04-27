@@ -84,6 +84,73 @@ PRs against `cataggar:zig`:
 | M4 | Smoke sample                                | Live `winrt_event` sample using `IMemoryBufferReference.add_Closed`. |
 | M5 | Doc + close #14                             | Move bullet from "deferred" to "shipped"; finalise this doc. |
 
+## Status — shipped (issue #14)
+
+All five milestones landed on `cataggar:zig` via PR #27:
+
+| M  | Commit       | Outcome |
+|----|--------------|---------|
+| M0 | `4102f80dd`  | Closed-generic `_Vtbl` now uses `IUnknown_Vtbl` base when the open type extends `MulticastDelegate`; regression test added. |
+| M1 | `5475d7314`  | `win_core.Delegate(InvokeFn, iid)` shipped with `create` / `userData` / IAgileObject QI / fired-once unit test. |
+| M2 | `12f4c21a1`  | Event-pair detector in `winbindgen` recognises `(add_X, remove_X)` by signature; snapshot-tested against `Windows.Foundation`. |
+| M3 | `9ba2d0e75`  | Per-interface `addX` / `removeX` sugar emitted whenever a detected pair targets a closed-generic delegate in the same namespace. |
+| M4 | `185024fb8`  | `zig/samples/winrt_event_sugar/main.zig` smoke sample exercises the full `MemoryBuffer → IMemoryBufferReference.Closed → IClosable.Close → token unregister` round-trip. |
+
+### The shipped API surface
+
+For each detected `(add_X, remove_X)` pair where the handler resolves
+to a closed generic delegate **in the same namespace** as the
+interface (the M3 cross-namespace constraint — see below), the emitter
+generates:
+
+```zig
+pub fn addX(
+    self: *const IFoo,
+    allocator: std.mem.Allocator,
+    invoke: @FieldType(<DelegateVtbl>, "Invoke"),
+    user_data: ?*anyopaque,
+) (win_core.hresult.Error || error{OutOfMemory})!EventRegistrationToken { ... }
+
+pub fn removeX(
+    self: *const IFoo,
+    token: EventRegistrationToken,
+) win_core.hresult.Error!void { ... }
+```
+
+The `invoke` parameter type is taken directly from the closed generic
+delegate's `_Vtbl.Invoke` field — so the first parameter of the
+caller's invoke body is the **typed** `*const TypedEventHandler__G2__...`
+handle (not `*anyopaque`), and recovering user data inside the body is
+a one-liner against the same comptime helper:
+
+```zig
+fn onClosed(
+    this: *const Foundation.TypedEventHandler__G2__Windows_Foundation_IMemoryBufferReference__object,
+    sender: *IMemoryBufferReference,
+    args: ?*const anyopaque,
+) callconv(.winapi) HRESULT {
+    _ = args; _ = sender;
+    const D = core.Delegate(@TypeOf(onClosed), @TypeOf(this.*).IID);
+    const ctx: *MyState = @ptrCast(@alignCast(D.userData(@constCast(this)) orelse return 0));
+    ctx.fired += 1;
+    return 0;
+}
+```
+
+The full canary lives in `zig/samples/winrt_event_sugar/main.zig`.
+
+### Same-namespace constraint (still in scope for #14)
+
+M3 only emits sugar when the closed generic delegate lives in the same
+namespace as the host interface. This avoids cross-namespace import
+plumbing in the emitter and covers every event currently in the
+v0.2 corpus (`MemoryBuffer.Closed` is the canonical case). Lifting this
+constraint is tracked separately — when needed, the emitter will need
+to import the delegate's namespace alias on the host side. Callers
+hitting an event whose handler crosses namespaces today can still
+register it manually via `core.Delegate(...).create(...)` and the raw
+`add_X` slot.
+
 ## Reference implementation (M1 target)
 
 For concreteness, here is the shape M1 will land in `win-core`. This
