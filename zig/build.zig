@@ -1395,6 +1395,11 @@ pub fn build(b: *std.Build) void {
             .extra_libs = &.{"ole32"},
             .needs_win = true,
         },
+        .{
+            .name = "winrt-event-sugar",
+            .root = "samples/winrt_event_sugar/main.zig",
+            .needs_win = true,
+        },
     };
 
     for (samples) |s| {
