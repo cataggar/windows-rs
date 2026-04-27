@@ -65,25 +65,25 @@ pub const PM_BWTASKID = extern struct {
     TaskID: @"Windows.Win32.Foundation".BSTR,
 };
 pub const PM_ENUM_FILTER = extern struct {
-    pub const _FilterParameter_e__Union = extern union {
-        Dummy: i32,
-        Genre: i32,
-        AppHubType: i32,
-        HubType: i32,
-        Tasktype: i32,
-        TaskProductID: GUID,
-        TileProductID: GUID,
-        AppTaskType: PM_APPTASKTYPE,
-        Consumer: PM_EXTENSIONCONSUMER,
-        BSATask: PM_BSATASKID,
-        BSAProductID: GUID,
-        BWTask: PM_BWTASKID,
-        ProtocolName: @"Windows.Win32.Foundation".BSTR,
-        FileType: @"Windows.Win32.Foundation".BSTR,
-        ContentType: @"Windows.Win32.Foundation".BSTR,
-        AppSupportedFileExtPID: GUID,
-        ShareTargetFileType: @"Windows.Win32.Foundation".BSTR,
-    };
+pub const _FilterParameter_e__Union = extern union {
+    Dummy: i32,
+    Genre: i32,
+    AppHubType: i32,
+    HubType: i32,
+    Tasktype: i32,
+    TaskProductID: GUID,
+    TileProductID: GUID,
+    AppTaskType: PM_APPTASKTYPE,
+    Consumer: PM_EXTENSIONCONSUMER,
+    BSATask: PM_BSATASKID,
+    BSAProductID: GUID,
+    BWTask: PM_BWTASKID,
+    ProtocolName: @"Windows.Win32.Foundation".BSTR,
+    FileType: @"Windows.Win32.Foundation".BSTR,
+    ContentType: @"Windows.Win32.Foundation".BSTR,
+    AppSupportedFileExtPID: GUID,
+    ShareTargetFileType: @"Windows.Win32.Foundation".BSTR,
+};
     FilterType: i32,
     FilterParameter: _FilterParameter_e__Union,
 };
@@ -181,11 +181,11 @@ pub const PATCH_OLD_FILE_INFO_H = extern struct {
     RetainRangeArray: *PATCH_RETAIN_RANGE,
 };
 pub const PATCH_OLD_FILE_INFO = extern struct {
-    pub const PATCH_OLD_FILE_INFO_0 = extern union {
-        OldFileNameA: @"Windows.Win32.Foundation".PSTR,
-        OldFileNameW: @"Windows.Win32.Foundation".PWSTR,
-        OldFileHandle: @"Windows.Win32.Foundation".HANDLE,
-    };
+pub const PATCH_OLD_FILE_INFO_0 = extern union {
+    OldFileNameA: @"Windows.Win32.Foundation".PSTR,
+    OldFileNameW: @"Windows.Win32.Foundation".PWSTR,
+    OldFileHandle: @"Windows.Win32.Foundation".HANDLE,
+};
     SizeOfThisStruct: u32,
     Anonymous: PATCH_OLD_FILE_INFO_0,
     IgnoreRangeCount: u32,
@@ -194,11 +194,11 @@ pub const PATCH_OLD_FILE_INFO = extern struct {
     RetainRangeArray: *PATCH_RETAIN_RANGE,
 };
 pub const PATCH_INTERLEAVE_MAP = extern struct {
-    pub const PATCH_INTERLEAVE_MAP_0 = extern struct {
-        OldOffset: u32,
-        OldLength: u32,
-        NewLength: u32,
-    };
+pub const PATCH_INTERLEAVE_MAP_0 = extern struct {
+    OldOffset: u32,
+    OldLength: u32,
+    NewLength: u32,
+};
     CountRanges: u32,
     Range: [1]PATCH_INTERLEAVE_MAP_0,
 };
@@ -214,10 +214,10 @@ pub const PATCH_OPTION_DATA = extern struct {
     MaxLzxWindowSize: u32,
 };
 pub const DELTA_INPUT = extern struct {
-    pub const DELTA_INPUT_0 = extern union {
-        lpcStart: *anyopaque,
-        lpStart: *anyopaque,
-    };
+pub const DELTA_INPUT_0 = extern union {
+    lpcStart: *anyopaque,
+    lpStart: *anyopaque,
+};
     Anonymous: DELTA_INPUT_0,
     uSize: usize,
     Editable: @"Windows.Win32.Foundation".BOOL,

@@ -450,29 +450,29 @@ pub const EXTLOGFONTW = extern struct {
     elfPanose: PANOSE,
 };
 pub const DEVMODEA = extern struct {
-    pub const DEVMODEA_0 = extern union {
-        pub const DEVMODEA_0_0 = extern struct {
-            dmOrientation: i16,
-            dmPaperSize: i16,
-            dmPaperLength: i16,
-            dmPaperWidth: i16,
-            dmScale: i16,
-            dmCopies: i16,
-            dmDefaultSource: i16,
-            dmPrintQuality: i16,
-        };
-        pub const DEVMODEA_0_1 = extern struct {
-            dmPosition: @"Windows.Win32.Foundation".POINTL,
-            dmDisplayOrientation: u32,
-            dmDisplayFixedOutput: u32,
-        };
-        Anonymous1: DEVMODEA_0_0,
-        Anonymous2: DEVMODEA_0_1,
-    };
-    pub const DEVMODEA_1 = extern union {
-        dmDisplayFlags: u32,
-        dmNup: u32,
-    };
+pub const DEVMODEA_0 = extern union {
+pub const DEVMODEA_0_0 = extern struct {
+    dmOrientation: i16,
+    dmPaperSize: i16,
+    dmPaperLength: i16,
+    dmPaperWidth: i16,
+    dmScale: i16,
+    dmCopies: i16,
+    dmDefaultSource: i16,
+    dmPrintQuality: i16,
+};
+pub const DEVMODEA_0_1 = extern struct {
+    dmPosition: @"Windows.Win32.Foundation".POINTL,
+    dmDisplayOrientation: u32,
+    dmDisplayFixedOutput: u32,
+};
+    Anonymous1: DEVMODEA_0_0,
+    Anonymous2: DEVMODEA_0_1,
+};
+pub const DEVMODEA_1 = extern union {
+    dmDisplayFlags: u32,
+    dmNup: u32,
+};
     dmDeviceName: [32]u8,
     dmSpecVersion: u16,
     dmDriverVersion: u16,
@@ -502,29 +502,29 @@ pub const DEVMODEA = extern struct {
     dmPanningHeight: u32,
 };
 pub const DEVMODEW = extern struct {
-    pub const DEVMODEW_0 = extern union {
-        pub const DEVMODEW_0_0 = extern struct {
-            dmOrientation: i16,
-            dmPaperSize: i16,
-            dmPaperLength: i16,
-            dmPaperWidth: i16,
-            dmScale: i16,
-            dmCopies: i16,
-            dmDefaultSource: i16,
-            dmPrintQuality: i16,
-        };
-        pub const DEVMODEW_0_1 = extern struct {
-            dmPosition: @"Windows.Win32.Foundation".POINTL,
-            dmDisplayOrientation: u32,
-            dmDisplayFixedOutput: u32,
-        };
-        Anonymous1: DEVMODEW_0_0,
-        Anonymous2: DEVMODEW_0_1,
-    };
-    pub const DEVMODEW_1 = extern union {
-        dmDisplayFlags: u32,
-        dmNup: u32,
-    };
+pub const DEVMODEW_0 = extern union {
+pub const DEVMODEW_0_0 = extern struct {
+    dmOrientation: i16,
+    dmPaperSize: i16,
+    dmPaperLength: i16,
+    dmPaperWidth: i16,
+    dmScale: i16,
+    dmCopies: i16,
+    dmDefaultSource: i16,
+    dmPrintQuality: i16,
+};
+pub const DEVMODEW_0_1 = extern struct {
+    dmPosition: @"Windows.Win32.Foundation".POINTL,
+    dmDisplayOrientation: u32,
+    dmDisplayFixedOutput: u32,
+};
+    Anonymous1: DEVMODEW_0_0,
+    Anonymous2: DEVMODEW_0_1,
+};
+pub const DEVMODEW_1 = extern union {
+    dmDisplayFlags: u32,
+    dmNup: u32,
+};
     dmDeviceName: [32]u16,
     dmSpecVersion: u16,
     dmDriverVersion: u16,

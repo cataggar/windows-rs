@@ -14,12 +14,12 @@ pub const PRJ_DIR_ENTRY_BUFFER_HANDLE = extern struct {
     Value: *anyopaque,
 };
 pub const PRJ_EXTENDED_INFO = extern struct {
-    pub const PRJ_EXTENDED_INFO_0 = extern union {
-        pub const _Symlink_e__Struct = extern struct {
-            TargetName: @"Windows.Win32.Foundation".PWSTR,
-        };
-        Symlink: _Symlink_e__Struct,
-    };
+pub const PRJ_EXTENDED_INFO_0 = extern union {
+pub const _Symlink_e__Struct = extern struct {
+    TargetName: @"Windows.Win32.Foundation".PWSTR,
+};
+    Symlink: _Symlink_e__Struct,
+};
     InfoType: i32,
     NextInfoOffset: u32,
     Anonymous: PRJ_EXTENDED_INFO_0,
@@ -53,18 +53,18 @@ pub const PRJ_FILE_BASIC_INFO = extern struct {
     FileAttributes: u32,
 };
 pub const PRJ_PLACEHOLDER_INFO = extern struct {
-    pub const _EaInformation_e__Struct = extern struct {
-        EaBufferSize: u32,
-        OffsetToFirstEa: u32,
-    };
-    pub const _SecurityInformation_e__Struct = extern struct {
-        SecurityBufferSize: u32,
-        OffsetToSecurityDescriptor: u32,
-    };
-    pub const _StreamsInformation_e__Struct = extern struct {
-        StreamsInfoBufferSize: u32,
-        OffsetToFirstStreamInfo: u32,
-    };
+pub const _EaInformation_e__Struct = extern struct {
+    EaBufferSize: u32,
+    OffsetToFirstEa: u32,
+};
+pub const _SecurityInformation_e__Struct = extern struct {
+    SecurityBufferSize: u32,
+    OffsetToSecurityDescriptor: u32,
+};
+pub const _StreamsInformation_e__Struct = extern struct {
+    StreamsInfoBufferSize: u32,
+    OffsetToFirstStreamInfo: u32,
+};
     FileBasicInfo: PRJ_FILE_BASIC_INFO,
     EaInformation: _EaInformation_e__Struct,
     SecurityInformation: _SecurityInformation_e__Struct,
@@ -86,15 +86,15 @@ pub const PRJ_CALLBACK_DATA = extern struct {
     InstanceContext: *anyopaque,
 };
 pub const PRJ_NOTIFICATION_PARAMETERS = extern union {
-    pub const _PostCreate_e__Struct = extern struct {
-        NotificationMask: u32,
-    };
-    pub const _FileRenamed_e__Struct = extern struct {
-        NotificationMask: u32,
-    };
-    pub const _FileDeletedOnHandleClose_e__Struct = extern struct {
-        IsFileModified: @"Windows.Win32.Foundation".BOOLEAN,
-    };
+pub const _PostCreate_e__Struct = extern struct {
+    NotificationMask: u32,
+};
+pub const _FileRenamed_e__Struct = extern struct {
+    NotificationMask: u32,
+};
+pub const _FileDeletedOnHandleClose_e__Struct = extern struct {
+    IsFileModified: @"Windows.Win32.Foundation".BOOLEAN,
+};
     PostCreate: _PostCreate_e__Struct,
     FileRenamed: _FileRenamed_e__Struct,
     FileDeletedOnHandleClose: _FileDeletedOnHandleClose_e__Struct,
@@ -110,16 +110,16 @@ pub const PRJ_CALLBACKS = extern struct {
     CancelCommandCallback: ?*const anyopaque,
 };
 pub const PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS = extern struct {
-    pub const PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS_0 = extern union {
-        pub const _Notification_e__Struct = extern struct {
-            NotificationMask: u32,
-        };
-        pub const _Enumeration_e__Struct = extern struct {
-            DirEntryBufferHandle: PRJ_DIR_ENTRY_BUFFER_HANDLE,
-        };
-        Notification: _Notification_e__Struct,
-        Enumeration: _Enumeration_e__Struct,
-    };
+pub const PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS_0 = extern union {
+pub const _Notification_e__Struct = extern struct {
+    NotificationMask: u32,
+};
+pub const _Enumeration_e__Struct = extern struct {
+    DirEntryBufferHandle: PRJ_DIR_ENTRY_BUFFER_HANDLE,
+};
+    Notification: _Notification_e__Struct,
+    Enumeration: _Enumeration_e__Struct,
+};
     CommandType: i32,
     Anonymous: PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS_0,
 };

@@ -25,6 +25,7 @@ pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     };
 }
 
+
 pub const aliases = struct {
     pub const OOBE_COMPLETED_CALLBACK = ?*const anyopaque;
 };

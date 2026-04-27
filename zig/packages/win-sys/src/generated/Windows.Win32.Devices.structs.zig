@@ -13,10 +13,10 @@ pub const IEEE1394_VDEV_PNP_REQUEST = extern struct {
     DeviceId: u8,
 };
 pub const IEEE1394_API_REQUEST = extern struct {
-    pub const _u_e__Union = extern union {
-        AddVirtualDevice: IEEE1394_VDEV_PNP_REQUEST,
-        RemoveVirtualDevice: IEEE1394_VDEV_PNP_REQUEST,
-    };
+pub const _u_e__Union = extern union {
+    AddVirtualDevice: IEEE1394_VDEV_PNP_REQUEST,
+    RemoveVirtualDevice: IEEE1394_VDEV_PNP_REQUEST,
+};
     RequestNumber: u32,
     Flags: u32,
     u: _u_e__Union,

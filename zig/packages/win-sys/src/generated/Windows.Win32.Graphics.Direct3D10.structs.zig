@@ -134,14 +134,14 @@ pub const D3D10_MAPPED_TEXTURE3D = extern struct {
     DepthPitch: u32,
 };
 pub const D3D10_BUFFER_SRV = extern struct {
-    pub const D3D10_BUFFER_SRV_0 = extern union {
-        FirstElement: u32,
-        ElementOffset: u32,
-    };
-    pub const D3D10_BUFFER_SRV_1 = extern union {
-        NumElements: u32,
-        ElementWidth: u32,
-    };
+pub const D3D10_BUFFER_SRV_0 = extern union {
+    FirstElement: u32,
+    ElementOffset: u32,
+};
+pub const D3D10_BUFFER_SRV_1 = extern union {
+    NumElements: u32,
+    ElementWidth: u32,
+};
     Anonymous1: D3D10_BUFFER_SRV_0,
     Anonymous2: D3D10_BUFFER_SRV_1,
 };
@@ -181,30 +181,30 @@ pub const D3D10_TEX2DMS_ARRAY_SRV = extern struct {
     ArraySize: u32,
 };
 pub const D3D10_SHADER_RESOURCE_VIEW_DESC = extern struct {
-    pub const D3D10_SHADER_RESOURCE_VIEW_DESC_0 = extern union {
-        Buffer: D3D10_BUFFER_SRV,
-        Texture1D: D3D10_TEX1D_SRV,
-        Texture1DArray: D3D10_TEX1D_ARRAY_SRV,
-        Texture2D: D3D10_TEX2D_SRV,
-        Texture2DArray: D3D10_TEX2D_ARRAY_SRV,
-        Texture2DMS: D3D10_TEX2DMS_SRV,
-        Texture2DMSArray: D3D10_TEX2DMS_ARRAY_SRV,
-        Texture3D: D3D10_TEX3D_SRV,
-        TextureCube: D3D10_TEXCUBE_SRV,
-    };
+pub const D3D10_SHADER_RESOURCE_VIEW_DESC_0 = extern union {
+    Buffer: D3D10_BUFFER_SRV,
+    Texture1D: D3D10_TEX1D_SRV,
+    Texture1DArray: D3D10_TEX1D_ARRAY_SRV,
+    Texture2D: D3D10_TEX2D_SRV,
+    Texture2DArray: D3D10_TEX2D_ARRAY_SRV,
+    Texture2DMS: D3D10_TEX2DMS_SRV,
+    Texture2DMSArray: D3D10_TEX2DMS_ARRAY_SRV,
+    Texture3D: D3D10_TEX3D_SRV,
+    TextureCube: D3D10_TEXCUBE_SRV,
+};
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D10_SHADER_RESOURCE_VIEW_DESC_0,
 };
 pub const D3D10_BUFFER_RTV = extern struct {
-    pub const D3D10_BUFFER_RTV_0 = extern union {
-        FirstElement: u32,
-        ElementOffset: u32,
-    };
-    pub const D3D10_BUFFER_RTV_1 = extern union {
-        NumElements: u32,
-        ElementWidth: u32,
-    };
+pub const D3D10_BUFFER_RTV_0 = extern union {
+    FirstElement: u32,
+    ElementOffset: u32,
+};
+pub const D3D10_BUFFER_RTV_1 = extern union {
+    NumElements: u32,
+    ElementWidth: u32,
+};
     Anonymous1: D3D10_BUFFER_RTV_0,
     Anonymous2: D3D10_BUFFER_RTV_1,
 };
@@ -237,16 +237,16 @@ pub const D3D10_TEX3D_RTV = extern struct {
     WSize: u32,
 };
 pub const D3D10_RENDER_TARGET_VIEW_DESC = extern struct {
-    pub const D3D10_RENDER_TARGET_VIEW_DESC_0 = extern union {
-        Buffer: D3D10_BUFFER_RTV,
-        Texture1D: D3D10_TEX1D_RTV,
-        Texture1DArray: D3D10_TEX1D_ARRAY_RTV,
-        Texture2D: D3D10_TEX2D_RTV,
-        Texture2DArray: D3D10_TEX2D_ARRAY_RTV,
-        Texture2DMS: D3D10_TEX2DMS_RTV,
-        Texture2DMSArray: D3D10_TEX2DMS_ARRAY_RTV,
-        Texture3D: D3D10_TEX3D_RTV,
-    };
+pub const D3D10_RENDER_TARGET_VIEW_DESC_0 = extern union {
+    Buffer: D3D10_BUFFER_RTV,
+    Texture1D: D3D10_TEX1D_RTV,
+    Texture1DArray: D3D10_TEX1D_ARRAY_RTV,
+    Texture2D: D3D10_TEX2D_RTV,
+    Texture2DArray: D3D10_TEX2D_ARRAY_RTV,
+    Texture2DMS: D3D10_TEX2DMS_RTV,
+    Texture2DMSArray: D3D10_TEX2DMS_ARRAY_RTV,
+    Texture3D: D3D10_TEX3D_RTV,
+};
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D10_RENDER_TARGET_VIEW_DESC_0,
@@ -275,14 +275,14 @@ pub const D3D10_TEX2DMS_ARRAY_DSV = extern struct {
     ArraySize: u32,
 };
 pub const D3D10_DEPTH_STENCIL_VIEW_DESC = extern struct {
-    pub const D3D10_DEPTH_STENCIL_VIEW_DESC_0 = extern union {
-        Texture1D: D3D10_TEX1D_DSV,
-        Texture1DArray: D3D10_TEX1D_ARRAY_DSV,
-        Texture2D: D3D10_TEX2D_DSV,
-        Texture2DArray: D3D10_TEX2D_ARRAY_DSV,
-        Texture2DMS: D3D10_TEX2DMS_DSV,
-        Texture2DMSArray: D3D10_TEX2DMS_ARRAY_DSV,
-    };
+pub const D3D10_DEPTH_STENCIL_VIEW_DESC_0 = extern union {
+    Texture1D: D3D10_TEX1D_DSV,
+    Texture1DArray: D3D10_TEX1D_ARRAY_DSV,
+    Texture2D: D3D10_TEX2D_DSV,
+    Texture2DArray: D3D10_TEX2D_ARRAY_DSV,
+    Texture2DMS: D3D10_TEX2DMS_DSV,
+    Texture2DMSArray: D3D10_TEX2DMS_ARRAY_DSV,
+};
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D10_DEPTH_STENCIL_VIEW_DESC_0,
@@ -521,18 +521,18 @@ pub const D3D10_TEXCUBE_ARRAY_SRV1 = extern struct {
     NumCubes: u32,
 };
 pub const D3D10_SHADER_RESOURCE_VIEW_DESC1 = extern struct {
-    pub const D3D10_SHADER_RESOURCE_VIEW_DESC1_0 = extern union {
-        Buffer: D3D10_BUFFER_SRV,
-        Texture1D: D3D10_TEX1D_SRV,
-        Texture1DArray: D3D10_TEX1D_ARRAY_SRV,
-        Texture2D: D3D10_TEX2D_SRV,
-        Texture2DArray: D3D10_TEX2D_ARRAY_SRV,
-        Texture2DMS: D3D10_TEX2DMS_SRV,
-        Texture2DMSArray: D3D10_TEX2DMS_ARRAY_SRV,
-        Texture3D: D3D10_TEX3D_SRV,
-        TextureCube: D3D10_TEXCUBE_SRV,
-        TextureCubeArray: D3D10_TEXCUBE_ARRAY_SRV1,
-    };
+pub const D3D10_SHADER_RESOURCE_VIEW_DESC1_0 = extern union {
+    Buffer: D3D10_BUFFER_SRV,
+    Texture1D: D3D10_TEX1D_SRV,
+    Texture1DArray: D3D10_TEX1D_ARRAY_SRV,
+    Texture2D: D3D10_TEX2D_SRV,
+    Texture2DArray: D3D10_TEX2D_ARRAY_SRV,
+    Texture2DMS: D3D10_TEX2DMS_SRV,
+    Texture2DMSArray: D3D10_TEX2DMS_ARRAY_SRV,
+    Texture3D: D3D10_TEX3D_SRV,
+    TextureCube: D3D10_TEXCUBE_SRV,
+    TextureCubeArray: D3D10_TEXCUBE_ARRAY_SRV1,
+};
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D10_SHADER_RESOURCE_VIEW_DESC1_0,

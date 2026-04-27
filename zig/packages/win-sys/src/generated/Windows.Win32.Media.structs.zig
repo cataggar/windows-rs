@@ -7,26 +7,26 @@ const NTSTATUS = win_core.NTSTATUS;
 const BOOLEAN = win_core.BOOLEAN;
 
 pub const MMTIME = extern struct {
-    pub const _u_e__Union = extern union {
-        pub const _smpte_e__Struct = extern struct {
-            hour: u8,
-            min: u8,
-            sec: u8,
-            frame: u8,
-            fps: u8,
-            dummy: u8,
-            pad: [2]u8,
-        };
-        pub const _midi_e__Struct = extern struct {
-            songptrpos: u32,
-        };
-        ms: u32,
-        sample: u32,
-        cb: u32,
-        ticks: u32,
-        smpte: _smpte_e__Struct,
-        midi: _midi_e__Struct,
-    };
+pub const _u_e__Union = extern union {
+pub const _smpte_e__Struct = extern struct {
+    hour: u8,
+    min: u8,
+    sec: u8,
+    frame: u8,
+    fps: u8,
+    dummy: u8,
+    pad: [2]u8,
+};
+pub const _midi_e__Struct = extern struct {
+    songptrpos: u32,
+};
+    ms: u32,
+    sample: u32,
+    cb: u32,
+    ticks: u32,
+    smpte: _smpte_e__Struct,
+    midi: _midi_e__Struct,
+};
     wType: u32,
     u: _u_e__Union,
 };
@@ -35,11 +35,11 @@ pub const TIMECAPS = extern struct {
     wPeriodMax: u32,
 };
 pub const TIMECODE = extern union {
-    pub const TIMECODE_0 = extern struct {
-        wFrameRate: u16,
-        wFrameFract: u16,
-        dwFrames: u32,
-    };
+pub const TIMECODE_0 = extern struct {
+    wFrameRate: u16,
+    wFrameFract: u16,
+    dwFrames: u32,
+};
     Anonymous: TIMECODE_0,
     qw: u64,
 };

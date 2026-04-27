@@ -36,6 +36,7 @@ pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
     };
 }
 
+
 pub const aliases = struct {
     pub const LPOVERLAPPED_COMPLETION_ROUTINE = ?*const anyopaque;
     pub const PIO_APC_ROUTINE = ?*const anyopaque;

@@ -8,17 +8,17 @@ const BOOLEAN = win_core.BOOLEAN;
 const @"Windows.Win32.Foundation" = @import("Windows.Win32.Foundation.structs.zig");
 
 pub const EC_VARIANT = extern struct {
-    pub const EC_VARIANT_0 = extern union {
-        BooleanVal: @"Windows.Win32.Foundation".BOOL,
-        UInt32Val: u32,
-        DateTimeVal: u64,
-        StringVal: @"Windows.Win32.Foundation".PWSTR,
-        BinaryVal: *u8,
-        BooleanArr: *@"Windows.Win32.Foundation".BOOL,
-        Int32Arr: *i32,
-        StringArr: *@"Windows.Win32.Foundation".PWSTR,
-        PropertyHandleVal: isize,
-    };
+pub const EC_VARIANT_0 = extern union {
+    BooleanVal: @"Windows.Win32.Foundation".BOOL,
+    UInt32Val: u32,
+    DateTimeVal: u64,
+    StringVal: @"Windows.Win32.Foundation".PWSTR,
+    BinaryVal: *u8,
+    BooleanArr: *@"Windows.Win32.Foundation".BOOL,
+    Int32Arr: *i32,
+    StringArr: *@"Windows.Win32.Foundation".PWSTR,
+    PropertyHandleVal: isize,
+};
     Anonymous: EC_VARIANT_0,
     Count: u32,
     Type: u32,

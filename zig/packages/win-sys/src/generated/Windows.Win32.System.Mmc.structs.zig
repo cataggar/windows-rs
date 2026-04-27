@@ -106,19 +106,19 @@ pub const MMC_TASK_DISPLAY_BITMAP = extern struct {
     szMouseOffBitmap: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const MMC_TASK_DISPLAY_OBJECT = extern struct {
-    pub const MMC_TASK_DISPLAY_OBJECT_0 = extern union {
-        uBitmap: MMC_TASK_DISPLAY_BITMAP,
-        uSymbol: MMC_TASK_DISPLAY_SYMBOL,
-    };
+pub const MMC_TASK_DISPLAY_OBJECT_0 = extern union {
+    uBitmap: MMC_TASK_DISPLAY_BITMAP,
+    uSymbol: MMC_TASK_DISPLAY_SYMBOL,
+};
     eDisplayType: i32,
     Anonymous: MMC_TASK_DISPLAY_OBJECT_0,
 };
 pub const MMC_TASK = extern struct {
-    pub const MMC_TASK_0 = extern union {
-        nCommandID: isize,
-        szActionURL: @"Windows.Win32.Foundation".PWSTR,
-        szScript: @"Windows.Win32.Foundation".PWSTR,
-    };
+pub const MMC_TASK_0 = extern union {
+    nCommandID: isize,
+    szActionURL: @"Windows.Win32.Foundation".PWSTR,
+    szScript: @"Windows.Win32.Foundation".PWSTR,
+};
     sDisplayObject: MMC_TASK_DISPLAY_OBJECT,
     szText: @"Windows.Win32.Foundation".PWSTR,
     szHelpString: @"Windows.Win32.Foundation".PWSTR,

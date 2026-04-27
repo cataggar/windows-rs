@@ -17,10 +17,10 @@ pub const MOVE_FILE_DATA32 = extern struct {
     ClusterCount: u32,
 };
 pub const MARK_HANDLE_INFO32 = extern struct {
-    pub const MARK_HANDLE_INFO32_0 = extern union {
-        UsnSourceInfo: u32,
-        CopyNumber: u32,
-    };
+pub const MARK_HANDLE_INFO32_0 = extern union {
+    UsnSourceInfo: u32,
+    CopyNumber: u32,
+};
     Anonymous: MARK_HANDLE_INFO32_0,
     VolumeHandle: u32,
     HandleInfo: u32,
@@ -47,13 +47,13 @@ pub const STORAGE_HOTPLUG_INFO = extern struct {
     WriteCacheEnableOverride: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const STORAGE_FEATURE_SUPPORT = extern struct {
-    pub const _Flags_e__Union = extern union {
-        pub const _Flags_e__Union_0 = extern struct {
-            _bitfield: u64,
-        };
-        Anonymous: _Flags_e__Union_0,
-        AsUlonglong: u64,
-    };
+pub const _Flags_e__Union = extern union {
+pub const _Flags_e__Union_0 = extern struct {
+    _bitfield: u64,
+};
+    Anonymous: _Flags_e__Union_0,
+    AsUlonglong: u64,
+};
     Size: u32,
     Version: u32,
     Flags: _Flags_e__Union,
@@ -110,43 +110,43 @@ pub const TAPE_GET_STATISTICS = extern struct {
     Operation: u32,
 };
 pub const DEVICE_MEDIA_INFO = extern struct {
-    pub const _DeviceSpecific_e__Union = extern union {
-        pub const _DiskInfo_e__Struct = extern struct {
-            Cylinders: i64,
-            MediaType: i32,
-            TracksPerCylinder: u32,
-            SectorsPerTrack: u32,
-            BytesPerSector: u32,
-            NumberMediaSides: u32,
-            MediaCharacteristics: u32,
-        };
-        pub const _RemovableDiskInfo_e__Struct = extern struct {
-            Cylinders: i64,
-            MediaType: i32,
-            TracksPerCylinder: u32,
-            SectorsPerTrack: u32,
-            BytesPerSector: u32,
-            NumberMediaSides: u32,
-            MediaCharacteristics: u32,
-        };
-        pub const _TapeInfo_e__Struct = extern struct {
-            pub const _BusSpecificData_e__Union = extern union {
-                pub const _ScsiInformation_e__Struct = extern struct {
-                    MediumType: u8,
-                    DensityCode: u8,
-                };
-                ScsiInformation: _ScsiInformation_e__Struct,
-            };
-            MediaType: i32,
-            MediaCharacteristics: u32,
-            CurrentBlockSize: u32,
-            BusType: i32,
-            BusSpecificData: _BusSpecificData_e__Union,
-        };
-        DiskInfo: _DiskInfo_e__Struct,
-        RemovableDiskInfo: _RemovableDiskInfo_e__Struct,
-        TapeInfo: _TapeInfo_e__Struct,
-    };
+pub const _DeviceSpecific_e__Union = extern union {
+pub const _DiskInfo_e__Struct = extern struct {
+    Cylinders: i64,
+    MediaType: i32,
+    TracksPerCylinder: u32,
+    SectorsPerTrack: u32,
+    BytesPerSector: u32,
+    NumberMediaSides: u32,
+    MediaCharacteristics: u32,
+};
+pub const _RemovableDiskInfo_e__Struct = extern struct {
+    Cylinders: i64,
+    MediaType: i32,
+    TracksPerCylinder: u32,
+    SectorsPerTrack: u32,
+    BytesPerSector: u32,
+    NumberMediaSides: u32,
+    MediaCharacteristics: u32,
+};
+pub const _TapeInfo_e__Struct = extern struct {
+pub const _BusSpecificData_e__Union = extern union {
+pub const _ScsiInformation_e__Struct = extern struct {
+    MediumType: u8,
+    DensityCode: u8,
+};
+    ScsiInformation: _ScsiInformation_e__Struct,
+};
+    MediaType: i32,
+    MediaCharacteristics: u32,
+    CurrentBlockSize: u32,
+    BusType: i32,
+    BusSpecificData: _BusSpecificData_e__Union,
+};
+    DiskInfo: _DiskInfo_e__Struct,
+    RemovableDiskInfo: _RemovableDiskInfo_e__Struct,
+    TapeInfo: _TapeInfo_e__Struct,
+};
     DeviceSpecific: _DeviceSpecific_e__Union,
 };
 pub const GET_MEDIA_TYPES = extern struct {
@@ -225,13 +225,13 @@ pub const STORAGE_MEDIUM_PRODUCT_TYPE_DESCRIPTOR = extern struct {
     MediumProductType: u32,
 };
 pub const STORAGE_MINIPORT_DESCRIPTOR = extern struct {
-    pub const _Flags_e__Union = extern union {
-        pub const _Flags_e__Union_0 = extern struct {
-            _bitfield: u8,
-        };
-        Anonymous: _Flags_e__Union_0,
-        AsBYTE: u8,
-    };
+pub const _Flags_e__Union = extern union {
+pub const _Flags_e__Union_0 = extern struct {
+    _bitfield: u8,
+};
+    Anonymous: _Flags_e__Union_0,
+    AsBYTE: u8,
+};
     Version: u32,
     Size: u32,
     Portdriver: i32,
@@ -343,16 +343,16 @@ pub const STORAGE_CRYPTO_CAPABILITY = extern struct {
     DataUnitSizeBitmask: u32,
 };
 pub const STORAGE_SECURITY_COMPLIANCE_BITMASK = extern union {
-    pub const STORAGE_SECURITY_COMPLIANCE_BITMASK_0 = extern struct {
-        _bitfield: u8,
-    };
+pub const STORAGE_SECURITY_COMPLIANCE_BITMASK_0 = extern struct {
+    _bitfield: u8,
+};
     Anonymous: STORAGE_SECURITY_COMPLIANCE_BITMASK_0,
     AsUchar: u8,
 };
 pub const STORAGE_CRYPTO_KEY_TYPE = extern union {
-    pub const STORAGE_CRYPTO_KEY_TYPE_0 = extern struct {
-        _bitfield: u8,
-    };
+pub const STORAGE_CRYPTO_KEY_TYPE_0 = extern struct {
+    _bitfield: u8,
+};
     Anonymous: STORAGE_CRYPTO_KEY_TYPE_0,
     AsUchar: u8,
 };
@@ -429,9 +429,9 @@ pub const STORAGE_DEVICE_FAULT_DOMAIN_DESCRIPTOR = extern struct {
     FaultDomainIds: [1]GUID,
 };
 pub const STORAGE_PROTOCOL_DATA_SUBVALUE_GET_LOG_PAGE = extern union {
-    pub const STORAGE_PROTOCOL_DATA_SUBVALUE_GET_LOG_PAGE_0 = extern struct {
-        _bitfield: u32,
-    };
+pub const STORAGE_PROTOCOL_DATA_SUBVALUE_GET_LOG_PAGE_0 = extern struct {
+    _bitfield: u32,
+};
     Anonymous: STORAGE_PROTOCOL_DATA_SUBVALUE_GET_LOG_PAGE_0,
     AsUlong: u32,
 };
@@ -503,18 +503,18 @@ pub const STORAGE_TEMPERATURE_THRESHOLD = extern struct {
     Reserved: u8,
 };
 pub const STORAGE_SPEC_VERSION = extern union {
-    pub const STORAGE_SPEC_VERSION_0 = extern struct {
-        pub const _MinorVersion_e__Union = extern union {
-            pub const _MinorVersion_e__Union_0 = extern struct {
-                SubMinor: u8,
-                Minor: u8,
-            };
-            Anonymous: _MinorVersion_e__Union_0,
-            AsUshort: u16,
-        };
-        MinorVersion: _MinorVersion_e__Union,
-        MajorVersion: u16,
-    };
+pub const STORAGE_SPEC_VERSION_0 = extern struct {
+pub const _MinorVersion_e__Union = extern union {
+pub const _MinorVersion_e__Union_0 = extern struct {
+    SubMinor: u8,
+    Minor: u8,
+};
+    Anonymous: _MinorVersion_e__Union_0,
+    AsUshort: u16,
+};
+    MinorVersion: _MinorVersion_e__Union,
+    MajorVersion: u16,
+};
     Anonymous: STORAGE_SPEC_VERSION_0,
     AsUlong: u32,
 };
@@ -574,22 +574,22 @@ pub const STORAGE_DEVICE_ATTRIBUTES_DESCRIPTOR = extern struct {
     Attributes: u64,
 };
 pub const STORAGE_OPERATIONAL_REASON = extern struct {
-    pub const _RawBytes_e__Union = extern union {
-        pub const _ScsiSenseKey_e__Struct = extern struct {
-            SenseKey: u8,
-            ASC: u8,
-            ASCQ: u8,
-            Reserved: u8,
-        };
-        pub const _NVDIMM_N_e__Struct = extern struct {
-            CriticalHealth: u8,
-            ModuleHealth: [2]u8,
-            ErrorThresholdStatus: u8,
-        };
-        ScsiSenseKey: _ScsiSenseKey_e__Struct,
-        NVDIMM_N: _NVDIMM_N_e__Struct,
-        AsUlong: u32,
-    };
+pub const _RawBytes_e__Union = extern union {
+pub const _ScsiSenseKey_e__Struct = extern struct {
+    SenseKey: u8,
+    ASC: u8,
+    ASCQ: u8,
+    Reserved: u8,
+};
+pub const _NVDIMM_N_e__Struct = extern struct {
+    CriticalHealth: u8,
+    ModuleHealth: [2]u8,
+    ErrorThresholdStatus: u8,
+};
+    ScsiSenseKey: _ScsiSenseKey_e__Struct,
+    NVDIMM_N: _NVDIMM_N_e__Struct,
+    AsUlong: u32,
+};
     Version: u32,
     Size: u32,
     Reason: i32,
@@ -615,19 +615,19 @@ pub const STORAGE_ZONE_GROUP = extern struct {
     ZoneSize: u64,
 };
 pub const STORAGE_ZONED_DEVICE_DESCRIPTOR = extern struct {
-    pub const _ZoneAttributes_e__Union = extern union {
-        pub const _SequentialRequiredZone_e__Struct = extern struct {
-            MaxOpenZoneCount: u32,
-            UnrestrictedRead: @"Windows.Win32.Foundation".BOOLEAN,
-            Reserved: [3]u8,
-        };
-        pub const _SequentialPreferredZone_e__Struct = extern struct {
-            OptimalOpenZoneCount: u32,
-            Reserved: u32,
-        };
-        SequentialRequiredZone: _SequentialRequiredZone_e__Struct,
-        SequentialPreferredZone: _SequentialPreferredZone_e__Struct,
-    };
+pub const _ZoneAttributes_e__Union = extern union {
+pub const _SequentialRequiredZone_e__Struct = extern struct {
+    MaxOpenZoneCount: u32,
+    UnrestrictedRead: @"Windows.Win32.Foundation".BOOLEAN,
+    Reserved: [3]u8,
+};
+pub const _SequentialPreferredZone_e__Struct = extern struct {
+    OptimalOpenZoneCount: u32,
+    Reserved: u32,
+};
+    SequentialRequiredZone: _SequentialRequiredZone_e__Struct,
+    SequentialPreferredZone: _SequentialPreferredZone_e__Struct,
+};
     Version: u32,
     Size: u32,
     DeviceType: i32,
@@ -637,18 +637,18 @@ pub const STORAGE_ZONED_DEVICE_DESCRIPTOR = extern struct {
     ZoneGroup: [1]STORAGE_ZONE_GROUP,
 };
 pub const DEVICE_LOCATION = extern struct {
-    pub const DEVICE_LOCATION_0 = extern union {
-        pub const DEVICE_LOCATION_0_0 = extern struct {
-            Channel: u32,
-            Device: u32,
-        };
-        pub const DEVICE_LOCATION_0_1 = extern struct {
-            Target: u32,
-            Lun: u32,
-        };
-        Anonymous1: DEVICE_LOCATION_0_0,
-        Anonymous2: DEVICE_LOCATION_0_1,
-    };
+pub const DEVICE_LOCATION_0 = extern union {
+pub const DEVICE_LOCATION_0_0 = extern struct {
+    Channel: u32,
+    Device: u32,
+};
+pub const DEVICE_LOCATION_0_1 = extern struct {
+    Target: u32,
+    Lun: u32,
+};
+    Anonymous1: DEVICE_LOCATION_0_0,
+    Anonymous2: DEVICE_LOCATION_0_1,
+};
     Socket: u32,
     Slot: u32,
     Adapter: u32,
@@ -672,9 +672,9 @@ pub const STORAGE_DEVICE_UNSAFE_SHUTDOWN_COUNT = extern struct {
     UnsafeShutdownCount: u32,
 };
 pub const STORAGE_HW_ENDURANCE_INFO = extern struct {
-    pub const _Flags_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _Flags_e__Struct = extern struct {
+    _bitfield: u32,
+};
     ValidFields: u32,
     GroupId: u32,
     Flags: _Flags_e__Struct,
@@ -754,13 +754,13 @@ pub const DEVICE_DSM_NOTIFICATION_PARAMETERS = extern struct {
     FileTypeID: [1]GUID,
 };
 pub const STORAGE_OFFLOAD_TOKEN = extern struct {
-    pub const STORAGE_OFFLOAD_TOKEN_0 = extern union {
-        pub const _StorageOffloadZeroDataToken_e__Struct = extern struct {
-            Reserved2: [504]u8,
-        };
-        StorageOffloadZeroDataToken: _StorageOffloadZeroDataToken_e__Struct,
-        Token: [504]u8,
-    };
+pub const STORAGE_OFFLOAD_TOKEN_0 = extern union {
+pub const _StorageOffloadZeroDataToken_e__Struct = extern struct {
+    Reserved2: [504]u8,
+};
+    StorageOffloadZeroDataToken: _StorageOffloadZeroDataToken_e__Struct,
+    Token: [504]u8,
+};
     TokenType: [4]u8,
     Reserved: [2]u8,
     TokenIdLength: [2]u8,
@@ -902,13 +902,13 @@ pub const DEVICE_DSM_REPORT_ZONES_DATA = extern struct {
     ZoneDescriptors: [1]STORAGE_ZONE_DESCRIPTOR,
 };
 pub const DEVICE_STORAGE_RANGE_ATTRIBUTES = extern struct {
-    pub const DEVICE_STORAGE_RANGE_ATTRIBUTES_0 = extern union {
-        pub const DEVICE_STORAGE_RANGE_ATTRIBUTES_0_0 = extern struct {
-            _bitfield: u32,
-        };
-        AllFlags: u32,
-        Anonymous: DEVICE_STORAGE_RANGE_ATTRIBUTES_0_0,
-    };
+pub const DEVICE_STORAGE_RANGE_ATTRIBUTES_0 = extern union {
+pub const DEVICE_STORAGE_RANGE_ATTRIBUTES_0_0 = extern struct {
+    _bitfield: u32,
+};
+    AllFlags: u32,
+    Anonymous: DEVICE_STORAGE_RANGE_ATTRIBUTES_0_0,
+};
     LengthInBytes: u64,
     Anonymous: DEVICE_STORAGE_RANGE_ATTRIBUTES_0,
     Reserved: u32,
@@ -1034,9 +1034,9 @@ pub const DEVICE_INTERNAL_STATUS_DATA = extern struct {
     StatusData: [1]u8,
 };
 pub const STORAGE_REINITIALIZE_MEDIA = extern struct {
-    pub const _SanitizeOption_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _SanitizeOption_e__Struct = extern struct {
+    _bitfield: u32,
+};
     Version: u32,
     Size: u32,
     TimeoutInSeconds: u32,
@@ -1066,19 +1066,19 @@ pub const STORAGE_WRITE_CACHE_PROPERTY = extern struct {
     NVCacheEnabled: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const PERSISTENT_RESERVE_COMMAND = extern struct {
-    pub const PERSISTENT_RESERVE_COMMAND_0 = extern union {
-        pub const _PR_IN_e__Struct = extern struct {
-            _bitfield: u8,
-            AllocationLength: u16,
-        };
-        pub const _PR_OUT_e__Struct = extern struct {
-            _bitfield1: u8,
-            _bitfield2: u8,
-            ParameterList: [1]u8,
-        };
-        PR_IN: _PR_IN_e__Struct,
-        PR_OUT: _PR_OUT_e__Struct,
-    };
+pub const PERSISTENT_RESERVE_COMMAND_0 = extern union {
+pub const _PR_IN_e__Struct = extern struct {
+    _bitfield: u8,
+    AllocationLength: u16,
+};
+pub const _PR_OUT_e__Struct = extern struct {
+    _bitfield1: u8,
+    _bitfield2: u8,
+    ParameterList: [1]u8,
+};
+    PR_IN: _PR_IN_e__Struct,
+    PR_OUT: _PR_OUT_e__Struct,
+};
     Version: u32,
     Size: u32,
     Anonymous: PERSISTENT_RESERVE_COMMAND_0,
@@ -1132,20 +1132,20 @@ pub const DEVICEDUMP_STORAGEDEVICE_DATA = extern struct {
     PrivateData: DEVICEDUMP_SUBSECTION_POINTER,
 };
 pub const DEVICEDUMP_STORAGESTACK_PUBLIC_STATE_RECORD = extern struct {
-    pub const _StackSpecific_e__Union = extern union {
-        pub const _ExternalStack_e__Struct = extern struct {
-            dwReserved: u32,
-        };
-        pub const _AtaPort_e__Struct = extern struct {
-            dwAtaPortSpecific: u32,
-        };
-        pub const _StorPort_e__Struct = extern struct {
-            SrbTag: u32,
-        };
-        ExternalStack: _ExternalStack_e__Struct,
-        AtaPort: _AtaPort_e__Struct,
-        StorPort: _StorPort_e__Struct,
-    };
+pub const _StackSpecific_e__Union = extern union {
+pub const _ExternalStack_e__Struct = extern struct {
+    dwReserved: u32,
+};
+pub const _AtaPort_e__Struct = extern struct {
+    dwAtaPortSpecific: u32,
+};
+pub const _StorPort_e__Struct = extern struct {
+    SrbTag: u32,
+};
+    ExternalStack: _ExternalStack_e__Struct,
+    AtaPort: _AtaPort_e__Struct,
+    StorPort: _StorPort_e__Struct,
+};
     Cdb: [16]u8,
     Command: [16]u8,
     StartTime: u64,
@@ -1195,14 +1195,14 @@ pub const STORAGE_EVENT_NOTIFICATION = extern struct {
     Events: u64,
 };
 pub const STORAGE_COUNTER = extern struct {
-    pub const _Value_e__Union = extern union {
-        pub const _ManufactureDate_e__Struct = extern struct {
-            Week: u32,
-            Year: u32,
-        };
-        ManufactureDate: _ManufactureDate_e__Struct,
-        AsUlonglong: u64,
-    };
+pub const _Value_e__Union = extern union {
+pub const _ManufactureDate_e__Struct = extern struct {
+    Week: u32,
+    Year: u32,
+};
+    ManufactureDate: _ManufactureDate_e__Struct,
+    AsUlonglong: u64,
+};
     Type: i32,
     Value: _Value_e__Union,
 };
@@ -1351,9 +1351,9 @@ pub const SCM_BUS_PROPERTY_QUERY = extern struct {
     AdditionalParameters: [1]u8,
 };
 pub const SCM_BUS_RUNTIME_FW_ACTIVATION_INFO = extern struct {
-    pub const _FirmwareActivationCapability_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _FirmwareActivationCapability_e__Struct = extern struct {
+    _bitfield: u32,
+};
     Version: u32,
     Size: u32,
     RuntimeFwActivationSupported: @"Windows.Win32.Foundation".BOOLEAN,
@@ -1365,9 +1365,9 @@ pub const SCM_BUS_RUNTIME_FW_ACTIVATION_INFO = extern struct {
     PlatformSupportedMaxIOAccessQuiesceTimeInUSecs: u64,
 };
 pub const SCM_BUS_DEDICATED_MEMORY_DEVICE_INFO = extern struct {
-    pub const _Flags_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _Flags_e__Struct = extern struct {
+    _bitfield: u32,
+};
     DeviceGuid: GUID,
     DeviceNumber: u32,
     Flags: _Flags_e__Struct,
@@ -1544,9 +1544,9 @@ pub const SCM_PD_PASSTHROUGH_INVDIMM_OUTPUT = extern struct {
     OutputData: [1]u8,
 };
 pub const SCM_PD_REINITIALIZE_MEDIA_INPUT = extern struct {
-    pub const _Options_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _Options_e__Struct = extern struct {
+    _bitfield: u32,
+};
     Version: u32,
     Size: u32,
     Options: _Options_e__Struct,
@@ -1626,10 +1626,10 @@ pub const PARTITION_INFORMATION_MBR = extern struct {
     PartitionId: GUID,
 };
 pub const SET_PARTITION_INFORMATION_EX = extern struct {
-    pub const SET_PARTITION_INFORMATION_EX_0 = extern union {
-        Mbr: SET_PARTITION_INFORMATION,
-        Gpt: PARTITION_INFORMATION_GPT,
-    };
+pub const SET_PARTITION_INFORMATION_EX_0 = extern union {
+    Mbr: SET_PARTITION_INFORMATION,
+    Gpt: PARTITION_INFORMATION_GPT,
+};
     PartitionStyle: i32,
     Anonymous: SET_PARTITION_INFORMATION_EX_0,
 };
@@ -1641,10 +1641,10 @@ pub const CREATE_DISK_MBR = extern struct {
     Signature: u32,
 };
 pub const CREATE_DISK = extern struct {
-    pub const CREATE_DISK_0 = extern union {
-        Mbr: CREATE_DISK_MBR,
-        Gpt: CREATE_DISK_GPT,
-    };
+pub const CREATE_DISK_0 = extern union {
+    Mbr: CREATE_DISK_MBR,
+    Gpt: CREATE_DISK_GPT,
+};
     PartitionStyle: i32,
     Anonymous: CREATE_DISK_0,
 };
@@ -1652,10 +1652,10 @@ pub const GET_LENGTH_INFORMATION = extern struct {
     Length: i64,
 };
 pub const PARTITION_INFORMATION_EX = extern struct {
-    pub const PARTITION_INFORMATION_EX_0 = extern union {
-        Mbr: PARTITION_INFORMATION_MBR,
-        Gpt: PARTITION_INFORMATION_GPT,
-    };
+pub const PARTITION_INFORMATION_EX_0 = extern union {
+    Mbr: PARTITION_INFORMATION_MBR,
+    Gpt: PARTITION_INFORMATION_GPT,
+};
     PartitionStyle: i32,
     StartingOffset: i64,
     PartitionLength: i64,
@@ -1675,10 +1675,10 @@ pub const DRIVE_LAYOUT_INFORMATION_MBR = extern struct {
     CheckSum: u32,
 };
 pub const DRIVE_LAYOUT_INFORMATION_EX = extern struct {
-    pub const DRIVE_LAYOUT_INFORMATION_EX_0 = extern union {
-        Mbr: DRIVE_LAYOUT_INFORMATION_MBR,
-        Gpt: DRIVE_LAYOUT_INFORMATION_GPT,
-    };
+pub const DRIVE_LAYOUT_INFORMATION_EX_0 = extern union {
+    Mbr: DRIVE_LAYOUT_INFORMATION_MBR,
+    Gpt: DRIVE_LAYOUT_INFORMATION_GPT,
+};
     PartitionStyle: u32,
     PartitionCount: u32,
     Anonymous: DRIVE_LAYOUT_INFORMATION_EX_0,
@@ -1702,29 +1702,29 @@ pub const DISK_EX_INT13_INFO = extern struct {
     ExReserved: u16,
 };
 pub const DISK_DETECTION_INFO = extern struct {
-    pub const DISK_DETECTION_INFO_0 = extern union {
-        pub const DISK_DETECTION_INFO_0_0 = extern struct {
-            Int13: DISK_INT13_INFO,
-            ExInt13: DISK_EX_INT13_INFO,
-        };
-        Anonymous: DISK_DETECTION_INFO_0_0,
-    };
+pub const DISK_DETECTION_INFO_0 = extern union {
+pub const DISK_DETECTION_INFO_0_0 = extern struct {
+    Int13: DISK_INT13_INFO,
+    ExInt13: DISK_EX_INT13_INFO,
+};
+    Anonymous: DISK_DETECTION_INFO_0_0,
+};
     SizeOfDetectInfo: u32,
     DetectionType: i32,
     Anonymous: DISK_DETECTION_INFO_0,
 };
 pub const DISK_PARTITION_INFO = extern struct {
-    pub const DISK_PARTITION_INFO_0 = extern union {
-        pub const _Mbr_e__Struct = extern struct {
-            Signature: u32,
-            CheckSum: u32,
-        };
-        pub const _Gpt_e__Struct = extern struct {
-            DiskId: GUID,
-        };
-        Mbr: _Mbr_e__Struct,
-        Gpt: _Gpt_e__Struct,
-    };
+pub const DISK_PARTITION_INFO_0 = extern union {
+pub const _Mbr_e__Struct = extern struct {
+    Signature: u32,
+    CheckSum: u32,
+};
+pub const _Gpt_e__Struct = extern struct {
+    DiskId: GUID,
+};
+    Mbr: _Mbr_e__Struct,
+    Gpt: _Gpt_e__Struct,
+};
     SizeOfPartitionInfo: u32,
     PartitionStyle: i32,
     Anonymous: DISK_PARTITION_INFO_0,
@@ -1739,19 +1739,19 @@ pub const DISK_CONTROLLER_NUMBER = extern struct {
     DiskNumber: u32,
 };
 pub const DISK_CACHE_INFORMATION = extern struct {
-    pub const DISK_CACHE_INFORMATION_0 = extern union {
-        pub const _ScalarPrefetch_e__Struct = extern struct {
-            Minimum: u16,
-            Maximum: u16,
-            MaximumBlocks: u16,
-        };
-        pub const _BlockPrefetch_e__Struct = extern struct {
-            Minimum: u16,
-            Maximum: u16,
-        };
-        ScalarPrefetch: _ScalarPrefetch_e__Struct,
-        BlockPrefetch: _BlockPrefetch_e__Struct,
-    };
+pub const DISK_CACHE_INFORMATION_0 = extern union {
+pub const _ScalarPrefetch_e__Struct = extern struct {
+    Minimum: u16,
+    Maximum: u16,
+    MaximumBlocks: u16,
+};
+pub const _BlockPrefetch_e__Struct = extern struct {
+    Minimum: u16,
+    Maximum: u16,
+};
+    ScalarPrefetch: _ScalarPrefetch_e__Struct,
+    BlockPrefetch: _BlockPrefetch_e__Struct,
+};
     ParametersSavable: @"Windows.Win32.Foundation".BOOLEAN,
     ReadCacheEnabled: @"Windows.Win32.Foundation".BOOLEAN,
     WriteCacheEnabled: @"Windows.Win32.Foundation".BOOLEAN,
@@ -2060,20 +2060,20 @@ pub const STARTING_VCN_INPUT_BUFFER = extern struct {
     StartingVcn: i64,
 };
 pub const RETRIEVAL_POINTERS_BUFFER = extern struct {
-    pub const RETRIEVAL_POINTERS_BUFFER_0 = extern struct {
-        NextVcn: i64,
-        Lcn: i64,
-    };
+pub const RETRIEVAL_POINTERS_BUFFER_0 = extern struct {
+    NextVcn: i64,
+    Lcn: i64,
+};
     ExtentCount: u32,
     StartingVcn: i64,
     Extents: [1]RETRIEVAL_POINTERS_BUFFER_0,
 };
 pub const RETRIEVAL_POINTERS_AND_REFCOUNT_BUFFER = extern struct {
-    pub const RETRIEVAL_POINTERS_AND_REFCOUNT_BUFFER_0 = extern struct {
-        NextVcn: i64,
-        Lcn: i64,
-        ReferenceCount: u32,
-    };
+pub const RETRIEVAL_POINTERS_AND_REFCOUNT_BUFFER_0 = extern struct {
+    NextVcn: i64,
+    Lcn: i64,
+    ReferenceCount: u32,
+};
     ExtentCount: u32,
     StartingVcn: i64,
     Extents: [1]RETRIEVAL_POINTERS_AND_REFCOUNT_BUFFER_0,
@@ -2255,10 +2255,10 @@ pub const DELETE_USN_JOURNAL_DATA = extern struct {
     DeleteFlags: u32,
 };
 pub const MARK_HANDLE_INFO = extern struct {
-    pub const MARK_HANDLE_INFO_0 = extern union {
-        UsnSourceInfo: u32,
-        CopyNumber: u32,
-    };
+pub const MARK_HANDLE_INFO_0 = extern union {
+    UsnSourceInfo: u32,
+    CopyNumber: u32,
+};
     Anonymous: MARK_HANDLE_INFO_0,
     VolumeHandle: @"Windows.Win32.Foundation".HANDLE,
     HandleInfo: u32,
@@ -2318,41 +2318,41 @@ pub const EXFAT_STATISTICS = extern struct {
     NonCachedDiskWrites: u32,
 };
 pub const NTFS_STATISTICS = extern struct {
-    pub const _MftWritesUserLevel_e__Struct = extern struct {
-        Write: u16,
-        Create: u16,
-        SetInfo: u16,
-        Flush: u16,
-    };
-    pub const _Mft2WritesUserLevel_e__Struct = extern struct {
-        Write: u16,
-        Create: u16,
-        SetInfo: u16,
-        Flush: u16,
-    };
-    pub const _BitmapWritesUserLevel_e__Struct = extern struct {
-        Write: u16,
-        Create: u16,
-        SetInfo: u16,
-    };
-    pub const _MftBitmapWritesUserLevel_e__Struct = extern struct {
-        Write: u16,
-        Create: u16,
-        SetInfo: u16,
-        Flush: u16,
-    };
-    pub const _Allocate_e__Struct = extern struct {
-        Calls: u32,
-        Clusters: u32,
-        Hints: u32,
-        RunsReturned: u32,
-        HintsHonored: u32,
-        HintsClusters: u32,
-        Cache: u32,
-        CacheClusters: u32,
-        CacheMiss: u32,
-        CacheMissClusters: u32,
-    };
+pub const _MftWritesUserLevel_e__Struct = extern struct {
+    Write: u16,
+    Create: u16,
+    SetInfo: u16,
+    Flush: u16,
+};
+pub const _Mft2WritesUserLevel_e__Struct = extern struct {
+    Write: u16,
+    Create: u16,
+    SetInfo: u16,
+    Flush: u16,
+};
+pub const _BitmapWritesUserLevel_e__Struct = extern struct {
+    Write: u16,
+    Create: u16,
+    SetInfo: u16,
+};
+pub const _MftBitmapWritesUserLevel_e__Struct = extern struct {
+    Write: u16,
+    Create: u16,
+    SetInfo: u16,
+    Flush: u16,
+};
+pub const _Allocate_e__Struct = extern struct {
+    Calls: u32,
+    Clusters: u32,
+    Hints: u32,
+    RunsReturned: u32,
+    HintsHonored: u32,
+    HintsClusters: u32,
+    Cache: u32,
+    CacheClusters: u32,
+    CacheMiss: u32,
+    CacheMissClusters: u32,
+};
     LogFileFullExceptions: u32,
     OtherExceptions: u32,
     MftReads: u32,
@@ -2418,42 +2418,42 @@ pub const FILESYSTEM_STATISTICS_EX = extern struct {
     MetaDataDiskWrites: u64,
 };
 pub const NTFS_STATISTICS_EX = extern struct {
-    pub const _MftWritesUserLevel_e__Struct = extern struct {
-        Write: u32,
-        Create: u32,
-        SetInfo: u32,
-        Flush: u32,
-    };
-    pub const _Mft2WritesUserLevel_e__Struct = extern struct {
-        Write: u32,
-        Create: u32,
-        SetInfo: u32,
-        Flush: u32,
-    };
-    pub const _BitmapWritesUserLevel_e__Struct = extern struct {
-        Write: u32,
-        Create: u32,
-        SetInfo: u32,
-        Flush: u32,
-    };
-    pub const _MftBitmapWritesUserLevel_e__Struct = extern struct {
-        Write: u32,
-        Create: u32,
-        SetInfo: u32,
-        Flush: u32,
-    };
-    pub const _Allocate_e__Struct = extern struct {
-        Calls: u32,
-        RunsReturned: u32,
-        Hints: u32,
-        HintsHonored: u32,
-        Cache: u32,
-        CacheMiss: u32,
-        Clusters: u64,
-        HintsClusters: u64,
-        CacheClusters: u64,
-        CacheMissClusters: u64,
-    };
+pub const _MftWritesUserLevel_e__Struct = extern struct {
+    Write: u32,
+    Create: u32,
+    SetInfo: u32,
+    Flush: u32,
+};
+pub const _Mft2WritesUserLevel_e__Struct = extern struct {
+    Write: u32,
+    Create: u32,
+    SetInfo: u32,
+    Flush: u32,
+};
+pub const _BitmapWritesUserLevel_e__Struct = extern struct {
+    Write: u32,
+    Create: u32,
+    SetInfo: u32,
+    Flush: u32,
+};
+pub const _MftBitmapWritesUserLevel_e__Struct = extern struct {
+    Write: u32,
+    Create: u32,
+    SetInfo: u32,
+    Flush: u32,
+};
+pub const _Allocate_e__Struct = extern struct {
+    Calls: u32,
+    RunsReturned: u32,
+    Hints: u32,
+    HintsHonored: u32,
+    Cache: u32,
+    CacheMiss: u32,
+    Clusters: u64,
+    HintsClusters: u64,
+    CacheClusters: u64,
+    CacheMissClusters: u64,
+};
     LogFileFullExceptions: u32,
     OtherExceptions: u32,
     MftReads: u64,
@@ -2513,15 +2513,15 @@ pub const NTFS_STATISTICS_EX = extern struct {
     NtfsFillStatInfoFromMftRecordBailedBecauseOfNonResReparsePointCount: u64,
 };
 pub const FILE_OBJECTID_BUFFER = extern struct {
-    pub const FILE_OBJECTID_BUFFER_0 = extern union {
-        pub const FILE_OBJECTID_BUFFER_0_0 = extern struct {
-            BirthVolumeId: [16]u8,
-            BirthObjectId: [16]u8,
-            DomainId: [16]u8,
-        };
-        Anonymous: FILE_OBJECTID_BUFFER_0_0,
-        ExtendedInfo: [48]u8,
-    };
+pub const FILE_OBJECTID_BUFFER_0 = extern union {
+pub const FILE_OBJECTID_BUFFER_0_0 = extern struct {
+    BirthVolumeId: [16]u8,
+    BirthObjectId: [16]u8,
+    DomainId: [16]u8,
+};
+    Anonymous: FILE_OBJECTID_BUFFER_0_0,
+    ExtendedInfo: [48]u8,
+};
     ObjectId: [16]u8,
     Anonymous: FILE_OBJECTID_BUFFER_0,
 };
@@ -2677,10 +2677,10 @@ pub const TXFS_START_RM_INFORMATION = extern struct {
     LogPath: [1]u16,
 };
 pub const TXFS_GET_METADATA_INFO_OUT = extern struct {
-    pub const _TxfFileId_e__Struct = extern struct {
-        LowPart: i64,
-        HighPart: i64,
-    };
+pub const _TxfFileId_e__Struct = extern struct {
+    LowPart: i64,
+    HighPart: i64,
+};
     TxfFileId: _TxfFileId_e__Struct,
     LockingTransaction: GUID,
     LastLsn: u64,
@@ -2713,10 +2713,10 @@ pub const TXFS_LIST_TRANSACTIONS = extern struct {
     BufferSizeRequired: u64,
 };
 pub const TXFS_READ_BACKUP_INFORMATION_OUT = extern struct {
-    pub const TXFS_READ_BACKUP_INFORMATION_OUT_0 = extern union {
-        BufferLength: u32,
-        Buffer: [1]u8,
-    };
+pub const TXFS_READ_BACKUP_INFORMATION_OUT_0 = extern union {
+    BufferLength: u32,
+    Buffer: [1]u8,
+};
     Anonymous: TXFS_READ_BACKUP_INFORMATION_OUT_0,
 };
 pub const TXFS_WRITE_BACKUP_INFORMATION = extern struct {
@@ -2744,9 +2744,9 @@ pub const TXFS_TRANSACTION_ACTIVE_INFO = extern struct {
     TransactionsActiveAtSnapshot: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const BOOT_AREA_INFO = extern struct {
-    pub const BOOT_AREA_INFO_0 = extern struct {
-        Offset: i64,
-    };
+pub const BOOT_AREA_INFO_0 = extern struct {
+    Offset: i64,
+};
     BootSectorCount: u32,
     BootSectors: [2]BOOT_AREA_INFO_0,
 };
@@ -2803,10 +2803,10 @@ pub const STORAGE_QUERY_DEPENDENT_VOLUME_LEV2_ENTRY = extern struct {
     DependentDeviceNameSize: u32,
 };
 pub const STORAGE_QUERY_DEPENDENT_VOLUME_RESPONSE = extern struct {
-    pub const STORAGE_QUERY_DEPENDENT_VOLUME_RESPONSE_0 = extern union {
-        Lev1Depends: [1]STORAGE_QUERY_DEPENDENT_VOLUME_LEV1_ENTRY,
-        Lev2Depends: [1]STORAGE_QUERY_DEPENDENT_VOLUME_LEV2_ENTRY,
-    };
+pub const STORAGE_QUERY_DEPENDENT_VOLUME_RESPONSE_0 = extern union {
+    Lev1Depends: [1]STORAGE_QUERY_DEPENDENT_VOLUME_LEV1_ENTRY,
+    Lev2Depends: [1]STORAGE_QUERY_DEPENDENT_VOLUME_LEV2_ENTRY,
+};
     ResponseLevel: u32,
     NumberEntries: u32,
     Anonymous: STORAGE_QUERY_DEPENDENT_VOLUME_RESPONSE_0,
@@ -2857,21 +2857,21 @@ pub const SD_ENUM_SDS_OUTPUT = extern struct {
     SDEntry: [1]SD_ENUM_SDS_ENTRY,
 };
 pub const SD_GLOBAL_CHANGE_INPUT = extern struct {
-    pub const SD_GLOBAL_CHANGE_INPUT_0 = extern union {
-        SdChange: SD_CHANGE_MACHINE_SID_INPUT,
-        SdQueryStats: SD_QUERY_STATS_INPUT,
-        SdEnumSds: SD_ENUM_SDS_INPUT,
-    };
+pub const SD_GLOBAL_CHANGE_INPUT_0 = extern union {
+    SdChange: SD_CHANGE_MACHINE_SID_INPUT,
+    SdQueryStats: SD_QUERY_STATS_INPUT,
+    SdEnumSds: SD_ENUM_SDS_INPUT,
+};
     Flags: u32,
     ChangeType: u32,
     Anonymous: SD_GLOBAL_CHANGE_INPUT_0,
 };
 pub const SD_GLOBAL_CHANGE_OUTPUT = extern struct {
-    pub const SD_GLOBAL_CHANGE_OUTPUT_0 = extern union {
-        SdChange: SD_CHANGE_MACHINE_SID_OUTPUT,
-        SdQueryStats: SD_QUERY_STATS_OUTPUT,
-        SdEnumSds: SD_ENUM_SDS_OUTPUT,
-    };
+pub const SD_GLOBAL_CHANGE_OUTPUT_0 = extern union {
+    SdChange: SD_CHANGE_MACHINE_SID_OUTPUT,
+    SdQueryStats: SD_QUERY_STATS_OUTPUT,
+    SdEnumSds: SD_ENUM_SDS_OUTPUT,
+};
     Flags: u32,
     ChangeType: u32,
     Anonymous: SD_GLOBAL_CHANGE_OUTPUT_0,
@@ -2991,15 +2991,15 @@ pub const FILE_REFERENCE_RANGE = extern struct {
     EndingFileReferenceNumber: u64,
 };
 pub const QUERY_FILE_LAYOUT_INPUT = extern struct {
-    pub const QUERY_FILE_LAYOUT_INPUT_0 = extern union {
-        FilterEntryCount: u32,
-        NumberOfPairs: u32,
-    };
-    pub const _Filter_e__Union = extern union {
-        ClusterRanges: [1]CLUSTER_RANGE,
-        FileReferenceRanges: [1]FILE_REFERENCE_RANGE,
-        StorageReserveIds: [1]i32,
-    };
+pub const QUERY_FILE_LAYOUT_INPUT_0 = extern union {
+    FilterEntryCount: u32,
+    NumberOfPairs: u32,
+};
+pub const _Filter_e__Union = extern union {
+    ClusterRanges: [1]CLUSTER_RANGE,
+    FileReferenceRanges: [1]FILE_REFERENCE_RANGE,
+    StorageReserveIds: [1]i32,
+};
     Anonymous: QUERY_FILE_LAYOUT_INPUT_0,
     Flags: u32,
     FilterType: i32,
@@ -3032,13 +3032,13 @@ pub const FILE_LAYOUT_NAME_ENTRY = extern struct {
     FileName: [1]u16,
 };
 pub const FILE_LAYOUT_INFO_ENTRY = extern struct {
-    pub const _BasicInformation_e__Struct = extern struct {
-        CreationTime: i64,
-        LastAccessTime: i64,
-        LastWriteTime: i64,
-        ChangeTime: i64,
-        FileAttributes: u32,
-    };
+pub const _BasicInformation_e__Struct = extern struct {
+    CreationTime: i64,
+    LastAccessTime: i64,
+    LastWriteTime: i64,
+    ChangeTime: i64,
+    FileAttributes: u32,
+};
     BasicInformation: _BasicInformation_e__Struct,
     OwnerId: u32,
     SecurityId: u32,
@@ -3059,9 +3059,9 @@ pub const STREAM_LAYOUT_ENTRY = extern struct {
     StreamIdentifier: [1]u16,
 };
 pub const STREAM_EXTENT_ENTRY = extern struct {
-    pub const _ExtentInformation_e__Union = extern union {
-        RetrievalPointers: RETRIEVAL_POINTERS_BUFFER,
-    };
+pub const _ExtentInformation_e__Union = extern union {
+    RetrievalPointers: RETRIEVAL_POINTERS_BUFFER,
+};
     Flags: u32,
     ExtentInformation: _ExtentInformation_e__Union,
 };
@@ -3169,34 +3169,34 @@ pub const FSCTL_QUERY_STORAGE_CLASSES_OUTPUT = extern struct {
     Tiers: [1]FILE_STORAGE_TIER,
 };
 pub const STREAM_INFORMATION_ENTRY = extern struct {
-    pub const _StreamInformation = extern union {
-        pub const _DesiredStorageClass = extern struct {
-            Class: i32,
-            Flags: u32,
-        };
-        pub const _DataStream = extern struct {
-            Length: u16,
-            Flags: u16,
-            Reserved: u32,
-            Vdl: u64,
-        };
-        pub const _Reparse = extern struct {
-            Length: u16,
-            Flags: u16,
-            ReparseDataSize: u32,
-            ReparseDataOffset: u32,
-        };
-        pub const _Ea = extern struct {
-            Length: u16,
-            Flags: u16,
-            EaSize: u32,
-            EaInformationOffset: u32,
-        };
-        DesiredStorageClass: _DesiredStorageClass,
-        DataStream: _DataStream,
-        Reparse: _Reparse,
-        Ea: _Ea,
-    };
+pub const _StreamInformation = extern union {
+pub const _DesiredStorageClass = extern struct {
+    Class: i32,
+    Flags: u32,
+};
+pub const _DataStream = extern struct {
+    Length: u16,
+    Flags: u16,
+    Reserved: u32,
+    Vdl: u64,
+};
+pub const _Reparse = extern struct {
+    Length: u16,
+    Flags: u16,
+    ReparseDataSize: u32,
+    ReparseDataOffset: u32,
+};
+pub const _Ea = extern struct {
+    Length: u16,
+    Flags: u16,
+    EaSize: u32,
+    EaInformationOffset: u32,
+};
+    DesiredStorageClass: _DesiredStorageClass,
+    DataStream: _DataStream,
+    Reparse: _Reparse,
+    Ea: _Ea,
+};
     Version: u32,
     Flags: u32,
     StreamInformation: _StreamInformation,
@@ -3426,13 +3426,13 @@ pub const FS_BPIO_INFO = extern struct {
     StorageDriverName: [32]u16,
 };
 pub const FS_BPIO_OUTPUT = extern struct {
-    pub const FS_BPIO_OUTPUT_0 = extern union {
-        Enable: FS_BPIO_RESULTS,
-        Query: FS_BPIO_RESULTS,
-        VolumeStackResume: FS_BPIO_RESULTS,
-        StreamResume: FS_BPIO_RESULTS,
-        GetInfo: FS_BPIO_INFO,
-    };
+pub const FS_BPIO_OUTPUT_0 = extern union {
+    Enable: FS_BPIO_RESULTS,
+    Query: FS_BPIO_RESULTS,
+    VolumeStackResume: FS_BPIO_RESULTS,
+    StreamResume: FS_BPIO_RESULTS,
+    GetInfo: FS_BPIO_INFO,
+};
     Operation: i32,
     OutFlags: i32,
     Reserved1: u64,

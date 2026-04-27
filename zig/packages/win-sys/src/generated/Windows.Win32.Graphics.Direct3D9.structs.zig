@@ -299,13 +299,13 @@ pub const D3DAUTHENTICATEDCHANNEL_QUERY_OUTPUT = extern struct {
     ReturnCode: @"Windows.Win32.Foundation".HRESULT,
 };
 pub const D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS = extern struct {
-    pub const D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0 = extern union {
-        pub const D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0_0 = extern struct {
-            _bitfield: u32,
-        };
-        Anonymous: D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0_0,
-        Value: u32,
-    };
+pub const D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0 = extern union {
+pub const D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0_0 = extern struct {
+    _bitfield: u32,
+};
+    Anonymous: D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0_0,
+    Value: u32,
+};
     Anonymous: D3DAUTHENTICATEDCHANNEL_PROTECTION_FLAGS_0,
 };
 pub const D3DAUTHENTICATEDCHANNEL_QUERYPROTECTION_OUTPUT = extern struct {
@@ -516,56 +516,56 @@ pub const D3DCAPS9 = extern struct {
     MaxPixelShader30InstructionSlots: u32,
 };
 pub const D3DHVERTEX = extern struct {
-    pub const D3DHVERTEX_0 = extern union {
-        hx: f32,
-        dvHX: f32,
-    };
-    pub const D3DHVERTEX_1 = extern union {
-        hy: f32,
-        dvHY: f32,
-    };
-    pub const D3DHVERTEX_2 = extern union {
-        hz: f32,
-        dvHZ: f32,
-    };
+pub const D3DHVERTEX_0 = extern union {
+    hx: f32,
+    dvHX: f32,
+};
+pub const D3DHVERTEX_1 = extern union {
+    hy: f32,
+    dvHY: f32,
+};
+pub const D3DHVERTEX_2 = extern union {
+    hz: f32,
+    dvHZ: f32,
+};
     dwFlags: u32,
     Anonymous1: D3DHVERTEX_0,
     Anonymous2: D3DHVERTEX_1,
     Anonymous3: D3DHVERTEX_2,
 };
 pub const D3DTLVERTEX = extern struct {
-    pub const D3DTLVERTEX_0 = extern union {
-        sx: f32,
-        dvSX: f32,
-    };
-    pub const D3DTLVERTEX_1 = extern union {
-        sy: f32,
-        dvSY: f32,
-    };
-    pub const D3DTLVERTEX_2 = extern union {
-        sz: f32,
-        dvSZ: f32,
-    };
-    pub const D3DTLVERTEX_3 = extern union {
-        rhw: f32,
-        dvRHW: f32,
-    };
-    pub const D3DTLVERTEX_4 = extern union {
-        color: u32,
-        dcColor: u32,
-    };
-    pub const D3DTLVERTEX_5 = extern union {
-        specular: u32,
-        dcSpecular: u32,
-    };
-    pub const D3DTLVERTEX_6 = extern union {
-        tu: f32,
-        dvTU: f32,
-    };
-    pub const D3DTLVERTEX_7 = extern union {
-        tv: f32,
-        dvTV: f32,
-    };
+pub const D3DTLVERTEX_0 = extern union {
+    sx: f32,
+    dvSX: f32,
+};
+pub const D3DTLVERTEX_1 = extern union {
+    sy: f32,
+    dvSY: f32,
+};
+pub const D3DTLVERTEX_2 = extern union {
+    sz: f32,
+    dvSZ: f32,
+};
+pub const D3DTLVERTEX_3 = extern union {
+    rhw: f32,
+    dvRHW: f32,
+};
+pub const D3DTLVERTEX_4 = extern union {
+    color: u32,
+    dcColor: u32,
+};
+pub const D3DTLVERTEX_5 = extern union {
+    specular: u32,
+    dcSpecular: u32,
+};
+pub const D3DTLVERTEX_6 = extern union {
+    tu: f32,
+    dvTU: f32,
+};
+pub const D3DTLVERTEX_7 = extern union {
+    tv: f32,
+    dvTV: f32,
+};
     Anonymous1: D3DTLVERTEX_0,
     Anonymous2: D3DTLVERTEX_1,
     Anonymous3: D3DTLVERTEX_2,
@@ -576,34 +576,34 @@ pub const D3DTLVERTEX = extern struct {
     Anonymous8: D3DTLVERTEX_7,
 };
 pub const D3DLVERTEX = extern struct {
-    pub const D3DLVERTEX_0 = extern union {
-        x: f32,
-        dvX: f32,
-    };
-    pub const D3DLVERTEX_1 = extern union {
-        y: f32,
-        dvY: f32,
-    };
-    pub const D3DLVERTEX_2 = extern union {
-        z: f32,
-        dvZ: f32,
-    };
-    pub const D3DLVERTEX_3 = extern union {
-        color: u32,
-        dcColor: u32,
-    };
-    pub const D3DLVERTEX_4 = extern union {
-        specular: u32,
-        dcSpecular: u32,
-    };
-    pub const D3DLVERTEX_5 = extern union {
-        tu: f32,
-        dvTU: f32,
-    };
-    pub const D3DLVERTEX_6 = extern union {
-        tv: f32,
-        dvTV: f32,
-    };
+pub const D3DLVERTEX_0 = extern union {
+    x: f32,
+    dvX: f32,
+};
+pub const D3DLVERTEX_1 = extern union {
+    y: f32,
+    dvY: f32,
+};
+pub const D3DLVERTEX_2 = extern union {
+    z: f32,
+    dvZ: f32,
+};
+pub const D3DLVERTEX_3 = extern union {
+    color: u32,
+    dcColor: u32,
+};
+pub const D3DLVERTEX_4 = extern union {
+    specular: u32,
+    dcSpecular: u32,
+};
+pub const D3DLVERTEX_5 = extern union {
+    tu: f32,
+    dvTU: f32,
+};
+pub const D3DLVERTEX_6 = extern union {
+    tv: f32,
+    dvTV: f32,
+};
     Anonymous1: D3DLVERTEX_0,
     Anonymous2: D3DLVERTEX_1,
     Anonymous3: D3DLVERTEX_2,
@@ -614,38 +614,38 @@ pub const D3DLVERTEX = extern struct {
     Anonymous7: D3DLVERTEX_6,
 };
 pub const D3DVERTEX = extern struct {
-    pub const D3DVERTEX_0 = extern union {
-        x: f32,
-        dvX: f32,
-    };
-    pub const D3DVERTEX_1 = extern union {
-        y: f32,
-        dvY: f32,
-    };
-    pub const D3DVERTEX_2 = extern union {
-        z: f32,
-        dvZ: f32,
-    };
-    pub const D3DVERTEX_3 = extern union {
-        nx: f32,
-        dvNX: f32,
-    };
-    pub const D3DVERTEX_4 = extern union {
-        ny: f32,
-        dvNY: f32,
-    };
-    pub const D3DVERTEX_5 = extern union {
-        nz: f32,
-        dvNZ: f32,
-    };
-    pub const D3DVERTEX_6 = extern union {
-        tu: f32,
-        dvTU: f32,
-    };
-    pub const D3DVERTEX_7 = extern union {
-        tv: f32,
-        dvTV: f32,
-    };
+pub const D3DVERTEX_0 = extern union {
+    x: f32,
+    dvX: f32,
+};
+pub const D3DVERTEX_1 = extern union {
+    y: f32,
+    dvY: f32,
+};
+pub const D3DVERTEX_2 = extern union {
+    z: f32,
+    dvZ: f32,
+};
+pub const D3DVERTEX_3 = extern union {
+    nx: f32,
+    dvNX: f32,
+};
+pub const D3DVERTEX_4 = extern union {
+    ny: f32,
+    dvNY: f32,
+};
+pub const D3DVERTEX_5 = extern union {
+    nz: f32,
+    dvNZ: f32,
+};
+pub const D3DVERTEX_6 = extern union {
+    tu: f32,
+    dvTU: f32,
+};
+pub const D3DVERTEX_7 = extern union {
+    tv: f32,
+    dvTV: f32,
+};
     Anonymous1: D3DVERTEX_0,
     Anonymous2: D3DVERTEX_1,
     Anonymous3: D3DVERTEX_2,
@@ -706,26 +706,26 @@ pub const D3DLIGHTINGELEMENT = extern struct {
     dvNormal: @"Windows.Win32.Graphics.Direct3D".D3DVECTOR,
 };
 pub const D3DMATERIAL = extern struct {
-    pub const D3DMATERIAL_0 = extern union {
-        diffuse: D3DCOLORVALUE,
-        dcvDiffuse: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL_1 = extern union {
-        ambient: D3DCOLORVALUE,
-        dcvAmbient: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL_2 = extern union {
-        specular: D3DCOLORVALUE,
-        dcvSpecular: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL_3 = extern union {
-        emissive: D3DCOLORVALUE,
-        dcvEmissive: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL_4 = extern union {
-        power: f32,
-        dvPower: f32,
-    };
+pub const D3DMATERIAL_0 = extern union {
+    diffuse: D3DCOLORVALUE,
+    dcvDiffuse: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL_1 = extern union {
+    ambient: D3DCOLORVALUE,
+    dcvAmbient: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL_2 = extern union {
+    specular: D3DCOLORVALUE,
+    dcvSpecular: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL_3 = extern union {
+    emissive: D3DCOLORVALUE,
+    dcvEmissive: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL_4 = extern union {
+    power: f32,
+    dvPower: f32,
+};
     dwSize: u32,
     Anonymous1: D3DMATERIAL_0,
     Anonymous2: D3DMATERIAL_1,
@@ -736,26 +736,26 @@ pub const D3DMATERIAL = extern struct {
     dwRampSize: u32,
 };
 pub const D3DMATERIAL7 = extern struct {
-    pub const D3DMATERIAL7_0 = extern union {
-        diffuse: D3DCOLORVALUE,
-        dcvDiffuse: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL7_1 = extern union {
-        ambient: D3DCOLORVALUE,
-        dcvAmbient: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL7_2 = extern union {
-        specular: D3DCOLORVALUE,
-        dcvSpecular: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL7_3 = extern union {
-        emissive: D3DCOLORVALUE,
-        dcvEmissive: D3DCOLORVALUE,
-    };
-    pub const D3DMATERIAL7_4 = extern union {
-        power: f32,
-        dvPower: f32,
-    };
+pub const D3DMATERIAL7_0 = extern union {
+    diffuse: D3DCOLORVALUE,
+    dcvDiffuse: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL7_1 = extern union {
+    ambient: D3DCOLORVALUE,
+    dcvAmbient: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL7_2 = extern union {
+    specular: D3DCOLORVALUE,
+    dcvSpecular: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL7_3 = extern union {
+    emissive: D3DCOLORVALUE,
+    dcvEmissive: D3DCOLORVALUE,
+};
+pub const D3DMATERIAL7_4 = extern union {
+    power: f32,
+    dvPower: f32,
+};
     Anonymous1: D3DMATERIAL7_0,
     Anonymous2: D3DMATERIAL7_1,
     Anonymous3: D3DMATERIAL7_2,
@@ -829,14 +829,14 @@ pub const D3DPICKRECORD = extern struct {
     dvZ: f32,
 };
 pub const D3DSTATE = extern struct {
-    pub const D3DSTATE_0 = extern union {
-        dlstLightStateType: i32,
-        drstRenderStateType: i32,
-    };
-    pub const D3DSTATE_1 = extern union {
-        dwArg: [1]u32,
-        dvArg: [1]f32,
-    };
+pub const D3DSTATE_0 = extern union {
+    dlstLightStateType: i32,
+    drstRenderStateType: i32,
+};
+pub const D3DSTATE_1 = extern union {
+    dwArg: [1]u32,
+    dvArg: [1]f32,
+};
     Anonymous1: D3DSTATE_0,
     Anonymous2: D3DSTATE_1,
 };
@@ -857,32 +857,32 @@ pub const D3DPROCESSVERTICES = extern struct {
     dwReserved: u32,
 };
 pub const D3DTRIANGLE = extern struct {
-    pub const D3DTRIANGLE_0 = extern union {
-        v1: u16,
-        wV1: u16,
-    };
-    pub const D3DTRIANGLE_1 = extern union {
-        v2: u16,
-        wV2: u16,
-    };
-    pub const D3DTRIANGLE_2 = extern union {
-        v3: u16,
-        wV3: u16,
-    };
+pub const D3DTRIANGLE_0 = extern union {
+    v1: u16,
+    wV1: u16,
+};
+pub const D3DTRIANGLE_1 = extern union {
+    v2: u16,
+    wV2: u16,
+};
+pub const D3DTRIANGLE_2 = extern union {
+    v3: u16,
+    wV3: u16,
+};
     Anonymous1: D3DTRIANGLE_0,
     Anonymous2: D3DTRIANGLE_1,
     Anonymous3: D3DTRIANGLE_2,
     wFlags: u16,
 };
 pub const D3DLINE = extern struct {
-    pub const D3DLINE_0 = extern union {
-        v1: u16,
-        wV1: u16,
-    };
-    pub const D3DLINE_1 = extern union {
-        v2: u16,
-        wV2: u16,
-    };
+pub const D3DLINE_0 = extern union {
+    v1: u16,
+    wV1: u16,
+};
+pub const D3DLINE_1 = extern union {
+    v2: u16,
+    wV2: u16,
+};
     Anonymous1: D3DLINE_0,
     Anonymous2: D3DLINE_1,
 };

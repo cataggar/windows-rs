@@ -11,12 +11,12 @@ pub const PLDAPSearch = extern struct {
     Value: isize,
 };
 pub const LDAP = extern struct {
-    pub const _ld_sb_e__Struct = extern struct {
-        sb_sd: usize,
-        Reserved1: [41]u8,
-        sb_naddr: usize,
-        Reserved2: [24]u8,
-    };
+pub const _ld_sb_e__Struct = extern struct {
+    sb_sd: usize,
+    Reserved1: [41]u8,
+    sb_naddr: usize,
+    Reserved2: [24]u8,
+};
     ld_sb: _ld_sb_e__Struct,
     ld_host: @"Windows.Win32.Foundation".PSTR,
     ld_version: u32,
@@ -69,19 +69,19 @@ pub const LDAPControlW = extern struct {
     ldctl_iscritical: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const LDAPModW = extern struct {
-    pub const _mod_vals_e__Union = extern union {
-        modv_strvals: *@"Windows.Win32.Foundation".PWSTR,
-        modv_bvals: **LDAP_BERVAL,
-    };
+pub const _mod_vals_e__Union = extern union {
+    modv_strvals: *@"Windows.Win32.Foundation".PWSTR,
+    modv_bvals: **LDAP_BERVAL,
+};
     mod_op: u32,
     mod_type: @"Windows.Win32.Foundation".PWSTR,
     mod_vals: _mod_vals_e__Union,
 };
 pub const LDAPModA = extern struct {
-    pub const _mod_vals_e__Union = extern union {
-        modv_strvals: *@"Windows.Win32.Foundation".PSTR,
-        modv_bvals: **LDAP_BERVAL,
-    };
+pub const _mod_vals_e__Union = extern union {
+    modv_strvals: *@"Windows.Win32.Foundation".PSTR,
+    modv_bvals: **LDAP_BERVAL,
+};
     mod_op: u32,
     mod_type: @"Windows.Win32.Foundation".PSTR,
     mod_vals: _mod_vals_e__Union,

@@ -87,77 +87,77 @@ pub const CF_CALLBACK_INFO = extern struct {
     RequestKey: i64,
 };
 pub const CF_CALLBACK_PARAMETERS = extern struct {
-    pub const CF_CALLBACK_PARAMETERS_0 = extern union {
-        pub const _Cancel_e__Struct = extern struct {
-            pub const _Cancel_e__Struct_0 = extern union {
-                pub const _FetchData_e__Struct = extern struct {
-                    FileOffset: i64,
-                    Length: i64,
-                };
-                FetchData: _FetchData_e__Struct,
-            };
-            Flags: i32,
-            Anonymous: _Cancel_e__Struct_0,
-        };
-        pub const _FetchData_e__Struct_2 = extern struct {
-            Flags: i32,
-            RequiredFileOffset: i64,
-            RequiredLength: i64,
-            OptionalFileOffset: i64,
-            OptionalLength: i64,
-            LastDehydrationTime: i64,
-            LastDehydrationReason: i32,
-        };
-        pub const _ValidateData_e__Struct = extern struct {
-            Flags: i32,
-            RequiredFileOffset: i64,
-            RequiredLength: i64,
-        };
-        pub const _FetchPlaceholders_e__Struct = extern struct {
-            Flags: i32,
-            Pattern: @"Windows.Win32.Foundation".PWSTR,
-        };
-        pub const _OpenCompletion_e__Struct = extern struct {
-            Flags: i32,
-        };
-        pub const _CloseCompletion_e__Struct = extern struct {
-            Flags: i32,
-        };
-        pub const _Dehydrate_e__Struct = extern struct {
-            Flags: i32,
-            Reason: i32,
-        };
-        pub const _DehydrateCompletion_e__Struct = extern struct {
-            Flags: i32,
-            Reason: i32,
-        };
-        pub const _Delete_e__Struct = extern struct {
-            Flags: i32,
-        };
-        pub const _DeleteCompletion_e__Struct = extern struct {
-            Flags: i32,
-        };
-        pub const _Rename_e__Struct = extern struct {
-            Flags: i32,
-            TargetPath: @"Windows.Win32.Foundation".PWSTR,
-        };
-        pub const _RenameCompletion_e__Struct = extern struct {
-            Flags: i32,
-            SourcePath: @"Windows.Win32.Foundation".PWSTR,
-        };
-        Cancel: _Cancel_e__Struct,
-        FetchData: _FetchData_e__Struct_2,
-        ValidateData: _ValidateData_e__Struct,
-        FetchPlaceholders: _FetchPlaceholders_e__Struct,
-        OpenCompletion: _OpenCompletion_e__Struct,
-        CloseCompletion: _CloseCompletion_e__Struct,
-        Dehydrate: _Dehydrate_e__Struct,
-        DehydrateCompletion: _DehydrateCompletion_e__Struct,
-        Delete: _Delete_e__Struct,
-        DeleteCompletion: _DeleteCompletion_e__Struct,
-        Rename: _Rename_e__Struct,
-        RenameCompletion: _RenameCompletion_e__Struct,
-    };
+pub const CF_CALLBACK_PARAMETERS_0 = extern union {
+pub const _Cancel_e__Struct = extern struct {
+pub const _Cancel_e__Struct_0 = extern union {
+pub const _FetchData_e__Struct = extern struct {
+    FileOffset: i64,
+    Length: i64,
+};
+    FetchData: _FetchData_e__Struct,
+};
+    Flags: i32,
+    Anonymous: _Cancel_e__Struct_0,
+};
+pub const _FetchData_e__Struct_2 = extern struct {
+    Flags: i32,
+    RequiredFileOffset: i64,
+    RequiredLength: i64,
+    OptionalFileOffset: i64,
+    OptionalLength: i64,
+    LastDehydrationTime: i64,
+    LastDehydrationReason: i32,
+};
+pub const _ValidateData_e__Struct = extern struct {
+    Flags: i32,
+    RequiredFileOffset: i64,
+    RequiredLength: i64,
+};
+pub const _FetchPlaceholders_e__Struct = extern struct {
+    Flags: i32,
+    Pattern: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const _OpenCompletion_e__Struct = extern struct {
+    Flags: i32,
+};
+pub const _CloseCompletion_e__Struct = extern struct {
+    Flags: i32,
+};
+pub const _Dehydrate_e__Struct = extern struct {
+    Flags: i32,
+    Reason: i32,
+};
+pub const _DehydrateCompletion_e__Struct = extern struct {
+    Flags: i32,
+    Reason: i32,
+};
+pub const _Delete_e__Struct = extern struct {
+    Flags: i32,
+};
+pub const _DeleteCompletion_e__Struct = extern struct {
+    Flags: i32,
+};
+pub const _Rename_e__Struct = extern struct {
+    Flags: i32,
+    TargetPath: @"Windows.Win32.Foundation".PWSTR,
+};
+pub const _RenameCompletion_e__Struct = extern struct {
+    Flags: i32,
+    SourcePath: @"Windows.Win32.Foundation".PWSTR,
+};
+    Cancel: _Cancel_e__Struct,
+    FetchData: _FetchData_e__Struct_2,
+    ValidateData: _ValidateData_e__Struct,
+    FetchPlaceholders: _FetchPlaceholders_e__Struct,
+    OpenCompletion: _OpenCompletion_e__Struct,
+    CloseCompletion: _CloseCompletion_e__Struct,
+    Dehydrate: _Dehydrate_e__Struct,
+    DehydrateCompletion: _DehydrateCompletion_e__Struct,
+    Delete: _Delete_e__Struct,
+    DeleteCompletion: _DeleteCompletion_e__Struct,
+    Rename: _Rename_e__Struct,
+    RenameCompletion: _RenameCompletion_e__Struct,
+};
     ParamSize: u32,
     Anonymous: CF_CALLBACK_PARAMETERS_0,
 };
@@ -183,64 +183,64 @@ pub const CF_OPERATION_INFO = extern struct {
     RequestKey: i64,
 };
 pub const CF_OPERATION_PARAMETERS = extern struct {
-    pub const CF_OPERATION_PARAMETERS_0 = extern union {
-        pub const _TransferData_e__Struct = extern struct {
-            Flags: i32,
-            CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
-            Buffer: *anyopaque,
-            Offset: i64,
-            Length: i64,
-        };
-        pub const _RetrieveData_e__Struct = extern struct {
-            Flags: i32,
-            Buffer: *anyopaque,
-            Offset: i64,
-            Length: i64,
-            ReturnedLength: i64,
-        };
-        pub const _AckData_e__Struct = extern struct {
-            Flags: i32,
-            CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
-            Offset: i64,
-            Length: i64,
-        };
-        pub const _RestartHydration_e__Struct = extern struct {
-            Flags: i32,
-            FsMetadata: *CF_FS_METADATA,
-            FileIdentity: *anyopaque,
-            FileIdentityLength: u32,
-        };
-        pub const _TransferPlaceholders_e__Struct = extern struct {
-            Flags: i32,
-            CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
-            PlaceholderTotalCount: i64,
-            PlaceholderArray: *CF_PLACEHOLDER_CREATE_INFO,
-            PlaceholderCount: u32,
-            EntriesProcessed: u32,
-        };
-        pub const _AckDehydrate_e__Struct = extern struct {
-            Flags: i32,
-            CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
-            FileIdentity: *anyopaque,
-            FileIdentityLength: u32,
-        };
-        pub const _AckRename_e__Struct = extern struct {
-            Flags: i32,
-            CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
-        };
-        pub const _AckDelete_e__Struct = extern struct {
-            Flags: i32,
-            CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
-        };
-        TransferData: _TransferData_e__Struct,
-        RetrieveData: _RetrieveData_e__Struct,
-        AckData: _AckData_e__Struct,
-        RestartHydration: _RestartHydration_e__Struct,
-        TransferPlaceholders: _TransferPlaceholders_e__Struct,
-        AckDehydrate: _AckDehydrate_e__Struct,
-        AckRename: _AckRename_e__Struct,
-        AckDelete: _AckDelete_e__Struct,
-    };
+pub const CF_OPERATION_PARAMETERS_0 = extern union {
+pub const _TransferData_e__Struct = extern struct {
+    Flags: i32,
+    CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
+    Buffer: *anyopaque,
+    Offset: i64,
+    Length: i64,
+};
+pub const _RetrieveData_e__Struct = extern struct {
+    Flags: i32,
+    Buffer: *anyopaque,
+    Offset: i64,
+    Length: i64,
+    ReturnedLength: i64,
+};
+pub const _AckData_e__Struct = extern struct {
+    Flags: i32,
+    CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
+    Offset: i64,
+    Length: i64,
+};
+pub const _RestartHydration_e__Struct = extern struct {
+    Flags: i32,
+    FsMetadata: *CF_FS_METADATA,
+    FileIdentity: *anyopaque,
+    FileIdentityLength: u32,
+};
+pub const _TransferPlaceholders_e__Struct = extern struct {
+    Flags: i32,
+    CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
+    PlaceholderTotalCount: i64,
+    PlaceholderArray: *CF_PLACEHOLDER_CREATE_INFO,
+    PlaceholderCount: u32,
+    EntriesProcessed: u32,
+};
+pub const _AckDehydrate_e__Struct = extern struct {
+    Flags: i32,
+    CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
+    FileIdentity: *anyopaque,
+    FileIdentityLength: u32,
+};
+pub const _AckRename_e__Struct = extern struct {
+    Flags: i32,
+    CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
+};
+pub const _AckDelete_e__Struct = extern struct {
+    Flags: i32,
+    CompletionStatus: @"Windows.Win32.Foundation".NTSTATUS,
+};
+    TransferData: _TransferData_e__Struct,
+    RetrieveData: _RetrieveData_e__Struct,
+    AckData: _AckData_e__Struct,
+    RestartHydration: _RestartHydration_e__Struct,
+    TransferPlaceholders: _TransferPlaceholders_e__Struct,
+    AckDehydrate: _AckDehydrate_e__Struct,
+    AckRename: _AckRename_e__Struct,
+    AckDelete: _AckDelete_e__Struct,
+};
     ParamSize: u32,
     Anonymous: CF_OPERATION_PARAMETERS_0,
 };

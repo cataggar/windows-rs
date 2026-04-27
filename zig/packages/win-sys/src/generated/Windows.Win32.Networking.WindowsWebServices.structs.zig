@@ -1042,9 +1042,9 @@ pub const WS_POLICY_PROPERTIES = extern struct {
     propertyCount: u32,
 };
 pub const WS_SECURITY_BINDING_PROPERTY_CONSTRAINT = extern struct {
-    pub const _out_e__Struct = extern struct {
-        securityBindingProperty: WS_SECURITY_BINDING_PROPERTY,
-    };
+pub const _out_e__Struct = extern struct {
+    securityBindingProperty: WS_SECURITY_BINDING_PROPERTY,
+};
     id: i32,
     allowedValues: *anyopaque,
     allowedValuesSize: u32,
@@ -1056,9 +1056,9 @@ pub const WS_SECURITY_BINDING_CONSTRAINT = extern struct {
     propertyConstraintCount: u32,
 };
 pub const WS_SSL_TRANSPORT_SECURITY_BINDING_CONSTRAINT = extern struct {
-    pub const _out_e__Struct = extern struct {
-        clientCertCredentialRequired: @"Windows.Win32.Foundation".BOOL,
-    };
+pub const _out_e__Struct = extern struct {
+    clientCertCredentialRequired: @"Windows.Win32.Foundation".BOOL,
+};
     bindingConstraint: WS_SECURITY_BINDING_CONSTRAINT,
     out: _out_e__Struct,
 };
@@ -1081,19 +1081,19 @@ pub const WS_KERBEROS_APREQ_MESSAGE_SECURITY_BINDING_CONSTRAINT = extern struct 
     bindingUsage: i32,
 };
 pub const WS_REQUEST_SECURITY_TOKEN_PROPERTY_CONSTRAINT = extern struct {
-    pub const _out_e__Struct = extern struct {
-        requestSecurityTokenProperty: WS_REQUEST_SECURITY_TOKEN_PROPERTY,
-    };
+pub const _out_e__Struct = extern struct {
+    requestSecurityTokenProperty: WS_REQUEST_SECURITY_TOKEN_PROPERTY,
+};
     id: i32,
     allowedValues: *anyopaque,
     allowedValuesSize: u32,
     out: _out_e__Struct,
 };
 pub const WS_ISSUED_TOKEN_MESSAGE_SECURITY_BINDING_CONSTRAINT = extern struct {
-    pub const _out_e__Struct = extern struct {
-        issuerAddress: *WS_ENDPOINT_ADDRESS,
-        requestSecurityTokenTemplate: *WS_XML_BUFFER,
-    };
+pub const _out_e__Struct = extern struct {
+    issuerAddress: *WS_ENDPOINT_ADDRESS,
+    requestSecurityTokenTemplate: *WS_XML_BUFFER,
+};
     bindingConstraint: WS_SECURITY_BINDING_CONSTRAINT,
     bindingUsage: i32,
     claimConstraints: *WS_XML_STRING,
@@ -1103,9 +1103,9 @@ pub const WS_ISSUED_TOKEN_MESSAGE_SECURITY_BINDING_CONSTRAINT = extern struct {
     out: _out_e__Struct,
 };
 pub const WS_SECURITY_PROPERTY_CONSTRAINT = extern struct {
-    pub const _out_e__Struct = extern struct {
-        securityProperty: WS_SECURITY_PROPERTY,
-    };
+pub const _out_e__Struct = extern struct {
+    securityProperty: WS_SECURITY_PROPERTY,
+};
     id: i32,
     allowedValues: *anyopaque,
     allowedValuesSize: u32,
@@ -1123,9 +1123,9 @@ pub const WS_SECURITY_CONTEXT_MESSAGE_SECURITY_BINDING_CONSTRAINT = extern struc
     bootstrapSecurityConstraint: *WS_SECURITY_CONSTRAINTS,
 };
 pub const WS_CHANNEL_PROPERTY_CONSTRAINT = extern struct {
-    pub const _out_e__Struct = extern struct {
-        channelProperty: WS_CHANNEL_PROPERTY,
-    };
+pub const _out_e__Struct = extern struct {
+    channelProperty: WS_CHANNEL_PROPERTY,
+};
     id: i32,
     allowedValues: *anyopaque,
     allowedValuesSize: u32,
@@ -1135,9 +1135,9 @@ pub const WS_POLICY_EXTENSION = extern struct {
     type: i32,
 };
 pub const WS_ENDPOINT_POLICY_EXTENSION = extern struct {
-    pub const _out_e__Struct = extern struct {
-        assertionValue: *WS_XML_BUFFER,
-    };
+pub const _out_e__Struct = extern struct {
+    assertionValue: *WS_XML_BUFFER,
+};
     policyExtension: WS_POLICY_EXTENSION,
     assertionName: *WS_XML_STRING,
     assertionNs: *WS_XML_STRING,

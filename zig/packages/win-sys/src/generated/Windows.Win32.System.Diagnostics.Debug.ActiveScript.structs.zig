@@ -18,14 +18,14 @@ pub const PROFILER_PROPERTY_TYPE_SUBSTRING_INFO = extern struct {
     value: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const PROFILER_HEAP_OBJECT_RELATIONSHIP = extern struct {
-    pub const PROFILER_HEAP_OBJECT_RELATIONSHIP_0 = extern union {
-        numberValue: f64,
-        stringValue: @"Windows.Win32.Foundation".PWSTR,
-        bstrValue: @"Windows.Win32.Foundation".BSTR,
-        objectId: usize,
-        externalObjectAddress: *anyopaque,
-        subString: *PROFILER_PROPERTY_TYPE_SUBSTRING_INFO,
-    };
+pub const PROFILER_HEAP_OBJECT_RELATIONSHIP_0 = extern union {
+    numberValue: f64,
+    stringValue: @"Windows.Win32.Foundation".PWSTR,
+    bstrValue: @"Windows.Win32.Foundation".BSTR,
+    objectId: usize,
+    externalObjectAddress: *anyopaque,
+    subString: *PROFILER_PROPERTY_TYPE_SUBSTRING_INFO,
+};
     relationshipId: u32,
     relationshipInfo: i32,
     Anonymous: PROFILER_HEAP_OBJECT_RELATIONSHIP_0,
@@ -35,29 +35,29 @@ pub const PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST = extern struct {
     elements: [1]PROFILER_HEAP_OBJECT_RELATIONSHIP,
 };
 pub const PROFILER_HEAP_OBJECT_OPTIONAL_INFO = extern struct {
-    pub const PROFILER_HEAP_OBJECT_OPTIONAL_INFO_0 = extern union {
-        prototype: usize,
-        functionName: @"Windows.Win32.Foundation".PWSTR,
-        elementAttributesSize: u32,
-        elementTextChildrenSize: u32,
-        scopeList: *PROFILER_HEAP_OBJECT_SCOPE_LIST,
-        internalProperty: *PROFILER_HEAP_OBJECT_RELATIONSHIP,
-        namePropertyList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-        indexPropertyList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-        relationshipList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-        eventList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-        weakMapCollectionList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-        mapCollectionList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-        setCollectionList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
-    };
+pub const PROFILER_HEAP_OBJECT_OPTIONAL_INFO_0 = extern union {
+    prototype: usize,
+    functionName: @"Windows.Win32.Foundation".PWSTR,
+    elementAttributesSize: u32,
+    elementTextChildrenSize: u32,
+    scopeList: *PROFILER_HEAP_OBJECT_SCOPE_LIST,
+    internalProperty: *PROFILER_HEAP_OBJECT_RELATIONSHIP,
+    namePropertyList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+    indexPropertyList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+    relationshipList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+    eventList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+    weakMapCollectionList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+    mapCollectionList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+    setCollectionList: *PROFILER_HEAP_OBJECT_RELATIONSHIP_LIST,
+};
     infoType: i32,
     Anonymous: PROFILER_HEAP_OBJECT_OPTIONAL_INFO_0,
 };
 pub const PROFILER_HEAP_OBJECT = extern struct {
-    pub const PROFILER_HEAP_OBJECT_0 = extern union {
-        objectId: usize,
-        externalObjectAddress: *anyopaque,
-    };
+pub const PROFILER_HEAP_OBJECT_0 = extern union {
+    objectId: usize,
+    externalObjectAddress: *anyopaque,
+};
     size: u32,
     Anonymous: PROFILER_HEAP_OBJECT_0,
     typeNameId: u32,

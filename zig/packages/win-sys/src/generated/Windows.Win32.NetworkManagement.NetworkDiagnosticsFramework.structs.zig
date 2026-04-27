@@ -20,22 +20,22 @@ pub const DIAG_SOCKADDR = extern struct {
     data: [126]@"Windows.Win32.Foundation".CHAR,
 };
 pub const HELPER_ATTRIBUTE = extern struct {
-    pub const HELPER_ATTRIBUTE_0 = extern union {
-        Boolean: @"Windows.Win32.Foundation".BOOL,
-        Char: u8,
-        Byte: u8,
-        Short: i16,
-        Word: u16,
-        Int: i32,
-        DWord: u32,
-        Int64: i64,
-        UInt64: u64,
-        PWStr: @"Windows.Win32.Foundation".PWSTR,
-        Guid: GUID,
-        LifeTime: LIFE_TIME,
-        Address: DIAG_SOCKADDR,
-        OctetString: OCTET_STRING,
-    };
+pub const HELPER_ATTRIBUTE_0 = extern union {
+    Boolean: @"Windows.Win32.Foundation".BOOL,
+    Char: u8,
+    Byte: u8,
+    Short: i16,
+    Word: u16,
+    Int: i32,
+    DWord: u32,
+    Int64: i64,
+    UInt64: u64,
+    PWStr: @"Windows.Win32.Foundation".PWSTR,
+    Guid: GUID,
+    LifeTime: LIFE_TIME,
+    Address: DIAG_SOCKADDR,
+    OctetString: OCTET_STRING,
+};
     pwszName: @"Windows.Win32.Foundation".PWSTR,
     type: i32,
     Anonymous: HELPER_ATTRIBUTE_0,
@@ -48,12 +48,12 @@ pub const ShellCommandInfo = extern struct {
     nShowCmd: u32,
 };
 pub const UiInfo = extern struct {
-    pub const UiInfo_0 = extern union {
-        pwzNull: @"Windows.Win32.Foundation".PWSTR,
-        ShellInfo: ShellCommandInfo,
-        pwzHelpUrl: @"Windows.Win32.Foundation".PWSTR,
-        pwzDui: @"Windows.Win32.Foundation".PWSTR,
-    };
+pub const UiInfo_0 = extern union {
+    pwzNull: @"Windows.Win32.Foundation".PWSTR,
+    ShellInfo: ShellCommandInfo,
+    pwzHelpUrl: @"Windows.Win32.Foundation".PWSTR,
+    pwzDui: @"Windows.Win32.Foundation".PWSTR,
+};
     type: i32,
     Anonymous: UiInfo_0,
 };

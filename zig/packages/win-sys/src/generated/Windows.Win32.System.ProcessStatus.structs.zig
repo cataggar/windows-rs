@@ -21,9 +21,9 @@ pub const PSAPI_WS_WATCH_INFORMATION_EX = extern struct {
     Flags: usize,
 };
 pub const PSAPI_WORKING_SET_BLOCK = extern union {
-    pub const PSAPI_WORKING_SET_BLOCK_0 = extern struct {
-        _bitfield: usize,
-    };
+pub const PSAPI_WORKING_SET_BLOCK_0 = extern struct {
+    _bitfield: usize,
+};
     Flags: usize,
     Anonymous: PSAPI_WORKING_SET_BLOCK_0,
 };
@@ -32,16 +32,16 @@ pub const PSAPI_WORKING_SET_INFORMATION = extern struct {
     WorkingSetInfo: [1]PSAPI_WORKING_SET_BLOCK,
 };
 pub const PSAPI_WORKING_SET_EX_BLOCK = extern union {
-    pub const PSAPI_WORKING_SET_EX_BLOCK_0 = extern union {
-        pub const PSAPI_WORKING_SET_EX_BLOCK_0_0 = extern struct {
-            _bitfield: usize,
-        };
-        pub const _Invalid_e__Struct = extern struct {
-            _bitfield: usize,
-        };
-        Anonymous: PSAPI_WORKING_SET_EX_BLOCK_0_0,
-        Invalid: _Invalid_e__Struct,
-    };
+pub const PSAPI_WORKING_SET_EX_BLOCK_0 = extern union {
+pub const PSAPI_WORKING_SET_EX_BLOCK_0_0 = extern struct {
+    _bitfield: usize,
+};
+pub const _Invalid_e__Struct = extern struct {
+    _bitfield: usize,
+};
+    Anonymous: PSAPI_WORKING_SET_EX_BLOCK_0_0,
+    Invalid: _Invalid_e__Struct,
+};
     Flags: usize,
     Anonymous: PSAPI_WORKING_SET_EX_BLOCK_0,
 };

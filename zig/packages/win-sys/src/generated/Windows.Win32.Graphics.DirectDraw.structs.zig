@@ -44,19 +44,19 @@ pub const DDOSCAPS = extern struct {
     dwCaps: u32,
 };
 pub const DDSCAPSEX = extern struct {
-    pub const DDSCAPSEX_0 = extern union {
-        dwCaps4: u32,
-        dwVolumeDepth: u32,
-    };
+pub const DDSCAPSEX_0 = extern union {
+    dwCaps4: u32,
+    dwVolumeDepth: u32,
+};
     dwCaps2: u32,
     dwCaps3: u32,
     Anonymous: DDSCAPSEX_0,
 };
 pub const DDSCAPS2 = extern struct {
-    pub const DDSCAPS2_0 = extern union {
-        dwCaps4: u32,
-        dwVolumeDepth: u32,
-    };
+pub const DDSCAPS2_0 = extern union {
+    dwCaps4: u32,
+    dwVolumeDepth: u32,
+};
     dwCaps: u32,
     dwCaps2: u32,
     dwCaps3: u32,
@@ -330,47 +330,47 @@ pub const DDCAPS_DX7 = extern struct {
     ddsCaps: DDSCAPS2,
 };
 pub const DDPIXELFORMAT = extern struct {
-    pub const DDPIXELFORMAT_0 = extern union {
-        dwRGBBitCount: u32,
-        dwYUVBitCount: u32,
-        dwZBufferBitDepth: u32,
-        dwAlphaBitDepth: u32,
-        dwLuminanceBitCount: u32,
-        dwBumpBitCount: u32,
-        dwPrivateFormatBitCount: u32,
-    };
-    pub const DDPIXELFORMAT_1 = extern union {
-        dwRBitMask: u32,
-        dwYBitMask: u32,
-        dwStencilBitDepth: u32,
-        dwLuminanceBitMask: u32,
-        dwBumpDuBitMask: u32,
-        dwOperations: u32,
-    };
-    pub const DDPIXELFORMAT_2 = extern union {
-        pub const _MultiSampleCaps_e__Struct = extern struct {
-            wFlipMSTypes: u16,
-            wBltMSTypes: u16,
-        };
-        dwGBitMask: u32,
-        dwUBitMask: u32,
-        dwZBitMask: u32,
-        dwBumpDvBitMask: u32,
-        MultiSampleCaps: _MultiSampleCaps_e__Struct,
-    };
-    pub const DDPIXELFORMAT_3 = extern union {
-        dwBBitMask: u32,
-        dwVBitMask: u32,
-        dwStencilBitMask: u32,
-        dwBumpLuminanceBitMask: u32,
-    };
-    pub const DDPIXELFORMAT_4 = extern union {
-        dwRGBAlphaBitMask: u32,
-        dwYUVAlphaBitMask: u32,
-        dwLuminanceAlphaBitMask: u32,
-        dwRGBZBitMask: u32,
-        dwYUVZBitMask: u32,
-    };
+pub const DDPIXELFORMAT_0 = extern union {
+    dwRGBBitCount: u32,
+    dwYUVBitCount: u32,
+    dwZBufferBitDepth: u32,
+    dwAlphaBitDepth: u32,
+    dwLuminanceBitCount: u32,
+    dwBumpBitCount: u32,
+    dwPrivateFormatBitCount: u32,
+};
+pub const DDPIXELFORMAT_1 = extern union {
+    dwRBitMask: u32,
+    dwYBitMask: u32,
+    dwStencilBitDepth: u32,
+    dwLuminanceBitMask: u32,
+    dwBumpDuBitMask: u32,
+    dwOperations: u32,
+};
+pub const DDPIXELFORMAT_2 = extern union {
+pub const _MultiSampleCaps_e__Struct = extern struct {
+    wFlipMSTypes: u16,
+    wBltMSTypes: u16,
+};
+    dwGBitMask: u32,
+    dwUBitMask: u32,
+    dwZBitMask: u32,
+    dwBumpDvBitMask: u32,
+    MultiSampleCaps: _MultiSampleCaps_e__Struct,
+};
+pub const DDPIXELFORMAT_3 = extern union {
+    dwBBitMask: u32,
+    dwVBitMask: u32,
+    dwStencilBitMask: u32,
+    dwBumpLuminanceBitMask: u32,
+};
+pub const DDPIXELFORMAT_4 = extern union {
+    dwRGBAlphaBitMask: u32,
+    dwYUVAlphaBitMask: u32,
+    dwLuminanceAlphaBitMask: u32,
+    dwRGBZBitMask: u32,
+    dwYUVZBitMask: u32,
+};
     dwSize: u32,
     dwFlags: u32,
     dwFourCC: u32,
@@ -409,15 +409,15 @@ pub const DDDEVICEIDENTIFIER2 = extern struct {
     dwWHQLLevel: u32,
 };
 pub const DDSURFACEDESC = extern struct {
-    pub const DDSURFACEDESC_0 = extern union {
-        lPitch: i32,
-        dwLinearSize: u32,
-    };
-    pub const DDSURFACEDESC_1 = extern union {
-        dwMipMapCount: u32,
-        dwZBufferBitDepth: u32,
-        dwRefreshRate: u32,
-    };
+pub const DDSURFACEDESC_0 = extern union {
+    lPitch: i32,
+    dwLinearSize: u32,
+};
+pub const DDSURFACEDESC_1 = extern union {
+    dwMipMapCount: u32,
+    dwZBufferBitDepth: u32,
+    dwRefreshRate: u32,
+};
     dwSize: u32,
     dwFlags: u32,
     dwHeight: u32,
@@ -436,27 +436,27 @@ pub const DDSURFACEDESC = extern struct {
     ddsCaps: DDSCAPS,
 };
 pub const DDSURFACEDESC2 = extern struct {
-    pub const DDSURFACEDESC2_0 = extern union {
-        lPitch: i32,
-        dwLinearSize: u32,
-    };
-    pub const DDSURFACEDESC2_1 = extern union {
-        dwBackBufferCount: u32,
-        dwDepth: u32,
-    };
-    pub const DDSURFACEDESC2_2 = extern union {
-        dwMipMapCount: u32,
-        dwRefreshRate: u32,
-        dwSrcVBHandle: u32,
-    };
-    pub const DDSURFACEDESC2_3 = extern union {
-        ddckCKDestOverlay: DDCOLORKEY,
-        dwEmptyFaceColor: u32,
-    };
-    pub const DDSURFACEDESC2_4 = extern union {
-        ddpfPixelFormat: DDPIXELFORMAT,
-        dwFVF: u32,
-    };
+pub const DDSURFACEDESC2_0 = extern union {
+    lPitch: i32,
+    dwLinearSize: u32,
+};
+pub const DDSURFACEDESC2_1 = extern union {
+    dwBackBufferCount: u32,
+    dwDepth: u32,
+};
+pub const DDSURFACEDESC2_2 = extern union {
+    dwMipMapCount: u32,
+    dwRefreshRate: u32,
+    dwSrcVBHandle: u32,
+};
+pub const DDSURFACEDESC2_3 = extern union {
+    ddckCKDestOverlay: DDCOLORKEY,
+    dwEmptyFaceColor: u32,
+};
+pub const DDSURFACEDESC2_4 = extern union {
+    ddpfPixelFormat: DDPIXELFORMAT,
+    dwFVF: u32,
+};
     dwSize: u32,
     dwFlags: u32,
     dwHeight: u32,
@@ -582,22 +582,22 @@ pub const DDKERNELCAPS = extern struct {
     dwIRQCaps: u32,
 };
 pub const SURFACEALIGNMENT = extern struct {
-    pub const SURFACEALIGNMENT_0 = extern union {
-        pub const _Linear_e__Struct = extern struct {
-            dwStartAlignment: u32,
-            dwPitchAlignment: u32,
-            dwFlags: u32,
-            dwReserved2: u32,
-        };
-        pub const _Rectangular_e__Struct = extern struct {
-            dwXAlignment: u32,
-            dwYAlignment: u32,
-            dwFlags: u32,
-            dwReserved2: u32,
-        };
-        Linear: _Linear_e__Struct,
-        Rectangular: _Rectangular_e__Struct,
-    };
+pub const SURFACEALIGNMENT_0 = extern union {
+pub const _Linear_e__Struct = extern struct {
+    dwStartAlignment: u32,
+    dwPitchAlignment: u32,
+    dwFlags: u32,
+    dwReserved2: u32,
+};
+pub const _Rectangular_e__Struct = extern struct {
+    dwXAlignment: u32,
+    dwYAlignment: u32,
+    dwFlags: u32,
+    dwReserved2: u32,
+};
+    Linear: _Linear_e__Struct,
+    Rectangular: _Rectangular_e__Struct,
+};
     Anonymous: SURFACEALIGNMENT_0,
 };
 pub const HEAPALIGNMENT = extern struct {
@@ -693,14 +693,14 @@ pub const DDVERSIONDATA = extern struct {
     dwReserved2: usize,
 };
 pub const VIDMEM = extern struct {
-    pub const VIDMEM_0 = extern union {
-        fpEnd: usize,
-        dwWidth: u32,
-    };
-    pub const VIDMEM_1 = extern union {
-        lpHeap: *VMEMHEAP,
-        dwHeight: u32,
-    };
+pub const VIDMEM_0 = extern union {
+    fpEnd: usize,
+    dwWidth: u32,
+};
+pub const VIDMEM_1 = extern union {
+    lpHeap: *VMEMHEAP,
+    dwHeight: u32,
+};
     dwFlags: u32,
     fpStart: usize,
     Anonymous1: VIDMEM_0,
@@ -852,10 +852,10 @@ pub const DDNONLOCALVIDMEMCAPS = extern struct {
     dwNLVBRops: [8]u32,
 };
 pub const DDMORESURFACECAPS = extern struct {
-    pub const ExtendedHeapRestrictions = extern struct {
-        ddsCapsEx: DDSCAPSEX,
-        ddsCapsExAlt: DDSCAPSEX,
-    };
+pub const ExtendedHeapRestrictions = extern struct {
+    ddsCapsEx: DDSCAPSEX,
+    ddsCapsExAlt: DDSCAPSEX,
+};
     dwSize: u32,
     ddsCapsMore: DDSCAPSEX,
     ddsExtendedHeapRestrictions: [1]ExtendedHeapRestrictions,
@@ -880,10 +880,10 @@ pub const ACCESSRECTLIST = opaque {};
 pub const DDRAWI_DDRAWSURFACE_INT = opaque {};
 pub const DDRAWI_DDRAWSURFACE_GBL = opaque {};
 pub const DDRAWI_DDRAWSURFACE_GBL_MORE = extern struct {
-    pub const DDRAWI_DDRAWSURFACE_GBL_MORE_0 = extern union {
-        dwPhysicalPageTable: u32,
-        fpPhysicalVidMem: usize,
-    };
+pub const DDRAWI_DDRAWSURFACE_GBL_MORE_0 = extern union {
+    dwPhysicalPageTable: u32,
+    fpPhysicalVidMem: usize,
+};
     dwSize: u32,
     Anonymous: DDRAWI_DDRAWSURFACE_GBL_MORE_0,
     pPageTable: *u32,
@@ -1090,9 +1090,9 @@ pub const DDHAL_GETHEAPALIGNMENTDATA = extern struct {
 };
 pub const DDHAL_CREATESURFACEEXDATA = opaque {};
 pub const DDHAL_GETDRIVERSTATEDATA = extern struct {
-    pub const DDHAL_GETDRIVERSTATEDATA_0 = extern union {
-        dwhContext: usize,
-    };
+pub const DDHAL_GETDRIVERSTATEDATA_0 = extern union {
+    dwhContext: usize,
+};
     dwFlags: u32,
     Anonymous: DDHAL_GETDRIVERSTATEDATA_0,
     lpdwStates: *u32,
@@ -1123,14 +1123,14 @@ pub const DDHAL_RENDERMOCOMPDATA = opaque {};
 pub const DDHAL_QUERYMOCOMPSTATUSDATA = opaque {};
 pub const DDHAL_DESTROYMOCOMPDATA = opaque {};
 pub const VIDEOMEMORY = extern struct {
-    pub const VIDEOMEMORY_0 = extern union {
-        fpEnd: usize,
-        dwWidth: u32,
-    };
-    pub const VIDEOMEMORY_1 = extern union {
-        lpHeap: *VMEMHEAP,
-        dwHeight: u32,
-    };
+pub const VIDEOMEMORY_0 = extern union {
+    fpEnd: usize,
+    dwWidth: u32,
+};
+pub const VIDEOMEMORY_1 = extern union {
+    lpHeap: *VMEMHEAP,
+    dwHeight: u32,
+};
     dwFlags: u32,
     fpStart: usize,
     Anonymous1: VIDEOMEMORY_0,
@@ -1283,19 +1283,19 @@ pub const DD_SURFACE_INT = extern struct {
     lpLcl: *DD_SURFACE_LOCAL,
 };
 pub const DD_SURFACE_GLOBAL = extern struct {
-    pub const DD_SURFACE_GLOBAL_0 = extern union {
-        dwBlockSizeY: u32,
-        lSlicePitch: i32,
-    };
-    pub const DD_SURFACE_GLOBAL_1 = extern union {
-        lpVidMemHeap: *VIDEOMEMORY,
-        dwBlockSizeX: u32,
-        dwUserMemSize: u32,
-    };
-    pub const DD_SURFACE_GLOBAL_2 = extern union {
-        lPitch: i32,
-        dwLinearSize: u32,
-    };
+pub const DD_SURFACE_GLOBAL_0 = extern union {
+    dwBlockSizeY: u32,
+    lSlicePitch: i32,
+};
+pub const DD_SURFACE_GLOBAL_1 = extern union {
+    lpVidMemHeap: *VIDEOMEMORY,
+    dwBlockSizeX: u32,
+    dwUserMemSize: u32,
+};
+pub const DD_SURFACE_GLOBAL_2 = extern union {
+    lPitch: i32,
+    dwLinearSize: u32,
+};
     Anonymous1: DD_SURFACE_GLOBAL_0,
     Anonymous2: DD_SURFACE_GLOBAL_1,
     fpVidMem: usize,
@@ -1317,14 +1317,14 @@ pub const DD_SURFACE_MORE = extern struct {
     dwSurfaceHandle: u32,
 };
 pub const DD_SURFACE_LOCAL = extern struct {
-    pub const DD_SURFACE_LOCAL_0 = extern union {
-        ddckCKSrcOverlay: DDCOLORKEY,
-        ddckCKSrcBlt: DDCOLORKEY,
-    };
-    pub const DD_SURFACE_LOCAL_1 = extern union {
-        ddckCKDestOverlay: DDCOLORKEY,
-        ddckCKDestBlt: DDCOLORKEY,
-    };
+pub const DD_SURFACE_LOCAL_0 = extern union {
+    ddckCKSrcOverlay: DDCOLORKEY,
+    ddckCKSrcBlt: DDCOLORKEY,
+};
+pub const DD_SURFACE_LOCAL_1 = extern union {
+    ddckCKDestOverlay: DDCOLORKEY,
+    ddckCKDestBlt: DDCOLORKEY,
+};
     lpGbl: *DD_SURFACE_GLOBAL,
     dwFlags: u32,
     ddsCaps: DDSCAPS,
@@ -1461,10 +1461,10 @@ pub const DD_MOTIONCOMP_LOCAL = extern struct {
     lpDriverReserved3: *anyopaque,
 };
 pub const DD_MORESURFACECAPS = extern struct {
-    pub const NTExtendedHeapRestrictions = extern struct {
-        ddsCapsEx: DDSCAPSEX,
-        ddsCapsExAlt: DDSCAPSEX,
-    };
+pub const NTExtendedHeapRestrictions = extern struct {
+    ddsCapsEx: DDSCAPSEX,
+    ddsCapsExAlt: DDSCAPSEX,
+};
     dwSize: u32,
     ddsCapsMore: DDSCAPSEX,
     ddsExtendedHeapRestrictions: [1]NTExtendedHeapRestrictions,
@@ -1941,10 +1941,10 @@ pub const DD_CREATESURFACEEXDATA = extern struct {
     ddRVal: @"Windows.Win32.Foundation".HRESULT,
 };
 pub const DD_GETDRIVERSTATEDATA = extern struct {
-    pub const DD_GETDRIVERSTATEDATA_0 = extern union {
-        lpDD: *DD_DIRECTDRAW_GLOBAL,
-        dwhContext: usize,
-    };
+pub const DD_GETDRIVERSTATEDATA_0 = extern union {
+    lpDD: *DD_DIRECTDRAW_GLOBAL,
+    dwhContext: usize,
+};
     dwFlags: u32,
     Anonymous: DD_GETDRIVERSTATEDATA_0,
     lpdwStates: *u32,

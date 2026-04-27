@@ -643,18 +643,18 @@ pub const MENUEX_TEMPLATE_ITEM = extern struct {
     szText: [1]u16,
 };
 pub const MENUTEMPLATEEX = extern struct {
-    pub const MENUTEMPLATEEX_0 = extern union {
-        pub const _Menu_e__Struct = extern struct {
-            mitHeader: MENUITEMTEMPLATEHEADER,
-            miTemplate: [1]MENUITEMTEMPLATE,
-        };
-        pub const _MenuEx_e__Struct = extern struct {
-            mexHeader: MENUEX_TEMPLATE_HEADER,
-            mexItem: [1]MENUEX_TEMPLATE_ITEM,
-        };
-        Menu: _Menu_e__Struct,
-        MenuEx: _MenuEx_e__Struct,
-    };
+pub const MENUTEMPLATEEX_0 = extern union {
+pub const _Menu_e__Struct = extern struct {
+    mitHeader: MENUITEMTEMPLATEHEADER,
+    miTemplate: [1]MENUITEMTEMPLATE,
+};
+pub const _MenuEx_e__Struct = extern struct {
+    mexHeader: MENUEX_TEMPLATE_HEADER,
+    mexItem: [1]MENUEX_TEMPLATE_ITEM,
+};
+    Menu: _Menu_e__Struct,
+    MenuEx: _MenuEx_e__Struct,
+};
     Anonymous: MENUTEMPLATEEX_0,
 };
 pub const IndexedResourceQualifier = extern struct {

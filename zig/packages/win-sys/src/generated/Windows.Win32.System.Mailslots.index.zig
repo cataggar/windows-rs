@@ -28,3 +28,4 @@ pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {
         else => null,
     };
 }
+

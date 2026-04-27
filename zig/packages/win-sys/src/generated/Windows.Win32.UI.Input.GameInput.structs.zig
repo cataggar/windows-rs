@@ -420,19 +420,19 @@ pub const GameInputForceFeedbackRampParams = extern struct {
     endMagnitude: GameInputForceFeedbackMagnitude,
 };
 pub const GameInputForceFeedbackParams = extern struct {
-    pub const _data_e__Union = extern union {
-        constant: GameInputForceFeedbackConstantParams,
-        ramp: GameInputForceFeedbackRampParams,
-        sineWave: GameInputForceFeedbackPeriodicParams,
-        squareWave: GameInputForceFeedbackPeriodicParams,
-        triangleWave: GameInputForceFeedbackPeriodicParams,
-        sawtoothUpWave: GameInputForceFeedbackPeriodicParams,
-        sawtoothDownWave: GameInputForceFeedbackPeriodicParams,
-        spring: GameInputForceFeedbackConditionParams,
-        friction: GameInputForceFeedbackConditionParams,
-        damper: GameInputForceFeedbackConditionParams,
-        inertia: GameInputForceFeedbackConditionParams,
-    };
+pub const _data_e__Union = extern union {
+    constant: GameInputForceFeedbackConstantParams,
+    ramp: GameInputForceFeedbackRampParams,
+    sineWave: GameInputForceFeedbackPeriodicParams,
+    squareWave: GameInputForceFeedbackPeriodicParams,
+    triangleWave: GameInputForceFeedbackPeriodicParams,
+    sawtoothUpWave: GameInputForceFeedbackPeriodicParams,
+    sawtoothDownWave: GameInputForceFeedbackPeriodicParams,
+    spring: GameInputForceFeedbackConditionParams,
+    friction: GameInputForceFeedbackConditionParams,
+    damper: GameInputForceFeedbackConditionParams,
+    inertia: GameInputForceFeedbackConditionParams,
+};
     kind: i32,
     data: _data_e__Union,
 };

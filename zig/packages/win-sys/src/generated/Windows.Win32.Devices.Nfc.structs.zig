@@ -49,11 +49,11 @@ pub const SECURE_ELEMENT_AID_ROUTING_INFO = extern struct {
     pbAid: [16]u8,
 };
 pub const SECURE_ELEMENT_ROUTING_TABLE_ENTRY = extern struct {
-    pub const SECURE_ELEMENT_ROUTING_TABLE_ENTRY_0 = extern union {
-        TechRoutingInfo: SECURE_ELEMENT_TECH_ROUTING_INFO,
-        ProtoRoutingInfo: SECURE_ELEMENT_PROTO_ROUTING_INFO,
-        AidRoutingInfo: SECURE_ELEMENT_AID_ROUTING_INFO,
-    };
+pub const SECURE_ELEMENT_ROUTING_TABLE_ENTRY_0 = extern union {
+    TechRoutingInfo: SECURE_ELEMENT_TECH_ROUTING_INFO,
+    ProtoRoutingInfo: SECURE_ELEMENT_PROTO_ROUTING_INFO,
+    AidRoutingInfo: SECURE_ELEMENT_AID_ROUTING_INFO,
+};
     eRoutingType: i32,
     Anonymous: SECURE_ELEMENT_ROUTING_TABLE_ENTRY_0,
 };
@@ -168,10 +168,10 @@ pub const NFC_LLCP_SOCKET_ACCEPT_INFO = extern struct {
     sSocketOption: NFC_LLCP_SOCKET_OPTION,
 };
 pub const NFC_LLCP_SOCKET_CONNECT_INFO = extern struct {
-    pub const NFC_LLCP_SOCKET_CONNECT_INFO_0 = extern union {
-        bSAP: u8,
-        sServiceName: NFC_LLCP_SERVICE_NAME_ENTRY,
-    };
+pub const NFC_LLCP_SOCKET_CONNECT_INFO_0 = extern union {
+    bSAP: u8,
+    sServiceName: NFC_LLCP_SERVICE_NAME_ENTRY,
+};
     hRemoteDev: isize,
     hSocket: isize,
     eConnectType: i32,
@@ -253,11 +253,11 @@ pub const NFC_SE_AID_ROUTING_INFO = extern struct {
     pbAid: [16]u8,
 };
 pub const NFC_SE_ROUTING_TABLE_ENTRY = extern struct {
-    pub const NFC_SE_ROUTING_TABLE_ENTRY_0 = extern union {
-        TechRoutingInfo: NFC_SE_TECH_ROUTING_INFO,
-        ProtoRoutingInfo: NFC_SE_PROTO_ROUTING_INFO,
-        AidRoutingInfo: NFC_SE_AID_ROUTING_INFO,
-    };
+pub const NFC_SE_ROUTING_TABLE_ENTRY_0 = extern union {
+    TechRoutingInfo: NFC_SE_TECH_ROUTING_INFO,
+    ProtoRoutingInfo: NFC_SE_PROTO_ROUTING_INFO,
+    AidRoutingInfo: NFC_SE_AID_ROUTING_INFO,
+};
     eRoutingType: i32,
     Anonymous: NFC_SE_ROUTING_TABLE_ENTRY_0,
 };

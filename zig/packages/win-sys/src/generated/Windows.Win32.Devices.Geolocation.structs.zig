@@ -81,13 +81,13 @@ pub const GNSS_LKGFIX_PARAM = extern struct {
     Version: u32,
 };
 pub const GNSS_FIXSESSION_PARAM = extern struct {
-    pub const GNSS_FIXSESSION_PARAM_0 = extern union {
-        SingleShotParam: GNSS_SINGLESHOT_PARAM,
-        DistanceParam: GNSS_DISTANCETRACKING_PARAM,
-        ContinuousParam: GNSS_CONTINUOUSTRACKING_PARAM,
-        LkgFixParam: GNSS_LKGFIX_PARAM,
-        UnusedParam: [268]u8,
-    };
+pub const GNSS_FIXSESSION_PARAM_0 = extern union {
+    SingleShotParam: GNSS_SINGLESHOT_PARAM,
+    DistanceParam: GNSS_DISTANCETRACKING_PARAM,
+    ContinuousParam: GNSS_CONTINUOUSTRACKING_PARAM,
+    LkgFixParam: GNSS_LKGFIX_PARAM,
+    UnusedParam: [268]u8,
+};
     Size: u32,
     Version: u32,
     FixSessionID: u32,
@@ -226,9 +226,9 @@ pub const GNSS_BREADCRUMB_V1 = extern struct {
     FixSuccess: u8,
 };
 pub const GNSS_BREADCRUMB_LIST = extern struct {
-    pub const GNSS_BREADCRUMB_LIST_0 = extern union {
-        v1: [50]GNSS_BREADCRUMB_V1,
-    };
+pub const GNSS_BREADCRUMB_LIST_0 = extern union {
+    v1: [50]GNSS_BREADCRUMB_V1,
+};
     Size: u32,
     Version: u32,
     NumCrumbs: u32,
@@ -240,10 +240,10 @@ pub const GNSS_GEOREGION_CIRCLE = extern struct {
     RadiusInMeters: f64,
 };
 pub const GNSS_GEOREGION = extern struct {
-    pub const GNSS_GEOREGION_0 = extern union {
-        Circle: GNSS_GEOREGION_CIRCLE,
-        Unused: [512]u8,
-    };
+pub const GNSS_GEOREGION_0 = extern union {
+    Circle: GNSS_GEOREGION_CIRCLE,
+    Unused: [512]u8,
+};
     Size: u32,
     Version: u32,
     GeoRegionType: i32,
@@ -324,11 +324,11 @@ pub const GNSS_V2UPL_NI_INFO = extern struct {
     RequestorId: [260]u16,
 };
 pub const GNSS_NI_REQUEST_PARAM = extern struct {
-    pub const GNSS_NI_REQUEST_PARAM_0 = extern union {
-        SuplNiInfo: GNSS_SUPL_NI_INFO,
-        CpNiInfo: GNSS_CP_NI_INFO,
-        V2UplNiInfo: GNSS_V2UPL_NI_INFO,
-    };
+pub const GNSS_NI_REQUEST_PARAM_0 = extern union {
+    SuplNiInfo: GNSS_SUPL_NI_INFO,
+    CpNiInfo: GNSS_CP_NI_INFO,
+    V2UplNiInfo: GNSS_V2UPL_NI_INFO,
+};
     Size: u32,
     Version: u32,
     RequestId: u32,
@@ -346,18 +346,18 @@ pub const GNSS_DRIVER_REQUEST_DATA = extern struct {
     RequestFlag: u32,
 };
 pub const GNSS_EVENT = extern struct {
-    pub const GNSS_EVENT_0 = extern union {
-        FixData: GNSS_FIXDATA,
-        AgnssRequest: GNSS_AGNSS_REQUEST_PARAM,
-        NiRequest: GNSS_NI_REQUEST_PARAM,
-        ErrorInformation: GNSS_ERRORINFO,
-        NmeaData: GNSS_NMEA_DATA,
-        GeofenceAlertData: GNSS_GEOFENCE_ALERT_DATA,
-        BreadcrumbAlertData: GNSS_BREADCRUMBING_ALERT_DATA,
-        GeofencesTrackingStatus: GNSS_GEOFENCES_TRACKINGSTATUS_DATA,
-        DriverRequestData: GNSS_DRIVER_REQUEST_DATA,
-        CustomData: [1]u8,
-    };
+pub const GNSS_EVENT_0 = extern union {
+    FixData: GNSS_FIXDATA,
+    AgnssRequest: GNSS_AGNSS_REQUEST_PARAM,
+    NiRequest: GNSS_NI_REQUEST_PARAM,
+    ErrorInformation: GNSS_ERRORINFO,
+    NmeaData: GNSS_NMEA_DATA,
+    GeofenceAlertData: GNSS_GEOFENCE_ALERT_DATA,
+    BreadcrumbAlertData: GNSS_BREADCRUMBING_ALERT_DATA,
+    GeofencesTrackingStatus: GNSS_GEOFENCES_TRACKINGSTATUS_DATA,
+    DriverRequestData: GNSS_DRIVER_REQUEST_DATA,
+    CustomData: [1]u8,
+};
     Size: u32,
     Version: u32,
     EventType: i32,
@@ -366,19 +366,19 @@ pub const GNSS_EVENT = extern struct {
     Anonymous: GNSS_EVENT_0,
 };
 pub const GNSS_EVENT_2 = extern struct {
-    pub const GNSS_EVENT_2_0 = extern union {
-        FixData: GNSS_FIXDATA,
-        FixData2: GNSS_FIXDATA_2,
-        AgnssRequest: GNSS_AGNSS_REQUEST_PARAM,
-        NiRequest: GNSS_NI_REQUEST_PARAM,
-        ErrorInformation: GNSS_ERRORINFO,
-        NmeaData: GNSS_NMEA_DATA,
-        GeofenceAlertData: GNSS_GEOFENCE_ALERT_DATA,
-        BreadcrumbAlertData: GNSS_BREADCRUMBING_ALERT_DATA,
-        GeofencesTrackingStatus: GNSS_GEOFENCES_TRACKINGSTATUS_DATA,
-        DriverRequestData: GNSS_DRIVER_REQUEST_DATA,
-        CustomData: [1]u8,
-    };
+pub const GNSS_EVENT_2_0 = extern union {
+    FixData: GNSS_FIXDATA,
+    FixData2: GNSS_FIXDATA_2,
+    AgnssRequest: GNSS_AGNSS_REQUEST_PARAM,
+    NiRequest: GNSS_NI_REQUEST_PARAM,
+    ErrorInformation: GNSS_ERRORINFO,
+    NmeaData: GNSS_NMEA_DATA,
+    GeofenceAlertData: GNSS_GEOFENCE_ALERT_DATA,
+    BreadcrumbAlertData: GNSS_BREADCRUMBING_ALERT_DATA,
+    GeofencesTrackingStatus: GNSS_GEOFENCES_TRACKINGSTATUS_DATA,
+    DriverRequestData: GNSS_DRIVER_REQUEST_DATA,
+    CustomData: [1]u8,
+};
     Size: u32,
     Version: u32,
     EventType: i32,
@@ -409,11 +409,11 @@ pub const GNSS_AGNSS_INJECTBLOB = extern struct {
     BlobData: [1]u8,
 };
 pub const GNSS_AGNSS_INJECT = extern struct {
-    pub const GNSS_AGNSS_INJECT_0 = extern union {
-        Time: GNSS_AGNSS_INJECTTIME,
-        Position: GNSS_AGNSS_INJECTPOSITION,
-        BlobData: GNSS_AGNSS_INJECTBLOB,
-    };
+pub const GNSS_AGNSS_INJECT_0 = extern union {
+    Time: GNSS_AGNSS_INJECTTIME,
+    Position: GNSS_AGNSS_INJECTPOSITION,
+    BlobData: GNSS_AGNSS_INJECTBLOB,
+};
     Size: u32,
     Version: u32,
     InjectionType: i32,

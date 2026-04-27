@@ -10,14 +10,14 @@ const @"Windows.Win32.Security.Cryptography" = @import("Windows.Win32.Security.C
 const @"Windows.Win32.Security.Cryptography.Sip" = @import("Windows.Win32.Security.Cryptography.Sip.structs.zig");
 
 pub const WINTRUST_DATA = extern struct {
-    pub const WINTRUST_DATA_0 = extern union {
-        pFile: *WINTRUST_FILE_INFO,
-        pCatalog: *WINTRUST_CATALOG_INFO,
-        pBlob: *WINTRUST_BLOB_INFO,
-        pSgnr: *WINTRUST_SGNR_INFO,
-        pCert: *WINTRUST_CERT_INFO,
-        pDetachedSig: *WINTRUST_DETACHED_SIG_INFO,
-    };
+pub const WINTRUST_DATA_0 = extern union {
+    pFile: *WINTRUST_FILE_INFO,
+    pCatalog: *WINTRUST_CATALOG_INFO,
+    pBlob: *WINTRUST_BLOB_INFO,
+    pSgnr: *WINTRUST_SGNR_INFO,
+    pCert: *WINTRUST_CERT_INFO,
+    pDetachedSig: *WINTRUST_DETACHED_SIG_INFO,
+};
     cbStruct: u32,
     pPolicyCallbackData: *anyopaque,
     pSIPClientData: *anyopaque,
@@ -57,10 +57,10 @@ pub const WINTRUST_DETACHED_SIG_BLOBS = extern struct {
     pbSignatureObject: *u8,
 };
 pub const WINTRUST_DETACHED_SIG_INFO = extern struct {
-    pub const WINTRUST_DETACHED_SIG_INFO_0 = extern union {
-        pDetachedSigHandles: *WINTRUST_DETACHED_SIG_FILE_HANDLES,
-        pDetachedSigBlobs: *WINTRUST_DETACHED_SIG_BLOBS,
-    };
+pub const WINTRUST_DETACHED_SIG_INFO_0 = extern union {
+    pDetachedSigHandles: *WINTRUST_DETACHED_SIG_FILE_HANDLES,
+    pDetachedSigBlobs: *WINTRUST_DETACHED_SIG_BLOBS,
+};
     cbStruct: u32,
     dwUnionChoice: u32,
     Anonymous: WINTRUST_DETACHED_SIG_INFO_0,
@@ -103,9 +103,9 @@ pub const WINTRUST_CERT_INFO = extern struct {
     psftVerifyAsOf: *@"Windows.Win32.Foundation".FILETIME,
 };
 pub const CRYPT_PROVIDER_DATA = extern struct {
-    pub const CRYPT_PROVIDER_DATA_0 = extern union {
-        pPDSip: *PROVDATA_SIP,
-    };
+pub const CRYPT_PROVIDER_DATA_0 = extern union {
+    pPDSip: *PROVDATA_SIP,
+};
     cbStruct: u32,
     pWintrustData: *WINTRUST_DATA,
     fOpenedFile: @"Windows.Win32.Foundation".BOOL,
@@ -278,11 +278,11 @@ pub const SPC_SIGINFO = extern struct {
     dwReserved5: u32,
 };
 pub const SPC_LINK = extern struct {
-    pub const SPC_LINK_0 = extern union {
-        pwszUrl: @"Windows.Win32.Foundation".PWSTR,
-        Moniker: SPC_SERIALIZED_OBJECT,
-        pwszFile: @"Windows.Win32.Foundation".PWSTR,
-    };
+pub const SPC_LINK_0 = extern union {
+    pwszUrl: @"Windows.Win32.Foundation".PWSTR,
+    Moniker: SPC_SERIALIZED_OBJECT,
+    pwszFile: @"Windows.Win32.Foundation".PWSTR,
+};
     dwLinkChoice: u32,
     Anonymous: SPC_LINK_0,
 };
@@ -378,10 +378,10 @@ pub const WIN_SPUB_TRUSTED_PUBLISHER_DATA = extern struct {
     lpCertificate: *WIN_CERTIFICATE,
 };
 pub const WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO = extern struct {
-    pub const WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO_0 = extern union {
-        cbStruct: u32,
-        cbSize: u32,
-    };
+pub const WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO_0 = extern union {
+    cbStruct: u32,
+    cbSize: u32,
+};
     Anonymous: WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO_0,
     pChainContext: *@"Windows.Win32.Security.Cryptography".CERT_CHAIN_CONTEXT,
     dwSignerType: u32,
@@ -391,10 +391,10 @@ pub const WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO = extern struct {
     rgpCounterSigner: **WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO,
 };
 pub const WTD_GENERIC_CHAIN_POLICY_CREATE_INFO = extern struct {
-    pub const WTD_GENERIC_CHAIN_POLICY_CREATE_INFO_0 = extern union {
-        cbStruct: u32,
-        cbSize: u32,
-    };
+pub const WTD_GENERIC_CHAIN_POLICY_CREATE_INFO_0 = extern union {
+    cbStruct: u32,
+    cbSize: u32,
+};
     Anonymous: WTD_GENERIC_CHAIN_POLICY_CREATE_INFO_0,
     hChainEngine: @"Windows.Win32.Security.Cryptography".HCERTCHAINENGINE,
     pChainPara: *@"Windows.Win32.Security.Cryptography".CERT_CHAIN_PARA,
@@ -402,10 +402,10 @@ pub const WTD_GENERIC_CHAIN_POLICY_CREATE_INFO = extern struct {
     pvReserved: *anyopaque,
 };
 pub const WTD_GENERIC_CHAIN_POLICY_DATA = extern struct {
-    pub const WTD_GENERIC_CHAIN_POLICY_DATA_0 = extern union {
-        cbStruct: u32,
-        cbSize: u32,
-    };
+pub const WTD_GENERIC_CHAIN_POLICY_DATA_0 = extern union {
+    cbStruct: u32,
+    cbSize: u32,
+};
     Anonymous: WTD_GENERIC_CHAIN_POLICY_DATA_0,
     pSignerChainInfo: *WTD_GENERIC_CHAIN_POLICY_CREATE_INFO,
     pCounterSignerChainInfo: *WTD_GENERIC_CHAIN_POLICY_CREATE_INFO,

@@ -22,15 +22,15 @@ pub const WEB_SOCKET_HTTP_HEADER = extern struct {
     ulValueLength: u32,
 };
 pub const WEB_SOCKET_BUFFER = extern union {
-    pub const _Data_e__Struct = extern struct {
-        pbBuffer: *u8,
-        ulBufferLength: u32,
-    };
-    pub const _CloseStatus_e__Struct = extern struct {
-        pbReason: *u8,
-        ulReasonLength: u32,
-        usStatus: u16,
-    };
+pub const _Data_e__Struct = extern struct {
+    pbBuffer: *u8,
+    ulBufferLength: u32,
+};
+pub const _CloseStatus_e__Struct = extern struct {
+    pbReason: *u8,
+    ulReasonLength: u32,
+    usStatus: u16,
+};
     Data: _Data_e__Struct,
     CloseStatus: _CloseStatus_e__Struct,
 };

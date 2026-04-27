@@ -15,27 +15,27 @@ pub const WINML_TENSOR_BINDING_DESC = extern struct {
     pData: *anyopaque,
 };
 pub const WINML_SEQUENCE_BINDING_DESC = extern struct {
-    pub const WINML_SEQUENCE_BINDING_DESC_0 = extern union {
-        pStrings: *@"Windows.Win32.Foundation".PWSTR,
-        pInts: *i64,
-        pFloats: *f32,
-        pDoubles: *f64,
-    };
+pub const WINML_SEQUENCE_BINDING_DESC_0 = extern union {
+    pStrings: *@"Windows.Win32.Foundation".PWSTR,
+    pInts: *i64,
+    pFloats: *f32,
+    pDoubles: *f64,
+};
     ElementCount: u32,
     ElementType: i32,
     Anonymous: WINML_SEQUENCE_BINDING_DESC_0,
 };
 pub const WINML_MAP_BINDING_DESC = extern struct {
-    pub const WINML_MAP_BINDING_DESC_0 = extern union {
-        pStringKeys: *@"Windows.Win32.Foundation".PWSTR,
-        pIntKeys: *i64,
-    };
-    pub const WINML_MAP_BINDING_DESC_1 = extern union {
-        pStringFields: *@"Windows.Win32.Foundation".PWSTR,
-        pIntFields: *i64,
-        pFloatFields: *f32,
-        pDoubleFields: *f64,
-    };
+pub const WINML_MAP_BINDING_DESC_0 = extern union {
+    pStringKeys: *@"Windows.Win32.Foundation".PWSTR,
+    pIntKeys: *i64,
+};
+pub const WINML_MAP_BINDING_DESC_1 = extern union {
+    pStringFields: *@"Windows.Win32.Foundation".PWSTR,
+    pIntFields: *i64,
+    pFloatFields: *f32,
+    pDoubleFields: *f64,
+};
     ElementCount: u32,
     KeyType: i32,
     Anonymous1: WINML_MAP_BINDING_DESC_0,
@@ -69,12 +69,12 @@ pub const WINML_IMAGE_VARIABLE_DESC = extern struct {
     pShape: *i64,
 };
 pub const WINML_VARIABLE_DESC = extern struct {
-    pub const WINML_VARIABLE_DESC_0 = extern union {
-        Tensor: WINML_TENSOR_VARIABLE_DESC,
-        Sequence: WINML_SEQUENCE_VARIABLE_DESC,
-        Map: WINML_MAP_VARIABLE_DESC,
-        Image: WINML_IMAGE_VARIABLE_DESC,
-    };
+pub const WINML_VARIABLE_DESC_0 = extern union {
+    Tensor: WINML_TENSOR_VARIABLE_DESC,
+    Sequence: WINML_SEQUENCE_VARIABLE_DESC,
+    Map: WINML_MAP_VARIABLE_DESC,
+    Image: WINML_IMAGE_VARIABLE_DESC,
+};
     Name: @"Windows.Win32.Foundation".PWSTR,
     Description: @"Windows.Win32.Foundation".PWSTR,
     FeatureType: i32,
@@ -89,19 +89,19 @@ pub const WINML_MODEL_DESC = extern struct {
     Version: usize,
 };
 pub const MLOperatorEdgeDescription = extern struct {
-    pub const MLOperatorEdgeDescription_0 = extern union {
-        reserved: u64,
-        tensorDataType: u32,
-    };
+pub const MLOperatorEdgeDescription_0 = extern union {
+    reserved: u64,
+    tensorDataType: u32,
+};
     edgeType: u32,
     Anonymous: MLOperatorEdgeDescription_0,
 };
 pub const MLOperatorSchemaEdgeDescription = extern struct {
-    pub const MLOperatorSchemaEdgeDescription_0 = extern union {
-        reserved: *anyopaque,
-        typeLabel: @"Windows.Win32.Foundation".PSTR,
-        edgeDescription: MLOperatorEdgeDescription,
-    };
+pub const MLOperatorSchemaEdgeDescription_0 = extern union {
+    reserved: *anyopaque,
+    typeLabel: @"Windows.Win32.Foundation".PSTR,
+    edgeDescription: MLOperatorEdgeDescription,
+};
     options: u32,
     typeFormat: i32,
     Anonymous: MLOperatorSchemaEdgeDescription_0,
@@ -117,12 +117,12 @@ pub const MLOperatorAttribute = extern struct {
     required: u8,
 };
 pub const MLOperatorAttributeNameValue = extern struct {
-    pub const MLOperatorAttributeNameValue_0 = extern union {
-        reserved: *anyopaque,
-        ints: *i64,
-        strings: **i8,
-        floats: *f32,
-    };
+pub const MLOperatorAttributeNameValue_0 = extern union {
+    reserved: *anyopaque,
+    ints: *i64,
+    strings: **i8,
+    floats: *f32,
+};
     name: @"Windows.Win32.Foundation".PSTR,
     type: u32,
     valueCount: u32,

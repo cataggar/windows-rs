@@ -31,10 +31,10 @@ pub const MI_Interval = extern struct {
     __padding3: u32,
 };
 pub const MI_Datetime = extern struct {
-    pub const _u_e__Union = extern union {
-        timestamp: MI_Timestamp,
-        interval: MI_Interval,
-    };
+pub const _u_e__Union = extern union {
+    timestamp: MI_Timestamp,
+    interval: MI_Interval,
+};
     isTimestamp: u32,
     u: _u_e__Union,
 };
@@ -816,10 +816,10 @@ pub const MI_UsernamePasswordCreds = extern struct {
     password: *u16,
 };
 pub const MI_UserCredentials = extern struct {
-    pub const _credentials_e__Union = extern union {
-        usernamePassword: MI_UsernamePasswordCreds,
-        certificateThumbprint: *u16,
-    };
+pub const _credentials_e__Union = extern union {
+    usernamePassword: MI_UsernamePasswordCreds,
+    certificateThumbprint: *u16,
+};
     authenticationType: *u16,
     credentials: _credentials_e__Union,
 };

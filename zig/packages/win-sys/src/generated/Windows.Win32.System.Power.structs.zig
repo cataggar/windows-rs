@@ -165,9 +165,9 @@ pub const BATTERY_STATUS = extern struct {
     Rate: i32,
 };
 pub const POWER_ADAPTER_POWER_STATES = extern union {
-    pub const _States_e__Struct = extern struct {
-        _bitfield: u32,
-    };
+pub const _States_e__Struct = extern struct {
+    _bitfield: u32,
+};
     States: _States_e__Struct,
     AsUlong: u32,
 };

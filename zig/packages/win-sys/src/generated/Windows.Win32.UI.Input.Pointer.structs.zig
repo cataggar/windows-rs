@@ -48,11 +48,11 @@ pub const POINTER_PEN_INFO = extern struct {
     tiltY: i32,
 };
 pub const POINTER_TYPE_INFO = extern struct {
-    pub const POINTER_TYPE_INFO_0 = extern union {
-        pointerInfo: POINTER_INFO,
-        touchInfo: POINTER_TOUCH_INFO,
-        penInfo: POINTER_PEN_INFO,
-    };
+pub const POINTER_TYPE_INFO_0 = extern union {
+    pointerInfo: POINTER_INFO,
+    touchInfo: POINTER_TOUCH_INFO,
+    penInfo: POINTER_PEN_INFO,
+};
     type: i32,
     Anonymous: POINTER_TYPE_INFO_0,
 };
@@ -63,28 +63,28 @@ pub const INPUT_INJECTION_VALUE = extern struct {
     index: u16,
 };
 pub const INPUT_TRANSFORM = extern struct {
-    pub const INPUT_TRANSFORM_0 = extern union {
-        pub const INPUT_TRANSFORM_0_0 = extern struct {
-            _11: f32,
-            _12: f32,
-            _13: f32,
-            _14: f32,
-            _21: f32,
-            _22: f32,
-            _23: f32,
-            _24: f32,
-            _31: f32,
-            _32: f32,
-            _33: f32,
-            _34: f32,
-            _41: f32,
-            _42: f32,
-            _43: f32,
-            _44: f32,
-        };
-        Anonymous: INPUT_TRANSFORM_0_0,
-        m: [16]f32,
-    };
+pub const INPUT_TRANSFORM_0 = extern union {
+pub const INPUT_TRANSFORM_0_0 = extern struct {
+    _11: f32,
+    _12: f32,
+    _13: f32,
+    _14: f32,
+    _21: f32,
+    _22: f32,
+    _23: f32,
+    _24: f32,
+    _31: f32,
+    _32: f32,
+    _33: f32,
+    _34: f32,
+    _41: f32,
+    _42: f32,
+    _43: f32,
+    _44: f32,
+};
+    Anonymous: INPUT_TRANSFORM_0_0,
+    m: [16]f32,
+};
     Anonymous: INPUT_TRANSFORM_0,
 };
 pub const POINTER_DEVICE_INFO = extern struct {

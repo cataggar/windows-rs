@@ -110,10 +110,10 @@ pub const CACLSID = extern struct {
 };
 pub const PROPVARIANT = opaque {};
 pub const PROPSPEC = extern struct {
-    pub const PROPSPEC_0 = extern union {
-        propid: u32,
-        lpwstr: @"Windows.Win32.Foundation".PWSTR,
-    };
+pub const PROPSPEC_0 = extern union {
+    propid: u32,
+    lpwstr: @"Windows.Win32.Foundation".PWSTR,
+};
     ulKind: u32,
     Anonymous: PROPSPEC_0,
 };

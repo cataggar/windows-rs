@@ -59,10 +59,10 @@ pub const BTH_HCI_EVENT_INFO = extern struct {
     connected: u8,
 };
 pub const BLUETOOTH_ADDRESS = extern struct {
-    pub const BLUETOOTH_ADDRESS_0 = extern union {
-        ullLong: u64,
-        rgBytes: [6]u8,
-    };
+pub const BLUETOOTH_ADDRESS_0 = extern union {
+    ullLong: u64,
+    rgBytes: [6]u8,
+};
     Anonymous: BLUETOOTH_ADDRESS_0,
 };
 pub const BLUETOOTH_LOCAL_SERVICE_INFO = extern struct {
@@ -94,10 +94,10 @@ pub const BLUETOOTH_DEVICE_INFO = extern struct {
     szName: [248]u16,
 };
 pub const BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS = extern struct {
-    pub const BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS_0 = extern union {
-        Numeric_Value: u32,
-        Passkey: u32,
-    };
+pub const BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS_0 = extern union {
+    Numeric_Value: u32,
+    Passkey: u32,
+};
     deviceInfo: BLUETOOTH_DEVICE_INFO,
     authenticationMethod: i32,
     ioCapability: i32,
@@ -150,54 +150,54 @@ pub const BLUETOOTH_PASSKEY_INFO = extern struct {
     passkey: u32,
 };
 pub const BLUETOOTH_AUTHENTICATE_RESPONSE = extern struct {
-    pub const BLUETOOTH_AUTHENTICATE_RESPONSE_0 = extern union {
-        pinInfo: BLUETOOTH_PIN_INFO,
-        oobInfo: BLUETOOTH_OOB_DATA_INFO,
-        numericCompInfo: BLUETOOTH_NUMERIC_COMPARISON_INFO,
-        passkeyInfo: BLUETOOTH_PASSKEY_INFO,
-    };
+pub const BLUETOOTH_AUTHENTICATE_RESPONSE_0 = extern union {
+    pinInfo: BLUETOOTH_PIN_INFO,
+    oobInfo: BLUETOOTH_OOB_DATA_INFO,
+    numericCompInfo: BLUETOOTH_NUMERIC_COMPARISON_INFO,
+    passkeyInfo: BLUETOOTH_PASSKEY_INFO,
+};
     bthAddressRemote: BLUETOOTH_ADDRESS,
     authMethod: i32,
     Anonymous: BLUETOOTH_AUTHENTICATE_RESPONSE_0,
     negativeResponse: u8,
 };
 pub const SDP_ELEMENT_DATA = extern struct {
-    pub const _data_e__Union = extern union {
-        pub const _string_e__Struct = extern struct {
-            value: *u8,
-            length: u32,
-        };
-        pub const _url_e__Struct = extern struct {
-            value: *u8,
-            length: u32,
-        };
-        pub const _sequence_e__Struct = extern struct {
-            value: *u8,
-            length: u32,
-        };
-        pub const _alternative_e__Struct = extern struct {
-            value: *u8,
-            length: u32,
-        };
-        int128: SDP_LARGE_INTEGER_16,
-        int64: i64,
-        int32: i32,
-        int16: i16,
-        int8: @"Windows.Win32.Foundation".CHAR,
-        uint128: SDP_ULARGE_INTEGER_16,
-        uint64: u64,
-        uint32: u32,
-        uint16: u16,
-        uint8: u8,
-        booleanVal: u8,
-        uuid128: GUID,
-        uuid32: u32,
-        uuid16: u16,
-        string: _string_e__Struct,
-        url: _url_e__Struct,
-        sequence: _sequence_e__Struct,
-        alternative: _alternative_e__Struct,
-    };
+pub const _data_e__Union = extern union {
+pub const _string_e__Struct = extern struct {
+    value: *u8,
+    length: u32,
+};
+pub const _url_e__Struct = extern struct {
+    value: *u8,
+    length: u32,
+};
+pub const _sequence_e__Struct = extern struct {
+    value: *u8,
+    length: u32,
+};
+pub const _alternative_e__Struct = extern struct {
+    value: *u8,
+    length: u32,
+};
+    int128: SDP_LARGE_INTEGER_16,
+    int64: i64,
+    int32: i32,
+    int16: i16,
+    int8: @"Windows.Win32.Foundation".CHAR,
+    uint128: SDP_ULARGE_INTEGER_16,
+    uint64: u64,
+    uint32: u32,
+    uint16: u16,
+    uint8: u8,
+    booleanVal: u8,
+    uuid128: GUID,
+    uuid32: u32,
+    uuid16: u16,
+    string: _string_e__Struct,
+    url: _url_e__Struct,
+    sequence: _sequence_e__Struct,
+    alternative: _alternative_e__Struct,
+};
     type: i32,
     specificType: i32,
     data: _data_e__Union,
@@ -208,10 +208,10 @@ pub const SDP_STRING_TYPE_DATA = extern struct {
     attributeId: u16,
 };
 pub const BTH_LE_UUID = extern struct {
-    pub const _Value_e__Union = extern union {
-        ShortUuid: u16,
-        LongUuid: GUID,
-    };
+pub const _Value_e__Union = extern union {
+    ShortUuid: u16,
+    LongUuid: GUID,
+};
     IsShortUuid: @"Windows.Win32.Foundation".BOOLEAN,
     Value: _Value_e__Union,
 };
@@ -245,30 +245,30 @@ pub const BTH_LE_GATT_DESCRIPTOR = extern struct {
     AttributeHandle: u16,
 };
 pub const BTH_LE_GATT_DESCRIPTOR_VALUE = extern struct {
-    pub const BTH_LE_GATT_DESCRIPTOR_VALUE_0 = extern union {
-        pub const _CharacteristicExtendedProperties_e__Struct = extern struct {
-            IsReliableWriteEnabled: @"Windows.Win32.Foundation".BOOLEAN,
-            IsAuxiliariesWritable: @"Windows.Win32.Foundation".BOOLEAN,
-        };
-        pub const _ClientCharacteristicConfiguration_e__Struct = extern struct {
-            IsSubscribeToNotification: @"Windows.Win32.Foundation".BOOLEAN,
-            IsSubscribeToIndication: @"Windows.Win32.Foundation".BOOLEAN,
-        };
-        pub const _ServerCharacteristicConfiguration_e__Struct = extern struct {
-            IsBroadcast: @"Windows.Win32.Foundation".BOOLEAN,
-        };
-        pub const _CharacteristicFormat_e__Struct = extern struct {
-            Format: u8,
-            Exponent: u8,
-            Unit: BTH_LE_UUID,
-            NameSpace: u8,
-            Description: BTH_LE_UUID,
-        };
-        CharacteristicExtendedProperties: _CharacteristicExtendedProperties_e__Struct,
-        ClientCharacteristicConfiguration: _ClientCharacteristicConfiguration_e__Struct,
-        ServerCharacteristicConfiguration: _ServerCharacteristicConfiguration_e__Struct,
-        CharacteristicFormat: _CharacteristicFormat_e__Struct,
-    };
+pub const BTH_LE_GATT_DESCRIPTOR_VALUE_0 = extern union {
+pub const _CharacteristicExtendedProperties_e__Struct = extern struct {
+    IsReliableWriteEnabled: @"Windows.Win32.Foundation".BOOLEAN,
+    IsAuxiliariesWritable: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const _ClientCharacteristicConfiguration_e__Struct = extern struct {
+    IsSubscribeToNotification: @"Windows.Win32.Foundation".BOOLEAN,
+    IsSubscribeToIndication: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const _ServerCharacteristicConfiguration_e__Struct = extern struct {
+    IsBroadcast: @"Windows.Win32.Foundation".BOOLEAN,
+};
+pub const _CharacteristicFormat_e__Struct = extern struct {
+    Format: u8,
+    Exponent: u8,
+    Unit: BTH_LE_UUID,
+    NameSpace: u8,
+    Description: BTH_LE_UUID,
+};
+    CharacteristicExtendedProperties: _CharacteristicExtendedProperties_e__Struct,
+    ClientCharacteristicConfiguration: _ClientCharacteristicConfiguration_e__Struct,
+    ServerCharacteristicConfiguration: _ServerCharacteristicConfiguration_e__Struct,
+    CharacteristicFormat: _CharacteristicFormat_e__Struct,
+};
     DescriptorType: i32,
     DescriptorUuid: BTH_LE_UUID,
     Anonymous: BTH_LE_GATT_DESCRIPTOR_VALUE_0,
@@ -326,11 +326,11 @@ pub const RFCOMM_RPN_DATA = extern struct {
     ParameterMask2: u8,
 };
 pub const RFCOMM_COMMAND = extern struct {
-    pub const _Data_e__Union = extern union {
-        MSC: RFCOMM_MSC_DATA,
-        RLS: RFCOMM_RLS_DATA,
-        RPN: RFCOMM_RPN_DATA,
-    };
+pub const _Data_e__Union = extern union {
+    MSC: RFCOMM_MSC_DATA,
+    RLS: RFCOMM_RLS_DATA,
+    RPN: RFCOMM_RPN_DATA,
+};
     CmdType: u32,
     Data: _Data_e__Union,
 };
@@ -348,10 +348,10 @@ pub const BTH_INFO_REQ = extern struct {
     infoType: u16,
 };
 pub const BTH_INFO_RSP = extern struct {
-    pub const BTH_INFO_RSP_0 = extern union {
-        connectionlessMTU: u16,
-        data: [44]u8,
-    };
+pub const BTH_INFO_RSP_0 = extern union {
+    connectionlessMTU: u16,
+    data: [44]u8,
+};
     result: u16,
     dataLen: u8,
     Anonymous: BTH_INFO_RSP_0,

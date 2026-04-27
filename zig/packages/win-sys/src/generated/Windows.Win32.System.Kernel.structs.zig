@@ -11,10 +11,10 @@ pub const SLIST_ENTRY = extern struct {
     Next: *SLIST_ENTRY,
 };
 pub const QUAD = extern struct {
-    pub const QUAD_0 = extern union {
-        UseThisFieldToCopy: i64,
-        DoNotUseThisField: f64,
-    };
+pub const QUAD_0 = extern union {
+    UseThisFieldToCopy: i64,
+    DoNotUseThisField: f64,
+};
     Anonymous: QUAD_0,
 };
 pub const PROCESSOR_NUMBER = extern struct {
@@ -40,18 +40,18 @@ pub const SINGLE_LIST_ENTRY = extern struct {
     Next: *SINGLE_LIST_ENTRY,
 };
 pub const RTL_BALANCED_NODE = extern struct {
-    pub const RTL_BALANCED_NODE_0 = extern union {
-        pub const RTL_BALANCED_NODE_0_0 = extern struct {
-            Left: *RTL_BALANCED_NODE,
-            Right: *RTL_BALANCED_NODE,
-        };
-        Children: [2]*RTL_BALANCED_NODE,
-        Anonymous: RTL_BALANCED_NODE_0_0,
-    };
-    pub const RTL_BALANCED_NODE_1 = extern union {
-        _bitfield: u8,
-        ParentValue: usize,
-    };
+pub const RTL_BALANCED_NODE_0 = extern union {
+pub const RTL_BALANCED_NODE_0_0 = extern struct {
+    Left: *RTL_BALANCED_NODE,
+    Right: *RTL_BALANCED_NODE,
+};
+    Children: [2]*RTL_BALANCED_NODE,
+    Anonymous: RTL_BALANCED_NODE_0_0,
+};
+pub const RTL_BALANCED_NODE_1 = extern union {
+    _bitfield: u8,
+    ParentValue: usize,
+};
     Anonymous1: RTL_BALANCED_NODE_0,
     Anonymous2: RTL_BALANCED_NODE_1,
 };
@@ -84,14 +84,14 @@ pub const OBJECTID = extern struct {
     Uniquifier: u32,
 };
 pub const SLIST_HEADER = extern union {
-    pub const SLIST_HEADER_0 = extern struct {
-        Alignment: u64,
-        Region: u64,
-    };
-    pub const _HeaderX64_e__Struct = extern struct {
-        _bitfield1: u64,
-        _bitfield2: u64,
-    };
+pub const SLIST_HEADER_0 = extern struct {
+    Alignment: u64,
+    Region: u64,
+};
+pub const _HeaderX64_e__Struct = extern struct {
+    _bitfield1: u64,
+    _bitfield2: u64,
+};
     Anonymous: SLIST_HEADER_0,
     HeaderX64: _HeaderX64_e__Struct,
 };
@@ -111,10 +111,10 @@ pub const EXCEPTION_REGISTRATION_RECORD = extern struct {
     Handler: ?*const anyopaque,
 };
 pub const NT_TIB = extern struct {
-    pub const NT_TIB_0 = extern union {
-        FiberData: *anyopaque,
-        Version: u32,
-    };
+pub const NT_TIB_0 = extern union {
+    FiberData: *anyopaque,
+    Version: u32,
+};
     ExceptionList: *EXCEPTION_REGISTRATION_RECORD,
     StackBase: *anyopaque,
     StackLimit: *anyopaque,
