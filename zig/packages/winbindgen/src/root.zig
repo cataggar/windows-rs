@@ -2640,8 +2640,101 @@ fn writeInterfaceIid(
     );
 }
 
-/// Emit typed `QueryInterface` / `AddRef` / `Release` method
-/// wrappers plus a `cast(comptime T)` convenience on a WinRT
+/// One detected `(add_X, remove_X)` event pair on a WinRT interface.
+/// Both rows are MethodDef row indices into the parent file; `event_name`
+/// is the shared suffix (`add_Closed` + `remove_Closed` → `"Closed"`).
+/// `delegate_param` is the handler parameter type carried by the
+/// `add_X` method — usually a closed-generic `class_name`
+/// (`Windows.Foundation.TypedEventHandler<...>` or `EventHandler<...>`).
+/// M3 will use it to pick which `_Vtbl` type to cast the
+/// `win_core.Delegate` instance to.
+pub const EventPair = struct {
+    event_name: []const u8,
+    add_row: u32,
+    remove_row: u32,
+    delegate_param: winmd.Ty,
+};
+
+fn isEventRegistrationToken(t: winmd.Ty) bool {
+    return switch (t) {
+        .value_name => |tn| std.mem.eql(u8, tn.namespace, "Windows.Foundation") and
+            std.mem.eql(u8, tn.name, "EventRegistrationToken"),
+        else => false,
+    };
+}
+
+fn isEventAddSignature(sig: winmd.MethodSignature) bool {
+    if (sig.params.len != 1) return false;
+    if (!isEventRegistrationToken(sig.return_type)) return false;
+    // The handler parameter is a delegate. WinRT delegates extend
+    // `System.MulticastDelegate` and arrive on the wire as
+    // ELEMENT_TYPE_CLASS / GENERICINST CLASS — both decode to
+    // `class_name` in our `Ty` union (with `generics` populated for
+    // closed generics like `TypedEventHandler<S,A>`).
+    return switch (sig.params[0]) {
+        .class_name => true,
+        else => false,
+    };
+}
+
+fn isEventRemoveSignature(sig: winmd.MethodSignature) bool {
+    if (sig.params.len != 1) return false;
+    if (sig.return_type != .void) return false;
+    return isEventRegistrationToken(sig.params[0]);
+}
+
+/// Walk the methods of the interface at `type_def_row` and return
+/// `(add_X, remove_X)` event pairs whose signatures match the WinRT
+/// shape:
+///
+///   * `add_X(handler) -> EventRegistrationToken`
+///   * `remove_X(EventRegistrationToken) -> void`
+///
+/// Pairing is name-based — `add_<X>` matches `remove_<X>` on the same
+/// interface. Unmatched halves and methods that don't fit either shape
+/// are dropped silently; M3 emits sugar only for what survives this
+/// filter. Allocates results into `arena`; the returned slice borrows
+/// from it.
+pub fn collectEventPairs(
+    arena: std.mem.Allocator,
+    file: *const winmd.File,
+    type_def_row: u32,
+) ![]EventPair {
+    const methods = file.list(.type_def, type_def_row, 5, .method_def);
+
+    var adds: std.StringHashMapUnmanaged(struct { row: u32, delegate: winmd.Ty }) = .empty;
+    var removes: std.StringHashMapUnmanaged(u32) = .empty;
+
+    var m = methods.start;
+    while (m < methods.end) : (m += 1) {
+        const name = file.str(.method_def, m, 3);
+        const sig_blob = file.blob(.method_def, m, 4);
+        const sig = winmd.readMethodSignature(arena, file, sig_blob) catch continue;
+
+        if (std.mem.startsWith(u8, name, "add_") and isEventAddSignature(sig)) {
+            try adds.put(arena, name["add_".len..], .{ .row = m, .delegate = sig.params[0] });
+        } else if (std.mem.startsWith(u8, name, "remove_") and isEventRemoveSignature(sig)) {
+            try removes.put(arena, name["remove_".len..], m);
+        }
+    }
+
+    var out: std.ArrayList(EventPair) = try .initCapacity(arena, adds.count());
+    var it = adds.iterator();
+    while (it.next()) |entry| {
+        const evt = entry.key_ptr.*;
+        const remove_row = removes.get(evt) orelse continue;
+        try out.append(arena, .{
+            .event_name = evt,
+            .add_row = entry.value_ptr.*.row,
+            .remove_row = remove_row,
+            .delegate_param = entry.value_ptr.*.delegate,
+        });
+    }
+    return out.toOwnedSlice(arena);
+}
+
+/// Emit IUnknown-method wrappers (`QueryInterface`, `AddRef`,
+/// `Release`, `cast`) on the typed handle — same shape for every
 /// interface handle. Every WinRT vtbl's first three slots are the
 /// IUnknown methods (reached here as `self.vtable.base.base.*` —
 /// `base: IInspectable_Vtbl` which has its own `base: IUnknown_Vtbl`).
@@ -4991,6 +5084,74 @@ test "closed-generic delegate vtbl uses IUnknown_Vtbl base, not IInspectable_Vtb
     try std.testing.expect(std.mem.indexOf(u8, body, "base: IUnknown_Vtbl") != null);
     try std.testing.expect(std.mem.indexOf(u8, body, "base: IInspectable_Vtbl") == null);
     try std.testing.expect(std.mem.indexOf(u8, body, "Invoke:") != null);
+}
+
+test "collectEventPairs finds IMemoryBufferReference.Closed in Windows.Foundation" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    // Locate the IMemoryBufferReference TypeDef row in Windows.Foundation.
+    const rows = file.rowCount(.type_def);
+    var iface_row: ?u32 = null;
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        const ns = file.str(.type_def, row, 2);
+        const name = file.str(.type_def, row, 1);
+        if (std.mem.eql(u8, ns, "Windows.Foundation") and
+            std.mem.eql(u8, name, "IMemoryBufferReference"))
+        {
+            iface_row = row;
+            break;
+        }
+    }
+    const tdr = iface_row orelse return error.IMemoryBufferReferenceMissing;
+
+    const pairs = try collectEventPairs(arena.allocator(), &file, tdr);
+
+    // IMemoryBufferReference defines exactly one event: `Closed`
+    // (`add_Closed` returning EventRegistrationToken + `remove_Closed`
+    // taking it). It is the canonical same-namespace closed-generic
+    // event source in the M4b corpus.
+    try std.testing.expectEqual(@as(usize, 1), pairs.len);
+    try std.testing.expectEqualStrings("Closed", pairs[0].event_name);
+
+    // The handler parameter is a closed-generic class (TypedEventHandler).
+    switch (pairs[0].delegate_param) {
+        .class_name => |tn| {
+            try std.testing.expectEqualStrings("Windows.Foundation", tn.namespace);
+            try std.testing.expect(std.mem.startsWith(u8, tn.name, "TypedEventHandler"));
+            try std.testing.expectEqual(@as(usize, 2), tn.generics.len);
+        },
+        else => return error.HandlerNotClass,
+    }
+}
+
+test "collectEventPairs ignores non-event interfaces" {
+    const bytes = @embedFile("Windows.winmd");
+    var file = try winmd.parse(bytes);
+
+    var arena = std.heap.ArenaAllocator.init(std.testing.allocator);
+    defer arena.deinit();
+
+    // IStringable has no events. Empty result expected.
+    const rows = file.rowCount(.type_def);
+    var iface_row: ?u32 = null;
+    var row: u32 = 0;
+    while (row < rows) : (row += 1) {
+        const ns = file.str(.type_def, row, 2);
+        const name = file.str(.type_def, row, 1);
+        if (std.mem.eql(u8, ns, "Windows.Foundation") and std.mem.eql(u8, name, "IStringable")) {
+            iface_row = row;
+            break;
+        }
+    }
+    const tdr = iface_row orelse return error.IStringableMissing;
+
+    const pairs = try collectEventPairs(arena.allocator(), &file, tdr);
+    try std.testing.expectEqual(@as(usize, 0), pairs.len);
 }
 
 test "emitNamespaceEx accepts external generic seeds" {
