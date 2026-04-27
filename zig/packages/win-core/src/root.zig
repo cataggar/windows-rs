@@ -559,7 +559,7 @@ pub const Async = struct {
 
     // -- Completion handler body ---------------------------------------------
 
-    fn onActionCompleted(
+    fn onCompleted(
         this: *anyopaque,
         _: *anyopaque,
         _: AsyncStatus,
@@ -570,18 +570,27 @@ pub const Async = struct {
         return hresult.S_OK;
     }
 
-    // -- Public API -----------------------------------------------------------
+    // -- Internals ------------------------------------------------------------
 
-    /// Block until an `IAsyncAction` completes. On success returns `void`;
-    /// on failure propagates the operation's error via `hresult.toError`.
-    ///
-    /// The `action` parameter must point at a COM object whose vtable starts
-    /// with `IInspectable_Vtbl` followed by the three `IAsyncAction` methods
-    /// (`put_Completed`, `get_Completed`, `GetResults`). This matches the
-    /// layout emitted by winbindgen for `Windows.Foundation.IAsyncAction`.
-    pub fn wait(
+    /// `IAsyncOperation<T>` vtable — extends `IInspectable`.
+    /// `GetResults` writes into an out-pointer of type `*T`.
+    pub fn IAsyncOperation_Vtbl(comptime T: type) type {
+        return extern struct {
+            base: IInspectable_Vtbl,
+            put_Completed: *const fn (this: *anyopaque, handler: *anyopaque) callconv(.winapi) HRESULT,
+            get_Completed: *const fn (this: *anyopaque, result: **anyopaque) callconv(.winapi) HRESULT,
+            GetResults: *const fn (this: *anyopaque, result: *T) callconv(.winapi) HRESULT,
+        };
+    }
+
+    /// Common blocking wait: create event → delegate → put_Completed → wait
+    /// → QI IAsyncInfo → check status. Returns the IAsyncInfo status.
+    /// On success the caller is responsible for calling GetResults.
+    fn blockUntilDone(
         allocator: std.mem.Allocator,
         action: *anyopaque,
+        put_completed_fn: *const fn (*anyopaque, *anyopaque) callconv(.winapi) HRESULT,
+        qi_fn: *const fn (*anyopaque, *const GUID, *?*anyopaque) callconv(.winapi) HRESULT,
     ) (hresult.Error || error{OutOfMemory})!void {
         // 1. Create manual-reset event (initially non-signaled).
         const event = CreateEventW(null, 1, 0, null) orelse
@@ -589,12 +598,15 @@ pub const Async = struct {
         defer _ = CloseHandle(event);
 
         // 2. Build the completion handler delegate.
+        // The IID doesn't actually matter for the runtime — it only needs to
+        // succeed QI for IAgileObject. We reuse the AsyncActionCompletedHandler
+        // IID since all four async completion handler types share the same
+        // three-arg invoke signature: (this, asyncInfo, status).
         const D = Delegate(CompletedHandlerInvokeFn, IID_AsyncActionCompletedHandler);
-        const handler = try D.create(allocator, &onActionCompleted, @ptrCast(event));
+        const handler = try D.create(allocator, &onCompleted, @ptrCast(event));
 
-        // 3. Register the handler via put_Completed.
-        const vtbl: *const IAsyncAction_Vtbl = @as(*const *const IAsyncAction_Vtbl, @ptrCast(@alignCast(action))).*;
-        const put_hr = vtbl.put_Completed(action, handler);
+        // 3. Register the handler.
+        const put_hr = put_completed_fn(action, handler);
         // Release our reference — the runtime AddRef'd on registration.
         _ = D.release(handler);
         if (hresult.failed(put_hr)) return hresult.toError(put_hr);
@@ -606,20 +618,19 @@ pub const Async = struct {
 
         // 5. QI for IAsyncInfo to read status and error code.
         var async_info: ?*anyopaque = null;
-        try hresult.ok(vtbl.base.base.QueryInterface(action, &IID_IAsyncInfo, &async_info));
+        try hresult.ok(qi_fn(action, &IID_IAsyncInfo, &async_info));
         const info_ptr = async_info orelse return hresult.toError(hresult.E_POINTER);
-        defer _ = @as(*const IAsyncInfo_Vtbl, @ptrCast(@alignCast(
-            @as(*const *const IAsyncInfo_Vtbl, @ptrCast(@alignCast(info_ptr))).*,
-        ))).base.base.Release(info_ptr);
+        const info_vtbl: *const IAsyncInfo_Vtbl = @as(
+            *const *const IAsyncInfo_Vtbl,
+            @ptrCast(@alignCast(info_ptr)),
+        ).*;
+        defer _ = info_vtbl.base.base.Release(info_ptr);
 
-        const info_vtbl: *const IAsyncInfo_Vtbl = @as(*const *const IAsyncInfo_Vtbl, @ptrCast(@alignCast(info_ptr))).*;
         var status: AsyncStatus = .Started;
         try hresult.ok(info_vtbl.get_Status(info_ptr, &status));
 
         switch (status) {
-            .Completed => {
-                try hresult.ok(vtbl.GetResults(action));
-            },
+            .Completed => return,
             .Canceled => return error.Aborted,
             .Error => {
                 var error_code: WinrtHResult = .{ .Value = 0 };
@@ -628,6 +639,59 @@ pub const Async = struct {
             },
             else => return hresult.toError(hresult.E_FAIL),
         }
+    }
+
+    // -- Public API -----------------------------------------------------------
+
+    /// Block until an `IAsyncAction` completes. On success returns `void`;
+    /// on failure propagates the operation's error via `hresult.toError`.
+    ///
+    /// The `action` parameter must point at a COM object whose vtable starts
+    /// with `IInspectable_Vtbl` followed by the three `IAsyncAction` methods
+    /// (`put_Completed`, `get_Completed`, `GetResults`). This matches the
+    /// layout emitted by winbindgen for `Windows.Foundation.IAsyncAction`.
+    ///
+    /// **Threading:** Must be called from an MTA thread. Calling from an STA
+    /// or UI thread will deadlock.
+    pub fn wait(
+        allocator: std.mem.Allocator,
+        action: *anyopaque,
+    ) (hresult.Error || error{OutOfMemory})!void {
+        const vtbl: *const IAsyncAction_Vtbl = @as(
+            *const *const IAsyncAction_Vtbl,
+            @ptrCast(@alignCast(action)),
+        ).*;
+
+        try blockUntilDone(allocator, action, vtbl.put_Completed, vtbl.base.base.QueryInterface);
+
+        // GetResults for IAsyncAction returns void on success.
+        try hresult.ok(vtbl.GetResults(action));
+    }
+
+    /// Block until an `IAsyncOperation<T>` completes and return the result.
+    ///
+    /// `T` is the result type (e.g. `i32`, `bool`, `*ISomething`).
+    /// The `operation` parameter must point at a COM object whose vtable
+    /// matches `IAsyncOperation<T>` layout: `IInspectable_Vtbl` base +
+    /// `put_Completed` + `get_Completed` + `GetResults(this, *T)`.
+    ///
+    /// **Threading:** Must be called from an MTA thread.
+    pub fn waitResult(
+        comptime T: type,
+        allocator: std.mem.Allocator,
+        operation: *anyopaque,
+    ) (hresult.Error || error{OutOfMemory})!T {
+        const Vtbl = IAsyncOperation_Vtbl(T);
+        const vtbl: *const Vtbl = @as(
+            *const *const Vtbl,
+            @ptrCast(@alignCast(operation)),
+        ).*;
+
+        try blockUntilDone(allocator, operation, vtbl.put_Completed, vtbl.base.base.QueryInterface);
+
+        var result: T = undefined;
+        try hresult.ok(vtbl.GetResults(operation, &result));
+        return result;
     }
 };
 
@@ -1612,4 +1676,174 @@ test "Async.wait propagates HRESULT for a failed IAsyncAction" {
     var mock = MockAsyncAction.init(.Error, hresult.E_ACCESSDENIED);
     const result = Async.wait(std.testing.allocator, @ptrCast(&mock));
     try std.testing.expectError(error.AccessDenied, result);
+}
+
+/// Mock IAsyncOperation<i32> for testing waitResult.
+const MockAsyncOperationI32 = struct {
+    vtbl_ptr: *const Async.IAsyncOperation_Vtbl(i32),
+    info_vtbl_ptr: *const Async.IAsyncInfo_Vtbl,
+    refcount: u32,
+    status: Async.AsyncStatus,
+    error_code: i32,
+    result_value: i32,
+
+    const op_vtbl = Async.IAsyncOperation_Vtbl(i32){
+        .base = .{
+            .base = .{
+                .QueryInterface = mockOpQI,
+                .AddRef = mockOpAddRef,
+                .Release = mockOpRelease,
+            },
+            .GetIids = MockAsyncAction.mockInspNoop3,
+            .GetRuntimeClassName = MockAsyncAction.mockInspClassName,
+            .GetTrustLevel = MockAsyncAction.mockInspTrustLevel,
+        },
+        .put_Completed = mockOpPutCompleted,
+        .get_Completed = mockOpGetCompleted,
+        .GetResults = mockOpGetResults,
+    };
+
+    const info_vtbl = Async.IAsyncInfo_Vtbl{
+        .base = .{
+            .base = .{
+                .QueryInterface = mockOpInfoQI,
+                .AddRef = mockOpInfoAddRef,
+                .Release = mockOpInfoRelease,
+            },
+            .GetIids = MockAsyncAction.mockInspNoop3,
+            .GetRuntimeClassName = MockAsyncAction.mockInspClassName,
+            .GetTrustLevel = MockAsyncAction.mockInspTrustLevel,
+        },
+        .get_Id = mockOpGetId,
+        .get_Status = mockOpGetStatus,
+        .get_ErrorCode = mockOpGetErrorCode,
+        .Cancel = mockOpCancel,
+        .Close = mockOpClose,
+    };
+
+    fn init(status: Async.AsyncStatus, error_code: i32, result_value: i32) MockAsyncOperationI32 {
+        return .{
+            .vtbl_ptr = &op_vtbl,
+            .info_vtbl_ptr = &info_vtbl,
+            .refcount = 1,
+            .status = status,
+            .error_code = error_code,
+            .result_value = result_value,
+        };
+    }
+
+    fn fromInfoFace(this: *anyopaque) *MockAsyncOperationI32 {
+        const ptr: [*]u8 = @ptrCast(this);
+        return @ptrCast(@alignCast(ptr - @offsetOf(MockAsyncOperationI32, "info_vtbl_ptr")));
+    }
+
+    fn mockOpQI(this: *anyopaque, riid: *const GUID, out: *?*anyopaque) callconv(.winapi) HRESULT {
+        if (std.meta.eql(riid.*, Async.IID_IAsyncInfo)) {
+            const self: *MockAsyncOperationI32 = @ptrCast(@alignCast(this));
+            self.refcount += 1;
+            out.* = @ptrCast(&self.info_vtbl_ptr);
+            return hresult.S_OK;
+        }
+        if (std.meta.eql(riid.*, IID_IUnknown)) {
+            const self: *MockAsyncOperationI32 = @ptrCast(@alignCast(this));
+            self.refcount += 1;
+            out.* = this;
+            return hresult.S_OK;
+        }
+        out.* = null;
+        return hresult.E_NOINTERFACE;
+    }
+
+    fn mockOpAddRef(this: *anyopaque) callconv(.winapi) u32 {
+        const self: *MockAsyncOperationI32 = @ptrCast(@alignCast(this));
+        self.refcount += 1;
+        return self.refcount;
+    }
+
+    fn mockOpRelease(this: *anyopaque) callconv(.winapi) u32 {
+        const self: *MockAsyncOperationI32 = @ptrCast(@alignCast(this));
+        if (self.refcount > 0) self.refcount -= 1;
+        return self.refcount;
+    }
+
+    fn mockOpInfoQI(this: *anyopaque, riid: *const GUID, out: *?*anyopaque) callconv(.winapi) HRESULT {
+        return mockOpQI(@ptrCast(fromInfoFace(this)), riid, out);
+    }
+    fn mockOpInfoAddRef(this: *anyopaque) callconv(.winapi) u32 {
+        return mockOpAddRef(@ptrCast(fromInfoFace(this)));
+    }
+    fn mockOpInfoRelease(this: *anyopaque) callconv(.winapi) u32 {
+        return mockOpRelease(@ptrCast(fromInfoFace(this)));
+    }
+
+    fn mockOpPutCompleted(this: *anyopaque, handler_ptr: *anyopaque) callconv(.winapi) HRESULT {
+        const self: *MockAsyncOperationI32 = @ptrCast(@alignCast(this));
+        const handler_vtbl: *const IUnknown_Vtbl =
+            @as(*const *const IUnknown_Vtbl, @ptrCast(@alignCast(handler_ptr))).*;
+        _ = handler_vtbl.AddRef(handler_ptr);
+        const d_vtbl = @as(
+            *const Delegate(Async.CompletedHandlerInvokeFn, Async.IID_AsyncActionCompletedHandler)._Vtbl,
+            @ptrCast(@alignCast(handler_vtbl)),
+        );
+        _ = d_vtbl.Invoke(handler_ptr, this, self.status);
+        _ = handler_vtbl.Release(handler_ptr);
+        return hresult.S_OK;
+    }
+
+    fn mockOpGetCompleted(_: *anyopaque, _: **anyopaque) callconv(.winapi) HRESULT {
+        return hresult.E_NOTIMPL;
+    }
+
+    fn mockOpGetResults(this: *anyopaque, result: *i32) callconv(.winapi) HRESULT {
+        const self: *MockAsyncOperationI32 = @ptrCast(@alignCast(this));
+        if (self.status == .Completed) {
+            result.* = self.result_value;
+            return hresult.S_OK;
+        }
+        return hresult.E_FAIL;
+    }
+
+    fn mockOpGetId(_: *anyopaque, result: *u32) callconv(.winapi) HRESULT {
+        result.* = 99;
+        return hresult.S_OK;
+    }
+
+    fn mockOpGetStatus(this: *anyopaque, result: *Async.AsyncStatus) callconv(.winapi) HRESULT {
+        const self = fromInfoFace(this);
+        result.* = self.status;
+        return hresult.S_OK;
+    }
+
+    fn mockOpGetErrorCode(this: *anyopaque, result: *Async.WinrtHResult) callconv(.winapi) HRESULT {
+        const self = fromInfoFace(this);
+        result.* = .{ .Value = self.error_code };
+        return hresult.S_OK;
+    }
+
+    fn mockOpCancel(_: *anyopaque) callconv(.winapi) HRESULT { return hresult.S_OK; }
+    fn mockOpClose(_: *anyopaque) callconv(.winapi) HRESULT { return hresult.S_OK; }
+};
+
+test "Async.waitResult returns result value for completed IAsyncOperation<i32>" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    var mock = MockAsyncOperationI32.init(.Completed, 0, 42);
+    const result = try Async.waitResult(i32, std.testing.allocator, @ptrCast(&mock));
+    try std.testing.expectEqual(@as(i32, 42), result);
+}
+
+test "Async.waitResult returns error.Aborted for canceled IAsyncOperation<i32>" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    var mock = MockAsyncOperationI32.init(.Canceled, 0, 0);
+    const result = Async.waitResult(i32, std.testing.allocator, @ptrCast(&mock));
+    try std.testing.expectError(error.Aborted, result);
+}
+
+test "Async.waitResult propagates HRESULT for failed IAsyncOperation<i32>" {
+    if (@import("builtin").target.os.tag != .windows) return error.SkipZigTest;
+
+    var mock = MockAsyncOperationI32.init(.Error, hresult.E_INVALIDARG, 0);
+    const result = Async.waitResult(i32, std.testing.allocator, @ptrCast(&mock));
+    try std.testing.expectError(error.InvalidArg, result);
 }
