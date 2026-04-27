@@ -182,8 +182,8 @@ The completion handler delegate is constructed via the same
 
 ## Status
 
-- [ ] M0 plan + design doc (this file)
-- [ ] M1 `Async.wait` — IAsyncAction blocking wait
-- [ ] M2 `Async.waitResult` — IAsyncOperation<T>
-- [ ] M3 Sample + integration
-- [ ] M4 Doc + close #4
+- [x] M0 plan + design doc (commit `bf7190563`)
+- [x] M1 `Async.wait` — IAsyncAction blocking wait (commit `bf7190563`)
+- [x] M2 `Async.waitResult` — IAsyncOperation<T> (commit `08f331cf9`)
+- [x] M3 Sample + integration (commit `ad67d6aa4`)
+- [x] M4 Doc + close #4
