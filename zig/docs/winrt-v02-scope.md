@@ -111,9 +111,11 @@ The heaviest milestone; landed in four phases.
   surface (direct factory return) work; anything requiring QI onto
   a closed generic does not.
 - **Generic delegates** (`EventHandler`1`, `TypedEventHandler`2`
-  as first-class). They round-trip through the registry enough to
-  unblock sigs that reference them, but there's no sugar for
-  add/remove-handler token dance.
+  as first-class). Closed-generic vtbls and per-interface
+  `addX`/`removeX` event-handler sugar shipped via issue #14
+  (commits `4102f80dd…185024fb8`). See
+  [generic-delegates.md](generic-delegates.md) for the ABI and
+  the shipped API surface.
 
 **Phased bring-up:**
 
@@ -295,8 +297,13 @@ method sugar (e.g. `GetInt32ArrayOwned` → `![]i32`).
 ## Carry-overs into v0.3
 
 - **Async contracts** (M5 deferred above).
-- **Generic delegates** with add/remove-handler sugar.
 - **Generic methods** (`.mvar_generic` still resolves to
   `UnsupportedElement`).
+- **Cross-namespace generic delegate event sugar.** v0.2 emits
+  `addX`/`removeX` only when the closed-generic delegate lives in
+  the same namespace as the host interface (covers the entire
+  v0.2 corpus). Cross-namespace delegates need import plumbing on
+  the host side; tracked separately. See
+  [generic-delegates.md](generic-delegates.md).
 - **`<Method>OwnedFromUtf16`** combined input-and-return HSTRING
   sugar, once a sample demands it.
