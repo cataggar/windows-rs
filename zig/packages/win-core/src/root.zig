@@ -345,6 +345,141 @@ pub fn Com(comptime Vtbl: type) type {
 /// `IUnknown` face.
 pub const IUnknown = Com(IUnknown_Vtbl);
 
+// ---- IAgileObject ---------------------------------------------------------
+
+/// Marker interface — no extra vtable methods beyond `IUnknown`. WinRT uses
+/// it to signal that an object is safe to call from any apartment, so any
+/// delegate handed to a WinRT event source MUST QI-succeed for this IID
+/// (otherwise the runtime falls back to slow proxying or hard-fails with
+/// `RPC_E_WRONG_THREAD`). See `zig/docs/generic-delegates.md`.
+pub const IID_IAgileObject = GUID.parse("94EA2B94-E9CC-49E0-C0FF-EE64CA8F5B90");
+
+// ---- Delegate -------------------------------------------------------------
+
+/// Build a runtime-callable WinRT delegate around a single `Invoke` function
+/// pointer. Returns a per-instantiation type that supplies:
+///
+///   * `_Vtbl` — `extern struct { base: IUnknown_Vtbl, Invoke: *const VtblInvokeFn }`,
+///     matching the closed-generic delegate vtable layout that
+///     `winbindgen` emits for `TypedEventHandler<...>` etc.
+///   * `create(allocator, invoke, user_data)` — heap-allocate a new delegate
+///     with refcount 1. The returned `*anyopaque` is the COM interface
+///     pointer to hand to `add_X(handler, &token)`. After registration the
+///     caller MUST `release(handler)` to drop their initial reference; the
+///     event source AddRefs internally.
+///   * `release(this)` — convenience wrapper for the vtable `Release` slot.
+///   * `userData(this)` — read the `?*anyopaque` context the caller supplied
+///     to `create()` from inside the user's `Invoke` body.
+///
+/// The implementation answers `QueryInterface` for `IID_IUnknown`, the
+/// caller-supplied `iid`, and `IID_IAgileObject`. The refcount is updated
+/// with atomic acquire-release ordering; the underlying allocation is
+/// freed when the count hits zero. See `zig/docs/generic-delegates.md` for
+/// the ABI contract this implements.
+///
+/// `VtblInvokeFn` is the WinRT-shaped signature the runtime calls into;
+/// its first parameter is `*anyopaque` (the COM `this`) and remaining
+/// parameters mirror the closed-generic `Invoke` slot. Inside the user's
+/// `invoke` body, recover the context pointer via `userData(this)`.
+pub fn Delegate(comptime VtblInvokeFn: type, comptime iid: GUID) type {
+    return struct {
+        const Self = @This();
+
+        pub const _Vtbl = extern struct {
+            base: IUnknown_Vtbl,
+            Invoke: *const VtblInvokeFn,
+        };
+
+        // Per-instance vtable: `vtbl_storage` is initialized once during
+        // `create()` and `vtbl_ptr` aims at it. Each delegate carries its
+        // own `Invoke` slot so different callers within the same
+        // instantiation can wire different function pointers without
+        // sharing global state. The first field MUST stay at offset 0
+        // — that's the COM ABI contract for the object pointer.
+        const Instance = extern struct {
+            vtbl_ptr: *const _Vtbl,
+            vtbl_storage: _Vtbl,
+            refcount: u32,
+            allocator_ptr: *anyopaque,
+            allocator_vtable: *const std.mem.Allocator.VTable,
+            user_data: ?*anyopaque,
+        };
+
+        fn qi(this: *anyopaque, riid: *const GUID, out: *?*anyopaque) callconv(.winapi) HRESULT {
+            const inst: *Instance = @ptrCast(@alignCast(this));
+            if (std.meta.eql(riid.*, IID_IUnknown) or
+                std.meta.eql(riid.*, iid) or
+                std.meta.eql(riid.*, IID_IAgileObject))
+            {
+                _ = @atomicRmw(u32, &inst.refcount, .Add, 1, .acq_rel);
+                out.* = this;
+                return hresult.S_OK;
+            }
+            out.* = null;
+            return hresult.E_NOINTERFACE;
+        }
+
+        fn addRefImpl(this: *anyopaque) callconv(.winapi) u32 {
+            const inst: *Instance = @ptrCast(@alignCast(this));
+            return @atomicRmw(u32, &inst.refcount, .Add, 1, .acq_rel) + 1;
+        }
+
+        fn releaseImpl(this: *anyopaque) callconv(.winapi) u32 {
+            const inst: *Instance = @ptrCast(@alignCast(this));
+            const prev = @atomicRmw(u32, &inst.refcount, .Sub, 1, .acq_rel);
+            if (prev == 1) {
+                const a: std.mem.Allocator = .{
+                    .ptr = inst.allocator_ptr,
+                    .vtable = inst.allocator_vtable,
+                };
+                a.destroy(inst);
+            }
+            return prev - 1;
+        }
+
+        /// Allocate a delegate with refcount 1. The returned pointer is
+        /// a COM-shaped `IUnknown` ready for `add_X(handler, &token)`.
+        /// Callers MUST `release(handler)` after handing it off — the
+        /// event source AddRefs internally on registration.
+        pub fn create(
+            allocator: std.mem.Allocator,
+            invoke: *const VtblInvokeFn,
+            user_data: ?*anyopaque,
+        ) !*anyopaque {
+            const inst = try allocator.create(Instance);
+            inst.* = .{
+                .vtbl_ptr = &inst.vtbl_storage,
+                .vtbl_storage = .{
+                    .base = .{
+                        .QueryInterface = qi,
+                        .AddRef = addRefImpl,
+                        .Release = releaseImpl,
+                    },
+                    .Invoke = invoke,
+                },
+                .refcount = 1,
+                .allocator_ptr = allocator.ptr,
+                .allocator_vtable = allocator.vtable,
+                .user_data = user_data,
+            };
+            return @ptrCast(inst);
+        }
+
+        /// Drop one reference. When the count hits zero the underlying
+        /// allocation is freed. Returns the new refcount.
+        pub fn release(this: *anyopaque) u32 {
+            return releaseImpl(this);
+        }
+
+        /// Recover the `user_data` supplied to `create()` from inside an
+        /// `Invoke` body. Pass the COM `this` pointer in.
+        pub fn userData(this: *anyopaque) ?*anyopaque {
+            const inst: *Instance = @ptrCast(@alignCast(this));
+            return inst.user_data;
+        }
+    };
+}
+
 // ---- BSTR -----------------------------------------------------------------
 
 /// Raw OLE Automation string: a UTF-16LE `[*]const u16` whose four bytes
@@ -876,6 +1011,101 @@ test "Com smart pointer drives a fake IUnknown vtable" {
     _ = p.release();
     _ = p.release();
     try std.testing.expectEqual(@as(u32, 0), obj.refcount);
+}
+
+test "Delegate QIs IUnknown / iid / IAgileObject and Invoke fires once" {
+    const fake_iid = comptime GUID.parse("11112222-3333-4444-5555-666677778888");
+    const State = struct {
+        fired: u32 = 0,
+        last_sender: ?*anyopaque = null,
+        last_args: ?*anyopaque = null,
+    };
+    var state: State = .{};
+
+    // TypedEventHandler-shaped Invoke: (this, sender, args) -> HRESULT.
+    const FakeInvokeFn = fn (
+        this: *anyopaque,
+        sender: *anyopaque,
+        args: *anyopaque,
+    ) callconv(.winapi) HRESULT;
+    const FakeDelegate = Delegate(FakeInvokeFn, fake_iid);
+
+    // Layout assertions — these are what makes the COM ABI contract hold.
+    try std.testing.expectEqual(@as(usize, 0), @offsetOf(FakeDelegate._Vtbl, "base"));
+    try std.testing.expectEqual(@as(usize, @sizeOf(IUnknown_Vtbl)), @offsetOf(FakeDelegate._Vtbl, "Invoke"));
+
+    const onFire = struct {
+        fn impl(
+            this: *anyopaque,
+            sender: *anyopaque,
+            args: *anyopaque,
+        ) callconv(.winapi) HRESULT {
+            const ud = FakeDelegate.userData(this).?;
+            const s: *State = @ptrCast(@alignCast(ud));
+            s.fired += 1;
+            s.last_sender = sender;
+            s.last_args = args;
+            return hresult.S_OK;
+        }
+    }.impl;
+
+    const handler = try FakeDelegate.create(
+        std.testing.allocator,
+        &onFire,
+        @ptrCast(&state),
+    );
+
+    // Read the per-instance vtable off the handler.
+    const vtbl_ptr: *const FakeDelegate._Vtbl =
+        @as(*const *const FakeDelegate._Vtbl, @ptrCast(@alignCast(handler))).*;
+
+    // AddRef from 1 -> 2, then balance with Release back to 1.
+    try std.testing.expectEqual(@as(u32, 2), vtbl_ptr.base.AddRef(handler));
+    try std.testing.expectEqual(@as(u32, 1), vtbl_ptr.base.Release(handler));
+
+    // QI for IUnknown succeeds, returns same pointer, bumps refcount, then balance.
+    var out: ?*anyopaque = null;
+    try std.testing.expect(hresult.isOk(vtbl_ptr.base.QueryInterface(handler, &IID_IUnknown, &out)));
+    try std.testing.expectEqual(@as(?*anyopaque, handler), out);
+    try std.testing.expectEqual(@as(u32, 1), vtbl_ptr.base.Release(handler));
+
+    // QI for the delegate's IID succeeds.
+    out = null;
+    try std.testing.expect(hresult.isOk(vtbl_ptr.base.QueryInterface(handler, &fake_iid, &out)));
+    try std.testing.expectEqual(@as(?*anyopaque, handler), out);
+    try std.testing.expectEqual(@as(u32, 1), vtbl_ptr.base.Release(handler));
+
+    // QI for IAgileObject succeeds — required for cross-apartment marshalling.
+    out = null;
+    try std.testing.expect(hresult.isOk(vtbl_ptr.base.QueryInterface(handler, &IID_IAgileObject, &out)));
+    try std.testing.expectEqual(@as(?*anyopaque, handler), out);
+    try std.testing.expectEqual(@as(u32, 1), vtbl_ptr.base.Release(handler));
+
+    // QI for an unrelated IID returns E_NOINTERFACE and clears `out`.
+    const random_iid = GUID.parse("AAAAAAAA-BBBB-CCCC-DDDD-EEEEFFFFAAAA");
+    out = handler;
+    try std.testing.expectEqual(
+        hresult.E_NOINTERFACE,
+        vtbl_ptr.base.QueryInterface(handler, &random_iid, &out),
+    );
+    try std.testing.expectEqual(@as(?*anyopaque, null), out);
+
+    // Fire the delegate via Invoke — the user callback runs once with the
+    // forwarded sender/args and finds the right context via userData().
+    var fake_sender: u32 = 0xDEAD;
+    var fake_args: u32 = 0xBEEF;
+    try std.testing.expect(hresult.isOk(vtbl_ptr.Invoke(
+        handler,
+        @ptrCast(&fake_sender),
+        @ptrCast(&fake_args),
+    )));
+    try std.testing.expectEqual(@as(u32, 1), state.fired);
+    try std.testing.expectEqual(@as(?*anyopaque, @ptrCast(&fake_sender)), state.last_sender);
+    try std.testing.expectEqual(@as(?*anyopaque, @ptrCast(&fake_args)), state.last_args);
+
+    // Drop the initial create() reference -> refcount 0, allocation freed.
+    // std.testing.allocator's leak detector enforces the free path.
+    try std.testing.expectEqual(@as(u32, 0), FakeDelegate.release(handler));
 }
 
 test "Bstr round-trips through OleAut32" {
