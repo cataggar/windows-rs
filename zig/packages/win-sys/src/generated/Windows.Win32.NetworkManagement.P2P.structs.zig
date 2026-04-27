@@ -27,10 +27,10 @@ pub const PNRPINFO_V1 = extern struct {
     enNameState: i32,
 };
 pub const PNRPINFO_V2 = extern struct {
-pub const PNRPINFO_V2_0 = extern union {
-    blobPayload: @"Windows.Win32.System.Com".BLOB,
-    pwszPayload: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PNRPINFO_V2_0 = extern union {
+        blobPayload: @"Windows.Win32.System.Com".BLOB,
+        pwszPayload: @"Windows.Win32.Foundation".PWSTR,
+    };
     dwSize: u32,
     lpwszIdentity: @"Windows.Win32.Foundation".PWSTR,
     nMaxResolve: u32,
@@ -139,14 +139,14 @@ pub const PEER_GRAPH_EVENT_REGISTRATION = extern struct {
     pType: *GUID,
 };
 pub const PEER_GRAPH_EVENT_DATA = extern struct {
-pub const PEER_GRAPH_EVENT_DATA_0 = extern union {
-    dwStatus: i32,
-    incomingData: PEER_EVENT_INCOMING_DATA,
-    recordChangeData: PEER_EVENT_RECORD_CHANGE_DATA,
-    connectionChangeData: PEER_EVENT_CONNECTION_CHANGE_DATA,
-    nodeChangeData: PEER_EVENT_NODE_CHANGE_DATA,
-    synchronizedData: PEER_EVENT_SYNCHRONIZED_DATA,
-};
+    pub const PEER_GRAPH_EVENT_DATA_0 = extern union {
+        dwStatus: i32,
+        incomingData: PEER_EVENT_INCOMING_DATA,
+        recordChangeData: PEER_EVENT_RECORD_CHANGE_DATA,
+        connectionChangeData: PEER_EVENT_CONNECTION_CHANGE_DATA,
+        nodeChangeData: PEER_EVENT_NODE_CHANGE_DATA,
+        synchronizedData: PEER_EVENT_SYNCHRONIZED_DATA,
+    };
     eventType: i32,
     Anonymous: PEER_GRAPH_EVENT_DATA_0,
 };
@@ -230,14 +230,14 @@ pub const PEER_GROUP_EVENT_REGISTRATION = extern struct {
     pType: *GUID,
 };
 pub const PEER_GROUP_EVENT_DATA = extern struct {
-pub const PEER_GROUP_EVENT_DATA_0 = extern union {
-    dwStatus: i32,
-    incomingData: PEER_EVENT_INCOMING_DATA,
-    recordChangeData: PEER_EVENT_RECORD_CHANGE_DATA,
-    connectionChangeData: PEER_EVENT_CONNECTION_CHANGE_DATA,
-    memberChangeData: PEER_EVENT_MEMBER_CHANGE_DATA,
-    hrConnectionFailedReason: @"Windows.Win32.Foundation".HRESULT,
-};
+    pub const PEER_GROUP_EVENT_DATA_0 = extern union {
+        dwStatus: i32,
+        incomingData: PEER_EVENT_INCOMING_DATA,
+        recordChangeData: PEER_EVENT_RECORD_CHANGE_DATA,
+        connectionChangeData: PEER_EVENT_CONNECTION_CHANGE_DATA,
+        memberChangeData: PEER_EVENT_MEMBER_CHANGE_DATA,
+        hrConnectionFailedReason: @"Windows.Win32.Foundation".HRESULT,
+    };
     eventType: i32,
     Anonymous: PEER_GROUP_EVENT_DATA_0,
 };
@@ -338,15 +338,15 @@ pub const PEER_EVENT_REQUEST_STATUS_CHANGED_DATA = extern struct {
     hrChange: @"Windows.Win32.Foundation".HRESULT,
 };
 pub const PEER_COLLAB_EVENT_DATA = extern struct {
-pub const PEER_COLLAB_EVENT_DATA_0 = extern union {
-    watchListChangedData: PEER_EVENT_WATCHLIST_CHANGED_DATA,
-    presenceChangedData: PEER_EVENT_PRESENCE_CHANGED_DATA,
-    applicationChangedData: PEER_EVENT_APPLICATION_CHANGED_DATA,
-    objectChangedData: PEER_EVENT_OBJECT_CHANGED_DATA,
-    endpointChangedData: PEER_EVENT_ENDPOINT_CHANGED_DATA,
-    peopleNearMeChangedData: PEER_EVENT_PEOPLE_NEAR_ME_CHANGED_DATA,
-    requestStatusChangedData: PEER_EVENT_REQUEST_STATUS_CHANGED_DATA,
-};
+    pub const PEER_COLLAB_EVENT_DATA_0 = extern union {
+        watchListChangedData: PEER_EVENT_WATCHLIST_CHANGED_DATA,
+        presenceChangedData: PEER_EVENT_PRESENCE_CHANGED_DATA,
+        applicationChangedData: PEER_EVENT_APPLICATION_CHANGED_DATA,
+        objectChangedData: PEER_EVENT_OBJECT_CHANGED_DATA,
+        endpointChangedData: PEER_EVENT_ENDPOINT_CHANGED_DATA,
+        peopleNearMeChangedData: PEER_EVENT_PEOPLE_NEAR_ME_CHANGED_DATA,
+        requestStatusChangedData: PEER_EVENT_REQUEST_STATUS_CHANGED_DATA,
+    };
     eventType: i32,
     Anonymous: PEER_COLLAB_EVENT_DATA_0,
 };
@@ -443,28 +443,28 @@ pub const DRT_SEARCH_RESULT = extern struct {
     registration: DRT_REGISTRATION,
 };
 pub const DRT_EVENT_DATA = extern struct {
-pub const DRT_EVENT_DATA_0 = extern union {
-pub const _leafsetKeyChange_e__Struct = extern struct {
-    change: i32,
-    localKey: DRT_DATA,
-    remoteKey: DRT_DATA,
-};
-pub const _registrationStateChange_e__Struct = extern struct {
-    state: i32,
-    localKey: DRT_DATA,
-};
-pub const _statusChange_e__Struct = extern struct {
-pub const _bootstrapAddresses_e__Struct = extern struct {
-    cntAddress: u32,
-    pAddresses: *@"Windows.Win32.Networking.WinSock".SOCKADDR_STORAGE,
-};
-    status: i32,
-    bootstrapAddresses: _bootstrapAddresses_e__Struct,
-};
-    leafsetKeyChange: _leafsetKeyChange_e__Struct,
-    registrationStateChange: _registrationStateChange_e__Struct,
-    statusChange: _statusChange_e__Struct,
-};
+    pub const DRT_EVENT_DATA_0 = extern union {
+        pub const _leafsetKeyChange_e__Struct = extern struct {
+            change: i32,
+            localKey: DRT_DATA,
+            remoteKey: DRT_DATA,
+        };
+        pub const _registrationStateChange_e__Struct = extern struct {
+            state: i32,
+            localKey: DRT_DATA,
+        };
+        pub const _statusChange_e__Struct = extern struct {
+            pub const _bootstrapAddresses_e__Struct = extern struct {
+                cntAddress: u32,
+                pAddresses: *@"Windows.Win32.Networking.WinSock".SOCKADDR_STORAGE,
+            };
+            status: i32,
+            bootstrapAddresses: _bootstrapAddresses_e__Struct,
+        };
+        leafsetKeyChange: _leafsetKeyChange_e__Struct,
+        registrationStateChange: _registrationStateChange_e__Struct,
+        statusChange: _statusChange_e__Struct,
+    };
     type: i32,
     hr: @"Windows.Win32.Foundation".HRESULT,
     pvContext: *anyopaque,

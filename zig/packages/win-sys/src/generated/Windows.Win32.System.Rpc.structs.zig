@@ -142,9 +142,9 @@ pub const RPC_HTTP_TRANSPORT_CREDENTIALS_V3_A = extern struct {
     ProxyAuthnSchemes: *u32,
 };
 pub const RPC_SECURITY_QOS_V2_W = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -153,9 +153,9 @@ pub const _u_e__Union = extern union {
     u: _u_e__Union,
 };
 pub const RPC_SECURITY_QOS_V2_A = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -164,9 +164,9 @@ pub const _u_e__Union = extern union {
     u: _u_e__Union,
 };
 pub const RPC_SECURITY_QOS_V3_W = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -176,9 +176,9 @@ pub const _u_e__Union = extern union {
     Sid: *anyopaque,
 };
 pub const RPC_SECURITY_QOS_V3_A = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -188,9 +188,9 @@ pub const _u_e__Union = extern union {
     Sid: *anyopaque,
 };
 pub const RPC_SECURITY_QOS_V4_W = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -201,9 +201,9 @@ pub const _u_e__Union = extern union {
     EffectiveOnly: u32,
 };
 pub const RPC_SECURITY_QOS_V4_A = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -214,9 +214,9 @@ pub const _u_e__Union = extern union {
     EffectiveOnly: u32,
 };
 pub const RPC_SECURITY_QOS_V5_W = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_W,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -228,9 +228,9 @@ pub const _u_e__Union = extern union {
     ServerSecurityDescriptor: *anyopaque,
 };
 pub const RPC_SECURITY_QOS_V5_A = extern struct {
-pub const _u_e__Union = extern union {
-    HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
-};
+    pub const _u_e__Union = extern union {
+        HttpCredentials: *RPC_HTTP_TRANSPORT_CREDENTIALS_A,
+    };
     Version: u32,
     Capabilities: u32,
     IdentityTracking: u32,
@@ -242,9 +242,9 @@ pub const _u_e__Union = extern union {
     ServerSecurityDescriptor: *anyopaque,
 };
 pub const RPC_BINDING_HANDLE_TEMPLATE_V1_W = extern struct {
-pub const _u1_e__Union = extern union {
-    Reserved: *u16,
-};
+    pub const _u1_e__Union = extern union {
+        Reserved: *u16,
+    };
     Version: u32,
     Flags: u32,
     ProtocolSequence: u32,
@@ -254,9 +254,9 @@ pub const _u1_e__Union = extern union {
     ObjectUuid: GUID,
 };
 pub const RPC_BINDING_HANDLE_TEMPLATE_V1_A = extern struct {
-pub const _u1_e__Union = extern union {
-    Reserved: *u8,
-};
+    pub const _u1_e__Union = extern union {
+        Reserved: *u8,
+    };
     Version: u32,
     Flags: u32,
     ProtocolSequence: u32,
@@ -427,20 +427,20 @@ pub const I_RpcProxyCallbackInterface = extern struct {
     RpcProxyUpdatePerfCounterBackendServerFn: ?*const anyopaque,
 };
 pub const RPC_ASYNC_NOTIFICATION_INFO = extern union {
-pub const _APC_e__Struct = extern struct {
-    NotificationRoutine: ?*const anyopaque,
-    hThread: @"Windows.Win32.Foundation".HANDLE,
-};
-pub const _IOC_e__Struct = extern struct {
-    hIOPort: @"Windows.Win32.Foundation".HANDLE,
-    dwNumberOfBytesTransferred: u32,
-    dwCompletionKey: usize,
-    lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
-};
-pub const _IntPtr_e__Struct = extern struct {
-    hWnd: @"Windows.Win32.Foundation".HWND,
-    Msg: u32,
-};
+    pub const _APC_e__Struct = extern struct {
+        NotificationRoutine: ?*const anyopaque,
+        hThread: @"Windows.Win32.Foundation".HANDLE,
+    };
+    pub const _IOC_e__Struct = extern struct {
+        hIOPort: @"Windows.Win32.Foundation".HANDLE,
+        dwNumberOfBytesTransferred: u32,
+        dwCompletionKey: usize,
+        lpOverlapped: *@"Windows.Win32.System.IO".OVERLAPPED,
+    };
+    pub const _IntPtr_e__Struct = extern struct {
+        hWnd: @"Windows.Win32.Foundation".HWND,
+        Msg: u32,
+    };
     APC: _APC_e__Struct,
     IOC: _IOC_e__Struct,
     IntPtr: _IntPtr_e__Struct,
@@ -465,22 +465,22 @@ pub const BinaryParam = extern struct {
     Size: i16,
 };
 pub const RPC_EE_INFO_PARAM = extern struct {
-pub const _u_e__Union = extern union {
-    AnsiString: @"Windows.Win32.Foundation".PSTR,
-    UnicodeString: @"Windows.Win32.Foundation".PWSTR,
-    LVal: i32,
-    SVal: i16,
-    PVal: u64,
-    BVal: BinaryParam,
-};
+    pub const _u_e__Union = extern union {
+        AnsiString: @"Windows.Win32.Foundation".PSTR,
+        UnicodeString: @"Windows.Win32.Foundation".PWSTR,
+        LVal: i32,
+        SVal: i16,
+        PVal: u64,
+        BVal: BinaryParam,
+    };
     ParameterType: i32,
     u: _u_e__Union,
 };
 pub const RPC_EXTENDED_ERROR_INFO = extern struct {
-pub const _u_e__Union = extern union {
-    SystemTime: @"Windows.Win32.Foundation".SYSTEMTIME,
-    FileTime: @"Windows.Win32.Foundation".FILETIME,
-};
+    pub const _u_e__Union = extern union {
+        SystemTime: @"Windows.Win32.Foundation".SYSTEMTIME,
+        FileTime: @"Windows.Win32.Foundation".FILETIME,
+    };
     Version: u32,
     ComputerName: @"Windows.Win32.Foundation".PWSTR,
     ProcessID: u32,
@@ -677,11 +677,11 @@ pub const NDR_EXPR_DESC = extern struct {
     pFormatExpr: *u8,
 };
 pub const MIDL_STUB_DESC = extern struct {
-pub const _IMPLICIT_HANDLE_INFO_e__Union = extern union {
-    pAutoHandle: **anyopaque,
-    pPrimitiveHandle: **anyopaque,
-    pGenericBindingInfo: *GENERIC_BINDING_INFO,
-};
+    pub const _IMPLICIT_HANDLE_INFO_e__Union = extern union {
+        pAutoHandle: **anyopaque,
+        pPrimitiveHandle: **anyopaque,
+        pGenericBindingInfo: *GENERIC_BINDING_INFO,
+    };
     RpcInterfaceInformation: *anyopaque,
     pfnAllocate: ?*const anyopaque,
     pfnFree: ?*const anyopaque,

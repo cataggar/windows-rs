@@ -66,102 +66,102 @@ pub const D2D_SIZE_U = extern struct {
     height: u32,
 };
 pub const D2D_MATRIX_3X2_F = extern struct {
-pub const D2D_MATRIX_3X2_F_0 = extern union {
-pub const D2D_MATRIX_3X2_F_0_0 = extern struct {
-    m11: f32,
-    m12: f32,
-    m21: f32,
-    m22: f32,
-    dx: f32,
-    dy: f32,
-};
-pub const D2D_MATRIX_3X2_F_0_1 = extern struct {
-    _11: f32,
-    _12: f32,
-    _21: f32,
-    _22: f32,
-    _31: f32,
-    _32: f32,
-};
-    Anonymous1: D2D_MATRIX_3X2_F_0_0,
-    Anonymous2: D2D_MATRIX_3X2_F_0_1,
-    m: [6]f32,
-};
+    pub const D2D_MATRIX_3X2_F_0 = extern union {
+        pub const D2D_MATRIX_3X2_F_0_0 = extern struct {
+            m11: f32,
+            m12: f32,
+            m21: f32,
+            m22: f32,
+            dx: f32,
+            dy: f32,
+        };
+        pub const D2D_MATRIX_3X2_F_0_1 = extern struct {
+            _11: f32,
+            _12: f32,
+            _21: f32,
+            _22: f32,
+            _31: f32,
+            _32: f32,
+        };
+        Anonymous1: D2D_MATRIX_3X2_F_0_0,
+        Anonymous2: D2D_MATRIX_3X2_F_0_1,
+        m: [6]f32,
+    };
     Anonymous: D2D_MATRIX_3X2_F_0,
 };
 pub const D2D_MATRIX_4X3_F = extern struct {
-pub const D2D_MATRIX_4X3_F_0 = extern union {
-pub const D2D_MATRIX_4X3_F_0_0 = extern struct {
-    _11: f32,
-    _12: f32,
-    _13: f32,
-    _21: f32,
-    _22: f32,
-    _23: f32,
-    _31: f32,
-    _32: f32,
-    _33: f32,
-    _41: f32,
-    _42: f32,
-    _43: f32,
-};
-    Anonymous: D2D_MATRIX_4X3_F_0_0,
-    m: [12]f32,
-};
+    pub const D2D_MATRIX_4X3_F_0 = extern union {
+        pub const D2D_MATRIX_4X3_F_0_0 = extern struct {
+            _11: f32,
+            _12: f32,
+            _13: f32,
+            _21: f32,
+            _22: f32,
+            _23: f32,
+            _31: f32,
+            _32: f32,
+            _33: f32,
+            _41: f32,
+            _42: f32,
+            _43: f32,
+        };
+        Anonymous: D2D_MATRIX_4X3_F_0_0,
+        m: [12]f32,
+    };
     Anonymous: D2D_MATRIX_4X3_F_0,
 };
 pub const D2D_MATRIX_4X4_F = extern struct {
-pub const D2D_MATRIX_4X4_F_0 = extern union {
-pub const D2D_MATRIX_4X4_F_0_0 = extern struct {
-    _11: f32,
-    _12: f32,
-    _13: f32,
-    _14: f32,
-    _21: f32,
-    _22: f32,
-    _23: f32,
-    _24: f32,
-    _31: f32,
-    _32: f32,
-    _33: f32,
-    _34: f32,
-    _41: f32,
-    _42: f32,
-    _43: f32,
-    _44: f32,
-};
-    Anonymous: D2D_MATRIX_4X4_F_0_0,
-    m: [16]f32,
-};
+    pub const D2D_MATRIX_4X4_F_0 = extern union {
+        pub const D2D_MATRIX_4X4_F_0_0 = extern struct {
+            _11: f32,
+            _12: f32,
+            _13: f32,
+            _14: f32,
+            _21: f32,
+            _22: f32,
+            _23: f32,
+            _24: f32,
+            _31: f32,
+            _32: f32,
+            _33: f32,
+            _34: f32,
+            _41: f32,
+            _42: f32,
+            _43: f32,
+            _44: f32,
+        };
+        Anonymous: D2D_MATRIX_4X4_F_0_0,
+        m: [16]f32,
+    };
     Anonymous: D2D_MATRIX_4X4_F_0,
 };
 pub const D2D_MATRIX_5X4_F = extern struct {
-pub const D2D_MATRIX_5X4_F_0 = extern union {
-pub const D2D_MATRIX_5X4_F_0_0 = extern struct {
-    _11: f32,
-    _12: f32,
-    _13: f32,
-    _14: f32,
-    _21: f32,
-    _22: f32,
-    _23: f32,
-    _24: f32,
-    _31: f32,
-    _32: f32,
-    _33: f32,
-    _34: f32,
-    _41: f32,
-    _42: f32,
-    _43: f32,
-    _44: f32,
-    _51: f32,
-    _52: f32,
-    _53: f32,
-    _54: f32,
-};
-    Anonymous: D2D_MATRIX_5X4_F_0_0,
-    m: [20]f32,
-};
+    pub const D2D_MATRIX_5X4_F_0 = extern union {
+        pub const D2D_MATRIX_5X4_F_0_0 = extern struct {
+            _11: f32,
+            _12: f32,
+            _13: f32,
+            _14: f32,
+            _21: f32,
+            _22: f32,
+            _23: f32,
+            _24: f32,
+            _31: f32,
+            _32: f32,
+            _33: f32,
+            _34: f32,
+            _41: f32,
+            _42: f32,
+            _43: f32,
+            _44: f32,
+            _51: f32,
+            _52: f32,
+            _53: f32,
+            _54: f32,
+        };
+        Anonymous: D2D_MATRIX_5X4_F_0_0,
+        m: [20]f32,
+    };
     Anonymous: D2D_MATRIX_5X4_F_0,
 };
 pub const D2D1_GRADIENT_STOP = extern struct {

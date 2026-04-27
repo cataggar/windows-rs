@@ -18,10 +18,10 @@ pub const MachineGlobalObjectTableRegistrationToken = extern struct {
     Value: *anyopaque,
 };
 pub const CY = extern union {
-pub const CY_0 = extern struct {
-    Lo: u32,
-    Hi: i32,
-};
+    pub const CY_0 = extern struct {
+        Lo: u32,
+        Hi: i32,
+    };
     Anonymous: CY_0,
     int64: i64,
 };
@@ -39,23 +39,23 @@ pub const QUERYCONTEXT = extern struct {
     dwVersionLo: u32,
 };
 pub const uCLSSPEC = extern struct {
-pub const _tagged_union_e__Struct = extern union {
-pub const _ByName_e__Struct = extern struct {
-    pPackageName: @"Windows.Win32.Foundation".PWSTR,
-    PolicyId: GUID,
-};
-pub const _ByObjectId_e__Struct = extern struct {
-    ObjectId: GUID,
-    PolicyId: GUID,
-};
-    clsid: GUID,
-    pFileExt: @"Windows.Win32.Foundation".PWSTR,
-    pMimeType: @"Windows.Win32.Foundation".PWSTR,
-    pProgId: @"Windows.Win32.Foundation".PWSTR,
-    pFileName: @"Windows.Win32.Foundation".PWSTR,
-    ByName: _ByName_e__Struct,
-    ByObjectId: _ByObjectId_e__Struct,
-};
+    pub const _tagged_union_e__Struct = extern union {
+        pub const _ByName_e__Struct = extern struct {
+            pPackageName: @"Windows.Win32.Foundation".PWSTR,
+            PolicyId: GUID,
+        };
+        pub const _ByObjectId_e__Struct = extern struct {
+            ObjectId: GUID,
+            PolicyId: GUID,
+        };
+        clsid: GUID,
+        pFileExt: @"Windows.Win32.Foundation".PWSTR,
+        pMimeType: @"Windows.Win32.Foundation".PWSTR,
+        pProgId: @"Windows.Win32.Foundation".PWSTR,
+        pFileName: @"Windows.Win32.Foundation".PWSTR,
+        ByName: _ByName_e__Struct,
+        ByObjectId: _ByObjectId_e__Struct,
+    };
     tyspec: u32,
     tagged_union: _tagged_union_e__Struct,
 };
@@ -253,11 +253,11 @@ pub const SAFEARRAY = extern struct {
     rgsabound: [1]SAFEARRAYBOUND,
 };
 pub const TYPEDESC = extern struct {
-pub const TYPEDESC_0 = extern union {
-    lptdesc: *TYPEDESC,
-    lpadesc: *@"Windows.Win32.System.Ole".ARRAYDESC,
-    hreftype: u32,
-};
+    pub const TYPEDESC_0 = extern union {
+        lptdesc: *TYPEDESC,
+        lpadesc: *@"Windows.Win32.System.Ole".ARRAYDESC,
+        hreftype: u32,
+    };
     Anonymous: TYPEDESC_0,
     vt: u16,
 };

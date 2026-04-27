@@ -27,10 +27,10 @@ pub const INET_FIREWALL_AC_BINARIES = extern struct {
     binaries: *@"Windows.Win32.Foundation".PWSTR,
 };
 pub const INET_FIREWALL_AC_CHANGE = extern struct {
-pub const INET_FIREWALL_AC_CHANGE_0 = extern union {
-    capabilities: INET_FIREWALL_AC_CAPABILITIES,
-    binaries: INET_FIREWALL_AC_BINARIES,
-};
+    pub const INET_FIREWALL_AC_CHANGE_0 = extern union {
+        capabilities: INET_FIREWALL_AC_CAPABILITIES,
+        binaries: INET_FIREWALL_AC_BINARIES,
+    };
     changeType: i32,
     createType: i32,
     appContainerSid: *@"Windows.Win32.Security".SID,

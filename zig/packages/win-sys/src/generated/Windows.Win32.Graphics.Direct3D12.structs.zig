@@ -467,10 +467,10 @@ pub const D3D12_DEPTH_STENCIL_VALUE = extern struct {
     Stencil: u8,
 };
 pub const D3D12_CLEAR_VALUE = extern struct {
-pub const D3D12_CLEAR_VALUE_0 = extern union {
-    Color: [4]f32,
-    DepthStencil: D3D12_DEPTH_STENCIL_VALUE,
-};
+    pub const D3D12_CLEAR_VALUE_0 = extern union {
+        Color: [4]f32,
+        DepthStencil: D3D12_DEPTH_STENCIL_VALUE,
+    };
     Format: i32,
     Anonymous: D3D12_CLEAR_VALUE_0,
 };
@@ -610,19 +610,19 @@ pub const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_SRV = extern struct {
     Location: u64,
 };
 pub const D3D12_SHADER_RESOURCE_VIEW_DESC = extern struct {
-pub const D3D12_SHADER_RESOURCE_VIEW_DESC_0 = extern union {
-    Buffer: D3D12_BUFFER_SRV,
-    Texture1D: D3D12_TEX1D_SRV,
-    Texture1DArray: D3D12_TEX1D_ARRAY_SRV,
-    Texture2D: D3D12_TEX2D_SRV,
-    Texture2DArray: D3D12_TEX2D_ARRAY_SRV,
-    Texture2DMS: D3D12_TEX2DMS_SRV,
-    Texture2DMSArray: D3D12_TEX2DMS_ARRAY_SRV,
-    Texture3D: D3D12_TEX3D_SRV,
-    TextureCube: D3D12_TEXCUBE_SRV,
-    TextureCubeArray: D3D12_TEXCUBE_ARRAY_SRV,
-    RaytracingAccelerationStructure: D3D12_RAYTRACING_ACCELERATION_STRUCTURE_SRV,
-};
+    pub const D3D12_SHADER_RESOURCE_VIEW_DESC_0 = extern union {
+        Buffer: D3D12_BUFFER_SRV,
+        Texture1D: D3D12_TEX1D_SRV,
+        Texture1DArray: D3D12_TEX1D_ARRAY_SRV,
+        Texture2D: D3D12_TEX2D_SRV,
+        Texture2DArray: D3D12_TEX2D_ARRAY_SRV,
+        Texture2DMS: D3D12_TEX2DMS_SRV,
+        Texture2DMSArray: D3D12_TEX2DMS_ARRAY_SRV,
+        Texture3D: D3D12_TEX3D_SRV,
+        TextureCube: D3D12_TEXCUBE_SRV,
+        TextureCubeArray: D3D12_TEXCUBE_ARRAY_SRV,
+        RaytracingAccelerationStructure: D3D12_RAYTRACING_ACCELERATION_STRUCTURE_SRV,
+    };
     Format: i32,
     ViewDimension: i32,
     Shader4ComponentMapping: u32,
@@ -645,10 +645,10 @@ pub const D3D12_SAMPLER_DESC = extern struct {
     MaxLOD: f32,
 };
 pub const D3D12_SAMPLER_DESC2 = extern struct {
-pub const D3D12_SAMPLER_DESC2_0 = extern union {
-    FloatBorderColor: [4]f32,
-    UintBorderColor: [4]u32,
-};
+    pub const D3D12_SAMPLER_DESC2_0 = extern union {
+        FloatBorderColor: [4]f32,
+        UintBorderColor: [4]u32,
+    };
     Filter: i32,
     AddressU: i32,
     AddressV: i32,
@@ -699,16 +699,16 @@ pub const D3D12_TEX3D_UAV = extern struct {
     WSize: u32,
 };
 pub const D3D12_UNORDERED_ACCESS_VIEW_DESC = extern struct {
-pub const D3D12_UNORDERED_ACCESS_VIEW_DESC_0 = extern union {
-    Buffer: D3D12_BUFFER_UAV,
-    Texture1D: D3D12_TEX1D_UAV,
-    Texture1DArray: D3D12_TEX1D_ARRAY_UAV,
-    Texture2D: D3D12_TEX2D_UAV,
-    Texture2DArray: D3D12_TEX2D_ARRAY_UAV,
-    Texture2DMS: D3D12_TEX2DMS_UAV,
-    Texture2DMSArray: D3D12_TEX2DMS_ARRAY_UAV,
-    Texture3D: D3D12_TEX3D_UAV,
-};
+    pub const D3D12_UNORDERED_ACCESS_VIEW_DESC_0 = extern union {
+        Buffer: D3D12_BUFFER_UAV,
+        Texture1D: D3D12_TEX1D_UAV,
+        Texture1DArray: D3D12_TEX1D_ARRAY_UAV,
+        Texture2D: D3D12_TEX2D_UAV,
+        Texture2DArray: D3D12_TEX2D_ARRAY_UAV,
+        Texture2DMS: D3D12_TEX2DMS_UAV,
+        Texture2DMSArray: D3D12_TEX2DMS_ARRAY_UAV,
+        Texture3D: D3D12_TEX3D_UAV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D12_UNORDERED_ACCESS_VIEW_DESC_0,
@@ -748,16 +748,16 @@ pub const D3D12_TEX3D_RTV = extern struct {
     WSize: u32,
 };
 pub const D3D12_RENDER_TARGET_VIEW_DESC = extern struct {
-pub const D3D12_RENDER_TARGET_VIEW_DESC_0 = extern union {
-    Buffer: D3D12_BUFFER_RTV,
-    Texture1D: D3D12_TEX1D_RTV,
-    Texture1DArray: D3D12_TEX1D_ARRAY_RTV,
-    Texture2D: D3D12_TEX2D_RTV,
-    Texture2DArray: D3D12_TEX2D_ARRAY_RTV,
-    Texture2DMS: D3D12_TEX2DMS_RTV,
-    Texture2DMSArray: D3D12_TEX2DMS_ARRAY_RTV,
-    Texture3D: D3D12_TEX3D_RTV,
-};
+    pub const D3D12_RENDER_TARGET_VIEW_DESC_0 = extern union {
+        Buffer: D3D12_BUFFER_RTV,
+        Texture1D: D3D12_TEX1D_RTV,
+        Texture1DArray: D3D12_TEX1D_ARRAY_RTV,
+        Texture2D: D3D12_TEX2D_RTV,
+        Texture2DArray: D3D12_TEX2D_ARRAY_RTV,
+        Texture2DMS: D3D12_TEX2DMS_RTV,
+        Texture2DMSArray: D3D12_TEX2DMS_ARRAY_RTV,
+        Texture3D: D3D12_TEX3D_RTV,
+    };
     Format: i32,
     ViewDimension: i32,
     Anonymous: D3D12_RENDER_TARGET_VIEW_DESC_0,
@@ -786,14 +786,14 @@ pub const D3D12_TEX2DMS_ARRAY_DSV = extern struct {
     ArraySize: u32,
 };
 pub const D3D12_DEPTH_STENCIL_VIEW_DESC = extern struct {
-pub const D3D12_DEPTH_STENCIL_VIEW_DESC_0 = extern union {
-    Texture1D: D3D12_TEX1D_DSV,
-    Texture1DArray: D3D12_TEX1D_ARRAY_DSV,
-    Texture2D: D3D12_TEX2D_DSV,
-    Texture2DArray: D3D12_TEX2D_ARRAY_DSV,
-    Texture2DMS: D3D12_TEX2DMS_DSV,
-    Texture2DMSArray: D3D12_TEX2DMS_ARRAY_DSV,
-};
+    pub const D3D12_DEPTH_STENCIL_VIEW_DESC_0 = extern union {
+        Texture1D: D3D12_TEX1D_DSV,
+        Texture1DArray: D3D12_TEX1D_ARRAY_DSV,
+        Texture2D: D3D12_TEX2D_DSV,
+        Texture2DArray: D3D12_TEX2D_ARRAY_DSV,
+        Texture2DMS: D3D12_TEX2DMS_DSV,
+        Texture2DMSArray: D3D12_TEX2DMS_ARRAY_DSV,
+    };
     Format: i32,
     ViewDimension: i32,
     Flags: i32,
@@ -826,11 +826,11 @@ pub const D3D12_ROOT_DESCRIPTOR = extern struct {
     RegisterSpace: u32,
 };
 pub const D3D12_ROOT_PARAMETER = extern struct {
-pub const D3D12_ROOT_PARAMETER_0 = extern union {
-    DescriptorTable: D3D12_ROOT_DESCRIPTOR_TABLE,
-    Constants: D3D12_ROOT_CONSTANTS,
-    Descriptor: D3D12_ROOT_DESCRIPTOR,
-};
+    pub const D3D12_ROOT_PARAMETER_0 = extern union {
+        DescriptorTable: D3D12_ROOT_DESCRIPTOR_TABLE,
+        Constants: D3D12_ROOT_CONSTANTS,
+        Descriptor: D3D12_ROOT_DESCRIPTOR,
+    };
     ParameterType: i32,
     Anonymous: D3D12_ROOT_PARAMETER_0,
     ShaderVisibility: i32,
@@ -891,11 +891,11 @@ pub const D3D12_ROOT_DESCRIPTOR1 = extern struct {
     Flags: i32,
 };
 pub const D3D12_ROOT_PARAMETER1 = extern struct {
-pub const D3D12_ROOT_PARAMETER1_0 = extern union {
-    DescriptorTable: D3D12_ROOT_DESCRIPTOR_TABLE1,
-    Constants: D3D12_ROOT_CONSTANTS,
-    Descriptor: D3D12_ROOT_DESCRIPTOR1,
-};
+    pub const D3D12_ROOT_PARAMETER1_0 = extern union {
+        DescriptorTable: D3D12_ROOT_DESCRIPTOR_TABLE1,
+        Constants: D3D12_ROOT_CONSTANTS,
+        Descriptor: D3D12_ROOT_DESCRIPTOR1,
+    };
     ParameterType: i32,
     Anonymous: D3D12_ROOT_PARAMETER1_0,
     ShaderVisibility: i32,
@@ -915,11 +915,11 @@ pub const D3D12_ROOT_SIGNATURE_DESC2 = extern struct {
     Flags: i32,
 };
 pub const D3D12_VERSIONED_ROOT_SIGNATURE_DESC = extern struct {
-pub const D3D12_VERSIONED_ROOT_SIGNATURE_DESC_0 = extern union {
-    Desc_1_0: D3D12_ROOT_SIGNATURE_DESC,
-    Desc_1_1: D3D12_ROOT_SIGNATURE_DESC1,
-    Desc_1_2: D3D12_ROOT_SIGNATURE_DESC2,
-};
+    pub const D3D12_VERSIONED_ROOT_SIGNATURE_DESC_0 = extern union {
+        Desc_1_0: D3D12_ROOT_SIGNATURE_DESC,
+        Desc_1_1: D3D12_ROOT_SIGNATURE_DESC1,
+        Desc_1_2: D3D12_ROOT_SIGNATURE_DESC2,
+    };
     Version: i32,
     Anonymous: D3D12_VERSIONED_ROOT_SIGNATURE_DESC_0,
 };
@@ -1007,35 +1007,35 @@ pub const D3D12_INDEX_BUFFER_VIEW = extern struct {
     Format: i32,
 };
 pub const D3D12_INDIRECT_ARGUMENT_DESC = extern struct {
-pub const D3D12_INDIRECT_ARGUMENT_DESC_0 = extern union {
-pub const _VertexBuffer_e__Struct = extern struct {
-    Slot: u32,
-};
-pub const _Constant_e__Struct = extern struct {
-    RootParameterIndex: u32,
-    DestOffsetIn32BitValues: u32,
-    Num32BitValuesToSet: u32,
-};
-pub const _ConstantBufferView_e__Struct = extern struct {
-    RootParameterIndex: u32,
-};
-pub const _ShaderResourceView_e__Struct = extern struct {
-    RootParameterIndex: u32,
-};
-pub const _UnorderedAccessView_e__Struct = extern struct {
-    RootParameterIndex: u32,
-};
-pub const _IncrementingConstant_e__Struct = extern struct {
-    RootParameterIndex: u32,
-    DestOffsetIn32BitValues: u32,
-};
-    VertexBuffer: _VertexBuffer_e__Struct,
-    Constant: _Constant_e__Struct,
-    ConstantBufferView: _ConstantBufferView_e__Struct,
-    ShaderResourceView: _ShaderResourceView_e__Struct,
-    UnorderedAccessView: _UnorderedAccessView_e__Struct,
-    IncrementingConstant: _IncrementingConstant_e__Struct,
-};
+    pub const D3D12_INDIRECT_ARGUMENT_DESC_0 = extern union {
+        pub const _VertexBuffer_e__Struct = extern struct {
+            Slot: u32,
+        };
+        pub const _Constant_e__Struct = extern struct {
+            RootParameterIndex: u32,
+            DestOffsetIn32BitValues: u32,
+            Num32BitValuesToSet: u32,
+        };
+        pub const _ConstantBufferView_e__Struct = extern struct {
+            RootParameterIndex: u32,
+        };
+        pub const _ShaderResourceView_e__Struct = extern struct {
+            RootParameterIndex: u32,
+        };
+        pub const _UnorderedAccessView_e__Struct = extern struct {
+            RootParameterIndex: u32,
+        };
+        pub const _IncrementingConstant_e__Struct = extern struct {
+            RootParameterIndex: u32,
+            DestOffsetIn32BitValues: u32,
+        };
+        VertexBuffer: _VertexBuffer_e__Struct,
+        Constant: _Constant_e__Struct,
+        ConstantBufferView: _ConstantBufferView_e__Struct,
+        ShaderResourceView: _ShaderResourceView_e__Struct,
+        UnorderedAccessView: _UnorderedAccessView_e__Struct,
+        IncrementingConstant: _IncrementingConstant_e__Struct,
+    };
     Type: i32,
     Anonymous: D3D12_INDIRECT_ARGUMENT_DESC_0,
 };
@@ -1190,20 +1190,20 @@ pub const D3D12_COMMON_COMPUTE_NODE_OVERRIDES = extern struct {
     pOutputOverrides: *D3D12_NODE_OUTPUT_OVERRIDES,
 };
 pub const D3D12_SHADER_NODE = extern struct {
-pub const D3D12_SHADER_NODE_0 = extern union {
-    pBroadcastingLaunchOverrides: *D3D12_BROADCASTING_LAUNCH_OVERRIDES,
-    pCoalescingLaunchOverrides: *D3D12_COALESCING_LAUNCH_OVERRIDES,
-    pThreadLaunchOverrides: *D3D12_THREAD_LAUNCH_OVERRIDES,
-    pCommonComputeNodeOverrides: *D3D12_COMMON_COMPUTE_NODE_OVERRIDES,
-};
+    pub const D3D12_SHADER_NODE_0 = extern union {
+        pBroadcastingLaunchOverrides: *D3D12_BROADCASTING_LAUNCH_OVERRIDES,
+        pCoalescingLaunchOverrides: *D3D12_COALESCING_LAUNCH_OVERRIDES,
+        pThreadLaunchOverrides: *D3D12_THREAD_LAUNCH_OVERRIDES,
+        pCommonComputeNodeOverrides: *D3D12_COMMON_COMPUTE_NODE_OVERRIDES,
+    };
     Shader: @"Windows.Win32.Foundation".PWSTR,
     OverridesType: i32,
     Anonymous: D3D12_SHADER_NODE_0,
 };
 pub const D3D12_NODE = extern struct {
-pub const D3D12_NODE_0 = extern union {
-    Shader: D3D12_SHADER_NODE,
-};
+    pub const D3D12_NODE_0 = extern union {
+        Shader: D3D12_SHADER_NODE,
+    };
     NodeType: i32,
     Anonymous: D3D12_NODE_0,
 };
@@ -1290,10 +1290,10 @@ pub const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_TOOLS_VISUALIZATION_HEAD
     NumDescs: u32,
 };
 pub const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_POSTBUILD_INFO_SERIALIZATION_DESC = extern struct {
-pub const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_POSTBUILD_INFO_SERIALIZATION_DESC_0 = extern union {
-    NumBottomLevelAccelerationStructurePointers: u64,
-    NumBottomLevelAccelerationStructureHeaderAndPointerListPairs: u64,
-};
+    pub const D3D12_RAYTRACING_ACCELERATION_STRUCTURE_POSTBUILD_INFO_SERIALIZATION_DESC_0 = extern union {
+        NumBottomLevelAccelerationStructurePointers: u64,
+        NumBottomLevelAccelerationStructureHeaderAndPointerListPairs: u64,
+    };
     SerializedSizeInBytes: u64,
     Anonymous: D3D12_RAYTRACING_ACCELERATION_STRUCTURE_POSTBUILD_INFO_SERIALIZATION_DESC_0,
 };
@@ -1308,10 +1308,10 @@ pub const D3D12_SERIALIZED_RAYTRACING_ACCELERATION_STRUCTURE_HEADER = extern str
     NumBottomLevelAccelerationStructurePointersAfterHeader: u64,
 };
 pub const D3D12_SERIALIZED_RAYTRACING_ACCELERATION_STRUCTURE_HEADER1 = extern struct {
-pub const D3D12_SERIALIZED_RAYTRACING_ACCELERATION_STRUCTURE_HEADER1_0 = extern union {
-    NumBottomLevelAccelerationStructurePointersAfterHeader: u32,
-    NumBlocks: u32,
-};
+    pub const D3D12_SERIALIZED_RAYTRACING_ACCELERATION_STRUCTURE_HEADER1_0 = extern union {
+        NumBottomLevelAccelerationStructurePointersAfterHeader: u32,
+        NumBlocks: u32,
+    };
     DriverMatchingIdentifier: D3D12_SERIALIZED_DATA_DRIVER_MATCHING_IDENTIFIER,
     SerializedSizeInBytesIncludingHeader: u64,
     DeserializedSizeInBytes: u64,
@@ -1332,11 +1332,11 @@ pub const D3D12_RAYTRACING_INSTANCE_DESC = extern struct {
     AccelerationStructure: u64,
 };
 pub const D3D12_RAYTRACING_GEOMETRY_DESC = extern struct {
-pub const D3D12_RAYTRACING_GEOMETRY_DESC_0 = extern union {
-    Triangles: D3D12_RAYTRACING_GEOMETRY_TRIANGLES_DESC,
-    AABBs: D3D12_RAYTRACING_GEOMETRY_AABBS_DESC,
-    OmmTriangles: D3D12_RAYTRACING_GEOMETRY_OMM_TRIANGLES_DESC,
-};
+    pub const D3D12_RAYTRACING_GEOMETRY_DESC_0 = extern union {
+        Triangles: D3D12_RAYTRACING_GEOMETRY_TRIANGLES_DESC,
+        AABBs: D3D12_RAYTRACING_GEOMETRY_AABBS_DESC,
+        OmmTriangles: D3D12_RAYTRACING_GEOMETRY_OMM_TRIANGLES_DESC,
+    };
     Type: i32,
     Flags: i32,
     Anonymous: D3D12_RAYTRACING_GEOMETRY_DESC_0,
@@ -1353,12 +1353,12 @@ pub const D3D12_RAYTRACING_OPACITY_MICROMAP_ARRAY_DESC = extern struct {
     PerOmmDescs: D3D12_GPU_VIRTUAL_ADDRESS_AND_STRIDE,
 };
 pub const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS = extern struct {
-pub const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS_0 = extern union {
-    InstanceDescs: u64,
-    pGeometryDescs: *D3D12_RAYTRACING_GEOMETRY_DESC,
-    ppGeometryDescs: **D3D12_RAYTRACING_GEOMETRY_DESC,
-    pOpacityMicromapArrayDesc: *D3D12_RAYTRACING_OPACITY_MICROMAP_ARRAY_DESC,
-};
+    pub const D3D12_BUILD_RAYTRACING_ACCELERATION_STRUCTURE_INPUTS_0 = extern union {
+        InstanceDescs: u64,
+        pGeometryDescs: *D3D12_RAYTRACING_GEOMETRY_DESC,
+        ppGeometryDescs: **D3D12_RAYTRACING_GEOMETRY_DESC,
+        pOpacityMicromapArrayDesc: *D3D12_RAYTRACING_OPACITY_MICROMAP_ARRAY_DESC,
+    };
     Type: i32,
     Flags: i32,
     NumDescs: u32,
@@ -1435,10 +1435,10 @@ pub const D3D12_RENDER_PASS_BEGINNING_ACCESS_PRESERVE_LOCAL_PARAMETERS = extern 
     AdditionalHeight: u32,
 };
 pub const D3D12_RENDER_PASS_BEGINNING_ACCESS = extern struct {
-pub const D3D12_RENDER_PASS_BEGINNING_ACCESS_0 = extern union {
-    Clear: D3D12_RENDER_PASS_BEGINNING_ACCESS_CLEAR_PARAMETERS,
-    PreserveLocal: D3D12_RENDER_PASS_BEGINNING_ACCESS_PRESERVE_LOCAL_PARAMETERS,
-};
+    pub const D3D12_RENDER_PASS_BEGINNING_ACCESS_0 = extern union {
+        Clear: D3D12_RENDER_PASS_BEGINNING_ACCESS_CLEAR_PARAMETERS,
+        PreserveLocal: D3D12_RENDER_PASS_BEGINNING_ACCESS_PRESERVE_LOCAL_PARAMETERS,
+    };
     Type: i32,
     Anonymous: D3D12_RENDER_PASS_BEGINNING_ACCESS_0,
 };
@@ -1479,11 +1479,11 @@ pub const D3D12_SET_GENERIC_PIPELINE_DESC = extern struct {
     ProgramIdentifier: D3D12_PROGRAM_IDENTIFIER,
 };
 pub const D3D12_SET_PROGRAM_DESC = extern struct {
-pub const D3D12_SET_PROGRAM_DESC_0 = extern union {
-    GenericPipeline: D3D12_SET_GENERIC_PIPELINE_DESC,
-    RaytracingPipeline: D3D12_SET_RAYTRACING_PIPELINE_DESC,
-    WorkGraph: D3D12_SET_WORK_GRAPH_DESC,
-};
+    pub const D3D12_SET_PROGRAM_DESC_0 = extern union {
+        GenericPipeline: D3D12_SET_GENERIC_PIPELINE_DESC,
+        RaytracingPipeline: D3D12_SET_RAYTRACING_PIPELINE_DESC,
+        WorkGraph: D3D12_SET_WORK_GRAPH_DESC,
+    };
     Type: i32,
     Anonymous: D3D12_SET_PROGRAM_DESC_0,
 };
@@ -1508,12 +1508,12 @@ pub const D3D12_MULTI_NODE_GPU_INPUT = extern struct {
     NodeInputs: D3D12_GPU_VIRTUAL_ADDRESS_AND_STRIDE,
 };
 pub const D3D12_DISPATCH_GRAPH_DESC = extern struct {
-pub const D3D12_DISPATCH_GRAPH_DESC_0 = extern union {
-    NodeCPUInput: D3D12_NODE_CPU_INPUT,
-    NodeGPUInput: u64,
-    MultiNodeCPUInput: D3D12_MULTI_NODE_CPU_INPUT,
-    MultiNodeGPUInput: u64,
-};
+    pub const D3D12_DISPATCH_GRAPH_DESC_0 = extern union {
+        NodeCPUInput: D3D12_NODE_CPU_INPUT,
+        NodeGPUInput: u64,
+        MultiNodeCPUInput: D3D12_MULTI_NODE_CPU_INPUT,
+        MultiNodeGPUInput: u64,
+    };
     Mode: i32,
     Anonymous: D3D12_DISPATCH_GRAPH_DESC_0,
 };

@@ -11,83 +11,83 @@ pub const WHV_PARTITION_HANDLE = extern struct {
     Value: isize,
 };
 pub const WHV_CAPABILITY_FEATURES = extern union {
-pub const WHV_CAPABILITY_FEATURES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_CAPABILITY_FEATURES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_CAPABILITY_FEATURES_0,
     AsUINT64: u64,
 };
 pub const WHV_EXTENDED_VM_EXITS = extern union {
-pub const WHV_EXTENDED_VM_EXITS_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_EXTENDED_VM_EXITS_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_EXTENDED_VM_EXITS_0,
     AsUINT64: u64,
 };
 pub const WHV_PROCESSOR_FEATURES = extern union {
-pub const WHV_PROCESSOR_FEATURES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_PROCESSOR_FEATURES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_PROCESSOR_FEATURES_0,
     AsUINT64: u64,
 };
 pub const WHV_PROCESSOR_FEATURES1 = extern union {
-pub const WHV_PROCESSOR_FEATURES1_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_PROCESSOR_FEATURES1_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_PROCESSOR_FEATURES1_0,
     AsUINT64: u64,
 };
 pub const WHV_PROCESSOR_FEATURES_BANKS = extern struct {
-pub const WHV_PROCESSOR_FEATURES_BANKS_0 = extern union {
-pub const WHV_PROCESSOR_FEATURES_BANKS_0_0 = extern struct {
-    Bank0: WHV_PROCESSOR_FEATURES,
-    Bank1: WHV_PROCESSOR_FEATURES1,
-};
-    Anonymous: WHV_PROCESSOR_FEATURES_BANKS_0_0,
-    AsUINT64: [2]u64,
-};
+    pub const WHV_PROCESSOR_FEATURES_BANKS_0 = extern union {
+        pub const WHV_PROCESSOR_FEATURES_BANKS_0_0 = extern struct {
+            Bank0: WHV_PROCESSOR_FEATURES,
+            Bank1: WHV_PROCESSOR_FEATURES1,
+        };
+        Anonymous: WHV_PROCESSOR_FEATURES_BANKS_0_0,
+        AsUINT64: [2]u64,
+    };
     BanksCount: u32,
     Reserved0: u32,
     Anonymous: WHV_PROCESSOR_FEATURES_BANKS_0,
 };
 pub const WHV_SYNTHETIC_PROCESSOR_FEATURES = extern union {
-pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_SYNTHETIC_PROCESSOR_FEATURES_0,
     AsUINT64: u64,
 };
 pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS = extern struct {
-pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0 = extern union {
-pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0_0 = extern struct {
-    Bank0: WHV_SYNTHETIC_PROCESSOR_FEATURES,
-};
-    Anonymous: WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0_0,
-    AsUINT64: [1]u64,
-};
+    pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0 = extern union {
+        pub const WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0_0 = extern struct {
+            Bank0: WHV_SYNTHETIC_PROCESSOR_FEATURES,
+        };
+        Anonymous: WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0_0,
+        AsUINT64: [1]u64,
+    };
     BanksCount: u32,
     Reserved0: u32,
     Anonymous: WHV_SYNTHETIC_PROCESSOR_FEATURES_BANKS_0,
 };
 pub const WHV_PROCESSOR_XSAVE_FEATURES = extern union {
-pub const WHV_PROCESSOR_XSAVE_FEATURES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_PROCESSOR_XSAVE_FEATURES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_PROCESSOR_XSAVE_FEATURES_0,
     AsUINT64: u64,
 };
 pub const WHV_PROCESSOR_PERFMON_FEATURES = extern union {
-pub const WHV_PROCESSOR_PERFMON_FEATURES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_PROCESSOR_PERFMON_FEATURES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_PROCESSOR_PERFMON_FEATURES_0,
     AsUINT64: u64,
 };
 pub const WHV_X64_MSR_EXIT_BITMAP = extern union {
-pub const WHV_X64_MSR_EXIT_BITMAP_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_X64_MSR_EXIT_BITMAP_0 = extern struct {
+        _bitfield: u64,
+    };
     AsUINT64: u64,
     Anonymous: WHV_X64_MSR_EXIT_BITMAP_0,
 };
@@ -96,9 +96,9 @@ pub const WHV_MEMORY_RANGE_ENTRY = extern struct {
     SizeInBytes: u64,
 };
 pub const WHV_ADVISE_GPA_RANGE_POPULATE_FLAGS = extern union {
-pub const WHV_ADVISE_GPA_RANGE_POPULATE_FLAGS_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const WHV_ADVISE_GPA_RANGE_POPULATE_FLAGS_0 = extern struct {
+        _bitfield: u32,
+    };
     AsUINT32: u32,
     Anonymous: WHV_ADVISE_GPA_RANGE_POPULATE_FLAGS_0,
 };
@@ -114,9 +114,9 @@ pub const WHV_CAPABILITY_PROCESSOR_FREQUENCY_CAP = extern struct {
     FrequencyStepMhz: u32,
 };
 pub const WHV_SCHEDULER_FEATURES = extern union {
-pub const WHV_SCHEDULER_FEATURES_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_SCHEDULER_FEATURES_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_SCHEDULER_FEATURES_0,
     AsUINT64: u64,
 };
@@ -207,76 +207,76 @@ pub const WHV_ADVISE_GPA_RANGE = extern union {
     Populate: WHV_ADVISE_GPA_RANGE_POPULATE,
 };
 pub const WHV_ACCESS_GPA_CONTROLS = extern union {
-pub const WHV_ACCESS_GPA_CONTROLS_0 = extern struct {
-    CacheType: i32,
-    Reserved: u32,
-};
+    pub const WHV_ACCESS_GPA_CONTROLS_0 = extern struct {
+        CacheType: i32,
+        Reserved: u32,
+    };
     AsUINT64: u64,
     Anonymous: WHV_ACCESS_GPA_CONTROLS_0,
 };
 pub const WHV_UINT128 = extern union {
-pub const WHV_UINT128_0 = extern struct {
-    Low64: u64,
-    High64: u64,
-};
+    pub const WHV_UINT128_0 = extern struct {
+        Low64: u64,
+        High64: u64,
+    };
     Anonymous: WHV_UINT128_0,
     Dword: [4]u32,
 };
 pub const WHV_X64_FP_REGISTER = extern union {
-pub const WHV_X64_FP_REGISTER_0 = extern struct {
-    Mantissa: u64,
-    _bitfield: u64,
-};
+    pub const WHV_X64_FP_REGISTER_0 = extern struct {
+        Mantissa: u64,
+        _bitfield: u64,
+    };
     Anonymous: WHV_X64_FP_REGISTER_0,
     AsUINT128: WHV_UINT128,
 };
 pub const WHV_X64_FP_CONTROL_STATUS_REGISTER = extern union {
-pub const WHV_X64_FP_CONTROL_STATUS_REGISTER_0 = extern struct {
-pub const WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0 = extern union {
-pub const WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0_0 = extern struct {
-    LastFpEip: u32,
-    LastFpCs: u16,
-    Reserved2: u16,
-};
-    LastFpRip: u64,
-    Anonymous: WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0_0,
-};
-    FpControl: u16,
-    FpStatus: u16,
-    FpTag: u8,
-    Reserved: u8,
-    LastFpOp: u16,
-    Anonymous: WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0,
-};
+    pub const WHV_X64_FP_CONTROL_STATUS_REGISTER_0 = extern struct {
+        pub const WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0 = extern union {
+            pub const WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0_0 = extern struct {
+                LastFpEip: u32,
+                LastFpCs: u16,
+                Reserved2: u16,
+            };
+            LastFpRip: u64,
+            Anonymous: WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0_0,
+        };
+        FpControl: u16,
+        FpStatus: u16,
+        FpTag: u8,
+        Reserved: u8,
+        LastFpOp: u16,
+        Anonymous: WHV_X64_FP_CONTROL_STATUS_REGISTER_0_0,
+    };
     Anonymous: WHV_X64_FP_CONTROL_STATUS_REGISTER_0,
     AsUINT128: WHV_UINT128,
 };
 pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER = extern union {
-pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER_0 = extern struct {
-pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0 = extern union {
-pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0_0 = extern struct {
-    LastFpDp: u32,
-    LastFpDs: u16,
-    Reserved: u16,
-};
-    LastFpRdp: u64,
-    Anonymous: WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0_0,
-};
-    Anonymous: WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0,
-    XmmStatusControl: u32,
-    XmmStatusControlMask: u32,
-};
+    pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER_0 = extern struct {
+        pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0 = extern union {
+            pub const WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0_0 = extern struct {
+                LastFpDp: u32,
+                LastFpDs: u16,
+                Reserved: u16,
+            };
+            LastFpRdp: u64,
+            Anonymous: WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0_0,
+        };
+        Anonymous: WHV_X64_XMM_CONTROL_STATUS_REGISTER_0_0,
+        XmmStatusControl: u32,
+        XmmStatusControlMask: u32,
+    };
     Anonymous: WHV_X64_XMM_CONTROL_STATUS_REGISTER_0,
     AsUINT128: WHV_UINT128,
 };
 pub const WHV_X64_SEGMENT_REGISTER = extern struct {
-pub const WHV_X64_SEGMENT_REGISTER_0 = extern union {
-pub const WHV_X64_SEGMENT_REGISTER_0_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: WHV_X64_SEGMENT_REGISTER_0_0,
-    Attributes: u16,
-};
+    pub const WHV_X64_SEGMENT_REGISTER_0 = extern union {
+        pub const WHV_X64_SEGMENT_REGISTER_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: WHV_X64_SEGMENT_REGISTER_0_0,
+        Attributes: u16,
+    };
     Base: u64,
     Limit: u32,
     Selector: u16,
@@ -288,55 +288,55 @@ pub const WHV_X64_TABLE_REGISTER = extern struct {
     Base: u64,
 };
 pub const WHV_X64_INTERRUPT_STATE_REGISTER = extern union {
-pub const WHV_X64_INTERRUPT_STATE_REGISTER_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_X64_INTERRUPT_STATE_REGISTER_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_X64_INTERRUPT_STATE_REGISTER_0,
     AsUINT64: u64,
 };
 pub const WHV_X64_PENDING_INTERRUPTION_REGISTER = extern union {
-pub const WHV_X64_PENDING_INTERRUPTION_REGISTER_0 = extern struct {
-    _bitfield: u32,
-    ErrorCode: u32,
-};
+    pub const WHV_X64_PENDING_INTERRUPTION_REGISTER_0 = extern struct {
+        _bitfield: u32,
+        ErrorCode: u32,
+    };
     Anonymous: WHV_X64_PENDING_INTERRUPTION_REGISTER_0,
     AsUINT64: u64,
 };
 pub const WHV_X64_DELIVERABILITY_NOTIFICATIONS_REGISTER = extern union {
-pub const WHV_X64_DELIVERABILITY_NOTIFICATIONS_REGISTER_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_X64_DELIVERABILITY_NOTIFICATIONS_REGISTER_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_X64_DELIVERABILITY_NOTIFICATIONS_REGISTER_0,
     AsUINT64: u64,
 };
 pub const WHV_X64_PENDING_EXCEPTION_EVENT = extern union {
-pub const WHV_X64_PENDING_EXCEPTION_EVENT_0 = extern struct {
-    _bitfield: u32,
-    ErrorCode: u32,
-    ExceptionParameter: u64,
-};
+    pub const WHV_X64_PENDING_EXCEPTION_EVENT_0 = extern struct {
+        _bitfield: u32,
+        ErrorCode: u32,
+        ExceptionParameter: u64,
+    };
     Anonymous: WHV_X64_PENDING_EXCEPTION_EVENT_0,
     AsUINT128: WHV_UINT128,
 };
 pub const WHV_X64_PENDING_EXT_INT_EVENT = extern union {
-pub const WHV_X64_PENDING_EXT_INT_EVENT_0 = extern struct {
-    _bitfield: u64,
-    Reserved2: u64,
-};
+    pub const WHV_X64_PENDING_EXT_INT_EVENT_0 = extern struct {
+        _bitfield: u64,
+        Reserved2: u64,
+    };
     Anonymous: WHV_X64_PENDING_EXT_INT_EVENT_0,
     AsUINT128: WHV_UINT128,
 };
 pub const WHV_INTERNAL_ACTIVITY_REGISTER = extern union {
-pub const WHV_INTERNAL_ACTIVITY_REGISTER_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_INTERNAL_ACTIVITY_REGISTER_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_INTERNAL_ACTIVITY_REGISTER_0,
     AsUINT64: u64,
 };
 pub const WHV_X64_PENDING_DEBUG_EXCEPTION = extern union {
-pub const WHV_X64_PENDING_DEBUG_EXCEPTION_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_X64_PENDING_DEBUG_EXCEPTION_0 = extern struct {
+        _bitfield: u64,
+    };
     AsUINT64: u64,
     Anonymous: WHV_X64_PENDING_DEBUG_EXCEPTION_0,
 };
@@ -365,9 +365,9 @@ pub const WHV_REGISTER_VALUE = extern union {
     PendingDebugException: WHV_X64_PENDING_DEBUG_EXCEPTION,
 };
 pub const WHV_X64_VP_EXECUTION_STATE = extern union {
-pub const WHV_X64_VP_EXECUTION_STATE_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const WHV_X64_VP_EXECUTION_STATE_0 = extern struct {
+        _bitfield: u16,
+    };
     Anonymous: WHV_X64_VP_EXECUTION_STATE_0,
     AsUINT16: u16,
 };
@@ -381,9 +381,9 @@ pub const WHV_VP_EXIT_CONTEXT = extern struct {
     Rflags: u64,
 };
 pub const WHV_MEMORY_ACCESS_INFO = extern union {
-pub const WHV_MEMORY_ACCESS_INFO_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const WHV_MEMORY_ACCESS_INFO_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: WHV_MEMORY_ACCESS_INFO_0,
     AsUINT32: u32,
 };
@@ -396,9 +396,9 @@ pub const WHV_MEMORY_ACCESS_CONTEXT = extern struct {
     Gva: u64,
 };
 pub const WHV_X64_IO_PORT_ACCESS_INFO = extern union {
-pub const WHV_X64_IO_PORT_ACCESS_INFO_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const WHV_X64_IO_PORT_ACCESS_INFO_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: WHV_X64_IO_PORT_ACCESS_INFO_0,
     AsUINT32: u32,
 };
@@ -417,9 +417,9 @@ pub const WHV_X64_IO_PORT_ACCESS_CONTEXT = extern struct {
     Es: WHV_X64_SEGMENT_REGISTER,
 };
 pub const WHV_X64_MSR_ACCESS_INFO = extern union {
-pub const WHV_X64_MSR_ACCESS_INFO_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const WHV_X64_MSR_ACCESS_INFO_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: WHV_X64_MSR_ACCESS_INFO_0,
     AsUINT32: u32,
 };
@@ -440,9 +440,9 @@ pub const WHV_X64_CPUID_ACCESS_CONTEXT = extern struct {
     DefaultResultRbx: u64,
 };
 pub const WHV_VP_EXCEPTION_INFO = extern union {
-pub const WHV_VP_EXCEPTION_INFO_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const WHV_VP_EXCEPTION_INFO_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: WHV_VP_EXCEPTION_INFO_0,
     AsUINT32: u32,
 };
@@ -471,9 +471,9 @@ pub const WHV_X64_APIC_EOI_CONTEXT = extern struct {
     InterruptVector: u32,
 };
 pub const WHV_X64_RDTSC_INFO = extern union {
-pub const WHV_X64_RDTSC_INFO_0 = extern struct {
-    _bitfield: u64,
-};
+    pub const WHV_X64_RDTSC_INFO_0 = extern struct {
+        _bitfield: u64,
+    };
     Anonymous: WHV_X64_RDTSC_INFO_0,
     AsUINT64: u64,
 };
@@ -508,23 +508,23 @@ pub const WHV_X64_APIC_WRITE_CONTEXT = extern struct {
     WriteValue: u64,
 };
 pub const WHV_RUN_VP_EXIT_CONTEXT = extern struct {
-pub const WHV_RUN_VP_EXIT_CONTEXT_0 = extern union {
-    MemoryAccess: WHV_MEMORY_ACCESS_CONTEXT,
-    IoPortAccess: WHV_X64_IO_PORT_ACCESS_CONTEXT,
-    MsrAccess: WHV_X64_MSR_ACCESS_CONTEXT,
-    CpuidAccess: WHV_X64_CPUID_ACCESS_CONTEXT,
-    VpException: WHV_VP_EXCEPTION_CONTEXT,
-    InterruptWindow: WHV_X64_INTERRUPTION_DELIVERABLE_CONTEXT,
-    UnsupportedFeature: WHV_X64_UNSUPPORTED_FEATURE_CONTEXT,
-    CancelReason: WHV_RUN_VP_CANCELED_CONTEXT,
-    ApicEoi: WHV_X64_APIC_EOI_CONTEXT,
-    ReadTsc: WHV_X64_RDTSC_CONTEXT,
-    ApicSmi: WHV_X64_APIC_SMI_CONTEXT,
-    Hypercall: WHV_HYPERCALL_CONTEXT,
-    ApicInitSipi: WHV_X64_APIC_INIT_SIPI_CONTEXT,
-    ApicWrite: WHV_X64_APIC_WRITE_CONTEXT,
-    SynicSintDeliverable: WHV_SYNIC_SINT_DELIVERABLE_CONTEXT,
-};
+    pub const WHV_RUN_VP_EXIT_CONTEXT_0 = extern union {
+        MemoryAccess: WHV_MEMORY_ACCESS_CONTEXT,
+        IoPortAccess: WHV_X64_IO_PORT_ACCESS_CONTEXT,
+        MsrAccess: WHV_X64_MSR_ACCESS_CONTEXT,
+        CpuidAccess: WHV_X64_CPUID_ACCESS_CONTEXT,
+        VpException: WHV_VP_EXCEPTION_CONTEXT,
+        InterruptWindow: WHV_X64_INTERRUPTION_DELIVERABLE_CONTEXT,
+        UnsupportedFeature: WHV_X64_UNSUPPORTED_FEATURE_CONTEXT,
+        CancelReason: WHV_RUN_VP_CANCELED_CONTEXT,
+        ApicEoi: WHV_X64_APIC_EOI_CONTEXT,
+        ReadTsc: WHV_X64_RDTSC_CONTEXT,
+        ApicSmi: WHV_X64_APIC_SMI_CONTEXT,
+        Hypercall: WHV_HYPERCALL_CONTEXT,
+        ApicInitSipi: WHV_X64_APIC_INIT_SIPI_CONTEXT,
+        ApicWrite: WHV_X64_APIC_WRITE_CONTEXT,
+        SynicSintDeliverable: WHV_SYNIC_SINT_DELIVERABLE_CONTEXT,
+    };
     ExitReason: i32,
     Reserved: u32,
     VpContext: WHV_VP_EXIT_CONTEXT,
@@ -603,9 +603,9 @@ pub const WHV_SRIOV_RESOURCE_DESCRIPTOR = extern struct {
     Reserved: u16,
 };
 pub const WHV_VPCI_DEVICE_NOTIFICATION = extern struct {
-pub const WHV_VPCI_DEVICE_NOTIFICATION_0 = extern union {
-    Reserved2: u64,
-};
+    pub const WHV_VPCI_DEVICE_NOTIFICATION_0 = extern union {
+        Reserved2: u64,
+    };
     NotificationType: i32,
     Reserved1: u32,
     Anonymous: WHV_VPCI_DEVICE_NOTIFICATION_0,
@@ -642,46 +642,46 @@ pub const WHV_VPCI_INTERRUPT_TARGET = extern struct {
     Processors: [1]u32,
 };
 pub const WHV_TRIGGER_PARAMETERS = extern struct {
-pub const WHV_TRIGGER_PARAMETERS_0 = extern union {
-pub const _DeviceInterrupt_e__Struct = extern struct {
-    LogicalDeviceId: u64,
-    MsiAddress: u64,
-    MsiData: u32,
-    Reserved: u32,
-};
-    Interrupt: WHV_INTERRUPT_CONTROL,
-    SynicEvent: WHV_SYNIC_EVENT_PARAMETERS,
-    DeviceInterrupt: _DeviceInterrupt_e__Struct,
-};
+    pub const WHV_TRIGGER_PARAMETERS_0 = extern union {
+        pub const _DeviceInterrupt_e__Struct = extern struct {
+            LogicalDeviceId: u64,
+            MsiAddress: u64,
+            MsiData: u32,
+            Reserved: u32,
+        };
+        Interrupt: WHV_INTERRUPT_CONTROL,
+        SynicEvent: WHV_SYNIC_EVENT_PARAMETERS,
+        DeviceInterrupt: _DeviceInterrupt_e__Struct,
+    };
     TriggerType: i32,
     Reserved: u32,
     Anonymous: WHV_TRIGGER_PARAMETERS_0,
 };
 pub const WHV_VIRTUAL_PROCESSOR_PROPERTY = extern struct {
-pub const WHV_VIRTUAL_PROCESSOR_PROPERTY_0 = extern union {
-    NumaNode: u16,
-    Padding: u64,
-};
+    pub const WHV_VIRTUAL_PROCESSOR_PROPERTY_0 = extern union {
+        NumaNode: u16,
+        Padding: u64,
+    };
     PropertyCode: i32,
     Reserved: u32,
     Anonymous: WHV_VIRTUAL_PROCESSOR_PROPERTY_0,
 };
 pub const WHV_NOTIFICATION_PORT_PARAMETERS = extern struct {
-pub const WHV_NOTIFICATION_PORT_PARAMETERS_0 = extern union {
-pub const _Event_e__Struct = extern struct {
-    ConnectionId: u32,
-};
-    Doorbell: WHV_DOORBELL_MATCH_DATA,
-    Event: _Event_e__Struct,
-};
+    pub const WHV_NOTIFICATION_PORT_PARAMETERS_0 = extern union {
+        pub const _Event_e__Struct = extern struct {
+            ConnectionId: u32,
+        };
+        Doorbell: WHV_DOORBELL_MATCH_DATA,
+        Event: _Event_e__Struct,
+    };
     NotificationPortType: i32,
     Reserved: u32,
     Anonymous: WHV_NOTIFICATION_PORT_PARAMETERS_0,
 };
 pub const WHV_EMULATOR_STATUS = extern union {
-pub const WHV_EMULATOR_STATUS_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const WHV_EMULATOR_STATUS_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: WHV_EMULATOR_STATUS_0,
     AsUINT32: u32,
 };
@@ -750,73 +750,73 @@ pub const GPA_MEMORY_CHUNK = extern struct {
     PageCount: u64,
 };
 pub const GUEST_OS_INFO = extern union {
-pub const _ClosedSource_e__Struct = extern struct {
-    _bitfield: u64,
-};
-pub const _OpenSource_e__Struct = extern struct {
-    _bitfield: u64,
-};
+    pub const _ClosedSource_e__Struct = extern struct {
+        _bitfield: u64,
+    };
+    pub const _OpenSource_e__Struct = extern struct {
+        _bitfield: u64,
+    };
     AsUINT64: u64,
     ClosedSource: _ClosedSource_e__Struct,
     OpenSource: _OpenSource_e__Struct,
 };
 pub const VIRTUAL_PROCESSOR_REGISTER = extern union {
-pub const _Reg128_e__Struct = extern struct {
-    Low64: u64,
-    High64: u64,
-};
-pub const _X64_e__Union = extern union {
-pub const _Segment_e__Struct = extern struct {
-pub const _Segment_e__Struct_0 = extern union {
-pub const _Segment_e__Struct_0_0 = extern struct {
-    _bitfield: u16,
-};
-    Attributes: u16,
-    Anonymous: _Segment_e__Struct_0_0,
-};
-    Base: u64,
-    Limit: u32,
-    Selector: u16,
-    Anonymous: _Segment_e__Struct_0,
-};
-pub const _Table_e__Struct = extern struct {
-    Limit: u16,
-    Base: u64,
-};
-pub const _FpControlStatus_e__Struct = extern struct {
-pub const _FpControlStatus_e__Struct_0 = extern union {
-pub const _FpControlStatus_e__Struct_0_0 = extern struct {
-    LastFpEip: u32,
-    LastFpCs: u16,
-};
-    LastFpRip: u64,
-    Anonymous: _FpControlStatus_e__Struct_0_0,
-};
-    FpControl: u16,
-    FpStatus: u16,
-    FpTag: u8,
-    Reserved: u8,
-    LastFpOp: u16,
-    Anonymous: _FpControlStatus_e__Struct_0,
-};
-pub const _XmmControlStatus_e__Struct = extern struct {
-pub const _XmmControlStatus_e__Struct_0 = extern union {
-pub const _XmmControlStatus_e__Struct_0_0 = extern struct {
-    LastFpDp: u32,
-    LastFpDs: u16,
-};
-    LastFpRdp: u64,
-    Anonymous: _XmmControlStatus_e__Struct_0_0,
-};
-    Anonymous: _XmmControlStatus_e__Struct_0,
-    XmmStatusControl: u32,
-    XmmStatusControlMask: u32,
-};
-    Segment: _Segment_e__Struct,
-    Table: _Table_e__Struct,
-    FpControlStatus: _FpControlStatus_e__Struct,
-    XmmControlStatus: _XmmControlStatus_e__Struct,
-};
+    pub const _Reg128_e__Struct = extern struct {
+        Low64: u64,
+        High64: u64,
+    };
+    pub const _X64_e__Union = extern union {
+        pub const _Segment_e__Struct = extern struct {
+            pub const _Segment_e__Struct_0 = extern union {
+                pub const _Segment_e__Struct_0_0 = extern struct {
+                    _bitfield: u16,
+                };
+                Attributes: u16,
+                Anonymous: _Segment_e__Struct_0_0,
+            };
+            Base: u64,
+            Limit: u32,
+            Selector: u16,
+            Anonymous: _Segment_e__Struct_0,
+        };
+        pub const _Table_e__Struct = extern struct {
+            Limit: u16,
+            Base: u64,
+        };
+        pub const _FpControlStatus_e__Struct = extern struct {
+            pub const _FpControlStatus_e__Struct_0 = extern union {
+                pub const _FpControlStatus_e__Struct_0_0 = extern struct {
+                    LastFpEip: u32,
+                    LastFpCs: u16,
+                };
+                LastFpRip: u64,
+                Anonymous: _FpControlStatus_e__Struct_0_0,
+            };
+            FpControl: u16,
+            FpStatus: u16,
+            FpTag: u8,
+            Reserved: u8,
+            LastFpOp: u16,
+            Anonymous: _FpControlStatus_e__Struct_0,
+        };
+        pub const _XmmControlStatus_e__Struct = extern struct {
+            pub const _XmmControlStatus_e__Struct_0 = extern union {
+                pub const _XmmControlStatus_e__Struct_0_0 = extern struct {
+                    LastFpDp: u32,
+                    LastFpDs: u16,
+                };
+                LastFpRdp: u64,
+                Anonymous: _XmmControlStatus_e__Struct_0_0,
+            };
+            Anonymous: _XmmControlStatus_e__Struct_0,
+            XmmStatusControl: u32,
+            XmmStatusControlMask: u32,
+        };
+        Segment: _Segment_e__Struct,
+        Table: _Table_e__Struct,
+        FpControlStatus: _FpControlStatus_e__Struct,
+        XmmControlStatus: _XmmControlStatus_e__Struct,
+    };
     Reg64: u64,
     Reg32: u32,
     Reg16: u16,

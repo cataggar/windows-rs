@@ -19,11 +19,11 @@ pub const WNV_NOTIFICATION_PARAM = extern struct {
     Buffer: *u8,
 };
 pub const WNV_IP_ADDRESS = extern struct {
-pub const _IP_e__Union = extern union {
-    v4: @"Windows.Win32.Networking.WinSock".IN_ADDR,
-    v6: @"Windows.Win32.Networking.WinSock".IN6_ADDR,
-    Addr: [16]u8,
-};
+    pub const _IP_e__Union = extern union {
+        v4: @"Windows.Win32.Networking.WinSock".IN_ADDR,
+        v6: @"Windows.Win32.Networking.WinSock".IN6_ADDR,
+        Addr: [16]u8,
+    };
     IP: _IP_e__Union,
 };
 pub const WNV_POLICY_MISMATCH_PARAM = extern struct {
@@ -48,10 +48,10 @@ pub const WNV_CUSTOMER_ADDRESS_CHANGE_PARAM = extern struct {
     NotificationReason: i32,
 };
 pub const WNV_OBJECT_CHANGE_PARAM = extern struct {
-pub const _ObjectParam_e__Union = extern union {
-    ProviderAddressChange: WNV_PROVIDER_ADDRESS_CHANGE_PARAM,
-    CustomerAddressChange: WNV_CUSTOMER_ADDRESS_CHANGE_PARAM,
-};
+    pub const _ObjectParam_e__Union = extern union {
+        ProviderAddressChange: WNV_PROVIDER_ADDRESS_CHANGE_PARAM,
+        CustomerAddressChange: WNV_CUSTOMER_ADDRESS_CHANGE_PARAM,
+    };
     ObjectType: i32,
     ObjectParam: _ObjectParam_e__Union,
 };

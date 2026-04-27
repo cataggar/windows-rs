@@ -109,10 +109,10 @@ pub const TRUSTEE_ACCESSW = extern struct {
     fReturnedAccess: u32,
 };
 pub const ACTRL_OVERLAPPED = extern struct {
-pub const ACTRL_OVERLAPPED_0 = extern union {
-    Provider: *anyopaque,
-    Reserved1: u32,
-};
+    pub const ACTRL_OVERLAPPED_0 = extern union {
+        Provider: *anyopaque,
+        Reserved1: u32,
+    };
     Anonymous: ACTRL_OVERLAPPED_0,
     Reserved2: u32,
     hEvent: @"Windows.Win32.Foundation".HANDLE,
@@ -159,20 +159,20 @@ pub const AUDIT_IP_ADDRESS = extern struct {
     pIpAddress: [128]u8,
 };
 pub const AUDIT_PARAM = extern struct {
-pub const AUDIT_PARAM_0 = extern union {
-    Data0: usize,
-    String: @"Windows.Win32.Foundation".PWSTR,
-    u: usize,
-    psid: *@"Windows.Win32.Security".SID,
-    pguid: *GUID,
-    LogonId_LowPart: u32,
-    pObjectTypes: *AUDIT_OBJECT_TYPES,
-    pIpAddress: *AUDIT_IP_ADDRESS,
-};
-pub const AUDIT_PARAM_1 = extern union {
-    Data1: usize,
-    LogonId_HighPart: i32,
-};
+    pub const AUDIT_PARAM_0 = extern union {
+        Data0: usize,
+        String: @"Windows.Win32.Foundation".PWSTR,
+        u: usize,
+        psid: *@"Windows.Win32.Security".SID,
+        pguid: *GUID,
+        LogonId_LowPart: u32,
+        pObjectTypes: *AUDIT_OBJECT_TYPES,
+        pIpAddress: *AUDIT_IP_ADDRESS,
+    };
+    pub const AUDIT_PARAM_1 = extern union {
+        Data1: usize,
+        LogonId_HighPart: i32,
+    };
     Type: i32,
     Length: u32,
     Flags: u32,
@@ -223,13 +223,13 @@ pub const AUTHZ_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE = extern struct {
     ValueLength: u32,
 };
 pub const AUTHZ_SECURITY_ATTRIBUTE_V1 = extern struct {
-pub const _Values_e__Union = extern union {
-    pInt64: *i64,
-    pUint64: *u64,
-    ppString: *@"Windows.Win32.Foundation".PWSTR,
-    pFqbn: *AUTHZ_SECURITY_ATTRIBUTE_FQBN_VALUE,
-    pOctetString: *AUTHZ_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE,
-};
+    pub const _Values_e__Union = extern union {
+        pInt64: *i64,
+        pUint64: *u64,
+        ppString: *@"Windows.Win32.Foundation".PWSTR,
+        pFqbn: *AUTHZ_SECURITY_ATTRIBUTE_FQBN_VALUE,
+        pOctetString: *AUTHZ_SECURITY_ATTRIBUTE_OCTET_STRING_VALUE,
+    };
     pName: @"Windows.Win32.Foundation".PWSTR,
     ValueType: u16,
     Reserved: u16,
@@ -238,9 +238,9 @@ pub const _Values_e__Union = extern union {
     Values: _Values_e__Union,
 };
 pub const AUTHZ_SECURITY_ATTRIBUTES_INFORMATION = extern struct {
-pub const _Attribute_e__Union = extern union {
-    pAttributeV1: *AUTHZ_SECURITY_ATTRIBUTE_V1,
-};
+    pub const _Attribute_e__Union = extern union {
+        pAttributeV1: *AUTHZ_SECURITY_ATTRIBUTE_V1,
+    };
     Version: u16,
     Reserved: u16,
     AttributeCount: u32,
@@ -269,10 +269,10 @@ pub const AUTHZ_REGISTRATION_OBJECT_TYPE_NAME_OFFSET = extern struct {
     dwOffset: u32,
 };
 pub const AUTHZ_SOURCE_SCHEMA_REGISTRATION = extern struct {
-pub const AUTHZ_SOURCE_SCHEMA_REGISTRATION_0 = extern union {
-    pReserved: *anyopaque,
-    pProviderGuid: *GUID,
-};
+    pub const AUTHZ_SOURCE_SCHEMA_REGISTRATION_0 = extern union {
+        pReserved: *anyopaque,
+        pProviderGuid: *GUID,
+    };
     dwFlags: u32,
     szEventSourceName: @"Windows.Win32.Foundation".PWSTR,
     szEventMessageFile: @"Windows.Win32.Foundation".PWSTR,

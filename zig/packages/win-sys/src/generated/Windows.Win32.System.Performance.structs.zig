@@ -193,13 +193,13 @@ pub const PDH_RAW_COUNTER_ITEM_W = extern struct {
     RawValue: PDH_RAW_COUNTER,
 };
 pub const PDH_FMT_COUNTERVALUE = extern struct {
-pub const PDH_FMT_COUNTERVALUE_0 = extern union {
-    longValue: i32,
-    doubleValue: f64,
-    largeValue: i64,
-    AnsiStringValue: @"Windows.Win32.Foundation".PSTR,
-    WideStringValue: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const PDH_FMT_COUNTERVALUE_0 = extern union {
+        longValue: i32,
+        doubleValue: f64,
+        largeValue: i64,
+        AnsiStringValue: @"Windows.Win32.Foundation".PSTR,
+        WideStringValue: @"Windows.Win32.Foundation".PWSTR,
+    };
     CStatus: u32,
     Anonymous: PDH_FMT_COUNTERVALUE_0,
 };
@@ -247,19 +247,19 @@ pub const PDH_DATA_ITEM_PATH_ELEMENTS_W = extern struct {
     szInstanceName: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const PDH_COUNTER_INFO_A = extern struct {
-pub const PDH_COUNTER_INFO_A_0 = extern union {
-pub const PDH_COUNTER_INFO_A_0_0 = extern struct {
-    szMachineName: @"Windows.Win32.Foundation".PSTR,
-    szObjectName: @"Windows.Win32.Foundation".PSTR,
-    szInstanceName: @"Windows.Win32.Foundation".PSTR,
-    szParentInstance: @"Windows.Win32.Foundation".PSTR,
-    dwInstanceIndex: u32,
-    szCounterName: @"Windows.Win32.Foundation".PSTR,
-};
-    DataItemPath: PDH_DATA_ITEM_PATH_ELEMENTS_A,
-    CounterPath: PDH_COUNTER_PATH_ELEMENTS_A,
-    Anonymous: PDH_COUNTER_INFO_A_0_0,
-};
+    pub const PDH_COUNTER_INFO_A_0 = extern union {
+        pub const PDH_COUNTER_INFO_A_0_0 = extern struct {
+            szMachineName: @"Windows.Win32.Foundation".PSTR,
+            szObjectName: @"Windows.Win32.Foundation".PSTR,
+            szInstanceName: @"Windows.Win32.Foundation".PSTR,
+            szParentInstance: @"Windows.Win32.Foundation".PSTR,
+            dwInstanceIndex: u32,
+            szCounterName: @"Windows.Win32.Foundation".PSTR,
+        };
+        DataItemPath: PDH_DATA_ITEM_PATH_ELEMENTS_A,
+        CounterPath: PDH_COUNTER_PATH_ELEMENTS_A,
+        Anonymous: PDH_COUNTER_INFO_A_0_0,
+    };
     dwLength: u32,
     dwType: u32,
     CVersion: u32,
@@ -274,19 +274,19 @@ pub const PDH_COUNTER_INFO_A_0_0 = extern struct {
     DataBuffer: [1]u32,
 };
 pub const PDH_COUNTER_INFO_W = extern struct {
-pub const PDH_COUNTER_INFO_W_0 = extern union {
-pub const PDH_COUNTER_INFO_W_0_0 = extern struct {
-    szMachineName: @"Windows.Win32.Foundation".PWSTR,
-    szObjectName: @"Windows.Win32.Foundation".PWSTR,
-    szInstanceName: @"Windows.Win32.Foundation".PWSTR,
-    szParentInstance: @"Windows.Win32.Foundation".PWSTR,
-    dwInstanceIndex: u32,
-    szCounterName: @"Windows.Win32.Foundation".PWSTR,
-};
-    DataItemPath: PDH_DATA_ITEM_PATH_ELEMENTS_W,
-    CounterPath: PDH_COUNTER_PATH_ELEMENTS_W,
-    Anonymous: PDH_COUNTER_INFO_W_0_0,
-};
+    pub const PDH_COUNTER_INFO_W_0 = extern union {
+        pub const PDH_COUNTER_INFO_W_0_0 = extern struct {
+            szMachineName: @"Windows.Win32.Foundation".PWSTR,
+            szObjectName: @"Windows.Win32.Foundation".PWSTR,
+            szInstanceName: @"Windows.Win32.Foundation".PWSTR,
+            szParentInstance: @"Windows.Win32.Foundation".PWSTR,
+            dwInstanceIndex: u32,
+            szCounterName: @"Windows.Win32.Foundation".PWSTR,
+        };
+        DataItemPath: PDH_DATA_ITEM_PATH_ELEMENTS_W,
+        CounterPath: PDH_COUNTER_PATH_ELEMENTS_W,
+        Anonymous: PDH_COUNTER_INFO_W_0_0,
+    };
     dwLength: u32,
     dwType: u32,
     CVersion: u32,
@@ -312,32 +312,32 @@ pub const PDH_RAW_LOG_RECORD = extern struct {
     RawBytes: [1]u8,
 };
 pub const PDH_LOG_SERVICE_QUERY_INFO_A = extern struct {
-pub const PDH_LOG_SERVICE_QUERY_INFO_A_0 = extern union {
-pub const PDH_LOG_SERVICE_QUERY_INFO_A_0_0 = extern struct {
-    PdlAutoNameInterval: u32,
-    PdlAutoNameUnits: u32,
-    PdlCommandFilename: @"Windows.Win32.Foundation".PSTR,
-    PdlCounterList: @"Windows.Win32.Foundation".PSTR,
-    PdlAutoNameFormat: u32,
-    PdlSampleInterval: u32,
-    PdlLogStartTime: @"Windows.Win32.Foundation".FILETIME,
-    PdlLogEndTime: @"Windows.Win32.Foundation".FILETIME,
-};
-pub const PDH_LOG_SERVICE_QUERY_INFO_A_0_1 = extern struct {
-    TlNumberOfBuffers: u32,
-    TlMinimumBuffers: u32,
-    TlMaximumBuffers: u32,
-    TlFreeBuffers: u32,
-    TlBufferSize: u32,
-    TlEventsLost: u32,
-    TlLoggerThreadId: u32,
-    TlBuffersWritten: u32,
-    TlLogHandle: u32,
-    TlLogFileName: @"Windows.Win32.Foundation".PSTR,
-};
-    Anonymous1: PDH_LOG_SERVICE_QUERY_INFO_A_0_0,
-    Anonymous2: PDH_LOG_SERVICE_QUERY_INFO_A_0_1,
-};
+    pub const PDH_LOG_SERVICE_QUERY_INFO_A_0 = extern union {
+        pub const PDH_LOG_SERVICE_QUERY_INFO_A_0_0 = extern struct {
+            PdlAutoNameInterval: u32,
+            PdlAutoNameUnits: u32,
+            PdlCommandFilename: @"Windows.Win32.Foundation".PSTR,
+            PdlCounterList: @"Windows.Win32.Foundation".PSTR,
+            PdlAutoNameFormat: u32,
+            PdlSampleInterval: u32,
+            PdlLogStartTime: @"Windows.Win32.Foundation".FILETIME,
+            PdlLogEndTime: @"Windows.Win32.Foundation".FILETIME,
+        };
+        pub const PDH_LOG_SERVICE_QUERY_INFO_A_0_1 = extern struct {
+            TlNumberOfBuffers: u32,
+            TlMinimumBuffers: u32,
+            TlMaximumBuffers: u32,
+            TlFreeBuffers: u32,
+            TlBufferSize: u32,
+            TlEventsLost: u32,
+            TlLoggerThreadId: u32,
+            TlBuffersWritten: u32,
+            TlLogHandle: u32,
+            TlLogFileName: @"Windows.Win32.Foundation".PSTR,
+        };
+        Anonymous1: PDH_LOG_SERVICE_QUERY_INFO_A_0_0,
+        Anonymous2: PDH_LOG_SERVICE_QUERY_INFO_A_0_1,
+    };
     dwSize: u32,
     dwFlags: u32,
     dwLogQuota: u32,
@@ -349,32 +349,32 @@ pub const PDH_LOG_SERVICE_QUERY_INFO_A_0_1 = extern struct {
     Anonymous: PDH_LOG_SERVICE_QUERY_INFO_A_0,
 };
 pub const PDH_LOG_SERVICE_QUERY_INFO_W = extern struct {
-pub const PDH_LOG_SERVICE_QUERY_INFO_W_0 = extern union {
-pub const PDH_LOG_SERVICE_QUERY_INFO_W_0_0 = extern struct {
-    PdlAutoNameInterval: u32,
-    PdlAutoNameUnits: u32,
-    PdlCommandFilename: @"Windows.Win32.Foundation".PWSTR,
-    PdlCounterList: @"Windows.Win32.Foundation".PWSTR,
-    PdlAutoNameFormat: u32,
-    PdlSampleInterval: u32,
-    PdlLogStartTime: @"Windows.Win32.Foundation".FILETIME,
-    PdlLogEndTime: @"Windows.Win32.Foundation".FILETIME,
-};
-pub const PDH_LOG_SERVICE_QUERY_INFO_W_0_1 = extern struct {
-    TlNumberOfBuffers: u32,
-    TlMinimumBuffers: u32,
-    TlMaximumBuffers: u32,
-    TlFreeBuffers: u32,
-    TlBufferSize: u32,
-    TlEventsLost: u32,
-    TlLoggerThreadId: u32,
-    TlBuffersWritten: u32,
-    TlLogHandle: u32,
-    TlLogFileName: @"Windows.Win32.Foundation".PWSTR,
-};
-    Anonymous1: PDH_LOG_SERVICE_QUERY_INFO_W_0_0,
-    Anonymous2: PDH_LOG_SERVICE_QUERY_INFO_W_0_1,
-};
+    pub const PDH_LOG_SERVICE_QUERY_INFO_W_0 = extern union {
+        pub const PDH_LOG_SERVICE_QUERY_INFO_W_0_0 = extern struct {
+            PdlAutoNameInterval: u32,
+            PdlAutoNameUnits: u32,
+            PdlCommandFilename: @"Windows.Win32.Foundation".PWSTR,
+            PdlCounterList: @"Windows.Win32.Foundation".PWSTR,
+            PdlAutoNameFormat: u32,
+            PdlSampleInterval: u32,
+            PdlLogStartTime: @"Windows.Win32.Foundation".FILETIME,
+            PdlLogEndTime: @"Windows.Win32.Foundation".FILETIME,
+        };
+        pub const PDH_LOG_SERVICE_QUERY_INFO_W_0_1 = extern struct {
+            TlNumberOfBuffers: u32,
+            TlMinimumBuffers: u32,
+            TlMaximumBuffers: u32,
+            TlFreeBuffers: u32,
+            TlBufferSize: u32,
+            TlEventsLost: u32,
+            TlLoggerThreadId: u32,
+            TlBuffersWritten: u32,
+            TlLogHandle: u32,
+            TlLogFileName: @"Windows.Win32.Foundation".PWSTR,
+        };
+        Anonymous1: PDH_LOG_SERVICE_QUERY_INFO_W_0_0,
+        Anonymous2: PDH_LOG_SERVICE_QUERY_INFO_W_0_1,
+    };
     dwSize: u32,
     dwFlags: u32,
     dwLogQuota: u32,

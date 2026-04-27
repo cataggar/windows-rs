@@ -197,10 +197,10 @@ pub const CHARFORMATW = extern struct {
     szFaceName: [32]u16,
 };
 pub const CHARFORMAT2W = extern struct {
-pub const CHARFORMAT2W_0 = extern union {
-    dwReserved: u32,
-    dwCookie: u32,
-};
+    pub const CHARFORMAT2W_0 = extern union {
+        dwReserved: u32,
+        dwCookie: u32,
+    };
     Base: CHARFORMATW,
     wWeight: u16,
     sSpacing: i16,
@@ -215,10 +215,10 @@ pub const CHARFORMAT2W_0 = extern union {
     bUnderlineColor: u8,
 };
 pub const CHARFORMAT2A = extern struct {
-pub const CHARFORMAT2A_0 = extern union {
-    dwReserved: u32,
-    dwCookie: u32,
-};
+    pub const CHARFORMAT2A_0 = extern union {
+        dwReserved: u32,
+        dwCookie: u32,
+    };
     Base: CHARFORMATA,
     wWeight: u16,
     sSpacing: i16,
@@ -237,10 +237,10 @@ pub const CHARRANGE = extern struct {
     cpMax: i32,
 };
 pub const PARAFORMAT = extern struct {
-pub const PARAFORMAT_0 = extern union {
-    wReserved: u16,
-    wEffects: u16,
-};
+    pub const PARAFORMAT_0 = extern union {
+        wReserved: u16,
+        wEffects: u16,
+    };
     cbSize: u32,
     dwMask: u32,
     wNumbering: u16,

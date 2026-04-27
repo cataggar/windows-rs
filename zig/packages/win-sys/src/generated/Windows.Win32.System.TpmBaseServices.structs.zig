@@ -10,13 +10,13 @@ pub const TBS_CONTEXT_PARAMS = extern struct {
     version: u32,
 };
 pub const TBS_CONTEXT_PARAMS2 = extern struct {
-pub const TBS_CONTEXT_PARAMS2_0 = extern union {
-pub const TBS_CONTEXT_PARAMS2_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: TBS_CONTEXT_PARAMS2_0_0,
-    asUINT32: u32,
-};
+    pub const TBS_CONTEXT_PARAMS2_0 = extern union {
+        pub const TBS_CONTEXT_PARAMS2_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: TBS_CONTEXT_PARAMS2_0_0,
+        asUINT32: u32,
+    };
     version: u32,
     Anonymous: TBS_CONTEXT_PARAMS2_0,
 };

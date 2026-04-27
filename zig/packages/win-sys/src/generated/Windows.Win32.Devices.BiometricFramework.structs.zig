@@ -21,17 +21,17 @@ pub const WINBIO_VERSION = extern struct {
     MinorVersion: u32,
 };
 pub const WINBIO_IDENTITY = extern struct {
-pub const _Value_e__Union = extern union {
-pub const _AccountSid_e__Struct = extern struct {
-    Size: u32,
-    Data: [68]u8,
-};
-    Null: u32,
-    Wildcard: u32,
-    TemplateGuid: GUID,
-    AccountSid: _AccountSid_e__Struct,
-    SecureId: [32]u8,
-};
+    pub const _Value_e__Union = extern union {
+        pub const _AccountSid_e__Struct = extern struct {
+            Size: u32,
+            Data: [68]u8,
+        };
+        Null: u32,
+        Wildcard: u32,
+        TemplateGuid: GUID,
+        AccountSid: _AccountSid_e__Struct,
+        SecureId: [32]u8,
+    };
     Type: u32,
     Value: _Value_e__Union,
 };
@@ -63,10 +63,10 @@ pub const WINBIO_REGISTERED_FORMAT = extern struct {
     Type: u16,
 };
 pub const WINBIO_BIR_HEADER = extern struct {
-pub const _ValidityPeriod_e__Struct = extern struct {
-    BeginDate: i64,
-    EndDate: i64,
-};
+    pub const _ValidityPeriod_e__Struct = extern struct {
+        BeginDate: i64,
+        EndDate: i64,
+    };
     ValidFields: u16,
     HeaderVersion: u8,
     PatronHeaderVersion: u8,
@@ -115,52 +115,52 @@ pub const WINBIO_SECURE_BUFFER_HEADER_V1 = extern struct {
     ValidationTag: u64,
 };
 pub const WINBIO_EVENT = extern struct {
-pub const _Parameters_e__Union = extern union {
-pub const _Unclaimed_e__Struct = extern struct {
-    UnitId: u32,
-    RejectDetail: u32,
-};
-pub const _UnclaimedIdentify_e__Struct = extern struct {
-    UnitId: u32,
-    Identity: WINBIO_IDENTITY,
-    SubFactor: u8,
-    RejectDetail: u32,
-};
-pub const _Error_e__Struct = extern struct {
-    ErrorCode: @"Windows.Win32.Foundation".HRESULT,
-};
-    Unclaimed: _Unclaimed_e__Struct,
-    UnclaimedIdentify: _UnclaimedIdentify_e__Struct,
-    Error: _Error_e__Struct,
-};
+    pub const _Parameters_e__Union = extern union {
+        pub const _Unclaimed_e__Struct = extern struct {
+            UnitId: u32,
+            RejectDetail: u32,
+        };
+        pub const _UnclaimedIdentify_e__Struct = extern struct {
+            UnitId: u32,
+            Identity: WINBIO_IDENTITY,
+            SubFactor: u8,
+            RejectDetail: u32,
+        };
+        pub const _Error_e__Struct = extern struct {
+            ErrorCode: @"Windows.Win32.Foundation".HRESULT,
+        };
+        Unclaimed: _Unclaimed_e__Struct,
+        UnclaimedIdentify: _UnclaimedIdentify_e__Struct,
+        Error: _Error_e__Struct,
+    };
     Type: u32,
     Parameters: _Parameters_e__Union,
 };
 pub const WINBIO_PRESENCE_PROPERTIES = extern union {
-pub const _FacialFeatures_e__Struct = extern struct {
-pub const _OpaqueEngineData_e__Struct = extern struct {
-    AdapterId: GUID,
-    Data: [78]u32,
-};
-    BoundingBox: @"Windows.Win32.Foundation".RECT,
-    Distance: i32,
-    OpaqueEngineData: _OpaqueEngineData_e__Struct,
-};
-pub const _Iris_e__Struct = extern struct {
-    EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
-    EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
-    PupilCenter_1: @"Windows.Win32.Foundation".POINT,
-    PupilCenter_2: @"Windows.Win32.Foundation".POINT,
-    Distance: i32,
-};
+    pub const _FacialFeatures_e__Struct = extern struct {
+        pub const _OpaqueEngineData_e__Struct = extern struct {
+            AdapterId: GUID,
+            Data: [78]u32,
+        };
+        BoundingBox: @"Windows.Win32.Foundation".RECT,
+        Distance: i32,
+        OpaqueEngineData: _OpaqueEngineData_e__Struct,
+    };
+    pub const _Iris_e__Struct = extern struct {
+        EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
+        EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
+        PupilCenter_1: @"Windows.Win32.Foundation".POINT,
+        PupilCenter_2: @"Windows.Win32.Foundation".POINT,
+        Distance: i32,
+    };
     FacialFeatures: _FacialFeatures_e__Struct,
     Iris: _Iris_e__Struct,
 };
 pub const WINBIO_PRESENCE = extern struct {
-pub const _Authorization_e__Struct = extern struct {
-    Size: u32,
-    Data: [32]u8,
-};
+    pub const _Authorization_e__Struct = extern struct {
+        Size: u32,
+        Data: [32]u8,
+    };
     Factor: u32,
     SubFactor: u8,
     Status: @"Windows.Win32.Foundation".HRESULT,
@@ -200,152 +200,152 @@ pub const WINBIO_STORAGE_SCHEMA = extern struct {
     ConnectionString: [256]u16,
 };
 pub const WINBIO_EXTENDED_SENSOR_INFO = extern struct {
-pub const _Specific_e__Union = extern union {
-pub const _FacialFeatures_e__Struct = extern struct {
-pub const _HardwareInfo_e__Struct = extern struct {
-    ColorSensorId: [260]u16,
-    InfraredSensorId: [260]u16,
-    InfraredSensorRotationAngle: u32,
-};
-    FrameSize: @"Windows.Win32.Foundation".RECT,
-    FrameOffset: @"Windows.Win32.Foundation".POINT,
-    MandatoryOrientation: u32,
-    HardwareInfo: _HardwareInfo_e__Struct,
-};
-pub const _Fingerprint_e__Struct = extern struct {
-    Reserved: u32,
-};
-pub const _Iris_e__Struct = extern struct {
-    FrameSize: @"Windows.Win32.Foundation".RECT,
-    FrameOffset: @"Windows.Win32.Foundation".POINT,
-    MandatoryOrientation: u32,
-};
-pub const _Voice_e__Struct = extern struct {
-    Reserved: u32,
-};
-    Null: u32,
-    FacialFeatures: _FacialFeatures_e__Struct,
-    Fingerprint: _Fingerprint_e__Struct,
-    Iris: _Iris_e__Struct,
-    Voice: _Voice_e__Struct,
-};
+    pub const _Specific_e__Union = extern union {
+        pub const _FacialFeatures_e__Struct = extern struct {
+            pub const _HardwareInfo_e__Struct = extern struct {
+                ColorSensorId: [260]u16,
+                InfraredSensorId: [260]u16,
+                InfraredSensorRotationAngle: u32,
+            };
+            FrameSize: @"Windows.Win32.Foundation".RECT,
+            FrameOffset: @"Windows.Win32.Foundation".POINT,
+            MandatoryOrientation: u32,
+            HardwareInfo: _HardwareInfo_e__Struct,
+        };
+        pub const _Fingerprint_e__Struct = extern struct {
+            Reserved: u32,
+        };
+        pub const _Iris_e__Struct = extern struct {
+            FrameSize: @"Windows.Win32.Foundation".RECT,
+            FrameOffset: @"Windows.Win32.Foundation".POINT,
+            MandatoryOrientation: u32,
+        };
+        pub const _Voice_e__Struct = extern struct {
+            Reserved: u32,
+        };
+        Null: u32,
+        FacialFeatures: _FacialFeatures_e__Struct,
+        Fingerprint: _Fingerprint_e__Struct,
+        Iris: _Iris_e__Struct,
+        Voice: _Voice_e__Struct,
+    };
     GenericSensorCapabilities: u32,
     Factor: u32,
     Specific: _Specific_e__Union,
 };
 pub const WINBIO_EXTENDED_ENGINE_INFO = extern struct {
-pub const _Specific_e__Union = extern union {
-pub const _FacialFeatures_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct = extern struct {
-    Null: u32,
-};
-    Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
-};
-pub const _Fingerprint_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct_2 = extern struct {
-    GeneralSamples: u32,
-    Center: u32,
-    TopEdge: u32,
-    BottomEdge: u32,
-    LeftEdge: u32,
-    RightEdge: u32,
-};
-    Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_2,
-};
-pub const _Iris_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct_3 = extern struct {
-    Null: u32,
-};
-    Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_3,
-};
-pub const _Voice_e__Struct = extern struct {
-pub const _EnrollmentRequirements_e__Struct_4 = extern struct {
-    Null: u32,
-};
-    Capabilities: u32,
-    EnrollmentRequirements: _EnrollmentRequirements_e__Struct_4,
-};
-    Null: u32,
-    FacialFeatures: _FacialFeatures_e__Struct,
-    Fingerprint: _Fingerprint_e__Struct,
-    Iris: _Iris_e__Struct,
-    Voice: _Voice_e__Struct,
-};
+    pub const _Specific_e__Union = extern union {
+        pub const _FacialFeatures_e__Struct = extern struct {
+            pub const _EnrollmentRequirements_e__Struct = extern struct {
+                Null: u32,
+            };
+            Capabilities: u32,
+            EnrollmentRequirements: _EnrollmentRequirements_e__Struct,
+        };
+        pub const _Fingerprint_e__Struct = extern struct {
+            pub const _EnrollmentRequirements_e__Struct_2 = extern struct {
+                GeneralSamples: u32,
+                Center: u32,
+                TopEdge: u32,
+                BottomEdge: u32,
+                LeftEdge: u32,
+                RightEdge: u32,
+            };
+            Capabilities: u32,
+            EnrollmentRequirements: _EnrollmentRequirements_e__Struct_2,
+        };
+        pub const _Iris_e__Struct = extern struct {
+            pub const _EnrollmentRequirements_e__Struct_3 = extern struct {
+                Null: u32,
+            };
+            Capabilities: u32,
+            EnrollmentRequirements: _EnrollmentRequirements_e__Struct_3,
+        };
+        pub const _Voice_e__Struct = extern struct {
+            pub const _EnrollmentRequirements_e__Struct_4 = extern struct {
+                Null: u32,
+            };
+            Capabilities: u32,
+            EnrollmentRequirements: _EnrollmentRequirements_e__Struct_4,
+        };
+        Null: u32,
+        FacialFeatures: _FacialFeatures_e__Struct,
+        Fingerprint: _Fingerprint_e__Struct,
+        Iris: _Iris_e__Struct,
+        Voice: _Voice_e__Struct,
+    };
     GenericEngineCapabilities: u32,
     Factor: u32,
     Specific: _Specific_e__Union,
 };
 pub const WINBIO_EXTENDED_STORAGE_INFO = extern struct {
-pub const _Specific_e__Union = extern union {
-pub const _FacialFeatures_e__Struct = extern struct {
-    Capabilities: u32,
-};
-pub const _Fingerprint_e__Struct = extern struct {
-    Capabilities: u32,
-};
-pub const _Iris_e__Struct = extern struct {
-    Capabilities: u32,
-};
-pub const _Voice_e__Struct = extern struct {
-    Capabilities: u32,
-};
-    Null: u32,
-    FacialFeatures: _FacialFeatures_e__Struct,
-    Fingerprint: _Fingerprint_e__Struct,
-    Iris: _Iris_e__Struct,
-    Voice: _Voice_e__Struct,
-};
+    pub const _Specific_e__Union = extern union {
+        pub const _FacialFeatures_e__Struct = extern struct {
+            Capabilities: u32,
+        };
+        pub const _Fingerprint_e__Struct = extern struct {
+            Capabilities: u32,
+        };
+        pub const _Iris_e__Struct = extern struct {
+            Capabilities: u32,
+        };
+        pub const _Voice_e__Struct = extern struct {
+            Capabilities: u32,
+        };
+        Null: u32,
+        FacialFeatures: _FacialFeatures_e__Struct,
+        Fingerprint: _Fingerprint_e__Struct,
+        Iris: _Iris_e__Struct,
+        Voice: _Voice_e__Struct,
+    };
     GenericStorageCapabilities: u32,
     Factor: u32,
     Specific: _Specific_e__Union,
 };
 pub const WINBIO_EXTENDED_ENROLLMENT_STATUS = extern struct {
-pub const _Specific_e__Union = extern union {
-pub const _FacialFeatures_e__Struct = extern struct {
-pub const _OpaqueEngineData_e__Struct = extern struct {
-    AdapterId: GUID,
-    Data: [78]u32,
-};
-    BoundingBox: @"Windows.Win32.Foundation".RECT,
-    Distance: i32,
-    OpaqueEngineData: _OpaqueEngineData_e__Struct,
-};
-pub const _Fingerprint_e__Struct = extern struct {
-    GeneralSamples: u32,
-    Center: u32,
-    TopEdge: u32,
-    BottomEdge: u32,
-    LeftEdge: u32,
-    RightEdge: u32,
-};
-pub const _Iris_e__Struct = extern struct {
-pub const _Point3D_e__Struct = extern struct {
-    X: f64,
-    Y: f64,
-    Z: f64,
-};
-    EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
-    EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
-    PupilCenter_1: @"Windows.Win32.Foundation".POINT,
-    PupilCenter_2: @"Windows.Win32.Foundation".POINT,
-    Distance: i32,
-    GridPointCompletionPercent: u32,
-    GridPointIndex: u16,
-    Point3D: _Point3D_e__Struct,
-    StopCaptureAndShowCriticalFeedback: @"Windows.Win32.Foundation".BOOL,
-};
-pub const _Voice_e__Struct = extern struct {
-    Reserved: u32,
-};
-    Null: u32,
-    FacialFeatures: _FacialFeatures_e__Struct,
-    Fingerprint: _Fingerprint_e__Struct,
-    Iris: _Iris_e__Struct,
-    Voice: _Voice_e__Struct,
-};
+    pub const _Specific_e__Union = extern union {
+        pub const _FacialFeatures_e__Struct = extern struct {
+            pub const _OpaqueEngineData_e__Struct = extern struct {
+                AdapterId: GUID,
+                Data: [78]u32,
+            };
+            BoundingBox: @"Windows.Win32.Foundation".RECT,
+            Distance: i32,
+            OpaqueEngineData: _OpaqueEngineData_e__Struct,
+        };
+        pub const _Fingerprint_e__Struct = extern struct {
+            GeneralSamples: u32,
+            Center: u32,
+            TopEdge: u32,
+            BottomEdge: u32,
+            LeftEdge: u32,
+            RightEdge: u32,
+        };
+        pub const _Iris_e__Struct = extern struct {
+            pub const _Point3D_e__Struct = extern struct {
+                X: f64,
+                Y: f64,
+                Z: f64,
+            };
+            EyeBoundingBox_1: @"Windows.Win32.Foundation".RECT,
+            EyeBoundingBox_2: @"Windows.Win32.Foundation".RECT,
+            PupilCenter_1: @"Windows.Win32.Foundation".POINT,
+            PupilCenter_2: @"Windows.Win32.Foundation".POINT,
+            Distance: i32,
+            GridPointCompletionPercent: u32,
+            GridPointIndex: u16,
+            Point3D: _Point3D_e__Struct,
+            StopCaptureAndShowCriticalFeedback: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const _Voice_e__Struct = extern struct {
+            Reserved: u32,
+        };
+        Null: u32,
+        FacialFeatures: _FacialFeatures_e__Struct,
+        Fingerprint: _Fingerprint_e__Struct,
+        Iris: _Iris_e__Struct,
+        Voice: _Voice_e__Struct,
+    };
     TemplateStatus: @"Windows.Win32.Foundation".HRESULT,
     RejectDetail: u32,
     PercentComplete: u32,
@@ -392,129 +392,129 @@ pub const WINBIO_CONNECTED_SENSOR = extern struct {
     isEnhancedSignInSecurityCapable: @"Windows.Win32.Foundation".BOOL,
 };
 pub const WINBIO_ASYNC_RESULT = extern struct {
-pub const _Parameters_e__Union = extern union {
-pub const _Verify_e__Struct = extern struct {
-    Match: @"Windows.Win32.Foundation".BOOLEAN,
-    RejectDetail: u32,
-};
-pub const _Identify_e__Struct = extern struct {
-    Identity: WINBIO_IDENTITY,
-    SubFactor: u8,
-    RejectDetail: u32,
-};
-pub const _EnrollBegin_e__Struct = extern struct {
-    SubFactor: u8,
-};
-pub const _EnrollCapture_e__Struct = extern struct {
-    RejectDetail: u32,
-};
-pub const _EnrollCommit_e__Struct = extern struct {
-    Identity: WINBIO_IDENTITY,
-    IsNewTemplate: @"Windows.Win32.Foundation".BOOLEAN,
-};
-pub const _EnumEnrollments_e__Struct = extern struct {
-    Identity: WINBIO_IDENTITY,
-    SubFactorCount: usize,
-    SubFactorArray: *u8,
-};
-pub const _CaptureSample_e__Struct = extern struct {
-    Sample: *WINBIO_BIR,
-    SampleSize: usize,
-    RejectDetail: u32,
-};
-pub const _DeleteTemplate_e__Struct = extern struct {
-    Identity: WINBIO_IDENTITY,
-    SubFactor: u8,
-};
-pub const _GetProperty_e__Struct = extern struct {
-    PropertyType: u32,
-    PropertyId: u32,
-    Identity: WINBIO_IDENTITY,
-    SubFactor: u8,
-    PropertyBufferSize: usize,
-    PropertyBuffer: *anyopaque,
-};
-pub const _SetProperty_e__Struct = extern struct {
-    PropertyType: u32,
-    PropertyId: u32,
-    Identity: WINBIO_IDENTITY,
-    SubFactor: u8,
-    PropertyBufferSize: usize,
-    PropertyBuffer: *anyopaque,
-};
-pub const _GetEvent_e__Struct = extern struct {
-    Event: WINBIO_EVENT,
-};
-pub const _ControlUnit_e__Struct = extern struct {
-    Component: u32,
-    ControlCode: u32,
-    OperationStatus: u32,
-    SendBuffer: *u8,
-    SendBufferSize: usize,
-    ReceiveBuffer: *u8,
-    ReceiveBufferSize: usize,
-    ReceiveDataSize: usize,
-};
-pub const _EnumServiceProviders_e__Struct = extern struct {
-    BspCount: usize,
-    BspSchemaArray: *WINBIO_BSP_SCHEMA,
-};
-pub const _EnumBiometricUnits_e__Struct = extern struct {
-    UnitCount: usize,
-    UnitSchemaArray: *WINBIO_UNIT_SCHEMA,
-};
-pub const _EnumDatabases_e__Struct = extern struct {
-    StorageCount: usize,
-    StorageSchemaArray: *WINBIO_STORAGE_SCHEMA,
-};
-pub const _VerifyAndReleaseTicket_e__Struct = extern struct {
-    Match: @"Windows.Win32.Foundation".BOOLEAN,
-    RejectDetail: u32,
-    Ticket: u64,
-};
-pub const _IdentifyAndReleaseTicket_e__Struct = extern struct {
-    Identity: WINBIO_IDENTITY,
-    SubFactor: u8,
-    RejectDetail: u32,
-    Ticket: u64,
-};
-pub const _EnrollSelect_e__Struct = extern struct {
-    SelectorValue: u64,
-};
-pub const _MonitorPresence_e__Struct = extern struct {
-    ChangeType: u32,
-    PresenceCount: usize,
-    PresenceArray: *WINBIO_PRESENCE,
-};
-pub const _GetProtectionPolicy_e__Struct = extern struct {
-    Identity: WINBIO_IDENTITY,
-    Policy: WINBIO_PROTECTION_POLICY,
-};
-pub const _NotifyUnitStatusChange_e__Struct = extern struct {
-    ExtendedStatus: WINBIO_EXTENDED_UNIT_STATUS,
-};
-    Verify: _Verify_e__Struct,
-    Identify: _Identify_e__Struct,
-    EnrollBegin: _EnrollBegin_e__Struct,
-    EnrollCapture: _EnrollCapture_e__Struct,
-    EnrollCommit: _EnrollCommit_e__Struct,
-    EnumEnrollments: _EnumEnrollments_e__Struct,
-    CaptureSample: _CaptureSample_e__Struct,
-    DeleteTemplate: _DeleteTemplate_e__Struct,
-    GetProperty: _GetProperty_e__Struct,
-    SetProperty: _SetProperty_e__Struct,
-    GetEvent: _GetEvent_e__Struct,
-    ControlUnit: _ControlUnit_e__Struct,
-    EnumServiceProviders: _EnumServiceProviders_e__Struct,
-    EnumBiometricUnits: _EnumBiometricUnits_e__Struct,
-    EnumDatabases: _EnumDatabases_e__Struct,
-    VerifyAndReleaseTicket: _VerifyAndReleaseTicket_e__Struct,
-    IdentifyAndReleaseTicket: _IdentifyAndReleaseTicket_e__Struct,
-    EnrollSelect: _EnrollSelect_e__Struct,
-    MonitorPresence: _MonitorPresence_e__Struct,
-    GetProtectionPolicy: _GetProtectionPolicy_e__Struct,
-    NotifyUnitStatusChange: _NotifyUnitStatusChange_e__Struct,
-};
+    pub const _Parameters_e__Union = extern union {
+        pub const _Verify_e__Struct = extern struct {
+            Match: @"Windows.Win32.Foundation".BOOLEAN,
+            RejectDetail: u32,
+        };
+        pub const _Identify_e__Struct = extern struct {
+            Identity: WINBIO_IDENTITY,
+            SubFactor: u8,
+            RejectDetail: u32,
+        };
+        pub const _EnrollBegin_e__Struct = extern struct {
+            SubFactor: u8,
+        };
+        pub const _EnrollCapture_e__Struct = extern struct {
+            RejectDetail: u32,
+        };
+        pub const _EnrollCommit_e__Struct = extern struct {
+            Identity: WINBIO_IDENTITY,
+            IsNewTemplate: @"Windows.Win32.Foundation".BOOLEAN,
+        };
+        pub const _EnumEnrollments_e__Struct = extern struct {
+            Identity: WINBIO_IDENTITY,
+            SubFactorCount: usize,
+            SubFactorArray: *u8,
+        };
+        pub const _CaptureSample_e__Struct = extern struct {
+            Sample: *WINBIO_BIR,
+            SampleSize: usize,
+            RejectDetail: u32,
+        };
+        pub const _DeleteTemplate_e__Struct = extern struct {
+            Identity: WINBIO_IDENTITY,
+            SubFactor: u8,
+        };
+        pub const _GetProperty_e__Struct = extern struct {
+            PropertyType: u32,
+            PropertyId: u32,
+            Identity: WINBIO_IDENTITY,
+            SubFactor: u8,
+            PropertyBufferSize: usize,
+            PropertyBuffer: *anyopaque,
+        };
+        pub const _SetProperty_e__Struct = extern struct {
+            PropertyType: u32,
+            PropertyId: u32,
+            Identity: WINBIO_IDENTITY,
+            SubFactor: u8,
+            PropertyBufferSize: usize,
+            PropertyBuffer: *anyopaque,
+        };
+        pub const _GetEvent_e__Struct = extern struct {
+            Event: WINBIO_EVENT,
+        };
+        pub const _ControlUnit_e__Struct = extern struct {
+            Component: u32,
+            ControlCode: u32,
+            OperationStatus: u32,
+            SendBuffer: *u8,
+            SendBufferSize: usize,
+            ReceiveBuffer: *u8,
+            ReceiveBufferSize: usize,
+            ReceiveDataSize: usize,
+        };
+        pub const _EnumServiceProviders_e__Struct = extern struct {
+            BspCount: usize,
+            BspSchemaArray: *WINBIO_BSP_SCHEMA,
+        };
+        pub const _EnumBiometricUnits_e__Struct = extern struct {
+            UnitCount: usize,
+            UnitSchemaArray: *WINBIO_UNIT_SCHEMA,
+        };
+        pub const _EnumDatabases_e__Struct = extern struct {
+            StorageCount: usize,
+            StorageSchemaArray: *WINBIO_STORAGE_SCHEMA,
+        };
+        pub const _VerifyAndReleaseTicket_e__Struct = extern struct {
+            Match: @"Windows.Win32.Foundation".BOOLEAN,
+            RejectDetail: u32,
+            Ticket: u64,
+        };
+        pub const _IdentifyAndReleaseTicket_e__Struct = extern struct {
+            Identity: WINBIO_IDENTITY,
+            SubFactor: u8,
+            RejectDetail: u32,
+            Ticket: u64,
+        };
+        pub const _EnrollSelect_e__Struct = extern struct {
+            SelectorValue: u64,
+        };
+        pub const _MonitorPresence_e__Struct = extern struct {
+            ChangeType: u32,
+            PresenceCount: usize,
+            PresenceArray: *WINBIO_PRESENCE,
+        };
+        pub const _GetProtectionPolicy_e__Struct = extern struct {
+            Identity: WINBIO_IDENTITY,
+            Policy: WINBIO_PROTECTION_POLICY,
+        };
+        pub const _NotifyUnitStatusChange_e__Struct = extern struct {
+            ExtendedStatus: WINBIO_EXTENDED_UNIT_STATUS,
+        };
+        Verify: _Verify_e__Struct,
+        Identify: _Identify_e__Struct,
+        EnrollBegin: _EnrollBegin_e__Struct,
+        EnrollCapture: _EnrollCapture_e__Struct,
+        EnrollCommit: _EnrollCommit_e__Struct,
+        EnumEnrollments: _EnumEnrollments_e__Struct,
+        CaptureSample: _CaptureSample_e__Struct,
+        DeleteTemplate: _DeleteTemplate_e__Struct,
+        GetProperty: _GetProperty_e__Struct,
+        SetProperty: _SetProperty_e__Struct,
+        GetEvent: _GetEvent_e__Struct,
+        ControlUnit: _ControlUnit_e__Struct,
+        EnumServiceProviders: _EnumServiceProviders_e__Struct,
+        EnumBiometricUnits: _EnumBiometricUnits_e__Struct,
+        EnumDatabases: _EnumDatabases_e__Struct,
+        VerifyAndReleaseTicket: _VerifyAndReleaseTicket_e__Struct,
+        IdentifyAndReleaseTicket: _IdentifyAndReleaseTicket_e__Struct,
+        EnrollSelect: _EnrollSelect_e__Struct,
+        MonitorPresence: _MonitorPresence_e__Struct,
+        GetProtectionPolicy: _GetProtectionPolicy_e__Struct,
+        NotifyUnitStatusChange: _NotifyUnitStatusChange_e__Struct,
+    };
     SessionHandle: u32,
     Operation: u32,
     SequenceNumber: u64,

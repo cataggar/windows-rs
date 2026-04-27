@@ -12,14 +12,14 @@ pub const TOKEN_VALUE = extern struct {
     dwValue: u32,
 };
 pub const NS_HELPER_ATTRIBUTES = extern struct {
-pub const NS_HELPER_ATTRIBUTES_0 = extern union {
-pub const NS_HELPER_ATTRIBUTES_0_0 = extern struct {
-    dwVersion: u32,
-    dwReserved: u32,
-};
-    Anonymous: NS_HELPER_ATTRIBUTES_0_0,
-    _ullAlign: u64,
-};
+    pub const NS_HELPER_ATTRIBUTES_0 = extern union {
+        pub const NS_HELPER_ATTRIBUTES_0_0 = extern struct {
+            dwVersion: u32,
+            dwReserved: u32,
+        };
+        Anonymous: NS_HELPER_ATTRIBUTES_0_0,
+        _ullAlign: u64,
+    };
     Anonymous: NS_HELPER_ATTRIBUTES_0,
     guidHelper: GUID,
     pfnStart: ?*const anyopaque,
@@ -42,14 +42,14 @@ pub const CMD_GROUP_ENTRY = extern struct {
     pOsVersionCheck: ?*const anyopaque,
 };
 pub const NS_CONTEXT_ATTRIBUTES = extern struct {
-pub const NS_CONTEXT_ATTRIBUTES_0 = extern union {
-pub const NS_CONTEXT_ATTRIBUTES_0_0 = extern struct {
-    dwVersion: u32,
-    dwReserved: u32,
-};
-    Anonymous: NS_CONTEXT_ATTRIBUTES_0_0,
-    _ullAlign: u64,
-};
+    pub const NS_CONTEXT_ATTRIBUTES_0 = extern union {
+        pub const NS_CONTEXT_ATTRIBUTES_0_0 = extern struct {
+            dwVersion: u32,
+            dwReserved: u32,
+        };
+        Anonymous: NS_CONTEXT_ATTRIBUTES_0_0,
+        _ullAlign: u64,
+    };
     Anonymous: NS_CONTEXT_ATTRIBUTES_0,
     pwszContext: @"Windows.Win32.Foundation".PWSTR,
     guidHelper: GUID,

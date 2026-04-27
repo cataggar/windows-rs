@@ -92,52 +92,52 @@ pub const PSS_VA_SPACE_ENTRY = extern struct {
     MappedFileName: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const PSS_HANDLE_ENTRY = extern struct {
-pub const _TypeSpecificInformation_e__Union = extern union {
-pub const _Process_e__Struct = extern struct {
-    ExitStatus: u32,
-    PebBaseAddress: *anyopaque,
-    AffinityMask: usize,
-    BasePriority: i32,
-    ProcessId: u32,
-    ParentProcessId: u32,
-    Flags: u32,
-};
-pub const _Thread_e__Struct = extern struct {
-    ExitStatus: u32,
-    TebBaseAddress: *anyopaque,
-    ProcessId: u32,
-    ThreadId: u32,
-    AffinityMask: usize,
-    Priority: i32,
-    BasePriority: i32,
-    Win32StartAddress: *anyopaque,
-};
-pub const _Mutant_e__Struct = extern struct {
-    CurrentCount: i32,
-    Abandoned: @"Windows.Win32.Foundation".BOOL,
-    OwnerProcessId: u32,
-    OwnerThreadId: u32,
-};
-pub const _Event_e__Struct = extern struct {
-    ManualReset: @"Windows.Win32.Foundation".BOOL,
-    Signaled: @"Windows.Win32.Foundation".BOOL,
-};
-pub const _Section_e__Struct = extern struct {
-    BaseAddress: *anyopaque,
-    AllocationAttributes: u32,
-    MaximumSize: i64,
-};
-pub const _Semaphore_e__Struct = extern struct {
-    CurrentCount: i32,
-    MaximumCount: i32,
-};
-    Process: _Process_e__Struct,
-    Thread: _Thread_e__Struct,
-    Mutant: _Mutant_e__Struct,
-    Event: _Event_e__Struct,
-    Section: _Section_e__Struct,
-    Semaphore: _Semaphore_e__Struct,
-};
+    pub const _TypeSpecificInformation_e__Union = extern union {
+        pub const _Process_e__Struct = extern struct {
+            ExitStatus: u32,
+            PebBaseAddress: *anyopaque,
+            AffinityMask: usize,
+            BasePriority: i32,
+            ProcessId: u32,
+            ParentProcessId: u32,
+            Flags: u32,
+        };
+        pub const _Thread_e__Struct = extern struct {
+            ExitStatus: u32,
+            TebBaseAddress: *anyopaque,
+            ProcessId: u32,
+            ThreadId: u32,
+            AffinityMask: usize,
+            Priority: i32,
+            BasePriority: i32,
+            Win32StartAddress: *anyopaque,
+        };
+        pub const _Mutant_e__Struct = extern struct {
+            CurrentCount: i32,
+            Abandoned: @"Windows.Win32.Foundation".BOOL,
+            OwnerProcessId: u32,
+            OwnerThreadId: u32,
+        };
+        pub const _Event_e__Struct = extern struct {
+            ManualReset: @"Windows.Win32.Foundation".BOOL,
+            Signaled: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const _Section_e__Struct = extern struct {
+            BaseAddress: *anyopaque,
+            AllocationAttributes: u32,
+            MaximumSize: i64,
+        };
+        pub const _Semaphore_e__Struct = extern struct {
+            CurrentCount: i32,
+            MaximumCount: i32,
+        };
+        Process: _Process_e__Struct,
+        Thread: _Thread_e__Struct,
+        Mutant: _Mutant_e__Struct,
+        Event: _Event_e__Struct,
+        Section: _Section_e__Struct,
+        Semaphore: _Semaphore_e__Struct,
+    };
     Handle: @"Windows.Win32.Foundation".HANDLE,
     Flags: i32,
     ObjectType: i32,

@@ -125,10 +125,10 @@ pub const DIDATAFORMAT = extern struct {
     rgodf: *DIOBJECTDATAFORMAT,
 };
 pub const DIACTIONA = extern struct {
-pub const DIACTIONA_0 = extern union {
-    lptszActionName: @"Windows.Win32.Foundation".PSTR,
-    uResIdString: u32,
-};
+    pub const DIACTIONA_0 = extern union {
+        lptszActionName: @"Windows.Win32.Foundation".PSTR,
+        uResIdString: u32,
+    };
     uAppData: usize,
     dwSemantic: u32,
     dwFlags: u32,
@@ -138,10 +138,10 @@ pub const DIACTIONA_0 = extern union {
     dwHow: u32,
 };
 pub const DIACTIONW = extern struct {
-pub const DIACTIONW_0 = extern union {
-    lptszActionName: @"Windows.Win32.Foundation".PWSTR,
-    uResIdString: u32,
-};
+    pub const DIACTIONW_0 = extern union {
+        lptszActionName: @"Windows.Win32.Foundation".PWSTR,
+        uResIdString: u32,
+    };
     uAppData: usize,
     dwSemantic: u32,
     dwFlags: u32,
@@ -653,14 +653,14 @@ pub const KEYBOARD_IME_STATUS = extern struct {
     ImeConvMode: u32,
 };
 pub const MOUSE_INPUT_DATA = extern struct {
-pub const MOUSE_INPUT_DATA_0 = extern union {
-pub const MOUSE_INPUT_DATA_0_0 = extern struct {
-    ButtonFlags: u16,
-    ButtonData: u16,
-};
-    Buttons: u32,
-    Anonymous: MOUSE_INPUT_DATA_0_0,
-};
+    pub const MOUSE_INPUT_DATA_0 = extern union {
+        pub const MOUSE_INPUT_DATA_0_0 = extern struct {
+            ButtonFlags: u16,
+            ButtonData: u16,
+        };
+        Buttons: u32,
+        Anonymous: MOUSE_INPUT_DATA_0_0,
+    };
     UnitId: u16,
     Flags: u16,
     Anonymous: MOUSE_INPUT_DATA_0,
@@ -683,30 +683,30 @@ pub const USAGE_AND_PAGE = extern struct {
     UsagePage: u16,
 };
 pub const HIDP_BUTTON_CAPS = extern struct {
-pub const HIDP_BUTTON_CAPS_0 = extern union {
-pub const _Range_e__Struct = extern struct {
-    UsageMin: u16,
-    UsageMax: u16,
-    StringMin: u16,
-    StringMax: u16,
-    DesignatorMin: u16,
-    DesignatorMax: u16,
-    DataIndexMin: u16,
-    DataIndexMax: u16,
-};
-pub const _NotRange_e__Struct = extern struct {
-    Usage: u16,
-    Reserved1: u16,
-    StringIndex: u16,
-    Reserved2: u16,
-    DesignatorIndex: u16,
-    Reserved3: u16,
-    DataIndex: u16,
-    Reserved4: u16,
-};
-    Range: _Range_e__Struct,
-    NotRange: _NotRange_e__Struct,
-};
+    pub const HIDP_BUTTON_CAPS_0 = extern union {
+        pub const _Range_e__Struct = extern struct {
+            UsageMin: u16,
+            UsageMax: u16,
+            StringMin: u16,
+            StringMax: u16,
+            DesignatorMin: u16,
+            DesignatorMax: u16,
+            DataIndexMin: u16,
+            DataIndexMax: u16,
+        };
+        pub const _NotRange_e__Struct = extern struct {
+            Usage: u16,
+            Reserved1: u16,
+            StringIndex: u16,
+            Reserved2: u16,
+            DesignatorIndex: u16,
+            Reserved3: u16,
+            DataIndex: u16,
+            Reserved4: u16,
+        };
+        Range: _Range_e__Struct,
+        NotRange: _NotRange_e__Struct,
+    };
     UsagePage: u16,
     ReportID: u8,
     IsAlias: @"Windows.Win32.Foundation".BOOLEAN,
@@ -724,30 +724,30 @@ pub const _NotRange_e__Struct = extern struct {
     Anonymous: HIDP_BUTTON_CAPS_0,
 };
 pub const HIDP_VALUE_CAPS = extern struct {
-pub const HIDP_VALUE_CAPS_0 = extern union {
-pub const _Range_e__Struct = extern struct {
-    UsageMin: u16,
-    UsageMax: u16,
-    StringMin: u16,
-    StringMax: u16,
-    DesignatorMin: u16,
-    DesignatorMax: u16,
-    DataIndexMin: u16,
-    DataIndexMax: u16,
-};
-pub const _NotRange_e__Struct = extern struct {
-    Usage: u16,
-    Reserved1: u16,
-    StringIndex: u16,
-    Reserved2: u16,
-    DesignatorIndex: u16,
-    Reserved3: u16,
-    DataIndex: u16,
-    Reserved4: u16,
-};
-    Range: _Range_e__Struct,
-    NotRange: _NotRange_e__Struct,
-};
+    pub const HIDP_VALUE_CAPS_0 = extern union {
+        pub const _Range_e__Struct = extern struct {
+            UsageMin: u16,
+            UsageMax: u16,
+            StringMin: u16,
+            StringMax: u16,
+            DesignatorMin: u16,
+            DesignatorMax: u16,
+            DataIndexMin: u16,
+            DataIndexMax: u16,
+        };
+        pub const _NotRange_e__Struct = extern struct {
+            Usage: u16,
+            Reserved1: u16,
+            StringIndex: u16,
+            Reserved2: u16,
+            DesignatorIndex: u16,
+            Reserved3: u16,
+            DataIndex: u16,
+            Reserved4: u16,
+        };
+        Range: _Range_e__Struct,
+        NotRange: _NotRange_e__Struct,
+    };
     UsagePage: u16,
     ReportID: u8,
     IsAlias: @"Windows.Win32.Foundation".BOOLEAN,
@@ -801,10 +801,10 @@ pub const HIDP_CAPS = extern struct {
     NumberFeatureDataIndices: u16,
 };
 pub const HIDP_DATA = extern struct {
-pub const HIDP_DATA_0 = extern union {
-    RawValue: u32,
-    On: @"Windows.Win32.Foundation".BOOLEAN,
-};
+    pub const HIDP_DATA_0 = extern union {
+        RawValue: u32,
+        On: @"Windows.Win32.Foundation".BOOLEAN,
+    };
     DataIndex: u16,
     Reserved: u16,
     Anonymous: HIDP_DATA_0,
@@ -825,13 +825,13 @@ pub const HIDP_BUTTON_ARRAY_DATA = extern struct {
     On: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const HIDP_KEYBOARD_MODIFIER_STATE = extern struct {
-pub const HIDP_KEYBOARD_MODIFIER_STATE_0 = extern union {
-pub const HIDP_KEYBOARD_MODIFIER_STATE_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: HIDP_KEYBOARD_MODIFIER_STATE_0_0,
-    ul: u32,
-};
+    pub const HIDP_KEYBOARD_MODIFIER_STATE_0 = extern union {
+        pub const HIDP_KEYBOARD_MODIFIER_STATE_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: HIDP_KEYBOARD_MODIFIER_STATE_0_0,
+        ul: u32,
+    };
     Anonymous: HIDP_KEYBOARD_MODIFIER_STATE_0,
 };
 pub const HIDD_CONFIGURATION = extern struct {

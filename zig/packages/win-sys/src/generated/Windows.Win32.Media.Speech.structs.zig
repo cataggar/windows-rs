@@ -281,26 +281,26 @@ pub const SPRULEENTRY = extern struct {
     pvClientGrammarContext: *anyopaque,
 };
 pub const SPTRANSITIONENTRY = extern struct {
-pub const SPTRANSITIONENTRY_0 = extern struct {
-    fHasProperty: u32,
-};
-pub const SPTRANSITIONENTRY_1 = extern union {
-pub const SPTRANSITIONENTRY_1_0 = extern struct {
-    hRuleInitialState: SPSTATEHANDLE,
-    hRule: SPRULEHANDLE,
-    pvClientRuleContext: *anyopaque,
-};
-pub const SPTRANSITIONENTRY_1_1 = extern struct {
-    hWord: SPWORDHANDLE,
-    pvClientWordContext: *anyopaque,
-};
-pub const SPTRANSITIONENTRY_1_2 = extern struct {
-    pvGrammarCookie: *anyopaque,
-};
-    Anonymous1: SPTRANSITIONENTRY_1_0,
-    Anonymous2: SPTRANSITIONENTRY_1_1,
-    Anonymous3: SPTRANSITIONENTRY_1_2,
-};
+    pub const SPTRANSITIONENTRY_0 = extern struct {
+        fHasProperty: u32,
+    };
+    pub const SPTRANSITIONENTRY_1 = extern union {
+        pub const SPTRANSITIONENTRY_1_0 = extern struct {
+            hRuleInitialState: SPSTATEHANDLE,
+            hRule: SPRULEHANDLE,
+            pvClientRuleContext: *anyopaque,
+        };
+        pub const SPTRANSITIONENTRY_1_1 = extern struct {
+            hWord: SPWORDHANDLE,
+            pvClientWordContext: *anyopaque,
+        };
+        pub const SPTRANSITIONENTRY_1_2 = extern struct {
+            pvGrammarCookie: *anyopaque,
+        };
+        Anonymous1: SPTRANSITIONENTRY_1_0,
+        Anonymous2: SPTRANSITIONENTRY_1_1,
+        Anonymous3: SPTRANSITIONENTRY_1_2,
+    };
     ID: SPTRANSITIONID,
     hNextState: SPSTATEHANDLE,
     Type: u8,

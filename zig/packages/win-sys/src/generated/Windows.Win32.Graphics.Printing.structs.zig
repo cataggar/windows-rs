@@ -63,14 +63,14 @@ pub const OPTTYPE = extern struct {
     dwReserved: [3]usize,
 };
 pub const EXTPUSH = extern struct {
-pub const EXTPUSH_0 = extern union {
-    DlgProc: ?*const anyopaque,
-    pfnCallBack: ?*const anyopaque,
-};
-pub const EXTPUSH_1 = extern union {
-    DlgTemplateID: u16,
-    hDlgTemplate: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const EXTPUSH_0 = extern union {
+        DlgProc: ?*const anyopaque,
+        pfnCallBack: ?*const anyopaque,
+    };
+    pub const EXTPUSH_1 = extern union {
+        DlgTemplateID: u16,
+        hDlgTemplate: @"Windows.Win32.Foundation".HANDLE,
+    };
     cbSize: u16,
     Flags: u16,
     pTitle: *i8,
@@ -97,14 +97,14 @@ pub const OIEXT = extern struct {
     dwReserved: [4]usize,
 };
 pub const OPTITEM = extern struct {
-pub const OPTITEM_0 = extern union {
-    Sel: i32,
-    pSel: *i8,
-};
-pub const OPTITEM_1 = extern union {
-    pExtChkBox: *EXTCHKBOX,
-    pExtPush: *EXTPUSH,
-};
+    pub const OPTITEM_0 = extern union {
+        Sel: i32,
+        pSel: *i8,
+    };
+    pub const OPTITEM_1 = extern union {
+        pExtChkBox: *EXTCHKBOX,
+        pExtPush: *EXTPUSH,
+    };
     cbSize: u16,
     Level: u8,
     DlgPageIdx: u8,
@@ -122,10 +122,10 @@ pub const OPTITEM_1 = extern union {
     dwReserved: [3]usize,
 };
 pub const CPSUICBPARAM = extern struct {
-pub const CPSUICBPARAM_0 = extern union {
-    OldSel: i32,
-    pOldSel: *i8,
-};
+    pub const CPSUICBPARAM_0 = extern union {
+        OldSel: i32,
+        pOldSel: *i8,
+    };
     cbSize: u16,
     Reason: u16,
     hDlg: @"Windows.Win32.Foundation".HWND,
@@ -138,10 +138,10 @@ pub const CPSUICBPARAM_0 = extern union {
     Result: usize,
 };
 pub const DLGPAGE = extern struct {
-pub const DLGPAGE_0 = extern union {
-    DlgTemplateID: u16,
-    hDlgTemplate: @"Windows.Win32.Foundation".HANDLE,
-};
+    pub const DLGPAGE_0 = extern union {
+        DlgTemplateID: u16,
+        hDlgTemplate: @"Windows.Win32.Foundation".HANDLE,
+    };
     cbSize: u16,
     Flags: u16,
     DlgProc: ?*const anyopaque,
@@ -211,10 +211,10 @@ pub const PROPSHEETUI_GETICON_INFO = extern struct {
     hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
 };
 pub const PROPSHEETUI_INFO_HEADER = extern struct {
-pub const PROPSHEETUI_INFO_HEADER_0 = extern union {
-    hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
-    IconID: usize,
-};
+    pub const PROPSHEETUI_INFO_HEADER_0 = extern union {
+        hIcon: @"Windows.Win32.UI.WindowsAndMessaging".HICON,
+        IconID: usize,
+    };
     cbSize: u16,
     Flags: u16,
     pTitle: *i8,
@@ -847,14 +847,14 @@ pub const PRINTER_NOTIFY_OPTIONS = extern struct {
     pTypes: *PRINTER_NOTIFY_OPTIONS_TYPE,
 };
 pub const PRINTER_NOTIFY_INFO_DATA = extern struct {
-pub const _NotifyData_e__Union = extern union {
-pub const _Data_e__Struct = extern struct {
-    cbBuf: u32,
-    pBuf: *anyopaque,
-};
-    adwData: [2]u32,
-    Data: _Data_e__Struct,
-};
+    pub const _NotifyData_e__Union = extern union {
+        pub const _Data_e__Struct = extern struct {
+            cbBuf: u32,
+            pBuf: *anyopaque,
+        };
+        adwData: [2]u32,
+        Data: _Data_e__Struct,
+    };
     Type: u16,
     Field: u16,
     Reserved: u32,
@@ -872,13 +872,13 @@ pub const BINARY_CONTAINER = extern struct {
     pData: *u8,
 };
 pub const BIDI_DATA = extern struct {
-pub const _u_e__Union = extern union {
-    bData: @"Windows.Win32.Foundation".BOOL,
-    iData: i32,
-    sData: @"Windows.Win32.Foundation".PWSTR,
-    fData: f32,
-    biData: BINARY_CONTAINER,
-};
+    pub const _u_e__Union = extern union {
+        bData: @"Windows.Win32.Foundation".BOOL,
+        iData: i32,
+        sData: @"Windows.Win32.Foundation".PWSTR,
+        fData: f32,
+        biData: BINARY_CONTAINER,
+    };
     dwBidiType: u32,
     u: _u_e__Union,
 };
@@ -950,17 +950,17 @@ pub const CORE_PRINTER_DRIVERW = extern struct {
     szPackageID: [260]u16,
 };
 pub const PrintPropertyValue = extern struct {
-pub const _value_e__Union = extern union {
-pub const _propertyBlob_e__Struct = extern struct {
-    cbBuf: u32,
-    pBuf: *anyopaque,
-};
-    propertyByte: u8,
-    propertyString: @"Windows.Win32.Foundation".PWSTR,
-    propertyInt32: i32,
-    propertyInt64: i64,
-    propertyBlob: _propertyBlob_e__Struct,
-};
+    pub const _value_e__Union = extern union {
+        pub const _propertyBlob_e__Struct = extern struct {
+            cbBuf: u32,
+            pBuf: *anyopaque,
+        };
+        propertyByte: u8,
+        propertyString: @"Windows.Win32.Foundation".PWSTR,
+        propertyInt32: i32,
+        propertyInt64: i64,
+        propertyBlob: _propertyBlob_e__Struct,
+    };
     ePropertyType: i32,
     value: _value_e__Union,
 };
@@ -1374,11 +1374,11 @@ pub const GLYPHRUN = extern struct {
     wGlyphCount: u16,
 };
 pub const TRANSDATA = extern struct {
-pub const _uCode_e__Union = extern union {
-    sCode: i16,
-    ubCode: u8,
-    ubPairs: [2]u8,
-};
+    pub const _uCode_e__Union = extern union {
+        sCode: i16,
+        ubCode: u8,
+        ubPairs: [2]u8,
+    };
     ubCodePageID: u8,
     ubType: u8,
     uCode: _uCode_e__Union,
@@ -1516,13 +1516,13 @@ pub const BranchOfficeLogOfflineFileFull = extern struct {
     pMachineName: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const BranchOfficeJobData = extern struct {
-pub const _JobInfo_e__Union = extern union {
-    LogJobPrinted: BranchOfficeJobDataPrinted,
-    LogJobRendered: BranchOfficeJobDataRendered,
-    LogJobError: BranchOfficeJobDataError,
-    LogPipelineFailed: BranchOfficeJobDataPipelineFailed,
-    LogOfflineFileFull: BranchOfficeLogOfflineFileFull,
-};
+    pub const _JobInfo_e__Union = extern union {
+        LogJobPrinted: BranchOfficeJobDataPrinted,
+        LogJobRendered: BranchOfficeJobDataRendered,
+        LogJobError: BranchOfficeJobDataError,
+        LogPipelineFailed: BranchOfficeJobDataPipelineFailed,
+        LogOfflineFileFull: BranchOfficeLogOfflineFileFull,
+    };
     eEventType: i32,
     JobId: u32,
     JobInfo: _JobInfo_e__Union,

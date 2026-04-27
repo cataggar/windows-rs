@@ -20,27 +20,27 @@ pub const VEC3D = extern struct {
     Z: f32,
 };
 pub const MATRIX3X3 = extern struct {
-pub const MATRIX3X3_0 = extern union {
-pub const MATRIX3X3_0_0 = extern struct {
-    A11: f32,
-    A12: f32,
-    A13: f32,
-    A21: f32,
-    A22: f32,
-    A23: f32,
-    A31: f32,
-    A32: f32,
-    A33: f32,
-};
-pub const MATRIX3X3_0_1 = extern struct {
-    V1: VEC3D,
-    V2: VEC3D,
-    V3: VEC3D,
-};
-    Anonymous1: MATRIX3X3_0_0,
-    Anonymous2: MATRIX3X3_0_1,
-    M: [9]f32,
-};
+    pub const MATRIX3X3_0 = extern union {
+        pub const MATRIX3X3_0_0 = extern struct {
+            A11: f32,
+            A12: f32,
+            A13: f32,
+            A21: f32,
+            A22: f32,
+            A23: f32,
+            A31: f32,
+            A32: f32,
+            A33: f32,
+        };
+        pub const MATRIX3X3_0_1 = extern struct {
+            V1: VEC3D,
+            V2: VEC3D,
+            V3: VEC3D,
+        };
+        Anonymous1: MATRIX3X3_0_0,
+        Anonymous2: MATRIX3X3_0_1,
+        M: [9]f32,
+    };
     Anonymous: MATRIX3X3_0,
 };
 pub const QUATERNION = extern struct {

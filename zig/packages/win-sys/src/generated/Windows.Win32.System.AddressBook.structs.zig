@@ -209,23 +209,23 @@ pub const STATUS_OBJECT_NOTIFICATION = extern struct {
     lpPropVals: *SPropValue,
 };
 pub const NOTIFICATION = extern struct {
-pub const _info_e__Union = extern union {
-    err: ERROR_NOTIFICATION,
-    newmail: NEWMAIL_NOTIFICATION,
-    obj: OBJECT_NOTIFICATION,
-    tab: TABLE_NOTIFICATION,
-    ext: EXTENDED_NOTIFICATION,
-    statobj: STATUS_OBJECT_NOTIFICATION,
-};
+    pub const _info_e__Union = extern union {
+        err: ERROR_NOTIFICATION,
+        newmail: NEWMAIL_NOTIFICATION,
+        obj: OBJECT_NOTIFICATION,
+        tab: TABLE_NOTIFICATION,
+        ext: EXTENDED_NOTIFICATION,
+        statobj: STATUS_OBJECT_NOTIFICATION,
+    };
     ulEventType: u32,
     ulAlignPad: u32,
     info: _info_e__Union,
 };
 pub const MAPINAMEID = extern struct {
-pub const _Kind_e__Union = extern union {
-    lID: i32,
-    lpwstrName: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const _Kind_e__Union = extern union {
+        lID: i32,
+        lpwstrName: @"Windows.Win32.Foundation".PWSTR,
+    };
     lpguid: *GUID,
     ulKind: u32,
     Kind: _Kind_e__Union,
@@ -292,19 +292,19 @@ pub const SCommentRestriction = extern struct {
     lpProp: *SPropValue,
 };
 pub const SRestriction = extern struct {
-pub const _res_e__Union = extern union {
-    resCompareProps: SComparePropsRestriction,
-    resAnd: SAndRestriction,
-    resOr: SOrRestriction,
-    resNot: SNotRestriction,
-    resContent: SContentRestriction,
-    resProperty: SPropertyRestriction,
-    resBitMask: SBitMaskRestriction,
-    resSize: SSizeRestriction,
-    resExist: SExistRestriction,
-    resSub: SSubRestriction,
-    resComment: SCommentRestriction,
-};
+    pub const _res_e__Union = extern union {
+        resCompareProps: SComparePropsRestriction,
+        resAnd: SAndRestriction,
+        resOr: SOrRestriction,
+        resNot: SNotRestriction,
+        resContent: SContentRestriction,
+        resProperty: SPropertyRestriction,
+        resBitMask: SBitMaskRestriction,
+        resSize: SSizeRestriction,
+        resExist: SExistRestriction,
+        resSub: SSubRestriction,
+        resComment: SCommentRestriction,
+    };
     rt: u32,
     res: _res_e__Union,
 };
@@ -396,21 +396,21 @@ pub const DTBLMVDDLBX = extern struct {
     ulMVPropTag: u32,
 };
 pub const DTCTL = extern struct {
-pub const _ctl_e__Union = extern union {
-    lpv: *anyopaque,
-    lplabel: *DTBLLABEL,
-    lpedit: *DTBLEDIT,
-    lplbx: *DTBLLBX,
-    lpcombobox: *DTBLCOMBOBOX,
-    lpddlbx: *DTBLDDLBX,
-    lpcheckbox: *DTBLCHECKBOX,
-    lpgroupbox: *DTBLGROUPBOX,
-    lpbutton: *DTBLBUTTON,
-    lpradiobutton: *DTBLRADIOBUTTON,
-    lpmvlbx: *DTBLMVLISTBOX,
-    lpmvddlbx: *DTBLMVDDLBX,
-    lppage: *DTBLPAGE,
-};
+    pub const _ctl_e__Union = extern union {
+        lpv: *anyopaque,
+        lplabel: *DTBLLABEL,
+        lpedit: *DTBLEDIT,
+        lplbx: *DTBLLBX,
+        lpcombobox: *DTBLCOMBOBOX,
+        lpddlbx: *DTBLDDLBX,
+        lpcheckbox: *DTBLCHECKBOX,
+        lpgroupbox: *DTBLGROUPBOX,
+        lpbutton: *DTBLBUTTON,
+        lpradiobutton: *DTBLRADIOBUTTON,
+        lpmvlbx: *DTBLMVLISTBOX,
+        lpmvddlbx: *DTBLMVDDLBX,
+        lppage: *DTBLPAGE,
+    };
     ulCtlType: u32,
     ulCtlFlags: u32,
     lpbNotif: *u8,
@@ -420,10 +420,10 @@ pub const _ctl_e__Union = extern union {
     ctl: _ctl_e__Union,
 };
 pub const DTPAGE = extern struct {
-pub const DTPAGE_0 = extern union {
-    lpszComponent: *i8,
-    ulItemID: u32,
-};
+    pub const DTPAGE_0 = extern union {
+        lpszComponent: *i8,
+        ulItemID: u32,
+    };
     cctl: u32,
     lpszResourceName: *i8,
     Anonymous: DTPAGE_0,

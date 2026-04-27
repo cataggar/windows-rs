@@ -19,10 +19,10 @@ pub const PXE_DHCP_OPTION = extern struct {
     OptionValue: [1]u8,
 };
 pub const PXE_DHCP_MESSAGE = extern struct {
-pub const PXE_DHCP_MESSAGE_0 = extern union {
-    bMagicCookie: [4]u8,
-    uMagicCookie: u32,
-};
+    pub const PXE_DHCP_MESSAGE_0 = extern union {
+        bMagicCookie: [4]u8,
+        uMagicCookie: u32,
+    };
     Operation: u8,
     HardwareAddressType: u8,
     HardwareAddressLength: u8,
@@ -71,10 +71,10 @@ pub const PXE_PROVIDER = extern struct {
     uIndex: u32,
 };
 pub const PXE_ADDRESS = extern struct {
-pub const PXE_ADDRESS_0 = extern union {
-    bAddress: [16]u8,
-    uIpAddress: u32,
-};
+    pub const PXE_ADDRESS_0 = extern union {
+        bAddress: [16]u8,
+        uIpAddress: u32,
+    };
     uFlags: u32,
     Anonymous: PXE_ADDRESS_0,
     uAddrLen: u32,

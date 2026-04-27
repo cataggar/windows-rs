@@ -58,17 +58,17 @@ pub const RIP_INFO = extern struct {
     dwType: u32,
 };
 pub const DEBUG_EVENT = extern struct {
-pub const _u_e__Union = extern union {
-    Exception: EXCEPTION_DEBUG_INFO,
-    CreateThread: CREATE_THREAD_DEBUG_INFO,
-    CreateProcessInfo: CREATE_PROCESS_DEBUG_INFO,
-    ExitThread: EXIT_THREAD_DEBUG_INFO,
-    ExitProcess: EXIT_PROCESS_DEBUG_INFO,
-    LoadDll: LOAD_DLL_DEBUG_INFO,
-    UnloadDll: UNLOAD_DLL_DEBUG_INFO,
-    DebugString: OUTPUT_DEBUG_STRING_INFO,
-    RipInfo: RIP_INFO,
-};
+    pub const _u_e__Union = extern union {
+        Exception: EXCEPTION_DEBUG_INFO,
+        CreateThread: CREATE_THREAD_DEBUG_INFO,
+        CreateProcessInfo: CREATE_PROCESS_DEBUG_INFO,
+        ExitThread: EXIT_THREAD_DEBUG_INFO,
+        ExitProcess: EXIT_PROCESS_DEBUG_INFO,
+        LoadDll: LOAD_DLL_DEBUG_INFO,
+        UnloadDll: UNLOAD_DLL_DEBUG_INFO,
+        DebugString: OUTPUT_DEBUG_STRING_INFO,
+        RipInfo: RIP_INFO,
+    };
     dwDebugEventCode: u32,
     dwProcessId: u32,
     dwThreadId: u32,
@@ -97,50 +97,50 @@ pub const XSTATE_CONTEXT = opaque {};
 pub const CONTEXT = opaque {};
 pub const DISPATCHER_CONTEXT = opaque {};
 pub const KNONVOLATILE_CONTEXT_POINTERS = extern struct {
-pub const KNONVOLATILE_CONTEXT_POINTERS_0 = extern union {
-pub const KNONVOLATILE_CONTEXT_POINTERS_0_0 = extern struct {
-    Xmm0: *M128A,
-    Xmm1: *M128A,
-    Xmm2: *M128A,
-    Xmm3: *M128A,
-    Xmm4: *M128A,
-    Xmm5: *M128A,
-    Xmm6: *M128A,
-    Xmm7: *M128A,
-    Xmm8: *M128A,
-    Xmm9: *M128A,
-    Xmm10: *M128A,
-    Xmm11: *M128A,
-    Xmm12: *M128A,
-    Xmm13: *M128A,
-    Xmm14: *M128A,
-    Xmm15: *M128A,
-};
-    FloatingContext: [16]*M128A,
-    Anonymous: KNONVOLATILE_CONTEXT_POINTERS_0_0,
-};
-pub const KNONVOLATILE_CONTEXT_POINTERS_1 = extern union {
-pub const KNONVOLATILE_CONTEXT_POINTERS_1_0 = extern struct {
-    Rax: *u64,
-    Rcx: *u64,
-    Rdx: *u64,
-    Rbx: *u64,
-    Rsp: *u64,
-    Rbp: *u64,
-    Rsi: *u64,
-    Rdi: *u64,
-    R8: *u64,
-    R9: *u64,
-    R10: *u64,
-    R11: *u64,
-    R12: *u64,
-    R13: *u64,
-    R14: *u64,
-    R15: *u64,
-};
-    IntegerContext: [16]*u64,
-    Anonymous: KNONVOLATILE_CONTEXT_POINTERS_1_0,
-};
+    pub const KNONVOLATILE_CONTEXT_POINTERS_0 = extern union {
+        pub const KNONVOLATILE_CONTEXT_POINTERS_0_0 = extern struct {
+            Xmm0: *M128A,
+            Xmm1: *M128A,
+            Xmm2: *M128A,
+            Xmm3: *M128A,
+            Xmm4: *M128A,
+            Xmm5: *M128A,
+            Xmm6: *M128A,
+            Xmm7: *M128A,
+            Xmm8: *M128A,
+            Xmm9: *M128A,
+            Xmm10: *M128A,
+            Xmm11: *M128A,
+            Xmm12: *M128A,
+            Xmm13: *M128A,
+            Xmm14: *M128A,
+            Xmm15: *M128A,
+        };
+        FloatingContext: [16]*M128A,
+        Anonymous: KNONVOLATILE_CONTEXT_POINTERS_0_0,
+    };
+    pub const KNONVOLATILE_CONTEXT_POINTERS_1 = extern union {
+        pub const KNONVOLATILE_CONTEXT_POINTERS_1_0 = extern struct {
+            Rax: *u64,
+            Rcx: *u64,
+            Rdx: *u64,
+            Rbx: *u64,
+            Rsp: *u64,
+            Rbp: *u64,
+            Rsi: *u64,
+            Rdi: *u64,
+            R8: *u64,
+            R9: *u64,
+            R10: *u64,
+            R11: *u64,
+            R12: *u64,
+            R13: *u64,
+            R14: *u64,
+            R15: *u64,
+        };
+        IntegerContext: [16]*u64,
+        Anonymous: KNONVOLATILE_CONTEXT_POINTERS_1_0,
+    };
     Anonymous1: KNONVOLATILE_CONTEXT_POINTERS_0,
     Anonymous2: KNONVOLATILE_CONTEXT_POINTERS_1,
 };
@@ -196,10 +196,10 @@ pub const XSAVE_AREA_HEADER = extern struct {
 };
 pub const XSAVE_AREA = opaque {};
 pub const ARM64_NT_NEON128 = extern union {
-pub const ARM64_NT_NEON128_0 = extern struct {
-    Low: u64,
-    High: i64,
-};
+    pub const ARM64_NT_NEON128_0 = extern struct {
+        Low: u64,
+        High: i64,
+    };
     Anonymous: ARM64_NT_NEON128_0,
     D: [2]f64,
     S: [4]f32,
@@ -207,43 +207,43 @@ pub const ARM64_NT_NEON128_0 = extern struct {
     B: [16]u8,
 };
 pub const ARM64_NT_CONTEXT = extern struct {
-pub const ARM64_NT_CONTEXT_0 = extern union {
-pub const ARM64_NT_CONTEXT_0_0 = extern struct {
-    X0: u64,
-    X1: u64,
-    X2: u64,
-    X3: u64,
-    X4: u64,
-    X5: u64,
-    X6: u64,
-    X7: u64,
-    X8: u64,
-    X9: u64,
-    X10: u64,
-    X11: u64,
-    X12: u64,
-    X13: u64,
-    X14: u64,
-    X15: u64,
-    X16: u64,
-    X17: u64,
-    X18: u64,
-    X19: u64,
-    X20: u64,
-    X21: u64,
-    X22: u64,
-    X23: u64,
-    X24: u64,
-    X25: u64,
-    X26: u64,
-    X27: u64,
-    X28: u64,
-    Fp: u64,
-    Lr: u64,
-};
-    Anonymous: ARM64_NT_CONTEXT_0_0,
-    X: [31]u64,
-};
+    pub const ARM64_NT_CONTEXT_0 = extern union {
+        pub const ARM64_NT_CONTEXT_0_0 = extern struct {
+            X0: u64,
+            X1: u64,
+            X2: u64,
+            X3: u64,
+            X4: u64,
+            X5: u64,
+            X6: u64,
+            X7: u64,
+            X8: u64,
+            X9: u64,
+            X10: u64,
+            X11: u64,
+            X12: u64,
+            X13: u64,
+            X14: u64,
+            X15: u64,
+            X16: u64,
+            X17: u64,
+            X18: u64,
+            X19: u64,
+            X20: u64,
+            X21: u64,
+            X22: u64,
+            X23: u64,
+            X24: u64,
+            X25: u64,
+            X26: u64,
+            X27: u64,
+            X28: u64,
+            Fp: u64,
+            Lr: u64,
+        };
+        Anonymous: ARM64_NT_CONTEXT_0_0,
+        X: [31]u64,
+    };
     ContextFlags: u32,
     Cpsr: u32,
     Anonymous: ARM64_NT_CONTEXT_0,
@@ -258,19 +258,19 @@ pub const ARM64_NT_CONTEXT_0_0 = extern struct {
     Wvr: [2]u64,
 };
 pub const LDT_ENTRY = extern struct {
-pub const _HighWord_e__Union = extern union {
-pub const _Bytes_e__Struct = extern struct {
-    BaseMid: u8,
-    Flags1: u8,
-    Flags2: u8,
-    BaseHi: u8,
-};
-pub const _Bits_e__Struct = extern struct {
-    _bitfield: u32,
-};
-    Bytes: _Bytes_e__Struct,
-    Bits: _Bits_e__Struct,
-};
+    pub const _HighWord_e__Union = extern union {
+        pub const _Bytes_e__Struct = extern struct {
+            BaseMid: u8,
+            Flags1: u8,
+            Flags2: u8,
+            BaseHi: u8,
+        };
+        pub const _Bits_e__Struct = extern struct {
+            _bitfield: u32,
+        };
+        Bytes: _Bytes_e__Struct,
+        Bits: _Bits_e__Struct,
+    };
     LimitLow: u16,
     BaseLow: u16,
     HighWord: _HighWord_e__Union,
@@ -314,19 +314,19 @@ pub const WOW64_CONTEXT = extern struct {
     ExtendedRegisters: [512]u8,
 };
 pub const WOW64_LDT_ENTRY = extern struct {
-pub const _HighWord_e__Union = extern union {
-pub const _Bytes_e__Struct = extern struct {
-    BaseMid: u8,
-    Flags1: u8,
-    Flags2: u8,
-    BaseHi: u8,
-};
-pub const _Bits_e__Struct = extern struct {
-    _bitfield: u32,
-};
-    Bytes: _Bytes_e__Struct,
-    Bits: _Bits_e__Struct,
-};
+    pub const _HighWord_e__Union = extern union {
+        pub const _Bytes_e__Struct = extern struct {
+            BaseMid: u8,
+            Flags1: u8,
+            Flags2: u8,
+            BaseHi: u8,
+        };
+        pub const _Bits_e__Struct = extern struct {
+            _bitfield: u32,
+        };
+        Bytes: _Bytes_e__Struct,
+        Bits: _Bits_e__Struct,
+    };
     LimitLow: u16,
     BaseLow: u16,
     HighWord: _HighWord_e__Union,
@@ -366,13 +366,13 @@ pub const XSTATE_FEATURE = extern struct {
     Size: u32,
 };
 pub const XSTATE_CONFIGURATION = extern struct {
-pub const XSTATE_CONFIGURATION_0 = extern union {
-pub const XSTATE_CONFIGURATION_0_0 = extern struct {
-    _bitfield: u32,
-};
-    ControlFlags: u32,
-    Anonymous: XSTATE_CONFIGURATION_0_0,
-};
+    pub const XSTATE_CONFIGURATION_0 = extern union {
+        pub const XSTATE_CONFIGURATION_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        ControlFlags: u32,
+        Anonymous: XSTATE_CONFIGURATION_0_0,
+    };
     EnabledFeatures: u64,
     EnabledVolatileFeatures: u64,
     Size: u32,
@@ -496,10 +496,10 @@ pub const IMAGE_ROM_HEADERS = extern struct {
     OptionalHeader: IMAGE_ROM_OPTIONAL_HEADER,
 };
 pub const IMAGE_SECTION_HEADER = extern struct {
-pub const _Misc_e__Union = extern union {
-    PhysicalAddress: u32,
-    VirtualSize: u32,
-};
+    pub const _Misc_e__Union = extern union {
+        PhysicalAddress: u32,
+        VirtualSize: u32,
+    };
     Name: [8]u8,
     Misc: _Misc_e__Union,
     VirtualAddress: u32,
@@ -622,21 +622,21 @@ pub const IMAGE_LOAD_CONFIG_DIRECTORY64 = extern struct {
     UmaFunctionPointers: u64,
 };
 pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY = extern struct {
-pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0 = extern union {
-pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    UnwindData: u32,
-    Anonymous: IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0_0,
-};
+    pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0 = extern union {
+        pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        UnwindData: u32,
+        Anonymous: IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0_0,
+    };
     BeginAddress: u32,
     Anonymous: IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_0,
 };
 pub const IMAGE_RUNTIME_FUNCTION_ENTRY = extern struct {
-pub const IMAGE_RUNTIME_FUNCTION_ENTRY_0 = extern union {
-    UnwindInfoAddress: u32,
-    UnwindData: u32,
-};
+    pub const IMAGE_RUNTIME_FUNCTION_ENTRY_0 = extern union {
+        UnwindInfoAddress: u32,
+        UnwindData: u32,
+    };
     BeginAddress: u32,
     EndAddress: u32,
     Anonymous: IMAGE_RUNTIME_FUNCTION_ENTRY_0,
@@ -674,19 +674,19 @@ pub const IMAGE_FUNCTION_ENTRY = extern struct {
     EndOfPrologue: u32,
 };
 pub const IMAGE_FUNCTION_ENTRY64 = extern struct {
-pub const IMAGE_FUNCTION_ENTRY64_0 = extern union {
-    EndOfPrologue: u64,
-    UnwindInfoAddress: u64,
-};
+    pub const IMAGE_FUNCTION_ENTRY64_0 = extern union {
+        EndOfPrologue: u64,
+        UnwindInfoAddress: u64,
+    };
     StartingAddress: u64,
     EndingAddress: u64,
     Anonymous: IMAGE_FUNCTION_ENTRY64_0,
 };
 pub const IMAGE_COR20_HEADER = extern struct {
-pub const IMAGE_COR20_HEADER_0 = extern union {
-    EntryPointToken: u32,
-    EntryPointRVA: u32,
-};
+    pub const IMAGE_COR20_HEADER_0 = extern union {
+        EntryPointToken: u32,
+        EntryPointRVA: u32,
+    };
     cb: u32,
     MajorRuntimeVersion: u16,
     MinorRuntimeVersion: u16,
@@ -701,21 +701,21 @@ pub const IMAGE_COR20_HEADER_0 = extern union {
     ManagedNativeHeader: IMAGE_DATA_DIRECTORY,
 };
 pub const WAITCHAIN_NODE_INFO = extern struct {
-pub const WAITCHAIN_NODE_INFO_0 = extern union {
-pub const _LockObject_e__Struct = extern struct {
-    ObjectName: [128]u16,
-    Timeout: i64,
-    Alertable: @"Windows.Win32.Foundation".BOOL,
-};
-pub const _ThreadObject_e__Struct = extern struct {
-    ProcessId: u32,
-    ThreadId: u32,
-    WaitTime: u32,
-    ContextSwitches: u32,
-};
-    LockObject: _LockObject_e__Struct,
-    ThreadObject: _ThreadObject_e__Struct,
-};
+    pub const WAITCHAIN_NODE_INFO_0 = extern union {
+        pub const _LockObject_e__Struct = extern struct {
+            ObjectName: [128]u16,
+            Timeout: i64,
+            Alertable: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const _ThreadObject_e__Struct = extern struct {
+            ProcessId: u32,
+            ThreadId: u32,
+            WaitTime: u32,
+            ContextSwitches: u32,
+        };
+        LockObject: _LockObject_e__Struct,
+        ThreadObject: _ThreadObject_e__Struct,
+    };
     ObjectType: i32,
     ObjectStatus: i32,
     Anonymous: WAITCHAIN_NODE_INFO_0,
@@ -737,10 +737,10 @@ pub const MINIDUMP_MEMORY_DESCRIPTOR64 = extern struct {
     DataSize: u64,
 };
 pub const MINIDUMP_HEADER = extern struct {
-pub const MINIDUMP_HEADER_0 = extern union {
-    Reserved: u32,
-    TimeDateStamp: u32,
-};
+    pub const MINIDUMP_HEADER_0 = extern union {
+        Reserved: u32,
+        TimeDateStamp: u32,
+    };
     Signature: u32,
     Version: u32,
     NumberOfStreams: u32,
@@ -758,35 +758,35 @@ pub const MINIDUMP_STRING = extern struct {
     Buffer: [1]u16,
 };
 pub const CPU_INFORMATION = extern union {
-pub const _X86CpuInfo_e__Struct = extern struct {
-    VendorId: [3]u32,
-    VersionInformation: u32,
-    FeatureInformation: u32,
-    AMDExtendedCpuFeatures: u32,
-};
-pub const _OtherCpuInfo_e__Struct = extern struct {
-    ProcessorFeatures: [2]u64,
-};
+    pub const _X86CpuInfo_e__Struct = extern struct {
+        VendorId: [3]u32,
+        VersionInformation: u32,
+        FeatureInformation: u32,
+        AMDExtendedCpuFeatures: u32,
+    };
+    pub const _OtherCpuInfo_e__Struct = extern struct {
+        ProcessorFeatures: [2]u64,
+    };
     X86CpuInfo: _X86CpuInfo_e__Struct,
     OtherCpuInfo: _OtherCpuInfo_e__Struct,
 };
 pub const MINIDUMP_SYSTEM_INFO = extern struct {
-pub const MINIDUMP_SYSTEM_INFO_0 = extern union {
-pub const MINIDUMP_SYSTEM_INFO_0_0 = extern struct {
-    NumberOfProcessors: u8,
-    ProductType: u8,
-};
-    Reserved0: u16,
-    Anonymous: MINIDUMP_SYSTEM_INFO_0_0,
-};
-pub const MINIDUMP_SYSTEM_INFO_1 = extern union {
-pub const MINIDUMP_SYSTEM_INFO_1_0 = extern struct {
-    SuiteMask: u16,
-    Reserved2: u16,
-};
-    Reserved1: u32,
-    Anonymous: MINIDUMP_SYSTEM_INFO_1_0,
-};
+    pub const MINIDUMP_SYSTEM_INFO_0 = extern union {
+        pub const MINIDUMP_SYSTEM_INFO_0_0 = extern struct {
+            NumberOfProcessors: u8,
+            ProductType: u8,
+        };
+        Reserved0: u16,
+        Anonymous: MINIDUMP_SYSTEM_INFO_0_0,
+    };
+    pub const MINIDUMP_SYSTEM_INFO_1 = extern union {
+        pub const MINIDUMP_SYSTEM_INFO_1_0 = extern struct {
+            SuiteMask: u16,
+            Reserved2: u16,
+        };
+        Reserved1: u32,
+        Anonymous: MINIDUMP_SYSTEM_INFO_1_0,
+    };
     ProcessorArchitecture: u16,
     ProcessorLevel: u16,
     ProcessorRevision: u16,
@@ -1372,38 +1372,38 @@ pub const MINIDUMP_VM_POST_READ_CALLBACK = extern struct {
 };
 pub const MINIDUMP_CALLBACK_INPUT = opaque {};
 pub const MINIDUMP_CALLBACK_OUTPUT = extern struct {
-pub const MINIDUMP_CALLBACK_OUTPUT_0 = extern union {
-pub const MINIDUMP_CALLBACK_OUTPUT_0_0 = extern struct {
-    MemoryBase: u64,
-    MemorySize: u32,
-};
-pub const MINIDUMP_CALLBACK_OUTPUT_0_1 = extern struct {
-    CheckCancel: @"Windows.Win32.Foundation".BOOL,
-    Cancel: @"Windows.Win32.Foundation".BOOL,
-};
-pub const MINIDUMP_CALLBACK_OUTPUT_0_2 = extern struct {
-    VmRegion: MINIDUMP_MEMORY_INFO,
-    Continue: @"Windows.Win32.Foundation".BOOL,
-};
-pub const MINIDUMP_CALLBACK_OUTPUT_0_3 = extern struct {
-    VmQueryStatus: @"Windows.Win32.Foundation".HRESULT,
-    VmQueryResult: MINIDUMP_MEMORY_INFO,
-};
-pub const MINIDUMP_CALLBACK_OUTPUT_0_4 = extern struct {
-    VmReadStatus: @"Windows.Win32.Foundation".HRESULT,
-    VmReadBytesCompleted: u32,
-};
-    ModuleWriteFlags: u32,
-    ThreadWriteFlags: u32,
-    SecondaryFlags: u32,
-    Anonymous1: MINIDUMP_CALLBACK_OUTPUT_0_0,
-    Anonymous2: MINIDUMP_CALLBACK_OUTPUT_0_1,
-    Handle: @"Windows.Win32.Foundation".HANDLE,
-    Anonymous3: MINIDUMP_CALLBACK_OUTPUT_0_2,
-    Anonymous4: MINIDUMP_CALLBACK_OUTPUT_0_3,
-    Anonymous5: MINIDUMP_CALLBACK_OUTPUT_0_4,
-    Status: @"Windows.Win32.Foundation".HRESULT,
-};
+    pub const MINIDUMP_CALLBACK_OUTPUT_0 = extern union {
+        pub const MINIDUMP_CALLBACK_OUTPUT_0_0 = extern struct {
+            MemoryBase: u64,
+            MemorySize: u32,
+        };
+        pub const MINIDUMP_CALLBACK_OUTPUT_0_1 = extern struct {
+            CheckCancel: @"Windows.Win32.Foundation".BOOL,
+            Cancel: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const MINIDUMP_CALLBACK_OUTPUT_0_2 = extern struct {
+            VmRegion: MINIDUMP_MEMORY_INFO,
+            Continue: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const MINIDUMP_CALLBACK_OUTPUT_0_3 = extern struct {
+            VmQueryStatus: @"Windows.Win32.Foundation".HRESULT,
+            VmQueryResult: MINIDUMP_MEMORY_INFO,
+        };
+        pub const MINIDUMP_CALLBACK_OUTPUT_0_4 = extern struct {
+            VmReadStatus: @"Windows.Win32.Foundation".HRESULT,
+            VmReadBytesCompleted: u32,
+        };
+        ModuleWriteFlags: u32,
+        ThreadWriteFlags: u32,
+        SecondaryFlags: u32,
+        Anonymous1: MINIDUMP_CALLBACK_OUTPUT_0_0,
+        Anonymous2: MINIDUMP_CALLBACK_OUTPUT_0_1,
+        Handle: @"Windows.Win32.Foundation".HANDLE,
+        Anonymous3: MINIDUMP_CALLBACK_OUTPUT_0_2,
+        Anonymous4: MINIDUMP_CALLBACK_OUTPUT_0_3,
+        Anonymous5: MINIDUMP_CALLBACK_OUTPUT_0_4,
+        Status: @"Windows.Win32.Foundation".HRESULT,
+    };
     Anonymous: MINIDUMP_CALLBACK_OUTPUT_0,
 };
 pub const MODLOAD_DATA = extern struct {
@@ -1812,17 +1812,17 @@ pub const PHYSICAL_MEMORY_DESCRIPTOR64 = extern struct {
     Run: [1]PHYSICAL_MEMORY_RUN64,
 };
 pub const DUMP_FILE_ATTRIBUTES = extern union {
-pub const DUMP_FILE_ATTRIBUTES_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const DUMP_FILE_ATTRIBUTES_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: DUMP_FILE_ATTRIBUTES_0,
     Attributes: u32,
 };
 pub const DUMP_HEADER32 = extern struct {
-pub const DUMP_HEADER32_0 = extern union {
-    PhysicalMemoryBlock: PHYSICAL_MEMORY_DESCRIPTOR32,
-    PhysicalMemoryBlockBuffer: [700]u8,
-};
+    pub const DUMP_HEADER32_0 = extern union {
+        PhysicalMemoryBlock: PHYSICAL_MEMORY_DESCRIPTOR32,
+        PhysicalMemoryBlockBuffer: [700]u8,
+    };
     Signature: u32,
     ValidDump: u32,
     MajorVersion: u32,
@@ -1863,10 +1863,10 @@ pub const DUMP_HEADER32_0 = extern union {
     _reserved3: [56]u8,
 };
 pub const DUMP_HEADER64 = extern struct {
-pub const DUMP_HEADER64_0 = extern union {
-    PhysicalMemoryBlock: PHYSICAL_MEMORY_DESCRIPTOR64,
-    PhysicalMemoryBlockBuffer: [700]u8,
-};
+    pub const DUMP_HEADER64_0 = extern union {
+        PhysicalMemoryBlock: PHYSICAL_MEMORY_DESCRIPTOR64,
+        PhysicalMemoryBlockBuffer: [700]u8,
+    };
     Signature: u32,
     ValidDump: u32,
     MajorVersion: u32,
@@ -1938,117 +1938,117 @@ pub const WHEA_DRIVER_BUFFER_SET = extern struct {
     Flags: *u8,
 };
 pub const WHEA_NOTIFICATION_FLAGS = extern union {
-pub const WHEA_NOTIFICATION_FLAGS_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const WHEA_NOTIFICATION_FLAGS_0 = extern struct {
+        _bitfield: u16,
+    };
     Anonymous: WHEA_NOTIFICATION_FLAGS_0,
     AsUSHORT: u16,
 };
 pub const XPF_MC_BANK_FLAGS = extern union {
-pub const XPF_MC_BANK_FLAGS_0 = extern struct {
-    _bitfield: u8,
-};
+    pub const XPF_MC_BANK_FLAGS_0 = extern struct {
+        _bitfield: u8,
+    };
     Anonymous: XPF_MC_BANK_FLAGS_0,
     AsUCHAR: u8,
 };
 pub const XPF_MCE_FLAGS = extern union {
-pub const XPF_MCE_FLAGS_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const XPF_MCE_FLAGS_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: XPF_MCE_FLAGS_0,
     AsULONG: u32,
 };
 pub const AER_ROOTPORT_DESCRIPTOR_FLAGS = extern union {
-pub const AER_ROOTPORT_DESCRIPTOR_FLAGS_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const AER_ROOTPORT_DESCRIPTOR_FLAGS_0 = extern struct {
+        _bitfield: u16,
+    };
     Anonymous: AER_ROOTPORT_DESCRIPTOR_FLAGS_0,
     AsUSHORT: u16,
 };
 pub const AER_ENDPOINT_DESCRIPTOR_FLAGS = extern union {
-pub const AER_ENDPOINT_DESCRIPTOR_FLAGS_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const AER_ENDPOINT_DESCRIPTOR_FLAGS_0 = extern struct {
+        _bitfield: u16,
+    };
     Anonymous: AER_ENDPOINT_DESCRIPTOR_FLAGS_0,
     AsUSHORT: u16,
 };
 pub const AER_BRIDGE_DESCRIPTOR_FLAGS = extern union {
-pub const AER_BRIDGE_DESCRIPTOR_FLAGS_0 = extern struct {
-    _bitfield: u16,
-};
+    pub const AER_BRIDGE_DESCRIPTOR_FLAGS_0 = extern struct {
+        _bitfield: u16,
+    };
     Anonymous: AER_BRIDGE_DESCRIPTOR_FLAGS_0,
     AsUSHORT: u16,
 };
 pub const WHEA_NOTIFICATION_DESCRIPTOR = extern struct {
-pub const _u_e__Union = extern union {
-pub const _Polled_e__Struct = extern struct {
-    PollInterval: u32,
-};
-pub const _Interrupt_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-pub const _LocalInterrupt_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-pub const _Sci_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-pub const _Nmi_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-pub const _Sea_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-pub const _Sei_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-pub const _Gsiv_e__Struct = extern struct {
-    PollInterval: u32,
-    Vector: u32,
-    SwitchToPollingThreshold: u32,
-    SwitchToPollingWindow: u32,
-    ErrorThreshold: u32,
-    ErrorThresholdWindow: u32,
-};
-    Polled: _Polled_e__Struct,
-    Interrupt: _Interrupt_e__Struct,
-    LocalInterrupt: _LocalInterrupt_e__Struct,
-    Sci: _Sci_e__Struct,
-    Nmi: _Nmi_e__Struct,
-    Sea: _Sea_e__Struct,
-    Sei: _Sei_e__Struct,
-    Gsiv: _Gsiv_e__Struct,
-};
+    pub const _u_e__Union = extern union {
+        pub const _Polled_e__Struct = extern struct {
+            PollInterval: u32,
+        };
+        pub const _Interrupt_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        pub const _LocalInterrupt_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        pub const _Sci_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        pub const _Nmi_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        pub const _Sea_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        pub const _Sei_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        pub const _Gsiv_e__Struct = extern struct {
+            PollInterval: u32,
+            Vector: u32,
+            SwitchToPollingThreshold: u32,
+            SwitchToPollingWindow: u32,
+            ErrorThreshold: u32,
+            ErrorThresholdWindow: u32,
+        };
+        Polled: _Polled_e__Struct,
+        Interrupt: _Interrupt_e__Struct,
+        LocalInterrupt: _LocalInterrupt_e__Struct,
+        Sci: _Sci_e__Struct,
+        Nmi: _Nmi_e__Struct,
+        Sea: _Sea_e__Struct,
+        Sei: _Sei_e__Struct,
+        Gsiv: _Gsiv_e__Struct,
+    };
     Type: u8,
     Length: u8,
     Flags: WHEA_NOTIFICATION_FLAGS,
@@ -2083,13 +2083,13 @@ pub const WHEA_XPF_CMC_DESCRIPTOR = extern struct {
     Banks: [32]WHEA_XPF_MC_BANK_DESCRIPTOR,
 };
 pub const WHEA_PCI_SLOT_NUMBER = extern struct {
-pub const _u_e__Union = extern union {
-pub const _bits_e__Struct = extern struct {
-    _bitfield: u32,
-};
-    bits: _bits_e__Struct,
-    AsULONG: u32,
-};
+    pub const _u_e__Union = extern union {
+        pub const _bits_e__Struct = extern struct {
+            _bitfield: u32,
+        };
+        bits: _bits_e__Struct,
+        AsULONG: u32,
+    };
     u: _u_e__Union,
 };
 pub const WHEA_XPF_NMI_DESCRIPTOR = extern struct {
@@ -2206,20 +2206,20 @@ pub const WHEA_IPF_CPE_DESCRIPTOR = extern struct {
     Reserved: u8,
 };
 pub const WHEA_ERROR_SOURCE_DESCRIPTOR = extern struct {
-pub const _Info_e__Union = extern union {
-    XpfMceDescriptor: WHEA_XPF_MCE_DESCRIPTOR,
-    XpfCmcDescriptor: WHEA_XPF_CMC_DESCRIPTOR,
-    XpfNmiDescriptor: WHEA_XPF_NMI_DESCRIPTOR,
-    IpfMcaDescriptor: WHEA_IPF_MCA_DESCRIPTOR,
-    IpfCmcDescriptor: WHEA_IPF_CMC_DESCRIPTOR,
-    IpfCpeDescriptor: WHEA_IPF_CPE_DESCRIPTOR,
-    AerRootportDescriptor: WHEA_AER_ROOTPORT_DESCRIPTOR,
-    AerEndpointDescriptor: WHEA_AER_ENDPOINT_DESCRIPTOR,
-    AerBridgeDescriptor: WHEA_AER_BRIDGE_DESCRIPTOR,
-    GenErrDescriptor: WHEA_GENERIC_ERROR_DESCRIPTOR,
-    GenErrDescriptorV2: WHEA_GENERIC_ERROR_DESCRIPTOR_V2,
-    DeviceDriverDescriptor: WHEA_DEVICE_DRIVER_DESCRIPTOR,
-};
+    pub const _Info_e__Union = extern union {
+        XpfMceDescriptor: WHEA_XPF_MCE_DESCRIPTOR,
+        XpfCmcDescriptor: WHEA_XPF_CMC_DESCRIPTOR,
+        XpfNmiDescriptor: WHEA_XPF_NMI_DESCRIPTOR,
+        IpfMcaDescriptor: WHEA_IPF_MCA_DESCRIPTOR,
+        IpfCmcDescriptor: WHEA_IPF_CMC_DESCRIPTOR,
+        IpfCpeDescriptor: WHEA_IPF_CPE_DESCRIPTOR,
+        AerRootportDescriptor: WHEA_AER_ROOTPORT_DESCRIPTOR,
+        AerEndpointDescriptor: WHEA_AER_ENDPOINT_DESCRIPTOR,
+        AerBridgeDescriptor: WHEA_AER_BRIDGE_DESCRIPTOR,
+        GenErrDescriptor: WHEA_GENERIC_ERROR_DESCRIPTOR,
+        GenErrDescriptorV2: WHEA_GENERIC_ERROR_DESCRIPTOR_V2,
+        DeviceDriverDescriptor: WHEA_DEVICE_DRIVER_DESCRIPTOR,
+    };
     Length: u32,
     Version: u32,
     Type: i32,
@@ -2241,25 +2241,25 @@ pub const IPMI_OS_SEL_RECORD = extern struct {
     Data: [1]u8,
 };
 pub const DIMM_ADDRESS = extern union {
-pub const _Ddr4_e__Struct = extern struct {
-    _bitfield: u64,
-    Row: u32,
-    Column: u32,
-    Info: u64,
-};
-pub const _Ddr5_e__Struct = extern struct {
-    _bitfield: u64,
-    Row: u32,
-    Column: u32,
-    Info: u64,
-};
+    pub const _Ddr4_e__Struct = extern struct {
+        _bitfield: u64,
+        Row: u32,
+        Column: u32,
+        Info: u64,
+    };
+    pub const _Ddr5_e__Struct = extern struct {
+        _bitfield: u64,
+        Row: u32,
+        Column: u32,
+        Info: u64,
+    };
     Ddr4: _Ddr4_e__Struct,
     Ddr5: _Ddr5_e__Struct,
 };
 pub const PAGE_OFFLINE_VALID_BITS = extern union {
-pub const PAGE_OFFLINE_VALID_BITS_0 = extern struct {
-    _bitfield: u8,
-};
+    pub const PAGE_OFFLINE_VALID_BITS_0 = extern struct {
+        _bitfield: u8,
+    };
     Anonymous: PAGE_OFFLINE_VALID_BITS_0,
     AsUINT8: u8,
 };

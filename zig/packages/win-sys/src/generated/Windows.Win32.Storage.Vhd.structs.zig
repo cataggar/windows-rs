@@ -12,103 +12,103 @@ pub const VIRTUAL_STORAGE_TYPE = extern struct {
     VendorId: GUID,
 };
 pub const OPEN_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const OPEN_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    RWDepth: u32,
-};
-pub const _Version2_e__Struct = extern struct {
-    GetInfoOnly: @"Windows.Win32.Foundation".BOOL,
-    ReadOnly: @"Windows.Win32.Foundation".BOOL,
-    ResiliencyGuid: GUID,
-};
-pub const _Version3_e__Struct = extern struct {
-    GetInfoOnly: @"Windows.Win32.Foundation".BOOL,
-    ReadOnly: @"Windows.Win32.Foundation".BOOL,
-    ResiliencyGuid: GUID,
-    SnapshotId: GUID,
-};
-    Version1: _Version1_e__Struct,
-    Version2: _Version2_e__Struct,
-    Version3: _Version3_e__Struct,
-};
+    pub const OPEN_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            RWDepth: u32,
+        };
+        pub const _Version2_e__Struct = extern struct {
+            GetInfoOnly: @"Windows.Win32.Foundation".BOOL,
+            ReadOnly: @"Windows.Win32.Foundation".BOOL,
+            ResiliencyGuid: GUID,
+        };
+        pub const _Version3_e__Struct = extern struct {
+            GetInfoOnly: @"Windows.Win32.Foundation".BOOL,
+            ReadOnly: @"Windows.Win32.Foundation".BOOL,
+            ResiliencyGuid: GUID,
+            SnapshotId: GUID,
+        };
+        Version1: _Version1_e__Struct,
+        Version2: _Version2_e__Struct,
+        Version3: _Version3_e__Struct,
+    };
     Version: i32,
     Anonymous: OPEN_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const CREATE_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const CREATE_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    UniqueId: GUID,
-    MaximumSize: u64,
-    BlockSizeInBytes: u32,
-    SectorSizeInBytes: u32,
-    ParentPath: @"Windows.Win32.Foundation".PWSTR,
-    SourcePath: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const _Version2_e__Struct = extern struct {
-    UniqueId: GUID,
-    MaximumSize: u64,
-    BlockSizeInBytes: u32,
-    SectorSizeInBytes: u32,
-    PhysicalSectorSizeInBytes: u32,
-    ParentPath: @"Windows.Win32.Foundation".PWSTR,
-    SourcePath: @"Windows.Win32.Foundation".PWSTR,
-    OpenFlags: i32,
-    ParentVirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    SourceVirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    ResiliencyGuid: GUID,
-};
-pub const _Version3_e__Struct = extern struct {
-    UniqueId: GUID,
-    MaximumSize: u64,
-    BlockSizeInBytes: u32,
-    SectorSizeInBytes: u32,
-    PhysicalSectorSizeInBytes: u32,
-    ParentPath: @"Windows.Win32.Foundation".PWSTR,
-    SourcePath: @"Windows.Win32.Foundation".PWSTR,
-    OpenFlags: i32,
-    ParentVirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    SourceVirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    ResiliencyGuid: GUID,
-    SourceLimitPath: @"Windows.Win32.Foundation".PWSTR,
-    BackingStorageType: VIRTUAL_STORAGE_TYPE,
-};
-pub const _Version4_e__Struct = extern struct {
-    UniqueId: GUID,
-    MaximumSize: u64,
-    BlockSizeInBytes: u32,
-    SectorSizeInBytes: u32,
-    PhysicalSectorSizeInBytes: u32,
-    ParentPath: @"Windows.Win32.Foundation".PWSTR,
-    SourcePath: @"Windows.Win32.Foundation".PWSTR,
-    OpenFlags: i32,
-    ParentVirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    SourceVirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    ResiliencyGuid: GUID,
-    SourceLimitPath: @"Windows.Win32.Foundation".PWSTR,
-    BackingStorageType: VIRTUAL_STORAGE_TYPE,
-    PmemAddressAbstractionType: GUID,
-    DataAlignment: u64,
-};
-    Version1: _Version1_e__Struct,
-    Version2: _Version2_e__Struct,
-    Version3: _Version3_e__Struct,
-    Version4: _Version4_e__Struct,
-};
+    pub const CREATE_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            UniqueId: GUID,
+            MaximumSize: u64,
+            BlockSizeInBytes: u32,
+            SectorSizeInBytes: u32,
+            ParentPath: @"Windows.Win32.Foundation".PWSTR,
+            SourcePath: @"Windows.Win32.Foundation".PWSTR,
+        };
+        pub const _Version2_e__Struct = extern struct {
+            UniqueId: GUID,
+            MaximumSize: u64,
+            BlockSizeInBytes: u32,
+            SectorSizeInBytes: u32,
+            PhysicalSectorSizeInBytes: u32,
+            ParentPath: @"Windows.Win32.Foundation".PWSTR,
+            SourcePath: @"Windows.Win32.Foundation".PWSTR,
+            OpenFlags: i32,
+            ParentVirtualStorageType: VIRTUAL_STORAGE_TYPE,
+            SourceVirtualStorageType: VIRTUAL_STORAGE_TYPE,
+            ResiliencyGuid: GUID,
+        };
+        pub const _Version3_e__Struct = extern struct {
+            UniqueId: GUID,
+            MaximumSize: u64,
+            BlockSizeInBytes: u32,
+            SectorSizeInBytes: u32,
+            PhysicalSectorSizeInBytes: u32,
+            ParentPath: @"Windows.Win32.Foundation".PWSTR,
+            SourcePath: @"Windows.Win32.Foundation".PWSTR,
+            OpenFlags: i32,
+            ParentVirtualStorageType: VIRTUAL_STORAGE_TYPE,
+            SourceVirtualStorageType: VIRTUAL_STORAGE_TYPE,
+            ResiliencyGuid: GUID,
+            SourceLimitPath: @"Windows.Win32.Foundation".PWSTR,
+            BackingStorageType: VIRTUAL_STORAGE_TYPE,
+        };
+        pub const _Version4_e__Struct = extern struct {
+            UniqueId: GUID,
+            MaximumSize: u64,
+            BlockSizeInBytes: u32,
+            SectorSizeInBytes: u32,
+            PhysicalSectorSizeInBytes: u32,
+            ParentPath: @"Windows.Win32.Foundation".PWSTR,
+            SourcePath: @"Windows.Win32.Foundation".PWSTR,
+            OpenFlags: i32,
+            ParentVirtualStorageType: VIRTUAL_STORAGE_TYPE,
+            SourceVirtualStorageType: VIRTUAL_STORAGE_TYPE,
+            ResiliencyGuid: GUID,
+            SourceLimitPath: @"Windows.Win32.Foundation".PWSTR,
+            BackingStorageType: VIRTUAL_STORAGE_TYPE,
+            PmemAddressAbstractionType: GUID,
+            DataAlignment: u64,
+        };
+        Version1: _Version1_e__Struct,
+        Version2: _Version2_e__Struct,
+        Version3: _Version3_e__Struct,
+        Version4: _Version4_e__Struct,
+    };
     Version: i32,
     Anonymous: CREATE_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const ATTACH_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const ATTACH_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    Reserved: u32,
-};
-pub const _Version2_e__Struct = extern struct {
-    RestrictedOffset: u64,
-    RestrictedLength: u64,
-};
-    Version1: _Version1_e__Struct,
-    Version2: _Version2_e__Struct,
-};
+    pub const ATTACH_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            Reserved: u32,
+        };
+        pub const _Version2_e__Struct = extern struct {
+            RestrictedOffset: u64,
+            RestrictedLength: u64,
+        };
+        Version1: _Version1_e__Struct,
+        Version2: _Version2_e__Struct,
+    };
     Version: i32,
     Anonymous: ATTACH_VIRTUAL_DISK_PARAMETERS_0,
 };
@@ -128,73 +128,73 @@ pub const STORAGE_DEPENDENCY_INFO_TYPE_2 = extern struct {
     DependentVolumeRelativePath: @"Windows.Win32.Foundation".PWSTR,
 };
 pub const STORAGE_DEPENDENCY_INFO = extern struct {
-pub const STORAGE_DEPENDENCY_INFO_0 = extern union {
-    Version1Entries: [1]STORAGE_DEPENDENCY_INFO_TYPE_1,
-    Version2Entries: [1]STORAGE_DEPENDENCY_INFO_TYPE_2,
-};
+    pub const STORAGE_DEPENDENCY_INFO_0 = extern union {
+        Version1Entries: [1]STORAGE_DEPENDENCY_INFO_TYPE_1,
+        Version2Entries: [1]STORAGE_DEPENDENCY_INFO_TYPE_2,
+    };
     Version: i32,
     NumberEntries: u32,
     Anonymous: STORAGE_DEPENDENCY_INFO_0,
 };
 pub const GET_VIRTUAL_DISK_INFO = extern struct {
-pub const GET_VIRTUAL_DISK_INFO_0 = extern union {
-pub const _Size_e__Struct = extern struct {
-    VirtualSize: u64,
-    PhysicalSize: u64,
-    BlockSize: u32,
-    SectorSize: u32,
-};
-pub const _ParentLocation_e__Struct = extern struct {
-    ParentResolved: @"Windows.Win32.Foundation".BOOL,
-    ParentLocationBuffer: [1]u16,
-};
-pub const _PhysicalDisk_e__Struct = extern struct {
-    LogicalSectorSize: u32,
-    PhysicalSectorSize: u32,
-    IsRemote: @"Windows.Win32.Foundation".BOOL,
-};
-pub const _ChangeTrackingState_e__Struct = extern struct {
-    Enabled: @"Windows.Win32.Foundation".BOOL,
-    NewerChanges: @"Windows.Win32.Foundation".BOOL,
-    MostRecentId: [1]u16,
-};
-    Size: _Size_e__Struct,
-    Identifier: GUID,
-    ParentLocation: _ParentLocation_e__Struct,
-    ParentIdentifier: GUID,
-    ParentTimestamp: u32,
-    VirtualStorageType: VIRTUAL_STORAGE_TYPE,
-    ProviderSubtype: u32,
-    Is4kAligned: @"Windows.Win32.Foundation".BOOL,
-    IsLoaded: @"Windows.Win32.Foundation".BOOL,
-    PhysicalDisk: _PhysicalDisk_e__Struct,
-    VhdPhysicalSectorSize: u32,
-    SmallestSafeVirtualSize: u64,
-    FragmentationPercentage: u32,
-    VirtualDiskId: GUID,
-    ChangeTrackingState: _ChangeTrackingState_e__Struct,
-};
+    pub const GET_VIRTUAL_DISK_INFO_0 = extern union {
+        pub const _Size_e__Struct = extern struct {
+            VirtualSize: u64,
+            PhysicalSize: u64,
+            BlockSize: u32,
+            SectorSize: u32,
+        };
+        pub const _ParentLocation_e__Struct = extern struct {
+            ParentResolved: @"Windows.Win32.Foundation".BOOL,
+            ParentLocationBuffer: [1]u16,
+        };
+        pub const _PhysicalDisk_e__Struct = extern struct {
+            LogicalSectorSize: u32,
+            PhysicalSectorSize: u32,
+            IsRemote: @"Windows.Win32.Foundation".BOOL,
+        };
+        pub const _ChangeTrackingState_e__Struct = extern struct {
+            Enabled: @"Windows.Win32.Foundation".BOOL,
+            NewerChanges: @"Windows.Win32.Foundation".BOOL,
+            MostRecentId: [1]u16,
+        };
+        Size: _Size_e__Struct,
+        Identifier: GUID,
+        ParentLocation: _ParentLocation_e__Struct,
+        ParentIdentifier: GUID,
+        ParentTimestamp: u32,
+        VirtualStorageType: VIRTUAL_STORAGE_TYPE,
+        ProviderSubtype: u32,
+        Is4kAligned: @"Windows.Win32.Foundation".BOOL,
+        IsLoaded: @"Windows.Win32.Foundation".BOOL,
+        PhysicalDisk: _PhysicalDisk_e__Struct,
+        VhdPhysicalSectorSize: u32,
+        SmallestSafeVirtualSize: u64,
+        FragmentationPercentage: u32,
+        VirtualDiskId: GUID,
+        ChangeTrackingState: _ChangeTrackingState_e__Struct,
+    };
     Version: i32,
     Anonymous: GET_VIRTUAL_DISK_INFO_0,
 };
 pub const SET_VIRTUAL_DISK_INFO = extern struct {
-pub const SET_VIRTUAL_DISK_INFO_0 = extern union {
-pub const _ParentPathWithDepthInfo_e__Struct = extern struct {
-    ChildDepth: u32,
-    ParentFilePath: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const _ParentLocator_e__Struct = extern struct {
-    LinkageId: GUID,
-    ParentFilePath: @"Windows.Win32.Foundation".PWSTR,
-};
-    ParentFilePath: @"Windows.Win32.Foundation".PWSTR,
-    UniqueIdentifier: GUID,
-    ParentPathWithDepthInfo: _ParentPathWithDepthInfo_e__Struct,
-    VhdPhysicalSectorSize: u32,
-    VirtualDiskId: GUID,
-    ChangeTrackingEnabled: @"Windows.Win32.Foundation".BOOL,
-    ParentLocator: _ParentLocator_e__Struct,
-};
+    pub const SET_VIRTUAL_DISK_INFO_0 = extern union {
+        pub const _ParentPathWithDepthInfo_e__Struct = extern struct {
+            ChildDepth: u32,
+            ParentFilePath: @"Windows.Win32.Foundation".PWSTR,
+        };
+        pub const _ParentLocator_e__Struct = extern struct {
+            LinkageId: GUID,
+            ParentFilePath: @"Windows.Win32.Foundation".PWSTR,
+        };
+        ParentFilePath: @"Windows.Win32.Foundation".PWSTR,
+        UniqueIdentifier: GUID,
+        ParentPathWithDepthInfo: _ParentPathWithDepthInfo_e__Struct,
+        VhdPhysicalSectorSize: u32,
+        VirtualDiskId: GUID,
+        ChangeTrackingEnabled: @"Windows.Win32.Foundation".BOOL,
+        ParentLocator: _ParentLocator_e__Struct,
+    };
     Version: i32,
     Anonymous: SET_VIRTUAL_DISK_INFO_0,
 };
@@ -204,57 +204,57 @@ pub const VIRTUAL_DISK_PROGRESS = extern struct {
     CompletionValue: u64,
 };
 pub const COMPACT_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const COMPACT_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    Reserved: u32,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const COMPACT_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            Reserved: u32,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: COMPACT_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const MERGE_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const MERGE_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    MergeDepth: u32,
-};
-pub const _Version2_e__Struct = extern struct {
-    MergeSourceDepth: u32,
-    MergeTargetDepth: u32,
-};
-    Version1: _Version1_e__Struct,
-    Version2: _Version2_e__Struct,
-};
+    pub const MERGE_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            MergeDepth: u32,
+        };
+        pub const _Version2_e__Struct = extern struct {
+            MergeSourceDepth: u32,
+            MergeTargetDepth: u32,
+        };
+        Version1: _Version1_e__Struct,
+        Version2: _Version2_e__Struct,
+    };
     Version: i32,
     Anonymous: MERGE_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const EXPAND_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const EXPAND_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    NewSize: u64,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const EXPAND_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            NewSize: u64,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: EXPAND_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const RESIZE_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const RESIZE_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    NewSize: u64,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const RESIZE_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            NewSize: u64,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: RESIZE_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const MIRROR_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const MIRROR_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    MirrorVirtualDiskPath: @"Windows.Win32.Foundation".PWSTR,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const MIRROR_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            MirrorVirtualDiskPath: @"Windows.Win32.Foundation".PWSTR,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: MIRROR_VIRTUAL_DISK_PARAMETERS_0,
 };
@@ -264,86 +264,86 @@ pub const QUERY_CHANGES_VIRTUAL_DISK_RANGE = extern struct {
     Reserved: u64,
 };
 pub const TAKE_SNAPSHOT_VHDSET_PARAMETERS = extern struct {
-pub const TAKE_SNAPSHOT_VHDSET_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    SnapshotId: GUID,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const TAKE_SNAPSHOT_VHDSET_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            SnapshotId: GUID,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: TAKE_SNAPSHOT_VHDSET_PARAMETERS_0,
 };
 pub const DELETE_SNAPSHOT_VHDSET_PARAMETERS = extern struct {
-pub const DELETE_SNAPSHOT_VHDSET_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    SnapshotId: GUID,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const DELETE_SNAPSHOT_VHDSET_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            SnapshotId: GUID,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: DELETE_SNAPSHOT_VHDSET_PARAMETERS_0,
 };
 pub const MODIFY_VHDSET_PARAMETERS = extern struct {
-pub const MODIFY_VHDSET_PARAMETERS_0 = extern union {
-pub const _SnapshotPath_e__Struct = extern struct {
-    SnapshotId: GUID,
-    SnapshotFilePath: @"Windows.Win32.Foundation".PWSTR,
-};
-    SnapshotPath: _SnapshotPath_e__Struct,
-    SnapshotId: GUID,
-    DefaultFilePath: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const MODIFY_VHDSET_PARAMETERS_0 = extern union {
+        pub const _SnapshotPath_e__Struct = extern struct {
+            SnapshotId: GUID,
+            SnapshotFilePath: @"Windows.Win32.Foundation".PWSTR,
+        };
+        SnapshotPath: _SnapshotPath_e__Struct,
+        SnapshotId: GUID,
+        DefaultFilePath: @"Windows.Win32.Foundation".PWSTR,
+    };
     Version: i32,
     Anonymous: MODIFY_VHDSET_PARAMETERS_0,
 };
 pub const APPLY_SNAPSHOT_VHDSET_PARAMETERS = extern struct {
-pub const APPLY_SNAPSHOT_VHDSET_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    SnapshotId: GUID,
-    LeafSnapshotId: GUID,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const APPLY_SNAPSHOT_VHDSET_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            SnapshotId: GUID,
+            LeafSnapshotId: GUID,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: APPLY_SNAPSHOT_VHDSET_PARAMETERS_0,
 };
 pub const RAW_SCSI_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const RAW_SCSI_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    RSVDHandle: @"Windows.Win32.Foundation".BOOL,
-    DataIn: u8,
-    CdbLength: u8,
-    SenseInfoLength: u8,
-    SrbFlags: u32,
-    DataTransferLength: u32,
-    DataBuffer: *anyopaque,
-    SenseInfo: *u8,
-    Cdb: *u8,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const RAW_SCSI_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            RSVDHandle: @"Windows.Win32.Foundation".BOOL,
+            DataIn: u8,
+            CdbLength: u8,
+            SenseInfoLength: u8,
+            SrbFlags: u32,
+            DataTransferLength: u32,
+            DataBuffer: *anyopaque,
+            SenseInfo: *u8,
+            Cdb: *u8,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: RAW_SCSI_VIRTUAL_DISK_PARAMETERS_0,
 };
 pub const RAW_SCSI_VIRTUAL_DISK_RESPONSE = extern struct {
-pub const RAW_SCSI_VIRTUAL_DISK_RESPONSE_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    ScsiStatus: u8,
-    SenseInfoLength: u8,
-    DataTransferLength: u32,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const RAW_SCSI_VIRTUAL_DISK_RESPONSE_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            ScsiStatus: u8,
+            SenseInfoLength: u8,
+            DataTransferLength: u32,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: RAW_SCSI_VIRTUAL_DISK_RESPONSE_0,
 };
 pub const FORK_VIRTUAL_DISK_PARAMETERS = extern struct {
-pub const FORK_VIRTUAL_DISK_PARAMETERS_0 = extern union {
-pub const _Version1_e__Struct = extern struct {
-    ForkedVirtualDiskPath: @"Windows.Win32.Foundation".PWSTR,
-};
-    Version1: _Version1_e__Struct,
-};
+    pub const FORK_VIRTUAL_DISK_PARAMETERS_0 = extern union {
+        pub const _Version1_e__Struct = extern struct {
+            ForkedVirtualDiskPath: @"Windows.Win32.Foundation".PWSTR,
+        };
+        Version1: _Version1_e__Struct,
+    };
     Version: i32,
     Anonymous: FORK_VIRTUAL_DISK_PARAMETERS_0,
 };

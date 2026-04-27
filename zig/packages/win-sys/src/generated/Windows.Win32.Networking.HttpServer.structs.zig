@@ -199,37 +199,37 @@ pub const HTTP_WINHTTP_FAST_FORWARDING_DATA = extern struct {
     Reserved: [16]u8,
 };
 pub const HTTP_DATA_CHUNK = extern struct {
-pub const HTTP_DATA_CHUNK_0 = extern union {
-pub const _FromMemory_e__Struct = extern struct {
-    pBuffer: *anyopaque,
-    BufferLength: u32,
-};
-pub const _FromFileHandle_e__Struct = extern struct {
-    ByteRange: HTTP_BYTE_RANGE,
-    FileHandle: @"Windows.Win32.Foundation".HANDLE,
-};
-pub const _FromFragmentCache_e__Struct = extern struct {
-    FragmentNameLength: u16,
-    pFragmentName: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const _FromFragmentCacheEx_e__Struct = extern struct {
-    ByteRange: HTTP_BYTE_RANGE,
-    pFragmentName: @"Windows.Win32.Foundation".PWSTR,
-};
-pub const _Trailers_e__Struct = extern struct {
-    TrailerCount: u16,
-    pTrailers: *HTTP_UNKNOWN_HEADER,
-};
-pub const _FromWinHttpFastForwarding_e__Struct = extern struct {
-    WhFastForwardingData: HTTP_WINHTTP_FAST_FORWARDING_DATA,
-};
-    FromMemory: _FromMemory_e__Struct,
-    FromFileHandle: _FromFileHandle_e__Struct,
-    FromFragmentCache: _FromFragmentCache_e__Struct,
-    FromFragmentCacheEx: _FromFragmentCacheEx_e__Struct,
-    Trailers: _Trailers_e__Struct,
-    FromWinHttpFastForwarding: _FromWinHttpFastForwarding_e__Struct,
-};
+    pub const HTTP_DATA_CHUNK_0 = extern union {
+        pub const _FromMemory_e__Struct = extern struct {
+            pBuffer: *anyopaque,
+            BufferLength: u32,
+        };
+        pub const _FromFileHandle_e__Struct = extern struct {
+            ByteRange: HTTP_BYTE_RANGE,
+            FileHandle: @"Windows.Win32.Foundation".HANDLE,
+        };
+        pub const _FromFragmentCache_e__Struct = extern struct {
+            FragmentNameLength: u16,
+            pFragmentName: @"Windows.Win32.Foundation".PWSTR,
+        };
+        pub const _FromFragmentCacheEx_e__Struct = extern struct {
+            ByteRange: HTTP_BYTE_RANGE,
+            pFragmentName: @"Windows.Win32.Foundation".PWSTR,
+        };
+        pub const _Trailers_e__Struct = extern struct {
+            TrailerCount: u16,
+            pTrailers: *HTTP_UNKNOWN_HEADER,
+        };
+        pub const _FromWinHttpFastForwarding_e__Struct = extern struct {
+            WhFastForwardingData: HTTP_WINHTTP_FAST_FORWARDING_DATA,
+        };
+        FromMemory: _FromMemory_e__Struct,
+        FromFileHandle: _FromFileHandle_e__Struct,
+        FromFragmentCache: _FromFragmentCache_e__Struct,
+        FromFragmentCacheEx: _FromFragmentCacheEx_e__Struct,
+        Trailers: _Trailers_e__Struct,
+        FromWinHttpFastForwarding: _FromWinHttpFastForwarding_e__Struct,
+    };
     DataChunkType: i32,
     Anonymous: HTTP_DATA_CHUNK_0,
 };
@@ -454,15 +454,15 @@ pub const HTTP_CERT_CONFIG_PARAM = extern struct {
     CertConfigs: *HTTP_CERT_CONFIG_ENTRY,
 };
 pub const HTTP_SERVICE_CONFIG_SSL_PARAM_EX = extern struct {
-pub const HTTP_SERVICE_CONFIG_SSL_PARAM_EX_0 = extern union {
-    Http2WindowSizeParam: HTTP2_WINDOW_SIZE_PARAM,
-    Http2SettingsLimitsParam: HTTP2_SETTINGS_LIMITS_PARAM,
-    HttpPerformanceParam: HTTP_PERFORMANCE_PARAM,
-    HttpTlsRestrictionsParam: HTTP_TLS_RESTRICTIONS_PARAM,
-    HttpErrorHeadersParam: HTTP_ERROR_HEADERS_PARAM,
-    HttpTlsSessionTicketKeysParam: HTTP_TLS_SESSION_TICKET_KEYS_PARAM,
-    HttpCertConfigParam: HTTP_CERT_CONFIG_PARAM,
-};
+    pub const HTTP_SERVICE_CONFIG_SSL_PARAM_EX_0 = extern union {
+        Http2WindowSizeParam: HTTP2_WINDOW_SIZE_PARAM,
+        Http2SettingsLimitsParam: HTTP2_SETTINGS_LIMITS_PARAM,
+        HttpPerformanceParam: HTTP_PERFORMANCE_PARAM,
+        HttpTlsRestrictionsParam: HTTP_TLS_RESTRICTIONS_PARAM,
+        HttpErrorHeadersParam: HTTP_ERROR_HEADERS_PARAM,
+        HttpTlsSessionTicketKeysParam: HTTP_TLS_SESSION_TICKET_KEYS_PARAM,
+        HttpCertConfigParam: HTTP_CERT_CONFIG_PARAM,
+    };
     ParamType: i32,
     Flags: u64,
     Anonymous: HTTP_SERVICE_CONFIG_SSL_PARAM_EX_0,

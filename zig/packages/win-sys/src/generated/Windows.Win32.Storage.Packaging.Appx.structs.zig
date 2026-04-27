@@ -39,16 +39,16 @@ pub const APPX_ENCRYPTED_EXEMPTIONS = extern struct {
     plainTextFiles: *@"Windows.Win32.Foundation".PWSTR,
 };
 pub const PACKAGE_VERSION = extern struct {
-pub const PACKAGE_VERSION_0 = extern union {
-pub const PACKAGE_VERSION_0_0 = extern struct {
-    Revision: u16,
-    Build: u16,
-    Minor: u16,
-    Major: u16,
-};
-    Version: u64,
-    Anonymous: PACKAGE_VERSION_0_0,
-};
+    pub const PACKAGE_VERSION_0 = extern union {
+        pub const PACKAGE_VERSION_0_0 = extern struct {
+            Revision: u16,
+            Build: u16,
+            Minor: u16,
+            Major: u16,
+        };
+        Version: u64,
+        Anonymous: PACKAGE_VERSION_0_0,
+    };
     Anonymous: PACKAGE_VERSION_0,
 };
 pub const _PACKAGE_INFO_REFERENCE = extern struct {

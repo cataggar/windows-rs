@@ -81,13 +81,13 @@ pub const XSAVE_ARM64_SVE_HEADER = extern struct {
     Reserved: [5]u32,
 };
 pub const KERNEL_CET_CONTEXT = extern struct {
-pub const KERNEL_CET_CONTEXT_0 = extern union {
-pub const KERNEL_CET_CONTEXT_0_0 = extern struct {
-    _bitfield: u16,
-};
-    AllFlags: u16,
-    Anonymous: KERNEL_CET_CONTEXT_0_0,
-};
+    pub const KERNEL_CET_CONTEXT_0 = extern union {
+        pub const KERNEL_CET_CONTEXT_0_0 = extern struct {
+            _bitfield: u16,
+        };
+        AllFlags: u16,
+        Anonymous: KERNEL_CET_CONTEXT_0_0,
+    };
     Ssp: u64,
     Rip: u64,
     SegCs: u16,
@@ -95,40 +95,40 @@ pub const KERNEL_CET_CONTEXT_0_0 = extern struct {
     Fill: [2]u16,
 };
 pub const SCOPE_TABLE_AMD64 = extern struct {
-pub const SCOPE_TABLE_AMD64_0 = extern struct {
-    BeginAddress: u32,
-    EndAddress: u32,
-    HandlerAddress: u32,
-    JumpTarget: u32,
-};
+    pub const SCOPE_TABLE_AMD64_0 = extern struct {
+        BeginAddress: u32,
+        EndAddress: u32,
+        HandlerAddress: u32,
+        JumpTarget: u32,
+    };
     Count: u32,
     ScopeRecord: [1]SCOPE_TABLE_AMD64_0,
 };
 pub const SCOPE_TABLE_ARM = extern struct {
-pub const SCOPE_TABLE_ARM_0 = extern struct {
-    BeginAddress: u32,
-    EndAddress: u32,
-    HandlerAddress: u32,
-    JumpTarget: u32,
-};
+    pub const SCOPE_TABLE_ARM_0 = extern struct {
+        BeginAddress: u32,
+        EndAddress: u32,
+        HandlerAddress: u32,
+        JumpTarget: u32,
+    };
     Count: u32,
     ScopeRecord: [1]SCOPE_TABLE_ARM_0,
 };
 pub const SCOPE_TABLE_ARM64 = extern struct {
-pub const SCOPE_TABLE_ARM64_0 = extern struct {
-    BeginAddress: u32,
-    EndAddress: u32,
-    HandlerAddress: u32,
-    JumpTarget: u32,
-};
+    pub const SCOPE_TABLE_ARM64_0 = extern struct {
+        BeginAddress: u32,
+        EndAddress: u32,
+        HandlerAddress: u32,
+        JumpTarget: u32,
+    };
     Count: u32,
     ScopeRecord: [1]SCOPE_TABLE_ARM64_0,
 };
 pub const DISPATCHER_CONTEXT_NONVOLREG_ARM64 = extern union {
-pub const DISPATCHER_CONTEXT_NONVOLREG_ARM64_0 = extern struct {
-    GpNvRegs: [11]u64,
-    FpNvRegs: [8]f64,
-};
+    pub const DISPATCHER_CONTEXT_NONVOLREG_ARM64_0 = extern struct {
+        GpNvRegs: [11]u64,
+        FpNvRegs: [8]f64,
+    };
     Buffer: [152]u8,
     Anonymous: DISPATCHER_CONTEXT_NONVOLREG_ARM64_0,
 };
@@ -141,14 +141,14 @@ pub const SECURITY_OBJECT_AI_PARAMS = extern struct {
     ConstraintMask: u32,
 };
 pub const SE_TOKEN_USER = extern struct {
-pub const SE_TOKEN_USER_0 = extern union {
-    TokenUser: @"Windows.Win32.Security".TOKEN_USER,
-    User: @"Windows.Win32.Security".SID_AND_ATTRIBUTES,
-};
-pub const SE_TOKEN_USER_1 = extern union {
-    Sid: @"Windows.Win32.Security".SID,
-    Buffer: [68]u8,
-};
+    pub const SE_TOKEN_USER_0 = extern union {
+        TokenUser: @"Windows.Win32.Security".TOKEN_USER,
+        User: @"Windows.Win32.Security".SID_AND_ATTRIBUTES,
+    };
+    pub const SE_TOKEN_USER_1 = extern union {
+        Sid: @"Windows.Win32.Security".SID,
+        Buffer: [68]u8,
+    };
     Anonymous1: SE_TOKEN_USER_0,
     Anonymous2: SE_TOKEN_USER_1,
 };
@@ -175,10 +175,10 @@ pub const TOKEN_BNO_ISOLATION_INFORMATION = extern struct {
     IsolationEnabled: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const NT_TIB32 = extern struct {
-pub const NT_TIB32_0 = extern union {
-    FiberData: u32,
-    Version: u32,
-};
+    pub const NT_TIB32_0 = extern union {
+        FiberData: u32,
+        Version: u32,
+    };
     ExceptionList: u32,
     StackBase: u32,
     StackLimit: u32,
@@ -188,10 +188,10 @@ pub const NT_TIB32_0 = extern union {
     Self: u32,
 };
 pub const NT_TIB64 = extern struct {
-pub const NT_TIB64_0 = extern union {
-    FiberData: u64,
-    Version: u32,
-};
+    pub const NT_TIB64_0 = extern union {
+        FiberData: u64,
+        Version: u32,
+    };
     ExceptionList: u64,
     StackBase: u64,
     StackLimit: u64,
@@ -209,9 +209,9 @@ pub const COMPONENT_FILTER = extern struct {
     ComponentFlags: u32,
 };
 pub const RATE_QUOTA_LIMIT = extern union {
-pub const RATE_QUOTA_LIMIT_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const RATE_QUOTA_LIMIT_0 = extern struct {
+        _bitfield: u32,
+    };
     RateData: u32,
     Anonymous: RATE_QUOTA_LIMIT_0,
 };
@@ -230,184 +230,184 @@ pub const QUOTA_LIMITS_EX = extern struct {
     CpuRateLimit: RATE_QUOTA_LIMIT,
 };
 pub const PROCESS_MITIGATION_ASLR_POLICY = extern struct {
-pub const PROCESS_MITIGATION_ASLR_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_ASLR_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_ASLR_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_ASLR_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_ASLR_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_ASLR_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_ASLR_POLICY_0,
 };
 pub const PROCESS_MITIGATION_DEP_POLICY = extern struct {
-pub const PROCESS_MITIGATION_DEP_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_DEP_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_DEP_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_DEP_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_DEP_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_DEP_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_DEP_POLICY_0,
     Permanent: @"Windows.Win32.Foundation".BOOLEAN,
 };
 pub const PROCESS_MITIGATION_SEHOP_POLICY = extern struct {
-pub const PROCESS_MITIGATION_SEHOP_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_SEHOP_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_SEHOP_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_SEHOP_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_SEHOP_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_SEHOP_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_SEHOP_POLICY_0,
 };
 pub const PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY = extern struct {
-pub const PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_STRICT_HANDLE_CHECK_POLICY_0,
 };
 pub const PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY = extern struct {
-pub const PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_SYSTEM_CALL_DISABLE_POLICY_0,
 };
 pub const PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY = extern struct {
-pub const PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_EXTENSION_POINT_DISABLE_POLICY_0,
 };
 pub const PROCESS_MITIGATION_DYNAMIC_CODE_POLICY = extern struct {
-pub const PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_DYNAMIC_CODE_POLICY_0,
 };
 pub const PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY = extern struct {
-pub const PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_CONTROL_FLOW_GUARD_POLICY_0,
 };
 pub const PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY = extern struct {
-pub const PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_BINARY_SIGNATURE_POLICY_0,
 };
 pub const PROCESS_MITIGATION_FONT_DISABLE_POLICY = extern struct {
-pub const PROCESS_MITIGATION_FONT_DISABLE_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_FONT_DISABLE_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_FONT_DISABLE_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_FONT_DISABLE_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_FONT_DISABLE_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_FONT_DISABLE_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_FONT_DISABLE_POLICY_0,
 };
 pub const PROCESS_MITIGATION_IMAGE_LOAD_POLICY = extern struct {
-pub const PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_IMAGE_LOAD_POLICY_0,
 };
 pub const PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY = extern struct {
-pub const PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_SYSTEM_CALL_FILTER_POLICY_0,
 };
 pub const PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY = extern struct {
-pub const PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_PAYLOAD_RESTRICTION_POLICY_0,
 };
 pub const PROCESS_MITIGATION_CHILD_PROCESS_POLICY = extern struct {
-pub const PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_CHILD_PROCESS_POLICY_0,
 };
 pub const PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY = extern struct {
-pub const PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_SIDE_CHANNEL_ISOLATION_POLICY_0,
 };
 pub const PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY = extern struct {
-pub const PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_USER_SHADOW_STACK_POLICY_0,
 };
 pub const PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY = extern struct {
-pub const PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_USER_POINTER_AUTH_POLICY_0,
 };
 pub const PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY = extern struct {
-pub const PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0 = extern union {
-pub const PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Flags: u32,
-    Anonymous: PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0_0,
-};
+    pub const PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0 = extern union {
+        pub const PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Flags: u32,
+        Anonymous: PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0_0,
+    };
     Anonymous: PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY_0,
 };
 pub const PROCESS_NETWORK_COUNTERS = extern struct {
@@ -464,13 +464,13 @@ pub const RUNTIME_REPORT_HEADER = extern struct {
     ReportSize: u32,
 };
 pub const DRIVER_INFO_ENTRY = extern struct {
-pub const _Flags_e__Union = extern union {
-pub const _Flags_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _Flags_e__Union_0,
-    AsUInt16: u16,
-};
+    pub const _Flags_e__Union = extern union {
+        pub const _Flags_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _Flags_e__Union_0,
+        AsUInt16: u16,
+    };
     InternalName: [32]@"Windows.Win32.Foundation".CHAR,
     ImageHashAlgorithm: u16,
     PublisherThumbprintHashAlgorithm: u16,
@@ -483,23 +483,23 @@ pub const _Flags_e__Union_0 = extern struct {
     Padding: u16,
 };
 pub const DRIVER_RUNTIME_REPORT = extern struct {
-pub const _Flags_e__Union = extern union {
-pub const _Flags_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    Anonymous: _Flags_e__Union_0,
-    AsUInt16: u16,
-};
+    pub const _Flags_e__Union = extern union {
+        pub const _Flags_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        Anonymous: _Flags_e__Union_0,
+        AsUInt16: u16,
+    };
     Header: RUNTIME_REPORT_HEADER,
     NumberOfDrivers: u16,
     Flags: _Flags_e__Union,
     DriverEntries: [1]DRIVER_INFO_ENTRY,
 };
 pub const FILE_NOTIFY_FULL_INFORMATION = extern struct {
-pub const FILE_NOTIFY_FULL_INFORMATION_0 = extern union {
-    ReparsePointTag: u32,
-    EaSize: u32,
-};
+    pub const FILE_NOTIFY_FULL_INFORMATION_0 = extern union {
+        ReparsePointTag: u32,
+        EaSize: u32,
+    };
     NextEntryOffset: u32,
     Action: u32,
     CreationTime: i64,
@@ -622,13 +622,13 @@ pub const NETWORK_APP_INSTANCE_EA = extern struct {
     CsvFlags: u32,
 };
 pub const POWER_LIMIT_ATTRIBUTES = extern struct {
-pub const _Flags_e__Union = extern union {
-pub const _Flags_e__Union_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: _Flags_e__Union_0,
-    AsUlong: u32,
-};
+    pub const _Flags_e__Union = extern union {
+        pub const _Flags_e__Union_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: _Flags_e__Union_0,
+        AsUlong: u32,
+    };
     Type: i32,
     DomainId: u32,
     MaxValue: u32,
@@ -660,30 +660,30 @@ pub const PROCESSOR_IDLESTATE_INFO = extern struct {
     Spare: [2]u8,
 };
 pub const PROCESSOR_IDLESTATE_POLICY = extern struct {
-pub const _Flags_e__Union = extern union {
-pub const _Flags_e__Union_0 = extern struct {
-    _bitfield: u16,
-};
-    AsWORD: u16,
-    Anonymous: _Flags_e__Union_0,
-};
+    pub const _Flags_e__Union = extern union {
+        pub const _Flags_e__Union_0 = extern struct {
+            _bitfield: u16,
+        };
+        AsWORD: u16,
+        Anonymous: _Flags_e__Union_0,
+    };
     Revision: u16,
     Flags: _Flags_e__Union,
     PolicyCount: u32,
     Policy: [3]PROCESSOR_IDLESTATE_INFO,
 };
 pub const PROCESSOR_PERFSTATE_POLICY = extern struct {
-pub const PROCESSOR_PERFSTATE_POLICY_0 = extern union {
-pub const _Flags_e__Union = extern union {
-pub const _Flags_e__Union_0 = extern struct {
-    _bitfield: u8,
-};
-    AsBYTE: u8,
-    Anonymous: _Flags_e__Union_0,
-};
-    Spare: u8,
-    Flags: _Flags_e__Union,
-};
+    pub const PROCESSOR_PERFSTATE_POLICY_0 = extern union {
+        pub const _Flags_e__Union = extern union {
+            pub const _Flags_e__Union_0 = extern struct {
+                _bitfield: u8,
+            };
+            AsBYTE: u8,
+            Anonymous: _Flags_e__Union_0,
+        };
+        Spare: u8,
+        Flags: _Flags_e__Union,
+    };
     Revision: u32,
     MaxThrottle: u8,
     MinThrottle: u8,
@@ -854,15 +854,15 @@ pub const ANON_OBJECT_HEADER_BIGOBJ = extern struct {
     NumberOfSymbols: u32,
 };
 pub const IMAGE_SYMBOL = extern struct {
-pub const _N_e__Union = extern union {
-pub const _Name_e__Struct = extern struct {
-    Short: u32,
-    Long: u32,
-};
-    ShortName: [8]u8,
-    Name: _Name_e__Struct,
-    LongName: [2]u32,
-};
+    pub const _N_e__Union = extern union {
+        pub const _Name_e__Struct = extern struct {
+            Short: u32,
+            Long: u32,
+        };
+        ShortName: [8]u8,
+        Name: _Name_e__Struct,
+        LongName: [2]u32,
+    };
     N: _N_e__Union,
     Value: u32,
     SectionNumber: i16,
@@ -871,15 +871,15 @@ pub const _Name_e__Struct = extern struct {
     NumberOfAuxSymbols: u8,
 };
 pub const IMAGE_SYMBOL_EX = extern struct {
-pub const _N_e__Union = extern union {
-pub const _Name_e__Struct = extern struct {
-    Short: u32,
-    Long: u32,
-};
-    ShortName: [8]u8,
-    Name: _Name_e__Struct,
-    LongName: [2]u32,
-};
+    pub const _N_e__Union = extern union {
+        pub const _Name_e__Struct = extern struct {
+            Short: u32,
+            Long: u32,
+        };
+        ShortName: [8]u8,
+        Name: _Name_e__Struct,
+        LongName: [2]u32,
+    };
     N: _N_e__Union,
     Value: u32,
     SectionNumber: i32,
@@ -894,48 +894,48 @@ pub const IMAGE_AUX_SYMBOL_TOKEN_DEF = extern struct {
     rgbReserved: [12]u8,
 };
 pub const IMAGE_AUX_SYMBOL = extern union {
-pub const _Sym_e__Struct = extern struct {
-pub const _Misc_e__Union = extern union {
-pub const _LnSz_e__Struct = extern struct {
-    Linenumber: u16,
-    Size: u16,
-};
-    LnSz: _LnSz_e__Struct,
-    TotalSize: u32,
-};
-pub const _FcnAry_e__Union = extern union {
-pub const _Function_e__Struct = extern struct {
-    PointerToLinenumber: u32,
-    PointerToNextFunction: u32,
-};
-pub const _Array_e__Struct = extern struct {
-    Dimension: [4]u16,
-};
-    Function: _Function_e__Struct,
-    Array: _Array_e__Struct,
-};
-    TagIndex: u32,
-    Misc: _Misc_e__Union,
-    FcnAry: _FcnAry_e__Union,
-    TvIndex: u16,
-};
-pub const _File_e__Struct = extern struct {
-    Name: [18]u8,
-};
-pub const _Section_e__Struct = extern struct {
-    Length: u32,
-    NumberOfRelocations: u16,
-    NumberOfLinenumbers: u16,
-    CheckSum: u32,
-    Number: i16,
-    Selection: u8,
-    bReserved: u8,
-    HighNumber: i16,
-};
-pub const _CRC_e__Struct = extern struct {
-    crc: u32,
-    rgbReserved: [14]u8,
-};
+    pub const _Sym_e__Struct = extern struct {
+        pub const _Misc_e__Union = extern union {
+            pub const _LnSz_e__Struct = extern struct {
+                Linenumber: u16,
+                Size: u16,
+            };
+            LnSz: _LnSz_e__Struct,
+            TotalSize: u32,
+        };
+        pub const _FcnAry_e__Union = extern union {
+            pub const _Function_e__Struct = extern struct {
+                PointerToLinenumber: u32,
+                PointerToNextFunction: u32,
+            };
+            pub const _Array_e__Struct = extern struct {
+                Dimension: [4]u16,
+            };
+            Function: _Function_e__Struct,
+            Array: _Array_e__Struct,
+        };
+        TagIndex: u32,
+        Misc: _Misc_e__Union,
+        FcnAry: _FcnAry_e__Union,
+        TvIndex: u16,
+    };
+    pub const _File_e__Struct = extern struct {
+        Name: [18]u8,
+    };
+    pub const _Section_e__Struct = extern struct {
+        Length: u32,
+        NumberOfRelocations: u16,
+        NumberOfLinenumbers: u16,
+        CheckSum: u32,
+        Number: i16,
+        Selection: u8,
+        bReserved: u8,
+        HighNumber: i16,
+    };
+    pub const _CRC_e__Struct = extern struct {
+        crc: u32,
+        rgbReserved: [14]u8,
+    };
     Sym: _Sym_e__Struct,
     File: _File_e__Struct,
     Section: _Section_e__Struct,
@@ -943,33 +943,33 @@ pub const _CRC_e__Struct = extern struct {
     CRC: _CRC_e__Struct,
 };
 pub const IMAGE_AUX_SYMBOL_EX = extern union {
-pub const _Sym_e__Struct = extern struct {
-    WeakDefaultSymIndex: u32,
-    WeakSearchType: u32,
-    rgbReserved: [12]u8,
-};
-pub const _File_e__Struct = extern struct {
-    Name: [20]u8,
-};
-pub const _Section_e__Struct = extern struct {
-    Length: u32,
-    NumberOfRelocations: u16,
-    NumberOfLinenumbers: u16,
-    CheckSum: u32,
-    Number: i16,
-    Selection: u8,
-    bReserved: u8,
-    HighNumber: i16,
-    rgbReserved: [2]u8,
-};
-pub const IMAGE_AUX_SYMBOL_EX_0 = extern struct {
-    TokenDef: IMAGE_AUX_SYMBOL_TOKEN_DEF,
-    rgbReserved: [2]u8,
-};
-pub const _CRC_e__Struct = extern struct {
-    crc: u32,
-    rgbReserved: [16]u8,
-};
+    pub const _Sym_e__Struct = extern struct {
+        WeakDefaultSymIndex: u32,
+        WeakSearchType: u32,
+        rgbReserved: [12]u8,
+    };
+    pub const _File_e__Struct = extern struct {
+        Name: [20]u8,
+    };
+    pub const _Section_e__Struct = extern struct {
+        Length: u32,
+        NumberOfRelocations: u16,
+        NumberOfLinenumbers: u16,
+        CheckSum: u32,
+        Number: i16,
+        Selection: u8,
+        bReserved: u8,
+        HighNumber: i16,
+        rgbReserved: [2]u8,
+    };
+    pub const IMAGE_AUX_SYMBOL_EX_0 = extern struct {
+        TokenDef: IMAGE_AUX_SYMBOL_TOKEN_DEF,
+        rgbReserved: [2]u8,
+    };
+    pub const _CRC_e__Struct = extern struct {
+        crc: u32,
+        rgbReserved: [16]u8,
+    };
     Sym: _Sym_e__Struct,
     File: _File_e__Struct,
     Section: _Section_e__Struct,
@@ -977,19 +977,19 @@ pub const _CRC_e__Struct = extern struct {
     CRC: _CRC_e__Struct,
 };
 pub const IMAGE_RELOCATION = extern struct {
-pub const IMAGE_RELOCATION_0 = extern union {
-    VirtualAddress: u32,
-    RelocCount: u32,
-};
+    pub const IMAGE_RELOCATION_0 = extern union {
+        VirtualAddress: u32,
+        RelocCount: u32,
+    };
     Anonymous: IMAGE_RELOCATION_0,
     SymbolTableIndex: u32,
     Type: u16,
 };
 pub const IMAGE_LINENUMBER = extern struct {
-pub const _Type_e__Union = extern union {
-    SymbolTableIndex: u32,
-    VirtualAddress: u32,
-};
+    pub const _Type_e__Union = extern union {
+        SymbolTableIndex: u32,
+        VirtualAddress: u32,
+    };
     Type: _Type_e__Union,
     Linenumber: u16,
 };
@@ -1024,13 +1024,13 @@ pub const IMAGE_IMPORT_BY_NAME = extern struct {
     Name: [1]@"Windows.Win32.Foundation".CHAR,
 };
 pub const IMAGE_TLS_DIRECTORY64 = extern struct {
-pub const IMAGE_TLS_DIRECTORY64_0 = extern union {
-pub const IMAGE_TLS_DIRECTORY64_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Characteristics: u32,
-    Anonymous: IMAGE_TLS_DIRECTORY64_0_0,
-};
+    pub const IMAGE_TLS_DIRECTORY64_0 = extern union {
+        pub const IMAGE_TLS_DIRECTORY64_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Characteristics: u32,
+        Anonymous: IMAGE_TLS_DIRECTORY64_0_0,
+    };
     StartAddressOfRawData: u64,
     EndAddressOfRawData: u64,
     AddressOfIndex: u64,
@@ -1039,13 +1039,13 @@ pub const IMAGE_TLS_DIRECTORY64_0_0 = extern struct {
     Anonymous: IMAGE_TLS_DIRECTORY64_0,
 };
 pub const IMAGE_TLS_DIRECTORY32 = extern struct {
-pub const IMAGE_TLS_DIRECTORY32_0 = extern union {
-pub const IMAGE_TLS_DIRECTORY32_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Characteristics: u32,
-    Anonymous: IMAGE_TLS_DIRECTORY32_0_0,
-};
+    pub const IMAGE_TLS_DIRECTORY32_0 = extern union {
+        pub const IMAGE_TLS_DIRECTORY32_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Characteristics: u32,
+        Anonymous: IMAGE_TLS_DIRECTORY32_0_0,
+    };
     StartAddressOfRawData: u32,
     EndAddressOfRawData: u32,
     AddressOfIndex: u32,
@@ -1054,10 +1054,10 @@ pub const IMAGE_TLS_DIRECTORY32_0_0 = extern struct {
     Anonymous: IMAGE_TLS_DIRECTORY32_0,
 };
 pub const IMAGE_IMPORT_DESCRIPTOR = extern struct {
-pub const IMAGE_IMPORT_DESCRIPTOR_0 = extern union {
-    Characteristics: u32,
-    OriginalFirstThunk: u32,
-};
+    pub const IMAGE_IMPORT_DESCRIPTOR_0 = extern union {
+        Characteristics: u32,
+        OriginalFirstThunk: u32,
+    };
     Anonymous: IMAGE_IMPORT_DESCRIPTOR_0,
     TimeDateStamp: u32,
     ForwarderChain: u32,
@@ -1083,21 +1083,21 @@ pub const IMAGE_RESOURCE_DIRECTORY = extern struct {
     NumberOfIdEntries: u16,
 };
 pub const IMAGE_RESOURCE_DIRECTORY_ENTRY = extern struct {
-pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_0 = extern union {
-pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    Anonymous: IMAGE_RESOURCE_DIRECTORY_ENTRY_0_0,
-    Name: u32,
-    Id: u16,
-};
-pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_1 = extern union {
-pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_1_0 = extern struct {
-    _bitfield: u32,
-};
-    OffsetToData: u32,
-    Anonymous: IMAGE_RESOURCE_DIRECTORY_ENTRY_1_0,
-};
+    pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_0 = extern union {
+        pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        Anonymous: IMAGE_RESOURCE_DIRECTORY_ENTRY_0_0,
+        Name: u32,
+        Id: u16,
+    };
+    pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_1 = extern union {
+        pub const IMAGE_RESOURCE_DIRECTORY_ENTRY_1_0 = extern struct {
+            _bitfield: u32,
+        };
+        OffsetToData: u32,
+        Anonymous: IMAGE_RESOURCE_DIRECTORY_ENTRY_1_0,
+    };
     Anonymous1: IMAGE_RESOURCE_DIRECTORY_ENTRY_0,
     Anonymous2: IMAGE_RESOURCE_DIRECTORY_ENTRY_1,
 };
@@ -1202,9 +1202,9 @@ pub const IMAGE_HOT_PATCH_BASE = extern struct {
     BufferOffset: u32,
 };
 pub const IMAGE_HOT_PATCH_MACHINE = extern struct {
-pub const IMAGE_HOT_PATCH_MACHINE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const IMAGE_HOT_PATCH_MACHINE_0 = extern struct {
+        _bitfield: u32,
+    };
     Anonymous: IMAGE_HOT_PATCH_MACHINE_0,
 };
 pub const IMAGE_HOT_PATCH_HASHES = extern struct {
@@ -1216,34 +1216,34 @@ pub const IMAGE_CE_RUNTIME_FUNCTION_ENTRY = extern struct {
     _bitfield: u32,
 };
 pub const IMAGE_ARM_RUNTIME_FUNCTION_ENTRY = extern struct {
-pub const IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0 = extern union {
-pub const IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0_0 = extern struct {
-    _bitfield: u32,
-};
-    UnwindData: u32,
-    Anonymous: IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0_0,
-};
+    pub const IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0 = extern union {
+        pub const IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0_0 = extern struct {
+            _bitfield: u32,
+        };
+        UnwindData: u32,
+        Anonymous: IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0_0,
+    };
     BeginAddress: u32,
     Anonymous: IMAGE_ARM_RUNTIME_FUNCTION_ENTRY_0,
 };
 pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA = extern union {
-pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_0 = extern struct {
+        _bitfield: u32,
+    };
     HeaderData: u32,
     Anonymous: IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_0,
 };
 pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EXTENDED = extern union {
-pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EXTENDED_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EXTENDED_0 = extern struct {
+        _bitfield: u32,
+    };
     ExtendedHeaderData: u32,
     Anonymous: IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EXTENDED_0,
 };
 pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EPILOG_SCOPE = extern union {
-pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EPILOG_SCOPE_0 = extern struct {
-    _bitfield: u32,
-};
+    pub const IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EPILOG_SCOPE_0 = extern struct {
+        _bitfield: u32,
+    };
     EpilogScopeData: u32,
     Anonymous: IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY_XDATA_EPILOG_SCOPE_0,
 };
@@ -1303,10 +1303,10 @@ pub const IMAGE_ARCHITECTURE_ENTRY = extern struct {
     NewInst: u32,
 };
 pub const IMPORT_OBJECT_HEADER = extern struct {
-pub const IMPORT_OBJECT_HEADER_0 = extern union {
-    Ordinal: u16,
-    Hint: u16,
-};
+    pub const IMPORT_OBJECT_HEADER_0 = extern union {
+        Ordinal: u16,
+        Hint: u16,
+    };
     Sig1: u16,
     Sig2: u16,
     Version: u16,
@@ -1317,20 +1317,20 @@ pub const IMPORT_OBJECT_HEADER_0 = extern union {
     _bitfield: u16,
 };
 pub const IMAGE_POLICY_ENTRY = extern struct {
-pub const _u_e__Union = extern union {
-    None: *anyopaque,
-    BoolValue: @"Windows.Win32.Foundation".BOOLEAN,
-    Int8Value: i8,
-    UInt8Value: u8,
-    Int16Value: i16,
-    UInt16Value: u16,
-    Int32Value: i32,
-    UInt32Value: u32,
-    Int64Value: i64,
-    UInt64Value: u64,
-    AnsiStringValue: @"Windows.Win32.Foundation".PSTR,
-    UnicodeStringValue: @"Windows.Win32.Foundation".PWSTR,
-};
+    pub const _u_e__Union = extern union {
+        None: *anyopaque,
+        BoolValue: @"Windows.Win32.Foundation".BOOLEAN,
+        Int8Value: i8,
+        UInt8Value: u8,
+        Int16Value: i16,
+        UInt16Value: u16,
+        Int32Value: i32,
+        UInt32Value: u32,
+        Int64Value: i64,
+        UInt64Value: u64,
+        AnsiStringValue: @"Windows.Win32.Foundation".PSTR,
+        UnicodeStringValue: @"Windows.Win32.Foundation".PWSTR,
+    };
     Type: i32,
     PolicyId: i32,
     u: _u_e__Union,
