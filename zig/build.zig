@@ -1136,6 +1136,7 @@ pub fn build(b: *std.Build) void {
         "Windows.System",
         "Windows.System.Diagnostics",
         "Windows.System.RemoteSystems",
+        "Windows.System.Threading",
         "Windows.UI",
         "Windows.UI.Composition",
         "Windows.UI.Core",
@@ -1203,6 +1204,9 @@ pub fn build(b: *std.Build) void {
         \\    pub const Foundation = @import("Windows.Foundation.zig");
         \\    pub const Collections = @import("Windows.Foundation.Collections.zig");
         \\    pub const Globalization = @import("Windows.Globalization.zig");
+        \\    pub const System = struct {
+        \\        pub const Threading = @import("Windows.System.Threading.zig");
+        \\    };
         \\};
         \\
     ;
@@ -1398,6 +1402,11 @@ pub fn build(b: *std.Build) void {
         .{
             .name = "winrt-event-sugar",
             .root = "samples/winrt_event_sugar/main.zig",
+            .needs_win = true,
+        },
+        .{
+            .name = "winrt-async",
+            .root = "samples/winrt_async/main.zig",
             .needs_win = true,
         },
     };

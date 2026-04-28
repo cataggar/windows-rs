@@ -176,12 +176,23 @@ The heaviest milestone; landed in four phases.
 
 ## M5 — Async contracts
 
-**Not shipped.** Zig 0.16's I/O interface shape was still settling
-during v0.2; designing `IAsyncOperation`1<T>` → `std.Io.async`
-risked a rewrite on 0.17. Deferred to v0.3.
+**Shipped (v0.3, issue #4).** `win_core.Async.wait` blocks on an
+`IAsyncAction` until completion; `Async.waitResult(T)` does the same
+for `IAsyncOperation<T>` and returns the result. Uses block-on-signal
+via Win32 `CreateEventW` / `WaitForSingleObject` (not Zig native async
+— that's deferred until `std.Io` stabilises). Error propagation reads
+`IAsyncInfo.get_Status` / `get_ErrorCode` and maps to `hresult.Error`.
+See `zig/docs/async-bridge.md`.
 
-Workaround for v0.2 consumers: drive `IAsyncOperation` manually by
-registering a `*Completion` callback and pumping the loop yourself.
+Sample: `zig/samples/winrt_async/main.zig` — `ThreadPool.RunAsync` →
+`Async.wait`.
+
+Carry-overs to v0.4:
+- Progress handlers (`IAsyncActionWithProgress<P>`,
+  `IAsyncOperationWithProgress<T,P>`).
+- Native Zig async/await integration (`std.Io`).
+- Cancellation tokens / timeout support.
+- Emitter sugar for async-returning methods.
 
 ## M6 — WinRT activation ergonomics
 
@@ -296,7 +307,9 @@ method sugar (e.g. `GetInt32ArrayOwned` → `![]i32`).
 
 ## Carry-overs into v0.3
 
-- **Async contracts** (M5 deferred above).
+- **Async contracts** — core shipped (M5 above, issue #4). Progress
+  variants, native async, cancellation tokens, emitter sugar carry
+  to v0.4.
 - **Generic methods** (`.mvar_generic` still resolves to
   `UnsupportedElement`).
 - **Cross-namespace generic delegate event sugar.** v0.2 emits
