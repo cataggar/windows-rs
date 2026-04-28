@@ -1820,8 +1820,12 @@ const MockAsyncOperationI32 = struct {
         return hresult.S_OK;
     }
 
-    fn mockOpCancel(_: *anyopaque) callconv(.winapi) HRESULT { return hresult.S_OK; }
-    fn mockOpClose(_: *anyopaque) callconv(.winapi) HRESULT { return hresult.S_OK; }
+    fn mockOpCancel(_: *anyopaque) callconv(.winapi) HRESULT {
+        return hresult.S_OK;
+    }
+    fn mockOpClose(_: *anyopaque) callconv(.winapi) HRESULT {
+        return hresult.S_OK;
+    }
 };
 
 test "Async.waitResult returns result value for completed IAsyncOperation<i32>" {
