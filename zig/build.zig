@@ -1409,6 +1409,14 @@ pub fn build(b: *std.Build) void {
             .root = "samples/winrt_async/main.zig",
             .needs_win = true,
         },
+        .{
+            .name = "message-box",
+            .root = "samples/message_box/main.zig",
+        },
+        .{
+            .name = "enum-windows",
+            .root = "samples/enum_windows/main.zig",
+        },
     };
 
     for (samples) |s| {
