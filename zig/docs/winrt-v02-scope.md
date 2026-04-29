@@ -318,5 +318,7 @@ method sugar (e.g. `GetInt32ArrayOwned` → `![]i32`).
   v0.2 corpus). Cross-namespace delegates need import plumbing on
   the host side; tracked separately. See
   [generic-delegates.md](generic-delegates.md).
-- **`<Method>OwnedFromUtf16`** combined input-and-return HSTRING
-  sugar, once a sample demands it.
+- **`<Method>OwnedFromUtf16`** — shipped (issue #16). Combined
+  input-and-return HSTRING sugar for methods that take `HSTRING` in
+  and return `HSTRING` out. Accepts `[]const u16`, returns
+  `!win_core.Hstring`.
