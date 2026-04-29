@@ -433,7 +433,7 @@ pub fn emitIidConstants(
         // Skip WinRT parameterized-generic typedefs (names like
         // `IAsyncOperation\`1`). `\`` is not a legal Zig identifier
         // character and instantiating generics is deferred to v0.2.
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
         try writer.print(
             \\pub const IID_{s}: GUID = .{{
             \\    .data1 = 0x{X:0>8},
@@ -1384,7 +1384,7 @@ pub fn emitEnums(
         const repr_str = zigReprFor(repr_ty) orelse continue;
 
         const name = file.str(.type_def, row, 1);
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
         try writer.print("pub const {s} = enum({s}) {{\n", .{ name, repr_str });
 
         var f: u32 = fields.start;
@@ -1562,12 +1562,12 @@ test "emitIidConstants writes IStringable from Windows.Foundation" {
     const out = buf.written();
 
     // IStringable's IID is the canonical `{96369F54-8EB6-48F0-ABCE-C1B211E627C3}`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IID_IStringable: GUID") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".data1 = 0x96369F54") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".data2 = 0x8EB6") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".data3 = 0x48F0") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IID_IStringable: GUID") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".data1 = 0x96369F54") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".data2 = 0x8EB6") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".data3 = 0x48F0") != null);
     // data4 bytes: AB CE C1 B2 11 E6 27 C3
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "0xAB, 0xCE, 0xC1, 0xB2, 0x11, 0xE6, 0x27, 0xC3",
@@ -1576,7 +1576,7 @@ test "emitIidConstants writes IStringable from Windows.Foundation" {
     // Make sure we emit more than one entry — count IID_ prefixes.
     var count: usize = 0;
     var search = out;
-    while (std.mem.indexOf(u8, search, "pub const IID_")) |idx| {
+    while (std.mem.find(u8, search, "pub const IID_")) |idx| {
         count += 1;
         search = search[idx + 1 ..];
     }
@@ -1628,7 +1628,7 @@ fn emitInterfaceVtblsImpl(
         const name = file.str(.type_def, row, 1);
         // Skip generic placeholders like `IVector`1` — a later slice
         // handles parameterised vtbls.
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
 
         // IUnknown itself has no base — it's the root of the COM
         // chain and is surfaced to generated code through the
@@ -1706,7 +1706,7 @@ fn collectInstFromTy(
 ) !void {
     switch (ty) {
         .class_name, .value_name => |tn| {
-            if (std.mem.indexOfScalar(u8, tn.name, '`') != null and
+            if (std.mem.findScalar(u8, tn.name, '`') != null and
                 tn.generics.len > 0 and
                 std.mem.eql(u8, tn.namespace, home_namespace))
             {
@@ -1794,7 +1794,7 @@ fn collectCrossNsInstFromTy(
 ) !void {
     switch (ty) {
         .class_name, .value_name => |tn| {
-            if (std.mem.indexOfScalar(u8, tn.name, '`') != null and
+            if (std.mem.findScalar(u8, tn.name, '`') != null and
                 tn.generics.len > 0 and
                 !std.mem.eql(u8, tn.namespace, source_namespace) and
                 isProjectableNs(tn.namespace))
@@ -2152,7 +2152,7 @@ pub fn emitInterfaceHandles(
         const is_winrt = (flags & winmd.TYPE_ATTR_WINDOWS_RUNTIME) != 0;
 
         const name = file.str(.type_def, row, 1);
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
 
         // `IUnknown` already ships as a hand-written handle in
         // `win-core` (aliased into the prelude). Re-emitting it from
@@ -2798,7 +2798,7 @@ fn tryEmitEventSugar(
         };
         // Closed generic only: name must carry the arity backtick and
         // generics must be present and all mangleable.
-        if (std.mem.indexOfScalar(u8, tn.name, '`') == null) continue;
+        if (std.mem.findScalar(u8, tn.name, '`') == null) continue;
         if (tn.generics.len == 0) continue;
         var all_mangleable = true;
         for (tn.generics) |a| {
@@ -3376,7 +3376,7 @@ fn writeArgMangle(writer: *std.Io.Writer, arg: winmd.Ty) !void {
             for (tn.namespace) |c| try writer.writeByte(if (c == '.') '_' else c);
             try writer.writeByte('_');
             // Strip backtick-arity from name before mangling.
-            const tick_idx = std.mem.indexOfScalar(u8, tn.name, '`') orelse tn.name.len;
+            const tick_idx = std.mem.findScalar(u8, tn.name, '`') orelse tn.name.len;
             try writer.writeAll(tn.name[0..tick_idx]);
             // Recurse for nested generic args.
             if (tn.generics.len > 0) {
@@ -3397,7 +3397,7 @@ fn writeArgMangle(writer: *std.Io.Writer, arg: winmd.Ty) !void {
 /// the open-def name; `__G<N>__<arg0>__<arg1>...` is appended where
 /// `<argK>` is produced by `writeArgMangle`.
 fn writeInstMangle(writer: *std.Io.Writer, open_name: []const u8, args: []const winmd.Ty) !void {
-    const tick_idx = std.mem.indexOfScalar(u8, open_name, '`') orelse open_name.len;
+    const tick_idx = std.mem.findScalar(u8, open_name, '`') orelse open_name.len;
     try writer.writeAll(open_name[0..tick_idx]);
     try writer.print("__G{d}", .{args.len});
     for (args) |a| {
@@ -3530,7 +3530,7 @@ fn writeZigTy(
             // do NOT add a leading `*`. Outer `ptr_mut`/`ptr_const`
             // wrappers still prepend one as usual.
             if (entries != null and file != null and
-                std.mem.indexOfScalar(u8, tn.name, '`') == null)
+                std.mem.findScalar(u8, tn.name, '`') == null)
             {
                 const key = try std.fmt.allocPrint(gpa, "{s}.{s}", .{ tn.namespace, tn.name });
                 if (entries.?.get(key)) |entry| {
@@ -3546,7 +3546,7 @@ fn writeZigTy(
             // reference the local mangled struct; cross-namespace
             // generics qualify with `@"<home-ns>"` and add the home
             // namespace to `cross` so `emitNamespace` adds the import.
-            if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
+            if (std.mem.findScalar(u8, tn.name, '`') != null) {
                 if (tn.generics.len > 0) {
                     var all_mangleable = true;
                     for (tn.generics) |a| {
@@ -3598,7 +3598,7 @@ fn writeZigTy(
             // / `isProjectableNs` routing below applies only to struct
             // and union refs.
             if (entries != null and file != null and
-                std.mem.indexOfScalar(u8, tn.name, '`') == null)
+                std.mem.findScalar(u8, tn.name, '`') == null)
             {
                 const key = try std.fmt.allocPrint(gpa, "{s}.{s}", .{ tn.namespace, tn.name });
                 if (entries.?.get(key)) |entry| {
@@ -3616,7 +3616,7 @@ fn writeZigTy(
                 }
             }
 
-            if (std.mem.indexOfScalar(u8, tn.name, '`') != null) {
+            if (std.mem.findScalar(u8, tn.name, '`') != null) {
                 return false;
             } else if (std.mem.eql(u8, tn.namespace, "System") and std.mem.eql(u8, tn.name, "Guid")) {
                 // `System.Guid` is the ECMA-335 name for the same
@@ -3693,19 +3693,19 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     try emitInterfaceVtbls(&buf.writer, arena.allocator(), &file, "Windows.Foundation");
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable_Vtbl = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "base: IInspectable_Vtbl") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IStringable_Vtbl = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "base: IInspectable_Vtbl") != null);
     // IStringable.ToString: `HSTRING ToString()` → typed signature with
     // a trailing *HSTRING out param and HRESULT return.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "ToString: *const fn (this: *const IStringable, result: *HSTRING) callconv(.winapi) HRESULT",
     ) != null);
 
     // IClosable.Close: `void Close()` → no trailing out param.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IClosable_Vtbl = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(u8, out, "pub const IClosable_Vtbl = extern struct {") != null);
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "Close: *const fn (this: *const IClosable) callconv(.winapi) HRESULT",
@@ -3714,7 +3714,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // IUriRuntimeClassFactory.CreateUri(HSTRING uri) returns a
     // runtime class (`Uri`) — a class_name reference. With typed
     // interface handles the out param becomes `**Uri`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "CreateUri: *const fn (this: *const IUriRuntimeClassFactory, p0: HSTRING, result: **Uri) callconv(.winapi) HRESULT",
@@ -3723,7 +3723,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // IAsyncInfo.get_Status returns the `AsyncStatus` enum — a
     // by-value value_name reference. The mapper should emit the
     // short name verbatim so downstream can resolve it via @import.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "get_Status: *const fn (this: *const IAsyncInfo, result: *AsyncStatus) callconv(.winapi) HRESULT",
@@ -3734,7 +3734,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // forced the entire slot to fall back to `*const anyopaque`. With
     // `.object` representable we now emit a fully typed slot with
     // `p0: i32` and a trailing `result: *?*const anyopaque` out-param.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "CreateInt32: *const fn (this: *const IPropertyValueStatics, p0: i32, result: *?*const anyopaque) callconv(.winapi) HRESULT",
@@ -3745,7 +3745,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // `CreateInt32Array([in] UINT32 __valueSize, [in] INT32[] value)
     // → IInspectable** propertyValue` exercises the primitive case.
     // Previously the whole slot fell back to `*const anyopaque`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "CreateInt32Array: *const fn (this: *const IPropertyValueStatics, p0_size: u32, p0_ptr: [*]const i32, result: *?*const anyopaque) callconv(.winapi) HRESULT",
@@ -3754,7 +3754,7 @@ test "emitInterfaceVtbls writes IStringable_Vtbl with ToString slot" {
     // At least one interface in Windows.Foundation uses types we don't
     // yet support (e.g. `IReference`1` methods with classes) — those
     // must degrade to opaque rather than fail the whole emit.
-    try std.testing.expect(std.mem.indexOf(u8, out, "*const anyopaque") != null);
+    try std.testing.expect(std.mem.find(u8, out, "*const anyopaque") != null);
 }
 
 test "emitInterfaceVtbls picks IUnknown_Vtbl for classic COM, skips IUnknown itself" {
@@ -3772,20 +3772,20 @@ test "emitInterfaceVtbls picks IUnknown_Vtbl for classic COM, skips IUnknown its
 
     // Classic COM interfaces in Windows.Win32 are NOT WindowsRuntime;
     // the base must be IUnknown_Vtbl, never IInspectable_Vtbl.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStream_Vtbl = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "base: IUnknown_Vtbl") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "base: IInspectable_Vtbl") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IStream_Vtbl = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "base: IUnknown_Vtbl") != null);
+    try std.testing.expect(std.mem.find(u8, out, "base: IInspectable_Vtbl") == null);
 
     // IUnknown itself must not be re-emitted here — it ships via the
     // win-core prelude alias with a baseless vtbl definition.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IUnknown_Vtbl = extern struct {") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IUnknown_Vtbl = extern struct {") == null);
 
     // Classic-COM methods already return HRESULT; the WinRT-style
     // split that synthesizes a trailing `result: *T` out-param must
     // NOT fire. `IStream.SetSize([in] ULARGE_INTEGER)` is a minimal
     // canary — the vtbl slot must be a direct `(this, p0: u64)` with
     // no phantom `*HRESULT` tail.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "SetSize: *const fn (this: *const IStream, p0: u64) callconv(.winapi) HRESULT",
@@ -3806,20 +3806,20 @@ test "emitEnums writes AsyncStatus from Windows.Foundation" {
     const out = buf.written();
 
     // AsyncStatus is the canonical WinRT i32-backed async-operation enum.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const AsyncStatus = enum(i32) {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Started = 0,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Completed = 1,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Canceled = 2,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Error = 3,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const AsyncStatus = enum(i32) {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Started = 0,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Completed = 1,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Canceled = 2,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Error = 3,") != null);
     // Non-exhaustive marker lets OR'd flag values in other enums remain
     // representable without re-declaration.
-    try std.testing.expect(std.mem.indexOf(u8, out, "    _,\n};") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    _,\n};") != null);
 
     // At least one enum is expected in Windows.Foundation (AsyncStatus
     // above) — the exact count varies by metadata vintage.
     var count: usize = 0;
     var search = out;
-    while (std.mem.indexOf(u8, search, "pub const ")) |idx| {
+    while (std.mem.find(u8, search, "pub const ")) |idx| {
         count += 1;
         search = search[idx + 1 ..];
     }
@@ -3986,7 +3986,7 @@ fn emitStructsImpl(
         if (!supportsArch(file, .type_def, row, arch)) continue;
 
         const name = file.str(.type_def, row, 1);
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
         if (isPreludeAlias(namespace, name)) continue;
         // Some names appear on multiple rows (e.g. callback-typedef
         // placeholders). Skip duplicates so we don't re-declare a type.
@@ -4313,7 +4313,7 @@ fn emitOneStruct(
         const child_row = nested_typedef - 1;
         if (!supportsArch(file, .type_def, child_row, arch)) continue;
         const child_name = file.str(.type_def, child_row, 1);
-        if (std.mem.indexOfScalar(u8, child_name, '`') != null) continue;
+        if (std.mem.findScalar(u8, child_name, '`') != null) continue;
 
         const base_name = if (std.mem.startsWith(u8, child_name, "_Anonymous")) blk: {
             const renamed = try std.fmt.allocPrint(arena, "{s}_{d}", .{ name, anon_index });
@@ -4378,18 +4378,18 @@ test "emitStructs writes Point/Rect/TimeSpan from Windows.Foundation" {
     const out = buf.written();
 
     // Point — classic two-f32 struct, a canary for sequential layout.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Point = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    X: f32,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Y: f32,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Point = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    X: f32,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Y: f32,") != null);
 
     // Rect — four f32s in declaration order.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Rect = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Width: f32,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Height: f32,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Rect = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Width: f32,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Height: f32,") != null);
 
     // TimeSpan — single i64 field, exercises non-f32 primitives.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const TimeSpan = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "    Duration: i64,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const TimeSpan = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "    Duration: i64,") != null);
 }
 
 test "emitInterfaceHandles writes IStringable handle with method wrappers" {
@@ -4409,53 +4409,53 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
 
     // Canonical COM object layout: first word is the vtbl pointer,
     // followed by method wrappers that forward through the vtable.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const IStringable = extern struct {\n    vtable: *const IStringable_Vtbl,\n    pub const Vtbl = IStringable_Vtbl;\n",
     ) != null);
 
     // The ToString wrapper forwards to `self.vtable.ToString(self, result)`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn ToString(self: *const IStringable, result: *HSTRING) callconv(.winapi) HRESULT {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.@\"ToString\"(self, result);") != null);
+    try std.testing.expect(std.mem.find(u8, out, "return self.vtable.@\"ToString\"(self, result);") != null);
 
     // IUnknown wrappers reach the IUnknown slots at `vtable.base.base.*`
     // (IInspectable_Vtbl.base is IUnknown_Vtbl).
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn QueryInterface(self: *const IStringable, iid: *const GUID, interface: *?*anyopaque) callconv(.winapi) HRESULT {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "return self.vtable.base.base.QueryInterface(@ptrCast(@constCast(self)), iid, interface);",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn AddRef(self: *const IStringable) callconv(.winapi) u32 {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn Release(self: *const IStringable) callconv(.winapi) u32 {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub fn AddRef(self: *const IStringable) callconv(.winapi) u32 {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub fn Release(self: *const IStringable) callconv(.winapi) u32 {") != null);
 
     // `cast` is the typed QueryInterface convenience — looks up
     // `T.IID` (emitted by writeInterfaceIid on every interface).
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn cast(self: *const IStringable, comptime T: type) ?*const T {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "if (self.QueryInterface(&T.IID, &out) < 0) return null;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "if (self.QueryInterface(&T.IID, &out) < 0) return null;") != null);
 
     // IStringable's IID from WinRT metadata: {96369f54-8eb6-48f0-abce-c1b211e627c3}.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const IID: GUID = .{ .data1 = 0x96369f54, .data2 = 0x8eb6, .data3 = 0x48f0, .data4 = .{ 0xab, 0xce, 0xc1, 0xb2, 0x11, 0xe6, 0x27, 0xc3 } };",
     ) != null);
 
     // IClosable.Close: void-returning, no trailing out param.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn Close(self: *const IClosable) callconv(.winapi) HRESULT {",
@@ -4466,22 +4466,22 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     // accepts a `[]const u16` slice and internally creates/deinits the
     // HSTRING via `win_core.Hstring.create`. This keeps the raw wrapper
     // untouched and offers a UTF-16-friendly alternative.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn CreateUriFromUtf16(self: *const IUriRuntimeClassFactory, p0: []const u16, result: **Uri) HRESULT {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "var h0 = win_core.Hstring.create(p0) catch return @as(HRESULT, @bitCast(@as(u32, 0x8007000E)));",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "defer h0.deinit();") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "return self.vtable.@\"CreateUri\"(self, h0.raw, result);") != null);
+    try std.testing.expect(std.mem.find(u8, out, "defer h0.deinit();") != null);
+    try std.testing.expect(std.mem.find(u8, out, "return self.vtable.@\"CreateUri\"(self, h0.raw, result);") != null);
 
     // Methods with no HSTRING inputs (e.g. IStringable.ToString) should
     // NOT get a FromUtf16 companion — the sugar is opt-in by signature.
-    try std.testing.expect(std.mem.indexOf(u8, out, "ToStringFromUtf16") == null);
+    try std.testing.expect(std.mem.find(u8, out, "ToStringFromUtf16") == null);
 
     // M2 return-side sugar: `IStringable.ToString` returns an HSTRING
     // via a `result: *HSTRING` out-param, so the emitter should add a
@@ -4489,40 +4489,40 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     // internally translates the HRESULT through `win_core.hresult.ok`,
     // then wraps the raw handle with `Hstring.fromRaw` for caller
     // `defer deinit()`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn ToStringOwned(self: *const IStringable) !win_core.Hstring {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "var r: HSTRING = null;") != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(u8, out, "var r: HSTRING = null;") != null);
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "try win_core.hresult.ok(self.vtable.@\"ToString\"(self, &r));",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "return win_core.Hstring.fromRaw(r);") != null);
+    try std.testing.expect(std.mem.find(u8, out, "return win_core.Hstring.fromRaw(r);") != null);
 
     // Non-HSTRING-returning methods (e.g. IClosable.Close, which is
     // void/HRESULT-only) should NOT get an `Owned` companion.
-    try std.testing.expect(std.mem.indexOf(u8, out, "CloseOwned") == null);
+    try std.testing.expect(std.mem.find(u8, out, "CloseOwned") == null);
 
     // Combined sugar: `IUriEscapeStatics.UnescapeComponent` takes HSTRING
     // in AND returns HSTRING out, so the emitter should produce an
     // `UnescapeComponentOwnedFromUtf16` companion that accepts `[]const u16`
     // and returns `!win_core.Hstring`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn UnescapeComponentOwnedFromUtf16(self: *const IUriEscapeStatics, p0: []const u16) !win_core.Hstring {",
     ) != null);
     // Input HSTRING is created from the slice and deferred.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "var h0 = win_core.Hstring.create(p0) catch return error.OutOfMemory;",
     ) != null);
     // Output HSTRING is wrapped in owning Hstring.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "try win_core.hresult.ok(self.vtable.@\"UnescapeComponent\"(self, h0.raw, &r));",
@@ -4530,16 +4530,16 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
 
     // Methods that only have HSTRING input but non-HSTRING output
     // (e.g. CreateUri returns **Uri) should NOT get OwnedFromUtf16.
-    try std.testing.expect(std.mem.indexOf(u8, out, "CreateUriOwnedFromUtf16") == null);
+    try std.testing.expect(std.mem.find(u8, out, "CreateUriOwnedFromUtf16") == null);
 
     // Methods with no HSTRING input (e.g. ToString) should NOT get
     // OwnedFromUtf16 either.
-    try std.testing.expect(std.mem.indexOf(u8, out, "ToStringOwnedFromUtf16") == null);
+    try std.testing.expect(std.mem.find(u8, out, "ToStringOwnedFromUtf16") == null);
 
     // Many interfaces should have been emitted.
     var count: usize = 0;
     var search = out;
-    while (std.mem.indexOf(u8, search, "pub const I")) |idx| {
+    while (std.mem.find(u8, search, "pub const I")) |idx| {
         count += 1;
         search = search[idx + 1 ..];
     }
@@ -4597,7 +4597,7 @@ pub fn emitRuntimeClasses(
             continue;
 
         const name = file.str(.type_def, row, 1);
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
 
         // Resolve the default interface, if present. Every WinRT
         // runtime class has at most one InterfaceImpl row carrying a
@@ -4613,7 +4613,7 @@ pub fn emitRuntimeClasses(
             // interfaces (IVector`1 etc.) still fall back to opaque
             // because their `_Vtbl` symbol isn't emitted either.
             const same_ns = std.mem.eql(u8, tn.namespace, namespace);
-            const is_generic = std.mem.indexOfScalar(u8, tn.name, '`') != null;
+            const is_generic = std.mem.findScalar(u8, tn.name, '`') != null;
             if (same_ns and !is_generic) {
                 try writer.print(
                     \\pub const {s} = extern struct {{
@@ -4741,7 +4741,7 @@ fn writeFactoryAlias(
     cross: *CrossNsSet,
 ) !void {
     const factory = activationFactoryName(arena, file, class_row) orelse return;
-    if (std.mem.indexOfScalar(u8, factory.name, '`') != null) return;
+    if (std.mem.findScalar(u8, factory.name, '`') != null) return;
     if (std.mem.eql(u8, factory.namespace, namespace)) {
         try writer.print("    pub const Factory = {s};\n", .{factory.name});
     } else if (isProjectableNs(factory.namespace)) {
@@ -4872,7 +4872,7 @@ fn writeStaticsAliases(
             .type_name => |t| t,
             else => continue,
         };
-        if (std.mem.indexOfScalar(u8, statics.name, '`') != null) continue;
+        if (std.mem.findScalar(u8, statics.name, '`') != null) continue;
 
         const same_ns = std.mem.eql(u8, statics.namespace, namespace);
         if (!same_ns and !isProjectableNs(statics.namespace)) continue;
@@ -4939,7 +4939,7 @@ pub fn emitDelegates(
         if (!std.mem.eql(u8, base.name, "MulticastDelegate")) continue;
 
         const name = file.str(.type_def, row, 1);
-        if (std.mem.indexOfScalar(u8, name, '`') != null) continue;
+        if (std.mem.findScalar(u8, name, '`') != null) continue;
         if (emitted_names.contains(name)) continue;
 
         try writer.print("pub const {s} = opaque {{}};\n", .{name});
@@ -4984,33 +4984,33 @@ test "emitRuntimeClasses writes Uri handle" {
     // UTF-8 `NAME` and UTF-16 `NAME_W` compile-time constants, plus a
     // `Factory` alias pointing at `IUriRuntimeClassFactory` (from
     // `[Activatable(typeof(IUriRuntimeClassFactory), ...)]`).
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Uri = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "vtable: *const IUriRuntimeClass_Vtbl,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.Uri\";") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [22]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 85, 114, 105 };") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Factory = IUriRuntimeClassFactory;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Uri = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "vtable: *const IUriRuntimeClass_Vtbl,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.Uri\";") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const NAME_W: [22]u16 = .{ 87, 105, 110, 100, 111, 119, 115, 46, 70, 111, 117, 110, 100, 97, 116, 105, 111, 110, 46, 85, 114, 105 };") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Factory = IUriRuntimeClassFactory;") != null);
     // `Uri` carries `[Static(typeof(IUriEscapeStatics), ...)]`, the
     // home of `UnescapeComponent` / `EscapeComponent`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Statics = IUriEscapeStatics;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Statics = IUriEscapeStatics;") != null);
     // `GuidHelper` and `PropertyValue` are static-only runtime
     // classes in the same namespace — both should pick up the alias.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Statics = IGuidHelperStatics;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Statics = IPropertyValueStatics;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Statics = IGuidHelperStatics;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Statics = IPropertyValueStatics;") != null);
 
     // WwwFormUrlDecoder is another Windows.Foundation runtime class.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.WwwFormUrlDecoder\";") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NAME_W: [36]u16 = .{") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const WwwFormUrlDecoder = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const NAME: []const u8 = \"Windows.Foundation.WwwFormUrlDecoder\";") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const NAME_W: [36]u16 = .{") != null);
 
     // `Uri` activates only through its typed factory
     // (`[Activatable(typeof(IUriRuntimeClassFactory), ...)]` — no
     // parameterless overload), so the `activate()` convenience must
     // NOT be emitted.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn activate") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub fn activate") == null);
 
     // No interface names should appear here — those go through
     // `emitInterfaceHandles`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IStringable") == null);
 }
 
 test "emitRuntimeClasses emits activate() on parameterless WinRT classes" {
@@ -5032,26 +5032,26 @@ test "emitRuntimeClasses emits activate() on parameterless WinRT classes" {
     // `[Activatable(version)]` attributes — they should pick up the
     // default-construction convenience that delegates to
     // `win_core.activateInstance`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const JsonObject = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn activate() !*JsonObject {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "        const raw = try win_core.activateInstance(IJsonObject_Vtbl, &NAME_W);") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const JsonObject = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub fn activate() !*JsonObject {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "        const raw = try win_core.activateInstance(IJsonObject_Vtbl, &NAME_W);") != null);
 
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const JsonArray = extern struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub fn activate() !*JsonArray {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const JsonArray = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub fn activate() !*JsonArray {") != null);
 
     // `JsonValue` has only `[Static(...)]` attributes — no activation
     // at all, not even typed — so no `activate()` should be emitted
     // on it.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const JsonValue = extern struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const JsonValue = extern struct {") != null);
     // Scan the slice of `out` starting at `JsonValue` up to the next
     // top-level `pub const ` (i.e. the following class) for any
     // `pub fn activate`. This is a stronger check than a raw
     // `indexOf` on the whole buffer since JsonObject/JsonArray
     // legitimately carry the method.
-    const jv_start = std.mem.indexOf(u8, out, "pub const JsonValue = extern struct {").?;
-    const jv_end_rel = std.mem.indexOf(u8, out[jv_start..], "\n};\n").?;
+    const jv_start = std.mem.find(u8, out, "pub const JsonValue = extern struct {").?;
+    const jv_end_rel = std.mem.find(u8, out[jv_start..], "\n};\n").?;
     const jv_body = out[jv_start .. jv_start + jv_end_rel];
-    try std.testing.expect(std.mem.indexOf(u8, jv_body, "pub fn activate") == null);
+    try std.testing.expect(std.mem.find(u8, jv_body, "pub fn activate") == null);
 }
 
 test "emitDelegates writes opaque handles for WinRT delegates" {
@@ -5066,16 +5066,16 @@ test "emitDelegates writes opaque handles for WinRT delegates" {
 
     // AsyncActionCompletedHandler / DeferralCompletedHandler are
     // non-generic delegates in Windows.Foundation.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const AsyncActionCompletedHandler = opaque {};") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const DeferralCompletedHandler = opaque {};") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const AsyncActionCompletedHandler = opaque {};") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const DeferralCompletedHandler = opaque {};") != null);
 
     // Generic-arity delegates (AsyncOperationCompletedHandler`1 etc.)
     // are skipped — no backticks in the output.
-    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+    try std.testing.expect(std.mem.findScalar(u8, out, '`') == null);
 
     // Interfaces and runtime classes must not leak into this emitter.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IStringable") == null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const Uri ") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IStringable") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const Uri ") == null);
 }
 
 test "emitNamespace composes all sub-emitters for Windows.Foundation" {
@@ -5093,20 +5093,20 @@ test "emitNamespace composes all sub-emitters for Windows.Foundation" {
 
     // Header establishes the win-core dependency and bridges the
     // primitives each sub-emitter references by bare name.
-    try std.testing.expect(std.mem.indexOf(u8, out, "const win_core = @import(\"win-core\");") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "const HRESULT = win_core.HRESULT;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "const HSTRING = win_core.HSTRING;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "const IInspectable_Vtbl = win_core.IInspectable_Vtbl;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "const IUnknown_Vtbl = win_core.IUnknown_Vtbl;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const win_core = @import(\"win-core\");") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const HRESULT = win_core.HRESULT;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const HSTRING = win_core.HSTRING;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const IInspectable_Vtbl = win_core.IInspectable_Vtbl;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const IUnknown_Vtbl = win_core.IUnknown_Vtbl;") != null);
 
     // One representative from each sub-emitter — ordering matters
     // because typed vtbls reference handles declared earlier.
-    const iid = std.mem.indexOf(u8, out, "pub const IID_IStringable: GUID = .{").?;
-    const enum_async = std.mem.indexOf(u8, out, "pub const AsyncStatus = enum(i32)").?;
-    const point = std.mem.indexOf(u8, out, "pub const Point = extern struct {").?;
-    const handle = std.mem.indexOf(u8, out, "pub const IStringable = extern struct {").?;
-    const rt_class = std.mem.indexOf(u8, out, "pub const Uri = extern struct {").?;
-    const vtbl = std.mem.indexOf(u8, out, "pub const IStringable_Vtbl = extern struct {").?;
+    const iid = std.mem.find(u8, out, "pub const IID_IStringable: GUID = .{").?;
+    const enum_async = std.mem.find(u8, out, "pub const AsyncStatus = enum(i32)").?;
+    const point = std.mem.find(u8, out, "pub const Point = extern struct {").?;
+    const handle = std.mem.find(u8, out, "pub const IStringable = extern struct {").?;
+    const rt_class = std.mem.find(u8, out, "pub const Uri = extern struct {").?;
+    const vtbl = std.mem.find(u8, out, "pub const IStringable_Vtbl = extern struct {").?;
 
     try std.testing.expect(iid < enum_async);
     try std.testing.expect(enum_async < point);
@@ -5133,7 +5133,7 @@ test "emitNamespace qualifies cross-namespace refs and emits import aliases" {
 
     // Each referenced namespace gets a `const @"<ns>" = @import("<ns>.zig");`
     // line emitted before the body.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "const @\"Windows.Foundation\" = @import(\"Windows.Foundation.zig\");",
@@ -5143,7 +5143,7 @@ test "emitNamespace qualifies cross-namespace refs and emits import aliases" {
     // `DateTime` (a `Windows.Foundation` value type) since it shows up
     // as a `*@"Windows.Foundation".DateTime` out-param in Calendar's
     // IClosable-adjacent methods.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "@\"Windows.Foundation\".DateTime",
@@ -5151,11 +5151,11 @@ test "emitNamespace qualifies cross-namespace refs and emits import aliases" {
 
     // Same-namespace references (Calendar → Calendar) must stay
     // unqualified so we don't uselessly bloat every vtbl slot.
-    try std.testing.expect(std.mem.indexOf(u8, out, "@\"Windows.Globalization\"") == null);
+    try std.testing.expect(std.mem.find(u8, out, "@\"Windows.Globalization\"") == null);
 
     // The import block must come before the first declaration.
-    const import_idx = std.mem.indexOf(u8, out, "@import(\"Windows.Foundation.zig\")").?;
-    if (std.mem.indexOf(u8, out, "pub const ")) |decl_idx| {
+    const import_idx = std.mem.find(u8, out, "@import(\"Windows.Foundation.zig\")").?;
+    if (std.mem.find(u8, out, "pub const ")) |decl_idx| {
         try std.testing.expect(import_idx < decl_idx);
     }
 }
@@ -5176,14 +5176,14 @@ test "emitNamespace Globalization references cross-ns IVectorView<HSTRING>" {
     // Calendar's ICalendar interface has `get_Languages` which returns
     // IVectorView`1<HSTRING>. Phase 4b should emit a cross-namespace
     // qualified reference to the mangled instantiation in Collections.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "@\"Windows.Foundation.Collections\".IVectorView__G1__HSTRING",
     ) != null);
 
     // Collections must appear in the import aliases.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "@import(\"Windows.Foundation.Collections.zig\")",
@@ -5208,11 +5208,11 @@ test "emitNamespace skips generic-arity typedefs (no backticks in output)" {
     try emitNamespace(&buf.writer, arena.allocator(), &file, "Windows.Foundation", .x64);
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+    try std.testing.expect(std.mem.findScalar(u8, out, '`') == null);
 
     // Spot check: non-generic declarations are still there.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const IID_IStringable") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const AsyncStatus") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const IID_IStringable") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const AsyncStatus") != null);
 }
 
 test "emitNamespace emits closed-generic instantiation for TypedEventHandler" {
@@ -5232,19 +5232,19 @@ test "emitNamespace emits closed-generic instantiation for TypedEventHandler" {
     const out = buf.written();
 
     // The mangled instantiation vtbl + handle should be emitted.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const TypedEventHandler__G2__Windows_Foundation_IMemoryBufferReference__object_Vtbl = extern struct {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const TypedEventHandler__G2__Windows_Foundation_IMemoryBufferReference__object = extern struct {",
     ) != null);
 
     // No backticks in the output.
-    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+    try std.testing.expect(std.mem.findScalar(u8, out, '`') == null);
 }
 
 test "closed-generic delegate vtbl uses IUnknown_Vtbl base, not IInspectable_Vtbl" {
@@ -5269,15 +5269,15 @@ test "closed-generic delegate vtbl uses IUnknown_Vtbl base, not IInspectable_Vtb
     // not IInspectable.
     const handler_vtbl_decl =
         "pub const TypedEventHandler__G2__Windows_Foundation_IMemoryBufferReference__object_Vtbl = extern struct {";
-    const idx = std.mem.indexOf(u8, out, handler_vtbl_decl) orelse
+    const idx = std.mem.find(u8, out, handler_vtbl_decl) orelse
         return error.HandlerVtblNotEmitted;
     const after = out[idx + handler_vtbl_decl.len ..];
-    const struct_end = std.mem.indexOfScalar(u8, after, '}') orelse return error.MalformedVtbl;
+    const struct_end = std.mem.findScalar(u8, after, '}') orelse return error.MalformedVtbl;
     const body = after[0..struct_end];
 
-    try std.testing.expect(std.mem.indexOf(u8, body, "base: IUnknown_Vtbl") != null);
-    try std.testing.expect(std.mem.indexOf(u8, body, "base: IInspectable_Vtbl") == null);
-    try std.testing.expect(std.mem.indexOf(u8, body, "Invoke:") != null);
+    try std.testing.expect(std.mem.find(u8, body, "base: IUnknown_Vtbl") != null);
+    try std.testing.expect(std.mem.find(u8, body, "base: IInspectable_Vtbl") == null);
+    try std.testing.expect(std.mem.find(u8, body, "Invoke:") != null);
 }
 
 test "collectEventPairs finds IMemoryBufferReference.Closed in Windows.Foundation" {
@@ -5365,7 +5365,7 @@ test "emitNamespace emits addX/removeX sugar for IMemoryBufferReference.Closed" 
     // allocator + a typed `invoke` fn ptr matching the closed-generic
     // delegate's `_Vtbl.Invoke` slot, returns
     // `EventRegistrationToken` via `win_core.hresult.Error || OOM`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "    pub fn addClosed(\n        self: *const IMemoryBufferReference,\n        allocator: std.mem.Allocator,\n",
@@ -5373,47 +5373,47 @@ test "emitNamespace emits addX/removeX sugar for IMemoryBufferReference.Closed" 
     // The `invoke` parameter pulls its type from the closed-generic
     // delegate's `_Vtbl` Invoke slot — guarantees ABI parity with the
     // raw `add_Closed` slot.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "invoke: @FieldType(TypedEventHandler__G2__",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "_Vtbl, \"Invoke\")",
     ) != null);
     // Body wires through `win_core.Delegate` and dispatches the raw
     // ABI slot.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "const _D = win_core.Delegate(std.meta.Child(@TypeOf(invoke)), TypedEventHandler__G2__",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         ".IID);",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "self.add_Closed(@ptrCast(@alignCast(_handler)), &_token)",
     ) != null);
     // Companion `removeClosed` defers to the raw ABI slot.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "    pub fn removeClosed(self: *const IMemoryBufferReference, token: EventRegistrationToken) win_core.hresult.Error!void {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "self.remove_Closed(token)",
     ) != null);
     // The prelude must import `std` so `std.mem.Allocator` and
     // `std.meta.Child` resolve in the emitted body.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "const std = @import(\"std\");",
@@ -5442,7 +5442,7 @@ test "emitNamespace emits no sugar for cross-namespace event delegates" {
     // (Defensive: if a same-namespace pair sneaks in here we'd want
     // to know — but `Windows.Storage` declares no delegates, so any
     // event source there has a cross-ns delegate.)
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "win_core.Delegate(std.meta.Child(@TypeOf(invoke))",
@@ -5480,12 +5480,12 @@ test "emitNamespaceEx accepts external generic seeds" {
     const out = buf.written();
 
     // The seeded instantiation should produce a handle + vtbl.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const IVector__G1__HSTRING_Vtbl = extern struct {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const IVector__G1__HSTRING = extern struct {",
@@ -5493,7 +5493,7 @@ test "emitNamespaceEx accepts external generic seeds" {
 
     // Vtbl should have substituted method signatures (GetAt returns
     // HSTRING, not a VAR placeholder).
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "GetAt:",
@@ -5503,7 +5503,7 @@ test "emitNamespaceEx accepts external generic seeds" {
     // lowers `items` as a FillArray split pair — `p1_size: u32, p1_ptr:
     // [*]T` (not opaque and not a pointer-to-pointer). For HSTRING args
     // the element type renders as `HSTRING`.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "GetMany: *const fn (this: *const IVector__G1__HSTRING, p0: u32, p1_size: u32, p1_ptr: [*]HSTRING, result: *u32)",
@@ -5597,25 +5597,25 @@ test "Phase 4c canary: Calendar.Languages → IVectorView<HSTRING> end-to-end" {
     const col_out = col_buf.written();
 
     // The seeded handle + vtbl must be present.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         col_out,
         "pub const IVectorView__G1__HSTRING_Vtbl = extern struct {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         col_out,
         "pub const IVectorView__G1__HSTRING = extern struct {",
     ) != null);
 
     // GetAt should reference HSTRING (substituted from VAR(0)).
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         col_out,
         "GetAt:",
     ) != null);
     // The vtbl should have base: IInspectable_Vtbl (WinRT interface).
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         col_out,
         "base: IInspectable_Vtbl",
@@ -5634,12 +5634,12 @@ test "Phase 4c canary: Calendar.Languages → IVectorView<HSTRING> end-to-end" {
     const glob_out = glob_buf.written();
 
     // get_Languages should reference the cross-ns mangled type.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         glob_out,
         "get_Languages:",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         glob_out,
         "@\"Windows.Foundation.Collections\".IVectorView__G1__HSTRING",
@@ -5662,19 +5662,19 @@ test "emitInterfaceVtblsImpl deduplicates overloaded method names" {
     try emitInterfaceVtbls(&buf.writer, arena.allocator(), &file, "Windows.Globalization");
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "TimeZoneAsString:",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "@\"TimeZoneAsString_2\":",
     ) != null);
 
     // No backticks in the output.
-    try std.testing.expect(std.mem.indexOfScalar(u8, out, '`') == null);
+    try std.testing.expect(std.mem.findScalar(u8, out, '`') == null);
 }
 
 test "collectNamespaceClosure returns transitive deps for Globalization" {
@@ -5728,16 +5728,16 @@ test "emitFreeFunctions emits kernel32 exports for Windows.Win32.Foundation" {
     // in Win32 metadata, which the first-slice mapper renders as a
     // pointer; the exact spelling can shift as type support grows, so
     // anchor on the fixed framing instead.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub extern \"KERNEL32\" fn CloseHandle(",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "callconv(.winapi)") != null);
+    try std.testing.expect(std.mem.find(u8, out, "callconv(.winapi)") != null);
 
     // Every emitted line must use the extern / callconv framing —
     // there should never be a bare `fn ` outside `callconv(.winapi)`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub extern ") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub extern ") != null);
 }
 
 test "emitFreeFunctions uses @extern for renamed P/Invoke (RtlGenRandom)" {
@@ -5757,10 +5757,10 @@ test "emitFreeFunctions uses @extern for renamed P/Invoke (RtlGenRandom)" {
     // RtlGenRandom is exported from ADVAPI32 under the real name
     // "SystemFunction036" — a textbook rename that requires
     // `@extern(.., .{ .name = ..., .library_name = ... })`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const RtlGenRandom: *const fn ") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "= @extern(*const fn ") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".name = \"SystemFunction036\"") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".library_name = \"ADVAPI32\"") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const RtlGenRandom: *const fn ") != null);
+    try std.testing.expect(std.mem.find(u8, out, "= @extern(*const fn ") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".name = \"SystemFunction036\"") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".library_name = \"ADVAPI32\"") != null);
 }
 
 test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
@@ -5781,7 +5781,7 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
         out,
         "pub const MethodRecord = struct {\n",
     ));
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub const method_def_by_name = std.static_string_map.StaticStringMap(MethodRecord).initComptime(.{\n",
@@ -5791,7 +5791,7 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
     // exported from KERNEL32. The exact signature bytes depend on
     // the metadata snapshot, so the test only asserts the entry
     // exists with the expected library + import name.
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "\"GetLastError\", MethodRecord{ .library = \"KERNEL32\", .import = \"GetLastError\", .signature = \"",
@@ -5800,13 +5800,13 @@ test "emitMethodIndex emits a StaticStringMap entry for GetLastError" {
     // The sidecar `resolveTypeRef` switch must also be emitted and
     // include at least one entry (GetLastError's return type is
     // WIN32_ERROR, a VALUETYPE TypeRef).
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         "pub fn resolveTypeRef(coded: u32) ?TypeRefEntry {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "=> TypeRefEntry{") != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(u8, out, "=> TypeRefEntry{") != null);
+    try std.testing.expect(std.mem.find(
         u8,
         out,
         ".name = \"WIN32_ERROR\"",
@@ -5830,7 +5830,7 @@ test "emitConstants emits primitive Win32 constants" {
 
     // At least one `pub const NAME: u32 = ...;` must appear — the
     // namespace has hundreds of u32 flag constants.
-    try std.testing.expect(std.mem.indexOf(u8, out, ": u32 = ") != null);
+    try std.testing.expect(std.mem.find(u8, out, ": u32 = ") != null);
 
     // Every emitted line must start with `pub const ` (no stray
     // output from unsupported field types).
@@ -5861,8 +5861,8 @@ test "emitStructs suppresses HRESULT and BOOL in Windows.Win32.Foundation" {
     // Prelude aliases must NOT be re-emitted from metadata as
     // `pub const HRESULT = extern struct ...`; they resolve through
     // `win_core` via the prelude aliases written by emitNamespace.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = extern struct") == null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = extern struct") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const HRESULT = extern struct") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const BOOL = extern struct") == null);
 }
 
 test "emitNamespace produces a self-consistent body for Windows.Win32.Foundation" {
@@ -5879,15 +5879,15 @@ test "emitNamespace produces a self-consistent body for Windows.Win32.Foundation
     const out = buf.written();
 
     // Prelude must appear exactly once.
-    try std.testing.expect(std.mem.indexOf(u8, out, "const win_core = @import(\"win-core\");") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "const HRESULT = win_core.HRESULT;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const win_core = @import(\"win-core\");") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const HRESULT = win_core.HRESULT;") != null);
 
     // No duplicate HRESULT/BOOL emitted from metadata.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = extern struct") == null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = extern struct") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const HRESULT = extern struct") == null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const BOOL = extern struct") == null);
 
     // A well-known direct P/Invoke from this namespace.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub extern \"KERNEL32\" fn CloseHandle(") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub extern \"KERNEL32\" fn CloseHandle(") != null);
 }
 
 test "emitGuidConstants emits CLSID/FMTID fields for a Win32 namespace" {
@@ -5906,9 +5906,9 @@ test "emitGuidConstants emits CLSID/FMTID fields for a Win32 namespace" {
     // Every emitted line should start with `pub const ` and carry the
     // `GUID` type annotation so downstream compilation is well-formed.
     try std.testing.expect(out.len > 0);
-    try std.testing.expect(std.mem.indexOf(u8, out, ": GUID = .{") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".data1 = 0x") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, ".data4 = .{") != null);
+    try std.testing.expect(std.mem.find(u8, out, ": GUID = .{") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".data1 = 0x") != null);
+    try std.testing.expect(std.mem.find(u8, out, ".data4 = .{") != null);
 
     // Every line must start with "pub const " (emission framing).
     var it = std.mem.splitScalar(u8, out, '\n');
@@ -5939,7 +5939,7 @@ test "emitConstants emits Win32 f32 constants (D3D11_DEFAULT_BLEND_FACTOR_ALPHA)
     const out = buf.written();
 
     // D3D11_DEFAULT_BLEND_FACTOR_{R,G,B,A} are f32 literals = 1.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const D3D11_DEFAULT_BLEND_FACTOR_ALPHA: f32 = 1") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const D3D11_DEFAULT_BLEND_FACTOR_ALPHA: f32 = 1") != null);
 }
 
 test "emitConstants emits Win32 PCWSTR string constants (SERVICES_ACTIVE_DATABASE)" {
@@ -5956,7 +5956,7 @@ test "emitConstants emits Win32 PCWSTR string constants (SERVICES_ACTIVE_DATABAS
     const out = buf.written();
 
     // SERVICES_ACTIVE_DATABASE is "ServicesActive" as UTF-16 (PCWSTR).
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SERVICES_ACTIVE_DATABASE: [:0]const u16 = win_core.utf16Lit(\"ServicesActive\");") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const SERVICES_ACTIVE_DATABASE: [:0]const u16 = win_core.utf16Lit(\"ServicesActive\");") != null);
 }
 
 test "emitConstants emits Win32 HRESULT/NTSTATUS typed integer constants" {
@@ -5973,14 +5973,14 @@ test "emitConstants emits Win32 HRESULT/NTSTATUS typed integer constants" {
     const out = buf.written();
 
     // S_OK: HRESULT = 0 (prelude alias → direct int-literal assign).
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const S_OK: HRESULT = 0;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const S_OK: HRESULT = 0;") != null);
     // E_FAIL = 0x80004005 sign-extends to -2147467259 (i32).
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const E_FAIL: HRESULT = -2147467259;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const E_FAIL: HRESULT = -2147467259;") != null);
     // TRUE/FALSE as BOOL.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const TRUE: BOOL = 1;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const FALSE: BOOL = 0;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const TRUE: BOOL = 1;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const FALSE: BOOL = 0;") != null);
     // STATUS_SUCCESS as NTSTATUS.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const STATUS_SUCCESS: NTSTATUS = 0;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const STATUS_SUCCESS: NTSTATUS = 0;") != null);
 }
 
 test "emitStructs emits Win32 ExplicitLayout TypeDefs as extern union" {
@@ -6000,9 +6000,9 @@ test "emitStructs emits Win32 ExplicitLayout TypeDefs as extern union" {
     try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem", .x64);
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const FILE_SEGMENT_ELEMENT = extern union") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const FILE_SEGMENT_ELEMENT = extern union") != null);
     // And at least one normal struct still emits as `extern struct`.
-    try std.testing.expect(std.mem.indexOf(u8, out, "extern struct") != null);
+    try std.testing.expect(std.mem.find(u8, out, "extern struct") != null);
 }
 
 test "emitStructs emits SYSTEM_INFO with usize and *anyopaque" {
@@ -6025,10 +6025,10 @@ test "emitStructs emits SYSTEM_INFO with usize and *anyopaque" {
     try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.System.SystemInformation", .x64);
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SYSTEM_INFO = extern struct") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "dwActiveProcessorMask: usize,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "lpMinimumApplicationAddress: *anyopaque,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "lpMaximumApplicationAddress: *anyopaque,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const SYSTEM_INFO = extern struct") != null);
+    try std.testing.expect(std.mem.find(u8, out, "dwActiveProcessorMask: usize,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "lpMinimumApplicationAddress: *anyopaque,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "lpMaximumApplicationAddress: *anyopaque,") != null);
 }
 
 test "emitStructs emits WIN32_FIND_DATAW with fixed-size u16 arrays" {
@@ -6050,9 +6050,9 @@ test "emitStructs emits WIN32_FIND_DATAW with fixed-size u16 arrays" {
     try emitStructs(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem", .x64);
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "cFileName: [260]u16,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "cAlternateFileName: [14]u16,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
+    try std.testing.expect(std.mem.find(u8, out, "cFileName: [260]u16,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "cAlternateFileName: [14]u16,") != null);
 }
 
 test "collectStructsClosure walks cross-namespace TypeRef graph" {
@@ -6116,25 +6116,25 @@ test "emitMethodIndex emits aliases block for enum TypeDefs" {
     // must all land in the emitted `aliases = struct { … };` block
     // so `project.zig` can look them up by TypeRef name without a
     // hand-maintained switch.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const aliases = struct {") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_ERROR = u32;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WAIT_EVENT = u32;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HANDLE_FLAGS = u32;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const aliases = struct {") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const WIN32_ERROR = u32;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const WAIT_EVENT = u32;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const HANDLE_FLAGS = u32;") != null);
     // BOOL, HRESULT, NTSTATUS are NativeTypedefAttribute wrappers
     // around a single `i32` field — they land in the same aliases
     // block via the second pass.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const BOOL = i32;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HRESULT = i32;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const NTSTATUS = i32;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const BOOL = i32;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const HRESULT = i32;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const NTSTATUS = i32;") != null);
     // HANDLE and friends wrap a `*void` field (Win32 convention);
     // the "Value"-heuristic path picks them up and projects them
     // as null-able anyopaque pointers.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HANDLE = ?*anyopaque;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const HMODULE = ?*anyopaque;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const HANDLE = ?*anyopaque;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const HMODULE = ?*anyopaque;") != null);
     // PWSTR wraps `*u16`; projects to a null-terminated many-item
     // pointer at the alias boundary.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const PWSTR = ?[*:0]u16;") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const PSTR = ?[*:0]u8;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const PWSTR = ?[*:0]u16;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const PSTR = ?[*:0]u8;") != null);
 }
 
 test "emitStructs renames MIDL anon nested types to <outer>_<index>" {
@@ -6160,13 +6160,13 @@ test "emitStructs renames MIDL anon nested types to <outer>_<index>" {
     // The outer union is renamed, and the struct inside the union is
     // renamed relative to its own (already-renamed) parent. Both the
     // declaration and the field-type reference must use the new name.
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SYSTEM_INFO_0 = extern union") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const SYSTEM_INFO_0_0 = extern struct") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "Anonymous: SYSTEM_INFO_0,") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "Anonymous: SYSTEM_INFO_0_0,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const SYSTEM_INFO_0 = extern union") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const SYSTEM_INFO_0_0 = extern struct") != null);
+    try std.testing.expect(std.mem.find(u8, out, "Anonymous: SYSTEM_INFO_0,") != null);
+    try std.testing.expect(std.mem.find(u8, out, "Anonymous: SYSTEM_INFO_0_0,") != null);
     // The raw MIDL names must not leak through.
-    try std.testing.expect(std.mem.indexOf(u8, out, "_Anonymous_e__Union") == null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "_Anonymous_e__Struct") == null);
+    try std.testing.expect(std.mem.find(u8, out, "_Anonymous_e__Union") == null);
+    try std.testing.expect(std.mem.find(u8, out, "_Anonymous_e__Struct") == null);
 }
 
 test "emitStructsFile produces a self-contained sidecar" {
@@ -6187,18 +6187,18 @@ test "emitStructsFile produces a self-contained sidecar" {
     try emitStructsFile(&buf.writer, arena.allocator(), &file, "Windows.Win32.Storage.FileSystem", .x64);
     const out = buf.written();
 
-    try std.testing.expect(std.mem.indexOf(u8, out, "const win_core = @import(\"win-core\");") != null);
-    try std.testing.expect(std.mem.indexOf(u8, out, "const GUID = win_core.GUID;") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const win_core = @import(\"win-core\");") != null);
+    try std.testing.expect(std.mem.find(u8, out, "const GUID = win_core.GUID;") != null);
     try std.testing.expect(
-        std.mem.indexOf(
+        std.mem.find(
             u8,
             out,
             "const @\"Windows.Win32.Foundation\" = @import(\"Windows.Win32.Foundation.structs.zig\");",
         ) != null,
     );
-    try std.testing.expect(std.mem.indexOf(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
+    try std.testing.expect(std.mem.find(u8, out, "pub const WIN32_FIND_DATAW = extern struct") != null);
     try std.testing.expect(
-        std.mem.indexOf(u8, out, "ftCreationTime: @\"Windows.Win32.Foundation\".FILETIME,") != null,
+        std.mem.find(u8, out, "ftCreationTime: @\"Windows.Win32.Foundation\".FILETIME,") != null,
     );
 }
 
@@ -6370,12 +6370,12 @@ test "emitBundle auto-routes IVectorView<HSTRING> to Foundation.Collections" {
     // closed-generic pair because Globalization's Calendar.Languages
     // returns it.
     const collections = out.get("Windows.Foundation.Collections").?;
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         collections,
         "pub const IVectorView__G1__HSTRING = extern struct {",
     ) != null);
-    try std.testing.expect(std.mem.indexOf(
+    try std.testing.expect(std.mem.find(
         u8,
         collections,
         "pub const IVectorView__G1__HSTRING_Vtbl = extern struct {",

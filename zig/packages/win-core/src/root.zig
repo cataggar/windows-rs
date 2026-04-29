@@ -1442,8 +1442,8 @@ test "Windows.Foundation.Uri round-trips a URL through IStringable" {
     // The Uri normalizes its input but should preserve the host + path.
     var buf: [256]u8 = undefined;
     const n = try std.unicode.utf16LeToUtf8(&buf, got.slice());
-    try std.testing.expect(std.mem.indexOf(u8, buf[0..n], "learn.microsoft.com") != null);
-    try std.testing.expect(std.mem.indexOf(u8, buf[0..n], "/windows") != null);
+    try std.testing.expect(std.mem.find(u8, buf[0..n], "learn.microsoft.com") != null);
+    try std.testing.expect(std.mem.find(u8, buf[0..n], "/windows") != null);
 }
 
 test "activateInstance constructs a parameterless WinRT class" {

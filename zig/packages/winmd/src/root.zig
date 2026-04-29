@@ -86,7 +86,7 @@ pub const File = struct {
     pub fn strAt(self: *const File, offset: u32) []const u8 {
         const start = self.strings + offset;
         const slice = self.bytes[start..];
-        const nul = std.mem.indexOfScalar(u8, slice, 0) orelse slice.len;
+        const nul = std.mem.findScalar(u8, slice, 0) orelse slice.len;
         return slice[0..nul];
     }
 
@@ -414,7 +414,7 @@ pub const TypeIndex = struct {
 /// Strip the `\`<arity>` suffix that WinRT uses to distinguish generic
 /// arities (e.g. `IVector\`1` → `IVector`).
 fn trimTick(name: []const u8) []const u8 {
-    if (std.mem.indexOfScalar(u8, name, '`')) |i| return name[0..i];
+    if (std.mem.findScalar(u8, name, '`')) |i| return name[0..i];
     return name;
 }
 
@@ -1384,7 +1384,7 @@ pub fn parse(bytes: []const u8) Error!File {
         if (view + 8 > bytes.len) return Error.OutOfBounds;
         const stream_off = std.mem.readInt(u32, bytes[view..][0..4], .little);
         const name_start = view + 8;
-        const name_end = std.mem.indexOfScalarPos(u8, bytes, name_start, 0) orelse
+        const name_end = std.mem.findScalarPos(u8, bytes, name_start, 0) orelse
             return Error.OutOfBounds;
         const name = bytes[name_start..name_end];
 
