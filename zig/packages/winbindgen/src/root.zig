@@ -3023,7 +3023,7 @@ fn writeMethodWrapper(
         for (sig.params, 0..) |p, i| {
             if (p == .string) {
                 try writer.print(
-                    "        var h{d} = win_core.Hstring.create(p{d}) catch return @as(HRESULT, @bitCast(@as(u32, 0x8007000E)));\n",
+                    "        var h{d} = win_core.Hstring.create(p{d}) catch return win_core.hresult.E_OUTOFMEMORY;\n",
                     .{ i, i },
                 );
                 try writer.print("        defer h{d}.deinit();\n", .{i});
@@ -4474,7 +4474,7 @@ test "emitInterfaceHandles writes IStringable handle with method wrappers" {
     try std.testing.expect(std.mem.find(
         u8,
         out,
-        "var h0 = win_core.Hstring.create(p0) catch return @as(HRESULT, @bitCast(@as(u32, 0x8007000E)));",
+        "var h0 = win_core.Hstring.create(p0) catch return win_core.hresult.E_OUTOFMEMORY;",
     ) != null);
     try std.testing.expect(std.mem.find(u8, out, "defer h0.deinit();") != null);
     try std.testing.expect(std.mem.find(u8, out, "return self.vtable.@\"CreateUri\"(self, h0.raw, result);") != null);
