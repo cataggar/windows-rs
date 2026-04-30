@@ -148,6 +148,10 @@ pub const structs = struct {
     pub const WNDCLASSA =
         generated_structs.@"Windows.Win32.UI.WindowsAndMessaging".WNDCLASSA;
 
+    /// §windef.h. Common rectangle used by USER32/GDI paint and layout APIs.
+    pub const RECT =
+        generated_structs.@"Windows.Win32.Foundation".RECT;
+
     /// §winuser.h. Out-param of `GetMessageA` / `PeekMessageA`. Fed
     /// (by value) to `TranslateMessage` and `DispatchMessageA`.
     pub const MSG =

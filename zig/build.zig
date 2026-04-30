@@ -1429,6 +1429,11 @@ pub fn build(b: *std.Build) void {
             .root = "samples/device_watcher/main.zig",
             .needs_win = true,
         },
+        .{
+            .name = "minesweeper",
+            .root = "samples/minesweeper/main.zig",
+            .extra_libs = &.{ "user32", "gdi32" },
+        },
     };
 
     for (samples) |s| {
