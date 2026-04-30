@@ -1184,6 +1184,10 @@ pub fn build(b: *std.Build) void {
     });
     bundle_mod.addImport("win-core", win_core_mod);
 
+    // This string is written below as generated Zig source for `win_bundle.zig`.
+    // The `\\` prefixes are multiline string literal syntax, not comments.
+    // The facade keeps generated file-relative imports working while exposing
+    // selected namespaces through the public `win` module.
     const win_bundle_proxy_source =
         \\pub const Foundation = @import("Windows.Win32.Foundation.zig");
         \\pub const Com = @import("Windows.Win32.System.Com.zig");
