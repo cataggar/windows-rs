@@ -49,7 +49,7 @@ pub fn main() void {
     };
 
     var counter: ?*anyopaque = null;
-    if (win.PdhAddCounterW(query, @constCast(@ptrCast(&counter_path)), 0, &counter) != 0) {
+    if (win.PdhAddCounterW(query, @ptrCast(@constCast(&counter_path)), 0, &counter) != 0) {
         std.debug.print("PdhAddCounterW failed\n", .{});
         return;
     }
