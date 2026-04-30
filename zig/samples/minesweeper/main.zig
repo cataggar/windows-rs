@@ -5,6 +5,8 @@
 //!
 //! Build: `zig build samples`
 //! Run:   `.\zig-out\bin\minesweeper.exe`
+//! Controls: left-click reveals a tile, right-click toggles a flag, and `R`
+//! resets the game.
 
 const std = @import("std");
 const win = @import("win");
@@ -617,7 +619,7 @@ pub fn main() !void {
     const atom = sys.RegisterClassA(&wc);
     if (atom == 0) return error.RegisterClassFailed;
 
-    var title = "Zig Minesweeper - Composition".*;
+    var title = "Zig Minesweeper - Left click reveal, right click flag, R reset".*;
     const title_ptr: ?[*:0]u8 = &title;
     const hwnd = sys.CreateWindowExA(
         WAM.WS_EX_NOREDIRECTIONBITMAP,
