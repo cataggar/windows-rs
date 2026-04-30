@@ -1207,6 +1207,9 @@ pub fn build(b: *std.Build) void {
         \\    pub const System = struct {
         \\        pub const Threading = @import("Windows.System.Threading.zig");
         \\    };
+        \\    pub const Devices = struct {
+        \\        pub const Enumeration = @import("Windows.Devices.Enumeration.zig");
+        \\    };
         \\};
         \\
     ;
@@ -1416,6 +1419,20 @@ pub fn build(b: *std.Build) void {
         .{
             .name = "enum-windows",
             .root = "samples/enum_windows/main.zig",
+        },
+        .{
+            .name = "counter",
+            .root = "samples/counter/main.zig",
+        },
+        .{
+            .name = "device-watcher",
+            .root = "samples/device_watcher/main.zig",
+            .needs_win = true,
+        },
+        .{
+            .name = "minesweeper",
+            .root = "samples/minesweeper/main.zig",
+            .extra_libs = &.{ "user32", "gdi32" },
         },
     };
 
