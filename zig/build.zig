@@ -1184,7 +1184,6 @@ pub fn build(b: *std.Build) void {
     });
     bundle_mod.addImport("win-core", win_core_mod);
 
-    // Single facade for selected generated bundle namespaces.
     const win_bundle_proxy_source =
         \\pub const Foundation = @import("Windows.Win32.Foundation.zig");
         \\pub const Com = @import("Windows.Win32.System.Com.zig");
