@@ -30,6 +30,10 @@ pub const Foundation = bundle.Foundation;
 /// emitter fix is tracked as a v0.2 task.
 pub const Com = bundle.Com;
 
+/// Additional Win32 namespaces that are only needed by WinRT interop
+/// surfaces, such as `Windows.Win32.System.WinRT.Composition`.
+pub const Win32 = bundle.Win32;
+
 /// WinRT namespaces. Kept under a `WinRT` sub-struct so the classic-Win32
 /// `Foundation` (BSTR / HWND / HANDLE) doesn't collide with the WinRT
 /// `Windows.Foundation` (Uri, IReference<T>, AsyncStatus, ...).
