@@ -14,6 +14,7 @@ const win_sys = @import("win-sys");
 const game_mod = @import("minesweeper.zig");
 
 const core = win.core;
+const Foundation = win.WinRT.Foundation;
 const Composition = win.WinRT.UI.Composition;
 const CompositionDesktop = Composition.Desktop;
 const Interop = win.Win32.System.WinRT.Composition;
@@ -21,13 +22,20 @@ const Numerics = win.WinRT.Numerics;
 const System = win.WinRT.System;
 
 const sys = win_sys.project(.{
+    .@"Windows.Win32.Foundation" = .{"CloseHandle"},
+    .@"Windows.Win32.System.Threading" = .{
+        "CreateEventW",
+        "SetEvent",
+    },
     .@"Windows.Win32.UI.WindowsAndMessaging" = .{
         "RegisterClassA",
         "CreateWindowExA",
         "DefWindowProcA",
         "GetMessageA",
+        "PeekMessageA",
         "TranslateMessage",
         "DispatchMessageA",
+        "MsgWaitForMultipleObjectsEx",
         "PostQuitMessage",
         "LoadCursorW",
         "ShowWindow",
@@ -38,6 +46,8 @@ const sys = win_sys.project(.{
     .@"Windows.Win32.System.SystemInformation" = .{"GetTickCount64"},
 });
 
+const WF = win_sys.index.@"Windows.Win32.Foundation";
+const WT = win_sys.index.@"Windows.Win32.System.Threading";
 const WAM = win_sys.index.@"Windows.Win32.UI.WindowsAndMessaging";
 
 const tile = 28;
@@ -86,11 +96,28 @@ const DispatcherQueueOptions = extern struct {
 
 const DQTYPE_THREAD_CURRENT: i32 = 2;
 const DQTAT_COM_STA: i32 = 2;
+const IID_AsyncActionCompletedHandler = core.GUID.parse("A4ED5C81-76C9-40BD-8BE6-B1D90FB20AE7");
+const AsyncActionCompletedHandlerInvoke = fn (
+    this: *anyopaque,
+    asyncInfo: *anyopaque,
+    status: Foundation.AsyncStatus,
+) callconv(.winapi) core.HRESULT;
 
 extern "CoreMessaging" fn CreateDispatcherQueueController(
     options: DispatcherQueueOptions,
     dispatcher_queue_controller: *?*anyopaque,
 ) callconv(.winapi) core.HRESULT;
+
+fn onShutdownCompleted(
+    this: *anyopaque,
+    _: *anyopaque,
+    _: Foundation.AsyncStatus,
+) callconv(.winapi) core.HRESULT {
+    const D = core.Delegate(AsyncActionCompletedHandlerInvoke, IID_AsyncActionCompletedHandler);
+    const event = D.userData(this) orelse return core.hresult.E_FAIL;
+    _ = sys.SetEvent(event);
+    return core.hresult.S_OK;
+}
 
 const BrushSet = struct {
     background: *const Composition.ICompositionColorBrush,
@@ -323,6 +350,7 @@ const CompositionState = struct {
         _ = self.root.Release();
         _ = self.target.Release();
         _ = self.compositor.Release();
+        shutdownDispatcherQueue(self.dispatcher);
         _ = self.dispatcher.Release();
         core.winrt.RoUninitialize();
     }
@@ -516,6 +544,72 @@ fn setSpriteOpacity(
     const visual = sprite.cast(Composition.IVisual) orelse return error.NoSpriteVisual;
     defer _ = visual.Release();
     try core.hresult.ok(visual.put_Opacity(opacity));
+}
+
+fn shutdownDispatcherQueue(dispatcher: *const System.IDispatcherQueueController) void {
+    var action: *Foundation.IAsyncAction = undefined;
+    core.hresult.ok(dispatcher.ShutdownQueueAsync(&action)) catch |err| {
+        std.debug.print("dispatcher shutdown failed: {}\n", .{err});
+        return;
+    };
+    defer _ = action.Release();
+
+    waitForShutdown(action) catch |err| {
+        std.debug.print("dispatcher shutdown wait failed: {}\n", .{err});
+    };
+}
+
+fn waitForShutdown(action: *const Foundation.IAsyncAction) !void {
+    const event = sys.CreateEventW(null, 1, 0, null) orelse return error.CreateEventFailed;
+    defer _ = sys.CloseHandle(event);
+
+    const D = core.Delegate(AsyncActionCompletedHandlerInvoke, IID_AsyncActionCompletedHandler);
+    const handler = try D.create(std.heap.page_allocator, &onShutdownCompleted, event);
+    const put_hr = action.put_Completed(@ptrCast(handler));
+    _ = D.release(handler);
+    try core.hresult.ok(put_hr);
+
+    var handles = [_]?*anyopaque{event};
+    while (true) {
+        const wait_result = sys.MsgWaitForMultipleObjectsEx(
+            handles.len,
+            &handles[0],
+            WT.INFINITE,
+            WAM.QS_ALLINPUT,
+            WAM.MWMO_INPUTAVAILABLE,
+        );
+
+        if (wait_result == WF.WAIT_OBJECT_0) break;
+        if (wait_result == WF.WAIT_FAILED) return error.MsgWaitFailed;
+
+        if (wait_result == WF.WAIT_OBJECT_0 + @as(u32, @intCast(handles.len))) {
+            var message: win_sys.structs.MSG = undefined;
+            while (sys.PeekMessageA(&message, null, 0, 0, WAM.PM_REMOVE) != 0) {
+                if (message.message == WAM.WM_QUIT) continue;
+                _ = sys.TranslateMessage(&message);
+                _ = sys.DispatchMessageA(&message);
+            }
+            continue;
+        }
+
+        return error.UnexpectedWaitResult;
+    }
+
+    const async_info = action.cast(Foundation.IAsyncInfo) orelse return error.NoAsyncInfo;
+    defer _ = async_info.Release();
+
+    var status: Foundation.AsyncStatus = .Started;
+    try core.hresult.ok(async_info.get_Status(&status));
+    switch (status) {
+        .Completed => try core.hresult.ok(action.GetResults()),
+        .Canceled => return error.Aborted,
+        .Error => {
+            var error_code: Foundation.HResult = .{ .Value = 0 };
+            _ = async_info.get_ErrorCode(&error_code);
+            return core.hresult.toError(error_code.Value);
+        },
+        else => return error.DispatcherQueueShutdownIncomplete,
+    }
 }
 
 fn appFromWindow(hwnd: ?*anyopaque) ?*App {
