@@ -7,6 +7,7 @@
 //!
 //! Usage:
 //!     winbindgen [--arch=x86|x64|arm64] <namespace>
+//!     winbindgen bundle --outdir <dir> [--arch=x86|x64|arm64] [--imports=relative|module] <namespace>...
 //!     winbindgen --list
 //!
 //! `--list` prints every distinct namespace across all three metadata
@@ -64,11 +65,11 @@ pub fn main(init: std.process.Init) !void {
         return;
     }
 
-    // `bundle --outdir <dir> [--arch=...] ns1 ns2 ...` emits a batch
-    // of namespaces as a coordinated bundle, auto-routing
+    // `bundle --outdir <dir> [--arch=...] [--imports=relative|module] ns1 ns2 ...`
+    // emits a batch of namespaces as a coordinated bundle, auto-routing
     // cross-namespace closed-generic instantiations to their home
     // namespace. Writes `<outdir>/<ns>.zig` for each input plus a
-    // generated `win_bundle.zig` facade root.
+    // generated `win_bundle.zig` facade root and dependency manifest.
     //
     // Inputs are grouped by metadata file before emission; closed-generic
     // routing happens within each metadata group.
@@ -300,11 +301,11 @@ fn stringLessThan(_: void, a: []const u8, b: []const u8) bool {
     return std.mem.lessThan(u8, a, b);
 }
 
-/// Handle the `bundle --outdir <dir> [--arch=...] ns1 ns2 ...` subcommand.
+/// Handle the `bundle --outdir <dir> [--arch=...] [--imports=relative|module] ns1 ns2 ...` subcommand.
 /// Calls `winbindgen.emitBundle` to emit every input namespace in a single
 /// coordinated pass (cross-namespace closed generics auto-route to their
 /// home namespace), then writes `<outdir>/<ns>.zig` for each result plus
-/// the generated `win_bundle.zig` facade root.
+/// the generated `win_bundle.zig` facade root and dependency manifest.
 fn runBundle(
     arena: std.mem.Allocator,
     gpa: std.mem.Allocator,
@@ -313,6 +314,7 @@ fn runBundle(
     stderr: *std.Io.Writer,
 ) !void {
     var arch: winbindgen.Arch = .x64;
+    var import_style: winbindgen.ImportStyle = .relative;
     var outdir: ?[]const u8 = null;
     var namespaces = try std.ArrayList([]const u8).initCapacity(arena, 0);
 
@@ -329,6 +331,17 @@ fn runBundle(
                 arch = .arm64;
             } else {
                 try stderr.print("unknown --arch value: {s}\n", .{v});
+                try stderr.flush();
+                std.process.exit(2);
+            }
+        } else if (std.mem.startsWith(u8, a, "--imports=")) {
+            const v = a["--imports=".len..];
+            if (std.mem.eql(u8, v, "relative")) {
+                import_style = .relative;
+            } else if (std.mem.eql(u8, v, "module")) {
+                import_style = .module;
+            } else {
+                try stderr.print("unknown --imports value: {s}\n", .{v});
                 try stderr.flush();
                 std.process.exit(2);
             }
@@ -349,7 +362,7 @@ fn runBundle(
 
     const dir_path = outdir orelse {
         try stderr.writeAll(
-            \\usage: winbindgen bundle --outdir <dir> [--arch=x86|x64|arm64] ns1 ns2 ...
+            \\usage: winbindgen bundle --outdir <dir> [--arch=x86|x64|arm64] [--imports=relative|module] ns1 ns2 ...
             \\
         );
         try stderr.flush();
@@ -377,24 +390,35 @@ fn runBundle(
     var dir = try std.Io.Dir.cwd().createDirPathOpen(io, dir_path, .{});
     defer dir.close(io);
 
+    var all_emission = winbindgen.BundleEmission{
+        .namespaces = .empty,
+        .dependencies = .empty,
+        .facade = "",
+    };
+
     var git = groups.iterator();
     while (git.next()) |entry| {
         const group_ns = entry.value_ptr.items;
         const group_bytes = selectBytes(group_ns[0]);
 
         var file = try winmd.parse(group_bytes);
-        const emission = try winbindgen.emitBundle(arena, &file, group_ns, arch);
+        const emission = try winbindgen.emitBundleWithImports(arena, &file, group_ns, arch, import_style);
 
         for (group_ns) |ns| {
             const bytes = emission.get(ns) orelse continue;
             const file_name = try std.fmt.allocPrint(arena, "{s}.zig", .{ns});
-            var out_file = try dir.createFile(io, file_name, .{});
-            defer out_file.close(io);
+            {
+                var out_file = try dir.createFile(io, file_name, .{});
+                defer out_file.close(io);
 
-            var out_buf: [4096]u8 = undefined;
-            var out_writer = out_file.writer(io, &out_buf);
-            try out_writer.interface.writeAll(bytes);
-            try out_writer.interface.flush();
+                var out_buf: [4096]u8 = undefined;
+                var out_writer = out_file.writer(io, &out_buf);
+                try out_writer.interface.writeAll(bytes);
+                try out_writer.interface.flush();
+            }
+
+            try all_emission.namespaces.put(arena, ns, bytes);
+            try all_emission.dependencies.put(arena, ns, emission.getDependencies(ns) orelse &.{});
         }
     }
 
@@ -404,7 +428,17 @@ fn runBundle(
 
         var out_buf: [4096]u8 = undefined;
         var out_writer = out_file.writer(io, &out_buf);
-        try winbindgen.emitBundleFacade(&out_writer.interface);
+        try winbindgen.emitBundleFacadeWithImports(&out_writer.interface, import_style);
+        try out_writer.interface.flush();
+    }
+
+    {
+        var out_file = try dir.createFile(io, winbindgen.BundleDependenciesFileName, .{});
+        defer out_file.close(io);
+
+        var out_buf: [4096]u8 = undefined;
+        var out_writer = out_file.writer(io, &out_buf);
+        try winbindgen.emitBundleDependencyManifest(&out_writer.interface, arena, all_emission);
         try out_writer.interface.flush();
     }
 

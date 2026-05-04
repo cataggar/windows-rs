@@ -173,6 +173,13 @@ The heaviest milestone; landed in four phases.
    emitted namespaces individually and accepted the weaker
    `*anyopaque` fallback. A regression in cross-ns closed-generic
    routing now surfaces on every target triple in CI.
+6. **Module-name bundle imports (issue #43).** The main bundle checks now
+   pass `--imports=module`, making generated namespace files import
+   dependencies through stable `<namespace>` module names. `build.zig`
+   mounts each generated namespace as its own module and wires the generated
+   `win_bundle.zig` facade through those modules, so the bundle no longer
+   relies on a shared same-directory `WriteFiles` root for cross-namespace
+   imports.
 
 ## M5 — Async contracts
 

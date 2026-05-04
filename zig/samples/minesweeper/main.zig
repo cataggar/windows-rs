@@ -3,7 +3,7 @@
 //! This keeps the existing pure game state in `minesweeper.zig` and renders
 //! a board-sized grid of `SpriteVisual`s through Windows.UI.Composition.
 //! The WinRT and Win32 Composition namespaces below come from the generated
-//! `win-bundle` facade emitted by `winbindgen bundle`.
+//! `win-bundle` facade emitted by `winbindgen bundle --imports=module`.
 //!
 //! Build: `zig build samples`
 //! Run:   `.\zig-out\bin\minesweeper.exe`

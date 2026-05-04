@@ -110,7 +110,7 @@ pub fn build(b: *std.Build) void {
         // `win/root.zig` analyzes `Com`'s pub decls, some of which
         // reference `*VARIANT` and trip the missing-struct error.
         // Compile-checking of Com.zig is covered by the
-        // `compile-check-bundle` step (via the shared WriteFiles dir)
+        // `compile-check-bundle` step (via the generated bundle module)
         // and by consumer samples like `com_uri`.
         .{ .name = "winbindgen", .mod = winbindgen_mod },
         .{ .name = "win-targets", .mod = win_targets_mod },
@@ -734,10 +734,10 @@ pub fn build(b: *std.Build) void {
     }
 
     // ------------------------------------------------------------------
-    // Bundle compile-check: drop several generated namespace files into
-    // one WriteFiles directory and type-check them together. This
-    // exercises cross-namespace `@import("Other.Namespace.zig")`
-    // references that the single-namespace checks above can't catch.
+    // Bundle compile-check: generate namespace files and mount each one as
+    // a stable Zig module named after its Windows namespace. This exercises
+    // cross-namespace module imports that the single-namespace checks
+    // above can't catch.
     // Each additional namespace added to the bundle is one more
     // dependency surface continuously validated by `zig build test`.
     // ------------------------------------------------------------------
@@ -1163,41 +1163,38 @@ pub fn build(b: *std.Build) void {
     const bundle_run = b.addRunArtifact(winbindgen_exe);
     bundle_run.addArg("bundle");
     if (arch_flag) |f| bundle_run.addArg(f);
+    bundle_run.addArg("--imports=module");
     bundle_run.addArg("--outdir");
     const bundle_outdir = bundle_run.addOutputDirectoryArg("bundle");
     for (bundle_namespaces) |ns| bundle_run.addArg(ns);
 
-    const bundle_wf = b.addWriteFiles();
-    for (bundle_namespaces) |ns| {
-        const src = bundle_outdir.path(b, b.fmt("{s}.zig", .{ns}));
-        _ = bundle_wf.addCopyFile(src, b.fmt("{s}.zig", .{ns}));
+    var bundle_mods: [bundle_namespaces.len]*std.Build.Module = undefined;
+    for (bundle_namespaces, 0..) |ns, i| {
+        const ns_mod = b.createModule(.{
+            .root_source_file = bundle_outdir.path(b, b.fmt("{s}.zig", .{ns})),
+            .target = target,
+            .optimize = optimize,
+        });
+        ns_mod.addImport("win-core", win_core_mod);
+        bundle_mods[i] = ns_mod;
     }
-    _ = bundle_wf.addCopyFile(bundle_outdir.path(b, "win_bundle.zig"), "win_bundle.zig");
+    for (bundle_mods, 0..) |ns_mod, i| {
+        addGeneratedNamespaceImports(ns_mod, bundle_namespaces[0..], bundle_mods[0..], i);
+    }
 
-    // Use the first namespace as the root of the bundle module; sibling
-    // `@import("OtherNamespace.zig")` references resolve via the shared
-    // WriteFiles directory.
-    const bundle_root = bundle_wf.getDirectory().path(b, b.fmt("{s}.zig", .{bundle_namespaces[0]}));
-    const bundle_mod = b.createModule(.{
-        .root_source_file = bundle_root,
-        .target = target,
-        .optimize = optimize,
-    });
-    bundle_mod.addImport("win-core", win_core_mod);
-
-    const win_bundle_root = bundle_wf.getDirectory().path(b, "win_bundle.zig");
+    const win_bundle_root = bundle_outdir.path(b, "win_bundle.zig");
     const win_bundle_mod = b.createModule(.{
         .root_source_file = win_bundle_root,
         .target = target,
         .optimize = optimize,
     });
-    win_bundle_mod.addImport("win-core", win_core_mod);
+    addGeneratedNamespaceImports(win_bundle_mod, bundle_namespaces[0..], bundle_mods[0..], null);
     win_mod.addImport("win-bundle", win_bundle_mod);
 
     if (host_is_windows) {
         const bundle_obj = b.addTest(.{
             .name = "compile-check-bundle",
-            .root_module = bundle_mod,
+            .root_module = win_bundle_mod,
         });
         const run_bundle_obj = b.addRunArtifact(bundle_obj);
         test_step.dependOn(&run_bundle_obj.step);
@@ -1245,28 +1242,35 @@ pub fn build(b: *std.Build) void {
         const cross_bundle_run = b.addRunArtifact(winbindgen_exe);
         cross_bundle_run.addArg("bundle");
         cross_bundle_run.addArg(ca.flag);
+        cross_bundle_run.addArg("--imports=module");
         cross_bundle_run.addArg("--outdir");
         const cross_bundle_outdir = cross_bundle_run.addOutputDirectoryArg("bundle");
         for (bundle_namespaces) |ns| cross_bundle_run.addArg(ns);
 
-        const cross_wf = b.addWriteFiles();
-        for (bundle_namespaces) |ns| {
-            const src = cross_bundle_outdir.path(b, b.fmt("{s}.zig", .{ns}));
-            _ = cross_wf.addCopyFile(src, b.fmt("{s}.zig", .{ns}));
+        var cross_mods: [bundle_namespaces.len]*std.Build.Module = undefined;
+        for (bundle_namespaces, 0..) |ns, i| {
+            const ns_mod = b.createModule(.{
+                .root_source_file = cross_bundle_outdir.path(b, b.fmt("{s}.zig", .{ns})),
+                .target = cross_target,
+                .optimize = optimize,
+            });
+            ns_mod.addImport("win-core", cross_core_mod);
+            cross_mods[i] = ns_mod;
         }
-        _ = cross_wf.addCopyFile(cross_bundle_outdir.path(b, "win_bundle.zig"), "win_bundle.zig");
-        const cross_root = cross_wf.getDirectory().path(b, b.fmt("{s}.zig", .{bundle_namespaces[0]}));
+        for (cross_mods, 0..) |ns_mod, i| {
+            addGeneratedNamespaceImports(ns_mod, bundle_namespaces[0..], cross_mods[0..], i);
+        }
 
-        const cross_mod = b.createModule(.{
-            .root_source_file = cross_root,
+        const cross_bundle_mod = b.createModule(.{
+            .root_source_file = cross_bundle_outdir.path(b, "win_bundle.zig"),
             .target = cross_target,
             .optimize = optimize,
         });
-        cross_mod.addImport("win-core", cross_core_mod);
+        addGeneratedNamespaceImports(cross_bundle_mod, bundle_namespaces[0..], cross_mods[0..], null);
 
         const cross_obj = b.addTest(.{
             .name = b.fmt("compile-check-bundle-{s}", .{ca.name}),
-            .root_module = cross_mod,
+            .root_module = cross_bundle_mod,
         });
         // Compile only — do not run (foreign binary when ca != host).
         test_step.dependOn(&cross_obj.step);
@@ -1501,5 +1505,19 @@ pub fn build(b: *std.Build) void {
         });
         const install_bench = b.addInstallArtifact(bench_exe, .{});
         bench_step.dependOn(&install_bench.step);
+    }
+}
+
+fn addGeneratedNamespaceImports(
+    importing: *std.Build.Module,
+    namespaces: []const []const u8,
+    modules: []const *std.Build.Module,
+    skip_index: ?usize,
+) void {
+    for (namespaces, modules, 0..) |namespace, module, i| {
+        if (skip_index) |skip| {
+            if (skip == i) continue;
+        }
+        importing.addImport(namespace, module);
     }
 }
