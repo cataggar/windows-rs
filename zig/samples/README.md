@@ -155,10 +155,11 @@ const Interop = win.Win32.System.WinRT.Composition;
 ```
 
 The `win` package mounts the generated `win-bundle` facade emitted by
-`winbindgen bundle`. Samples such as `minesweeper` use these curated
-aliases for public WinRT/Win32 Composition paths while the generated
-namespace files stay side-by-side so file-relative imports continue to
-resolve.
+`winbindgen bundle --imports=module`. Samples such as `minesweeper` use
+these curated aliases for public WinRT/Win32 Composition paths. The bundle
+build mounts each generated namespace as a stable `<namespace>` module, so
+cross-namespace dependencies are explicit in Zig's module graph instead of
+depending on sibling file-relative imports.
 
 ### Layout assertion
 
