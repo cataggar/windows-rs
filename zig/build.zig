@@ -1172,6 +1172,7 @@ pub fn build(b: *std.Build) void {
         const src = bundle_outdir.path(b, b.fmt("{s}.zig", .{ns}));
         _ = bundle_wf.addCopyFile(src, b.fmt("{s}.zig", .{ns}));
     }
+    _ = bundle_wf.addCopyFile(bundle_outdir.path(b, "win_bundle.zig"), "win_bundle.zig");
 
     // Use the first namespace as the root of the bundle module; sibling
     // `@import("OtherNamespace.zig")` references resolve via the shared
@@ -1184,62 +1185,6 @@ pub fn build(b: *std.Build) void {
     });
     bundle_mod.addImport("win-core", win_core_mod);
 
-    // This string is written below as generated Zig source for `win_bundle.zig`.
-    // The `\\` prefixes are multiline string literal syntax, not comments.
-    // The facade keeps generated file-relative imports working while exposing
-    // selected namespaces through the public `win` module.
-    const win_bundle_proxy_source =
-        \\pub const Foundation = @import("Windows.Win32.Foundation.zig");
-        \\pub const Com = @import("Windows.Win32.System.Com.zig");
-        \\pub const Win32 = struct {
-        \\    pub const System = struct {
-        \\        pub const WinRT = struct {
-        \\            pub const Composition = @import("Windows.Win32.System.WinRT.Composition.zig");
-        \\        };
-        \\    };
-        \\};
-        \\pub const WinRT = struct {
-        \\    pub const Foundation = @import("Windows.Foundation.zig");
-        \\    pub const Collections = @import("Windows.Foundation.Collections.zig");
-        \\    pub const Numerics = @import("Windows.Foundation.Numerics.zig");
-        \\    pub const Graphics = @import("Windows.Graphics.zig");
-        \\    pub const Globalization = @import("Windows.Globalization.zig");
-        \\    pub const System = struct {
-        \\        const Windows_System = @import("Windows.System.zig");
-        \\        pub const DispatcherQueueController = Windows_System.DispatcherQueueController;
-        \\        pub const IDispatcherQueueController = Windows_System.IDispatcherQueueController;
-        \\        pub const Threading = @import("Windows.System.Threading.zig");
-        \\    };
-        \\    pub const UI = struct {
-        \\        const Windows_UI = @import("Windows.UI.zig");
-        \\        pub const Color = Windows_UI.Color;
-        \\        pub const Composition = struct {
-        \\            const Windows_UI_Composition = @import("Windows.UI.Composition.zig");
-        \\            pub const Compositor = Windows_UI_Composition.Compositor;
-        \\            pub const CompositionBrush = Windows_UI_Composition.CompositionBrush;
-        \\            pub const CompositionColorBrush = Windows_UI_Composition.CompositionColorBrush;
-        \\            pub const ContainerVisual = Windows_UI_Composition.ContainerVisual;
-        \\            pub const ICompositionBrush = Windows_UI_Composition.ICompositionBrush;
-        \\            pub const ICompositionColorBrush = Windows_UI_Composition.ICompositionColorBrush;
-        \\            pub const ICompositionTarget = Windows_UI_Composition.ICompositionTarget;
-        \\            pub const IContainerVisual = Windows_UI_Composition.IContainerVisual;
-        \\            pub const ICompositor = Windows_UI_Composition.ICompositor;
-        \\            pub const ISpriteVisual = Windows_UI_Composition.ISpriteVisual;
-        \\            pub const IVisual = Windows_UI_Composition.IVisual;
-        \\            pub const IVisualCollection = Windows_UI_Composition.IVisualCollection;
-        \\            pub const SpriteVisual = Windows_UI_Composition.SpriteVisual;
-        \\            pub const Visual = Windows_UI_Composition.Visual;
-        \\            pub const VisualCollection = Windows_UI_Composition.VisualCollection;
-        \\            pub const Desktop = @import("Windows.UI.Composition.Desktop.zig");
-        \\        };
-        \\    };
-        \\    pub const Devices = struct {
-        \\        pub const Enumeration = @import("Windows.Devices.Enumeration.zig");
-        \\    };
-        \\};
-        \\
-    ;
-    _ = bundle_wf.add("win_bundle.zig", win_bundle_proxy_source);
     const win_bundle_root = bundle_wf.getDirectory().path(b, "win_bundle.zig");
     const win_bundle_mod = b.createModule(.{
         .root_source_file = win_bundle_root,
@@ -1309,6 +1254,7 @@ pub fn build(b: *std.Build) void {
             const src = cross_bundle_outdir.path(b, b.fmt("{s}.zig", .{ns}));
             _ = cross_wf.addCopyFile(src, b.fmt("{s}.zig", .{ns}));
         }
+        _ = cross_wf.addCopyFile(cross_bundle_outdir.path(b, "win_bundle.zig"), "win_bundle.zig");
         const cross_root = cross_wf.getDirectory().path(b, b.fmt("{s}.zig", .{bundle_namespaces[0]}));
 
         const cross_mod = b.createModule(.{
