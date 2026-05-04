@@ -145,6 +145,21 @@ pointers. Same sample can reach into multiple `index.<NS>`
 bundles — constants live where Windows put them (`INVALID_HANDLE_VALUE`
 is Foundation, not FileSystem).
 
+### Generated WinRT bundle facade
+
+```zig
+const win = @import("win");
+const UI = win.WinRT.UI;
+const Composition = UI.Composition;
+const Interop = win.Win32.System.WinRT.Composition;
+```
+
+The `win` package mounts the generated `win-bundle` facade emitted by
+`winbindgen bundle`. Samples such as `minesweeper` use these curated
+aliases for public WinRT/Win32 Composition paths while the generated
+namespace files stay side-by-side so file-relative imports continue to
+resolve.
+
 ### Layout assertion
 
 ```zig

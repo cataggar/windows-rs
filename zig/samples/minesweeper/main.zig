@@ -2,6 +2,8 @@
 //!
 //! This keeps the existing pure game state in `minesweeper.zig` and renders
 //! a board-sized grid of `SpriteVisual`s through Windows.UI.Composition.
+//! The WinRT and Win32 Composition namespaces below come from the generated
+//! `win-bundle` facade emitted by `winbindgen bundle`.
 //!
 //! Build: `zig build samples`
 //! Run:   `.\zig-out\bin\minesweeper.exe`
@@ -15,7 +17,8 @@ const game_mod = @import("minesweeper.zig");
 
 const core = win.core;
 const Foundation = win.WinRT.Foundation;
-const Composition = win.WinRT.UI.Composition;
+const UI = win.WinRT.UI;
+const Composition = UI.Composition;
 const CompositionDesktop = Composition.Desktop;
 const Interop = win.Win32.System.WinRT.Composition;
 const Numerics = win.WinRT.Numerics;
@@ -386,7 +389,7 @@ const App = struct {
 
 fn createBrush(
     compositor: *const Composition.ICompositor,
-    color: win.WinRT.UI.Color,
+    color: UI.Color,
 ) !*const Composition.ICompositionColorBrush {
     var raw: *Composition.CompositionColorBrush = undefined;
     try core.hresult.ok(compositor.CreateColorBrush_2(color, &raw));
@@ -689,7 +692,7 @@ fn vec3(x: f32, y: f32, z: f32) Numerics.Vector3 {
     return .{ .X = x, .Y = y, .Z = z };
 }
 
-fn rgba(a: u8, r: u8, g: u8, b: u8) win.WinRT.UI.Color {
+fn rgba(a: u8, r: u8, g: u8, b: u8) UI.Color {
     return .{ .A = a, .R = r, .G = g, .B = b };
 }
 

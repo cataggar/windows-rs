@@ -67,11 +67,11 @@ pub fn main(init: std.process.Init) !void {
     // `bundle --outdir <dir> [--arch=...] ns1 ns2 ...` emits a batch
     // of namespaces as a coordinated bundle, auto-routing
     // cross-namespace closed-generic instantiations to their home
-    // namespace. Writes `<outdir>/<ns>.zig` for each input.
+    // namespace. Writes `<outdir>/<ns>.zig` for each input plus a
+    // generated `win_bundle.zig` facade root.
     //
-    // All input namespaces must resolve to the same metadata file —
-    // closed generics today are WinRT-only, so this is the Phase 4b
-    // path for `Windows.winmd`.
+    // Inputs are grouped by metadata file before emission; closed-generic
+    // routing happens within each metadata group.
     if (args.len >= 2 and std.mem.eql(u8, args[1], "bundle")) {
         try runBundle(
             init.arena.allocator(),
@@ -303,7 +303,8 @@ fn stringLessThan(_: void, a: []const u8, b: []const u8) bool {
 /// Handle the `bundle --outdir <dir> [--arch=...] ns1 ns2 ...` subcommand.
 /// Calls `winbindgen.emitBundle` to emit every input namespace in a single
 /// coordinated pass (cross-namespace closed generics auto-route to their
-/// home namespace), then writes `<outdir>/<ns>.zig` for each result.
+/// home namespace), then writes `<outdir>/<ns>.zig` for each result plus
+/// the generated `win_bundle.zig` facade root.
 fn runBundle(
     arena: std.mem.Allocator,
     gpa: std.mem.Allocator,
@@ -395,6 +396,16 @@ fn runBundle(
             try out_writer.interface.writeAll(bytes);
             try out_writer.interface.flush();
         }
+    }
+
+    {
+        var out_file = try dir.createFile(io, winbindgen.BundleFacadeFileName, .{});
+        defer out_file.close(io);
+
+        var out_buf: [4096]u8 = undefined;
+        var out_writer = out_file.writer(io, &out_buf);
+        try winbindgen.emitBundleFacade(&out_writer.interface);
+        try out_writer.interface.flush();
     }
 
     // Suppress-unused-warning; gpa currently only needed for future
