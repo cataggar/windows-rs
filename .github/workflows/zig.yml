@@ -2,6 +2,7 @@ name: zig
 
 permissions:
   contents: read
+  attestations: read
 
 on:
   pull_request:
@@ -30,10 +31,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Zig
-        uses: mlugg/setup-zig@v2
+      - name: Install Zig via ghr
+        uses: cataggar/ghr/actions/install@v0.9.1
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: 0.16.0
+          tools: |
+            cataggar/zig@v0.16.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
       - name: Check formatting
         working-directory: zig
         run: zig fmt --check .
@@ -57,10 +61,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Zig
-        uses: mlugg/setup-zig@v2
+      - name: Install Zig via ghr
+        uses: cataggar/ghr/actions/install@v0.9.1
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: 0.16.0
+          tools: |
+            cataggar/zig@v0.16.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
       - name: Build and test
         working-directory: zig
         run: zig build test --summary all
@@ -74,10 +81,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Zig
-        uses: mlugg/setup-zig@v2
+      - name: Install Zig via ghr
+        uses: cataggar/ghr/actions/install@v0.9.1
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: 0.16.0
+          tools: |
+            cataggar/zig@v0.16.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
       - name: Regenerate canary bindings
         working-directory: zig
         run: |
@@ -94,10 +104,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Zig
-        uses: mlugg/setup-zig@v2
+      - name: Install Zig via ghr
+        uses: cataggar/ghr/actions/install@v0.9.1
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: 0.16.0
+          tools: |
+            cataggar/zig@v0.16.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
       - name: Build all samples
         working-directory: zig
         run: zig build samples
@@ -131,10 +144,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
-      - name: Install Zig
-        uses: mlugg/setup-zig@v2
+      - name: Install Zig via ghr
+        uses: cataggar/ghr/actions/install@v0.9.1
+        env:
+          GH_TOKEN: ${{ github.token }}
         with:
-          version: 0.16.0
+          tools: |
+            cataggar/zig@v0.16.0 RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
       - name: Build and verify import libs for ${{ matrix.target }}
         working-directory: zig
         shell: bash
